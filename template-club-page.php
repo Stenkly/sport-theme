@@ -1,0 +1,189 @@
+<?php
+/**
+ * Template Name: Pagina Club Condivisa
+ *
+ * @package Sport_Theme
+ */
+
+get_header();
+
+// Setup active states for the submenu
+$current_page_title = strtolower(get_the_title());
+$is_storia = ($current_page_title === 'storia');
+$is_progetto = ($current_page_title === 'progetto sportivo');
+
+// Style helpers
+$btn_active = "padding: 10px 40px; font-weight: 700; text-transform: uppercase; font-size: 14px; text-decoration: none; border: 2px solid var(--c-primary); background-color: var(--c-primary); color: var(--c-black);";
+$btn_inactive = "padding: 10px 40px; font-weight: 700; text-transform: uppercase; font-size: 14px; text-decoration: none; border: 2px solid white; background-color: transparent; color: white; transition: all 0.3s;";
+?>
+
+<main id="primary" class="site-main page-club">
+
+    <!-- HERO IMMAGINE -->
+    <section class="news-hero">
+        <?php
+        if ( has_post_thumbnail() ) {
+            $hero_image_url = get_the_post_thumbnail_url( get_the_ID(), 'full' );
+        } else {
+            $hero_image_url = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=2000&auto=format&fit=crop';
+        }
+        ?>
+        <div class="club-hero-wrapper">
+            <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block;" alt="<?php echo esc_attr(get_the_title()); ?>">
+            <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 70%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
+            
+            <div class="news-hero-content container" style="position: absolute; bottom: 40px; left: 0; right: 0; text-align: left;">
+                <h1 class="club-hero-title"><?php the_title(); ?></h1>
+                
+                <?php if (has_excerpt()) : ?>
+                <p class="hero-subtitle text-white" style="font-size: 22px; font-weight: 700; text-transform: uppercase; max-width: 800px; margin-top: 15px; line-height: 1.4;"><?php echo get_the_excerpt(); ?></p>
+                <?php endif; ?>
+
+                <hr style="border: 0; border-top: 2px solid white; margin: 20px 0;">
+                
+                <div class="page-submenu" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                    <a href="<?php echo esc_url( site_url('/organigramma') ); ?>" class="btn-outline-hover" style="<?php echo $btn_inactive; ?>">ORGANIGRAMMA</a>
+                    <a href="<?php echo esc_url( site_url('/storia') ); ?>" class="<?php echo $is_storia ? '' : 'btn-outline-hover'; ?>" style="<?php echo $is_storia ? $btn_active : $btn_inactive; ?>">STORIA</a>
+                    <a href="<?php echo esc_url( site_url('/progetto-sportivo') ); ?>" class="<?php echo $is_progetto ? '' : 'btn-outline-hover'; ?>" style="<?php echo $is_progetto ? $btn_active : $btn_inactive; ?>">PROGETTO SPORTIVO</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTENT -->
+    <div class="container club-content" style="padding-top: 60px; padding-bottom: 30px;">
+        <?php
+        while ( have_posts() ) :
+            the_post();
+            
+            $raw_content = get_the_content();
+            $clean_content = trim(strip_tags($raw_content));
+            $current_slug = get_post_field('post_name', get_the_ID());
+            
+            // Finto testo se la pagina non è stata ancora scritta
+            if ( empty($clean_content) || strlen($clean_content) < 150 ) {
+                $lorem_p = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>";
+                $lorem_h3 = "<h3>LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT, SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA.</h3>";
+                
+                $titolo_check = strtolower(get_the_title());
+                if ($current_slug === 'storia' || strpos($titolo_check, 'storia') !== false) {
+                    echo '<h2>IDENTITÀ DEL CLUB</h2>' . $lorem_h3 . $lorem_p;
+                    echo '<h2>RUOLO DELLA PRIMA SQUADRA</h2>' . $lorem_h3 . $lorem_p;
+                    echo '<h2>EVOLUZIONE NEL TEMPO</h2>' . $lorem_h3 . $lorem_p;
+                } else if ($current_slug === 'progetto-sportivo' || strpos($titolo_check, 'progetto') !== false) {
+                    echo '<h2>VISIONE, OBIETTIVI E VALORI SPORTIVI</h2>' . $lorem_h3 . $lorem_p;
+                    echo '<h2>FILOSOFIA DI GIOCO</h2>' . $lorem_h3 . $lorem_p;
+                    echo '<h2>OBIETTIVI SPORTIVI</h2>' . $lorem_h3 . $lorem_p;
+                    echo '<h2>VALORI</h2>' . $lorem_h3 . $lorem_p;
+                }
+            } else {
+                the_content();
+            }
+
+        endwhile;
+        ?>
+    </div>
+
+    <!-- DYNAMIC FOTOGALLERY (dal Custom Post Type Foto Gallery) -->
+    <?php
+    $gallery_args = array(
+        'post_type' => 'fotogallery',
+    );
+    
+    if ($current_slug === 'storia') {
+        $gallery_args['posts_per_page'] = -1;
+        $gallery_args['tax_query'] = array(
+            array(
+                'taxonomy' => 'categoria_galleria',
+                'field'    => 'slug',
+                'terms'    => 'storia',
+            ),
+        );
+    } else {
+        // Progetto Sportivo: ultime 4 foto ESCLUDENDO quelle caricate per Storia
+        $gallery_args['posts_per_page'] = 4;
+        $gallery_args['tax_query'] = array(
+            array(
+                'taxonomy' => 'categoria_galleria',
+                'field'    => 'slug',
+                'terms'    => 'storia',
+                'operator' => 'NOT IN',
+            ),
+        );
+    }
+    
+    $gallery_query = new WP_Query($gallery_args);
+    ?>
+    <section class="container <?php echo $current_slug === 'storia' ? 'club-content' : ''; ?> ps-section" style="padding-bottom: 60px;">
+        <h2 class="<?php echo $current_slug === 'storia' ? 'text-white' : 'section-title text-white'; ?>" style="<?php echo $current_slug === 'storia' ? 'font-size: 28px; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; color: white;' : 'margin-bottom: 30px;'; ?>">FOTOGALLERY</h2>
+        
+        <?php if ($current_slug === 'storia') : ?>
+            <!-- Layout MASONRY per Storia -->
+            <div class="custom-cpt-gallery wp-block-gallery">
+                <?php 
+                if ($gallery_query->have_posts()) :
+                    while ($gallery_query->have_posts()) : $gallery_query->the_post(); 
+                        if (has_post_thumbnail()) :
+                            $img_url = get_the_post_thumbnail_url(get_the_ID(), 'large');
+                    ?>
+                        <figure class="wp-block-image">
+                            <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr(get_the_title()); ?>">
+                        </figure>
+                    <?php 
+                        endif;
+                    endwhile; wp_reset_postdata(); 
+                else :
+                    // Mockup Segnaposto per STORIA
+                ?>
+                    <figure class="wp-block-image"><img src="https://images.unsplash.com/photo-1518622358385-8ea7d0794bf6?q=80&w=800&auto=format&fit=crop" style="filter: grayscale(1);"></figure>
+                    <figure class="wp-block-image"><img src="https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=1000&auto=format&fit=crop" style="filter: grayscale(1);"></figure>
+                    <figure class="wp-block-image"><img src="https://images.unsplash.com/photo-1551280857-2b9eb02029c3?q=80&w=800&auto=format&fit=crop" style="filter: grayscale(1);"></figure>
+                    <figure class="wp-block-image"><img src="https://images.unsplash.com/photo-1522778526582-12002162a043?q=80&w=800&auto=format&fit=crop" style="filter: grayscale(1);"></figure>
+                    <figure class="wp-block-image"><img src="https://images.unsplash.com/photo-1508344928928-7137b29de218?q=80&w=800&auto=format&fit=crop" style="filter: grayscale(1);"></figure>
+                    <figure class="wp-block-image"><img src="https://images.unsplash.com/photo-1553147573-0ff7d2b45053?q=80&w=800&auto=format&fit=crop" style="filter: grayscale(1);"></figure>
+                <?php endif; ?>
+            </div>
+        <?php else : ?>
+            <!-- Layout CAROUSEL 4-GRID per Progetto Sportivo (uguale a Prima Squadra) -->
+            <div class="ps-grid grid-4 ps-gallery">
+                <?php 
+                if ($gallery_query->have_posts()) :
+                    while ($gallery_query->have_posts()) : $gallery_query->the_post(); 
+                        if (has_post_thumbnail()) :
+                            $img_url = get_the_post_thumbnail_url(get_the_ID(), 'large');
+                            echo '<a data-fancybox="gallery" href="' . esc_url($img_url) . '"><div class="gallery-item cover-bg" style="background-image: url(\'' . esc_url($img_url) . '\')"></div></a>';
+                        endif;
+                    endwhile; wp_reset_postdata(); 
+                else :
+                    // Mockup Segnaposto per PROGETTO SPORTIVO
+                    for($i=0; $i<4; $i++) {
+                        $demo_img = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=1000';
+                        echo '<a data-fancybox="gallery" href="' . esc_url($demo_img) . '"><div class="gallery-item cover-bg" style="background-image: url(\'' . esc_url($demo_img) . '\')"></div></a>';
+                    }
+                endif; 
+                ?>
+            </div>
+            
+            <!-- Indicatori Slider (Estetica / Mockup per Progetto Sportivo) -->
+            <div class="gallery-navigation" style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+                <span style="color: var(--c-primary); font-size: 24px; font-weight: bold; cursor: pointer;">&lt;</span>
+                <div class="gallery-dots" style="display: flex; gap: 8px;">
+                    <span style="width: 8px; height: 8px; background-color: var(--c-primary); border-radius: 50%; display: inline-block;"></span>
+                    <span style="width: 8px; height: 8px; border: 1px solid var(--c-primary); border-radius: 50%; display: inline-block;"></span>
+                    <span style="width: 8px; height: 8px; border: 1px solid var(--c-primary); border-radius: 50%; display: inline-block;"></span>
+                    <span style="width: 8px; height: 8px; border: 1px solid var(--c-primary); border-radius: 50%; display: inline-block;"></span>
+                </div>
+                <span style="color: var(--c-primary); font-size: 24px; font-weight: bold; cursor: pointer;">&gt;</span>
+            </div>
+        <?php endif; ?>
+    </section>
+
+    <!-- PARTNER E SPONSOR -->
+    <section class="ps-section container">
+        <h2 class="section-title text-white">PARTNER E SPONSOR</h2>
+        <?php sport_theme_render_global_sponsors(); ?>
+    </section>
+
+</main>
+
+<?php get_footer(); ?>
