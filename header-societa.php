@@ -39,44 +39,44 @@
         <ul style="list-style:none; margin:0; padding:0;">
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">HOME</a>
+                <a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>" class="<?php if(is_front_page() || is_page('ac-taverne')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">HOME</a>
             </li>
 
             <!-- Società con sottomenu -->
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
                 <div class="hs-mob-toggle" style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:18px 0;">
-                    <span style="color:white; font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">SOCIETÀ</span>
+                    <span class="<?php if(is_page('la-societa') || is_page('comitato') || is_page('club-dei-100')) echo 'mob-active'; ?>" style="color:white; font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">SOCIETÀ</span>
                     <i class="fa-solid fa-chevron-down" style="color:white; font-size:14px; transition: transform 0.3s;"></i>
                 </div>
                 <ul class="hs-mob-submenu" style="display:none; list-style:none; padding: 0 0 10px 20px; margin:0;">
-                    <li><a href="<?php echo esc_url( site_url('/la-societa') ); ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">La Società</a></li>
-                    <li><a href="<?php echo esc_url( site_url('/comitato') ); ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Comitato</a></li>
-                    <li><a href="<?php echo esc_url( site_url('/club-dei-100') ); ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Club dei 100</a></li>
+                    <li><a href="<?php echo esc_url( site_url('/la-societa') ); ?>" class="<?php if(is_page('la-societa')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">La Società</a></li>
+                    <li><a href="<?php echo esc_url( site_url('/comitato') ); ?>" class="<?php if(is_page('comitato')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Comitato</a></li>
+                    <li><a href="<?php echo esc_url( site_url('/club-dei-100') ); ?>" class="<?php if(is_page('club-dei-100')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Club dei 100</a></li>
                 </ul>
             </li>
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <a href="<?php echo esc_url( site_url('/sezioni') ); ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">SEZIONI</a>
+                <a href="<?php echo esc_url( site_url('/sezioni') ); ?>" class="<?php if(is_page('sezioni')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">SEZIONI</a>
             </li>
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <a href="<?php echo esc_url( site_url('/scuola-calcio') ); ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">SCUOLA CALCIO</a>
+                <a href="<?php echo esc_url( site_url('/scuola-calcio') ); ?>" class="<?php if(is_page('scuola-calcio')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">SCUOLA CALCIO</a>
             </li>
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <a href="<?php echo esc_url( site_url('/infrastruttura') ); ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">INFRASTRUTTURA</a>
+                <a href="<?php echo esc_url( site_url('/infrastruttura') ); ?>" class="<?php if(is_page('infrastruttura')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">INFRASTRUTTURA</a>
             </li>
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <a href="<?php echo esc_url( site_url('/news-societa') ); ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">NEWS</a>
+                <a href="<?php echo esc_url( site_url('/news-societa') ); ?>" class="<?php if(is_page('news-societa')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">NEWS</a>
             </li>
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <a href="<?php echo esc_url( site_url('/iscritti') ); ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">ISCRIVITI</a>
+                <a href="<?php echo esc_url( site_url('/iscritti') ); ?>" class="<?php if(is_page('iscritti')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">ISCRIVITI</a>
             </li>
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <a href="<?php echo esc_url( site_url('/contatti-societa') ); ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">CONTATTI</a>
+                <a href="<?php echo esc_url( site_url('/contatti-societa') ); ?>" class="<?php if(is_page('contatti-societa')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">CONTATTI</a>
             </li>
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">

@@ -45,44 +45,44 @@
         <ul style="list-style:none; margin:0; padding:0;">
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <a href="<?php echo esc_url( site_url('/news') ); ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">News</a>
+                <a href="<?php echo esc_url( site_url('/news') ); ?>" class="<?php if (is_page('news')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">News</a>
             </li>
 
             <!-- Team con sottomenu -->
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
                 <div class="mob-toggle" style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:18px 0;">
-                    <span style="color:white; font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Team</span>
+                    <span class="<?php if (is_page('rosa') || is_page('staff') || is_singular('giocatore')) echo 'mob-active'; ?>" style="color:white; font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Team</span>
                     <i class="fa-solid fa-chevron-down" style="color:white; font-size:14px; transition: transform 0.3s;"></i>
                 </div>
                 <ul class="mob-submenu" style="display:none; list-style:none; padding: 0 0 10px 20px; margin:0;">
-                    <li><a href="<?php echo esc_url( site_url('/rosa') ); ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Rosa</a></li>
-                    <li><a href="<?php echo esc_url( site_url('/staff') ); ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Staff</a></li>
+                    <li><a href="<?php echo esc_url( site_url('/rosa') ); ?>" class="<?php if (is_page('rosa')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Rosa</a></li>
+                    <li><a href="<?php echo esc_url( site_url('/staff') ); ?>" class="<?php if (is_page('staff')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Staff</a></li>
                 </ul>
             </li>
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <a href="<?php echo esc_url( site_url('/stagione') ); ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">Stagione</a>
+                <a href="<?php echo esc_url( site_url('/stagione') ); ?>" class="<?php if (is_page('stagione')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">Stagione</a>
             </li>
 
             <!-- Club con sottomenu -->
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
                 <div class="mob-toggle" style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:18px 0;">
-                    <span style="color:white; font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Club</span>
+                    <span class="<?php if (is_page('organigramma') || is_page('storia') || is_page('progetto-sportivo')) echo 'mob-active'; ?>" style="color:white; font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Club</span>
                     <i class="fa-solid fa-chevron-down" style="color:white; font-size:14px; transition: transform 0.3s;"></i>
                 </div>
                 <ul class="mob-submenu" style="display:none; list-style:none; padding: 0 0 10px 20px; margin:0;">
-                    <li><a href="<?php echo esc_url( site_url('/organigramma') ); ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Organigramma</a></li>
-                    <li><a href="<?php echo esc_url( site_url('/storia') ); ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Storia del Club</a></li>
-                    <li><a href="<?php echo esc_url( site_url('/progetto-sportivo') ); ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Progetto Sportivo</a></li>
+                    <li><a href="<?php echo esc_url( site_url('/organigramma') ); ?>" class="<?php if (is_page('organigramma')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Organigramma</a></li>
+                    <li><a href="<?php echo esc_url( site_url('/storia') ); ?>" class="<?php if (is_page('storia')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Storia del Club</a></li>
+                    <li><a href="<?php echo esc_url( site_url('/progetto-sportivo') ); ?>" class="<?php if (is_page('progetto-sportivo')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Progetto Sportivo</a></li>
                 </ul>
             </li>
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <a href="<?php echo esc_url( site_url('/partner') ); ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">Partner</a>
+                <a href="<?php echo esc_url( site_url('/partner') ); ?>" class="<?php if (is_page('partner') || is_page('sponsor')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">Partner</a>
             </li>
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <a href="<?php echo esc_url( site_url('/contatti') ); ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">Contatti</a>
+                <a href="<?php echo esc_url( site_url('/contatti') ); ?>" class="<?php if (is_page('contatti')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">Contatti</a>
             </li>
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
@@ -92,13 +92,13 @@
             <!-- AC Taverne con sottomenu -->
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
                 <div class="mob-toggle" style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:18px 0;">
-                    <span style="color:var(--c-primary); font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">AC Taverne</span>
+                    <span class="<?php if (is_page('ac-taverne') || is_page('societa') || is_page('scuola-calcio') || is_page('infrastruttura')) echo 'mob-active'; ?>" style="color:var(--c-primary); font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">AC Taverne</span>
                     <i class="fa-solid fa-chevron-down" style="color:white; font-size:14px; transition: transform 0.3s;"></i>
                 </div>
                 <ul class="mob-submenu" style="display:none; list-style:none; padding: 0 0 10px 20px; margin:0;">
-                    <li><a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Società</a></li>
-                    <li><a href="<?php echo esc_url( site_url('/scuola-calcio') ); ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Scuola Calcio</a></li>
-                    <li><a href="<?php echo esc_url( site_url('/infrastruttura') ); ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Infrastruttura</a></li>
+                    <li><a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>" class="<?php if (is_page('ac-taverne') || is_page('societa')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Società</a></li>
+                    <li><a href="<?php echo esc_url( site_url('/scuola-calcio') ); ?>" class="<?php if (is_page('scuola-calcio')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Scuola Calcio</a></li>
+                    <li><a href="<?php echo esc_url( site_url('/infrastruttura') ); ?>" class="<?php if (is_page('infrastruttura')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Infrastruttura</a></li>
                 </ul>
             </li>
 
