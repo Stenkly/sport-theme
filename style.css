@@ -160,10 +160,19 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     color: var(--c-primary);
 }
 
-/* Regola specifica per far diventare giallo fisso il link AC Taverne */
+/* Pagina attiva nel menu: sottolineatura invece di colore giallo */
 .main-navigation ul > li > a[href$="/ac-taverne/"],
 .main-navigation ul > li > a[href$="/ac-taverne"] {
-    color: var(--c-primary) !important;
+    color: var(--c-white) !important;
+    text-decoration: underline !important;
+    text-underline-offset: 6px;
+}
+
+/* Stile generico per la voce attiva del menu */
+.main-navigation ul > li.current-menu-item > a,
+.main-navigation ul > li > a.current-menu-item {
+    text-decoration: underline;
+    text-underline-offset: 6px;
 }
 
 /* --- FRONT PAGE INTRO --- */

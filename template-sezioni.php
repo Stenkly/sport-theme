@@ -7,6 +7,9 @@
 
 get_header('societa');
 
+// Legge il parametro ?cat= per pre-selezionare una categoria (es: /sezioni?cat=allievi)
+$default_cat = isset($_GET['cat']) ? sanitize_title($_GET['cat']) : '';
+
 // Recupera le categorie Root (Livello 1)
 $root_categories = get_terms(array(
     'taxonomy'   => 'categoria_sezione',
@@ -386,10 +389,12 @@ if(!function_exists('print_sezione_panel')) {
                     $first_cat = true;
                     foreach ($struttura as $cat_name => $cat_data): 
                         $cat_slug = sanitize_title($cat_name);
-                        $active_class = $first_cat ? 'active' : '';
-                        $bg_color = $first_cat ? 'var(--c-primary)' : 'transparent';
-                        $text_color = $first_cat ? '#000' : 'white';
-                        $border_color = $first_cat ? 'var(--c-primary)' : 'white';
+                        // Attivo se corrisponde al parametro ?cat= oppure se è il primo e nessun parametro
+                        $is_active = ($default_cat && $cat_slug === $default_cat) || (!$default_cat && $first_cat);
+                        $active_class = $is_active ? 'active' : '';
+                        $bg_color     = $is_active ? 'var(--c-primary)' : 'transparent';
+                        $text_color   = $is_active ? '#000' : 'white';
+                        $border_color = $is_active ? 'var(--c-primary)' : 'white';
                     ?>
                         <button class="sez-tab-btn-l1 <?php echo $active_class; ?>" data-cat="<?php echo esc_attr($cat_slug); ?>" style="background-color: <?php echo $bg_color; ?>; color: <?php echo $text_color; ?>; border: 2px solid <?php echo $border_color; ?>; padding: 10px 30px; font-weight: bold; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: 0.3s; width: 220px;">
                             <?php echo esc_html(strtoupper($cat_name)); ?>
@@ -408,7 +413,8 @@ if(!function_exists('print_sezione_panel')) {
                     $first_cat = true;
                     foreach ($struttura as $cat_name => $cat_data): 
                         $cat_slug = sanitize_title($cat_name);
-                        $display_l2 = $first_cat ? 'block' : 'none';
+                        $is_active   = ($default_cat && $cat_slug === $default_cat) || (!$default_cat && $first_cat);
+                        $display_l2  = $is_active ? 'block' : 'none';
                     ?>
                         <div class="sezioni-tabs-l2-wrapper" id="tabs-l2-wrapper-<?php echo esc_attr($cat_slug); ?>" style="display: <?php echo $display_l2; ?>;">
                             
@@ -514,14 +520,15 @@ if(!function_exists('print_sezione_panel')) {
         <?php 
         $first_cat = true;
         foreach ($struttura as $cat_name => $cat_data): 
-            $cat_slug = sanitize_title($cat_name);
+            $cat_slug  = sanitize_title($cat_name);
+            $cat_active = ($default_cat && $cat_slug === $default_cat) || (!$default_cat && $first_cat);
             
             if ($cat_data['type'] == 'teams') {
                 $first_sq = true;
                 if(!empty($cat_data['items'])) {
                     foreach ($cat_data['items'] as $sq):
                         $sq_id = esc_attr($sq['id']);
-                        $display = ($first_cat && $first_sq) ? 'block' : 'none';
+                        $display = ($cat_active && $first_sq) ? 'block' : 'none';
                         ?>
                         <div id="content-sq-<?php echo $sq_id; ?>" class="sezioni-content-panel" style="display: <?php echo $display; ?>;">
                             <?php print_sezione_panel($sq); ?>
@@ -537,7 +544,7 @@ if(!function_exists('print_sezione_panel')) {
                     if(!empty($sub_teams)) {
                         foreach ($sub_teams as $sq):
                             $sq_id = esc_attr($sq['id']);
-                            $display = ($first_cat && $first_sub && $first_sq) ? 'block' : 'none';
+                            $display = ($cat_active && $first_sub && $first_sq) ? 'block' : 'none';
                             ?>
                             <div id="content-sq-<?php echo $sq_id; ?>" class="sezioni-content-panel" style="display: <?php echo $display; ?>;">
                                 <?php print_sezione_panel($sq); ?>
@@ -590,23 +597,17 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.addEventListener('click', function() {
             const cat = this.getAttribute('data-cat');
             
-            // 1. Resetta L1
             catBtns.forEach(b => setBtnInactive(b));
             setBtnActive(this);
 
-            // 2. Mostra L2 corretto
             l2Wrappers.forEach(w => w.style.display = 'none');
             contentPanels.forEach(panel => panel.style.display = 'none');
             
             const targetL2Wrapper = document.getElementById('tabs-l2-wrapper-' + cat);
             if(targetL2Wrapper) {
                 targetL2Wrapper.style.display = 'block';
-                
-                // Clicca automaticamente il primo bottone visibile in L2
                 const firstBtn = targetL2Wrapper.querySelector('.sez-tab-btn-subcat, .sez-tab-btn-team');
-                if(firstBtn) {
-                    firstBtn.click();
-                }
+                if(firstBtn) firstBtn.click();
             }
         });
     });
@@ -617,12 +618,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const sub = this.getAttribute('data-sub');
             const parentWrapperId = this.getAttribute('data-parent-wrapper');
             
-            // 1. Resetta le sottocategorie vicine
             const siblings = document.querySelectorAll('#' + parentWrapperId + ' .sez-tab-btn-subcat');
             siblings.forEach(b => setBtnInactive(b));
             setBtnActive(this);
 
-            // 2. Nascondi gli altri L3 e mostra questo
             const l3s = document.querySelectorAll('#' + parentWrapperId + ' .sezioni-tabs-l3');
             l3s.forEach(l => l.style.display = 'none');
             contentPanels.forEach(panel => panel.style.display = 'none');
@@ -630,11 +629,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const targetL3 = document.getElementById('tabs-l3-' + sub);
             if(targetL3) {
                 targetL3.style.display = 'flex';
-                // 3. Clicca la prima squadra di L3
                 const firstSqBtn = targetL3.querySelector('.sez-tab-btn-team');
-                if(firstSqBtn) {
-                    firstSqBtn.click();
-                }
+                if(firstSqBtn) firstSqBtn.click();
             }
         });
     });
@@ -645,19 +641,32 @@ document.addEventListener('DOMContentLoaded', function() {
             const sqId = this.getAttribute('data-sq');
             const parentContainerId = this.getAttribute('data-parent-wrapper');
             
-            // 1. Resetta i bottoni squadra vicini
             const siblings = document.querySelectorAll('#' + parentContainerId + ' .sez-tab-btn-team');
             siblings.forEach(b => setBtnInactive(b));
             setBtnActive(this);
 
-            // 2. Mostra contenuto
             contentPanels.forEach(panel => panel.style.display = 'none');
             const targetContent = document.getElementById('content-' + sqId);
-            if(targetContent) {
-                targetContent.style.display = 'block';
-            }
+            if(targetContent) targetContent.style.display = 'block';
         });
     });
+
+    // ── Attiva il tab corretto dall'URL hash (es: /sezioni#allievi) ──
+    var hash = window.location.hash.replace('#', '').toLowerCase();
+    if (hash) {
+        var matchBtn = null;
+        catBtns.forEach(function(btn) {
+            if (btn.getAttribute('data-cat') === hash) matchBtn = btn;
+        });
+        if (matchBtn) {
+            matchBtn.click();
+            // Piccolo scroll verso la sezione tabs
+            setTimeout(function() {
+                var hero = document.querySelector('.news-hero');
+                if (hero) window.scrollTo({ top: hero.offsetHeight - 80, behavior: 'smooth' });
+            }, 100);
+        }
+    }
 
 });
 </script>
