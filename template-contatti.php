@@ -58,8 +58,8 @@ get_header();
                 <div class="contatti-info-block">
                     <h3 class="contatti-label">SEGUICI</h3>
                     <div class="contatti-social">
-                        <a href="https://www.instagram.com/ac_taverne/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="https://www.facebook.com/actaverne" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/ac_taverne?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/share/1BZrVQUTfb/?mibextid=wwXIfr" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
                     </div>
                 </div>
             </div>
@@ -139,7 +139,7 @@ get_header();
                         <span class="stat-label">profili seguiti</span>
                     </div>
                 </div>
-                <a href="https://www.instagram.com/ac_taverne/" target="_blank" class="instagram-follow-btn">Segui</a>
+                <a href="https://www.instagram.com/ac_taverne?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="instagram-follow-btn">Segui</a>
             </div>
         </div>
 
