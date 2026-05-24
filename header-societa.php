@@ -134,7 +134,7 @@
         <nav id="hs-nav" class="main-navigation">
             <ul>
                 <li><a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>" <?php if(is_front_page() || is_page('ac-taverne')) echo 'class="current-menu-item"'; ?>>HOME</a></li>
-                <li class="menu-item-has-children">
+                <li class="menu-item-has-children <?php if(is_page('la-societa') || is_page('comitato') || is_page('club-dei-100')) echo 'current-menu-item'; ?>">
                     <a href="<?php echo esc_url( site_url('/la-societa') ); ?>">SOCIETÀ</a>
                     <ul class="sub-menu">
                         <li><a href="<?php echo esc_url( site_url('/la-societa') ); ?>">La Società</a></li>

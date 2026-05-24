@@ -92,7 +92,7 @@
             <!-- AC Taverne con sottomenu -->
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
                 <div class="mob-toggle" style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:18px 0;">
-                    <span style="color:white; font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">AC Taverne</span>
+                    <span style="color:var(--c-primary); font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">AC Taverne</span>
                     <i class="fa-solid fa-chevron-down" style="color:white; font-size:14px; transition: transform 0.3s;"></i>
                 </div>
                 <ul class="mob-submenu" style="display:none; list-style:none; padding: 0 0 10px 20px; margin:0;">
@@ -176,16 +176,16 @@
 					// Fallback manuale per rispecchiare l'immagine finché il menu non è creato su WP
 					?>
 					<ul>
-						<li><a href="#">News</a></li>
-						<li class="menu-item-has-children">
+						<li class="<?php if (is_page('news')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( site_url('/news') ); ?>">News</a></li>
+						<li class="menu-item-has-children <?php if (is_page('rosa') || is_page('staff') || is_singular('giocatore')) echo 'current-menu-item'; ?>">
 							<a href="#">Team</a>
 							<ul class="sub-menu">
 								<li><a href="<?php echo esc_url( site_url('/rosa') ); ?>">Rosa</a></li>
 								<li><a href="<?php echo esc_url( site_url('/staff') ); ?>">Staff</a></li>
 							</ul>
 						</li>
-						<li><a href="#">Stagione</a></li>
-						<li class="menu-item-has-children">
+						<li class="<?php if (is_page('stagione')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( site_url('/stagione') ); ?>">Stagione</a></li>
+						<li class="menu-item-has-children <?php if (is_page('organigramma') || is_page('storia') || is_page('progetto-sportivo')) echo 'current-menu-item'; ?>">
 							<a href="#">Club</a>
 							<ul class="sub-menu">
 								<li><a href="<?php echo esc_url( site_url('/organigramma') ); ?>">Organigramma</a></li>
@@ -193,10 +193,10 @@
 								<li><a href="<?php echo esc_url( site_url('/progetto-sportivo') ); ?>">Progetto</a></li>
 							</ul>
 						</li>
-						<li><a href="#">Partner</a></li>
-						<li><a href="<?php echo esc_url( site_url('/contatti') ); ?>" <?php if (is_page('contatti')) echo 'style="text-decoration: underline; text-underline-offset: 6px;"'; ?>>Contatti</a></li>
+						<li class="<?php if (is_page('partner') || is_page('sponsor')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( site_url('/partner') ); ?>">Partner</a></li>
+						<li class="<?php if (is_page('contatti')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( site_url('/contatti') ); ?>">Contatti</a></li>
 						<li><a href="https://actaverneshop.com/" target="_blank">Shop</a></li>
-						<li class="menu-item-has-children current-menu-item">
+						<li class="menu-item-has-children <?php if (is_page('ac-taverne') || is_page('societa') || is_page('scuola-calcio') || is_page('infrastruttura')) echo 'current-menu-item'; ?>">
 							<a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>">AC Taverne</a>
 							<ul class="sub-menu">
 								<li><a href="<?php echo esc_url( site_url('/societa') ); ?>">Società</a></li>
