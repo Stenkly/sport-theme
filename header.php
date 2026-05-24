@@ -196,7 +196,7 @@
 						<li class="<?php if (is_page('partner') || is_page('sponsor')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( site_url('/partner') ); ?>">Partner</a></li>
 						<li class="<?php if (is_page('contatti')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( site_url('/contatti') ); ?>">Contatti</a></li>
 						<li><a href="https://actaverneshop.com/" target="_blank">Shop</a></li>
-						<li class="menu-item-has-children <?php if (is_page('ac-taverne') || is_page('societa') || is_page('scuola-calcio') || is_page('infrastruttura')) echo 'current-menu-item'; ?>">
+						<li class="menu-item-ac-taverne menu-item-has-children <?php if (is_page('ac-taverne') || is_page('societa') || is_page('scuola-calcio') || is_page('infrastruttura')) echo 'current-menu-item'; ?>">
 							<a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>">AC Taverne</a>
 							<ul class="sub-menu">
 								<li><a href="<?php echo esc_url( site_url('/societa') ); ?>">Società</a></li>
