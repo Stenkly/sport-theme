@@ -223,7 +223,7 @@
         <div class="hp-card-overlay"></div>
         <div class="hp-card-content">
             <h2>PRIMA SQUADRA</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p>La massima espressione sportiva del nostro club. Passione, determinazione e spirito di squadra per onorare i colori gialloneri in ogni partita e puntare a traguardi sempre più alti.</p>
             <a href="<?php echo esc_url(site_url('/prima-squadra')); ?>" class="hp-btn">ENTRA</a>
             <div class="hp-card-social">
                 <a href="https://www.instagram.com/ac_taverne?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
@@ -241,7 +241,7 @@
         <div class="hp-card-overlay"></div>
         <div class="hp-card-content">
             <h2>AC TAVERNE</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p>Esplora il mondo societario giallonero. Trova le informazioni per la Scuola Calcio e le sezioni giovanili, i moduli di iscrizione, la nostra storia e i contatti della sede.</p>
             <a href="<?php echo esc_url(site_url('/ac-taverne')); ?>" class="hp-btn">ENTRA</a>
             <div class="hp-card-social">
                 <a href="https://www.instagram.com/ac_taverne/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
