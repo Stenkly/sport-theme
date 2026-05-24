@@ -80,7 +80,7 @@
             </li>
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <a href="<?php echo esc_url( site_url('/prima-squadra') ); ?>" style="display:block; color:var(--c-primary); font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">PRIMA SQUADRA</a>
+                <a href="<?php echo esc_url( site_url('/prima-squadra') ); ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">PRIMA SQUADRA</a>
             </li>
 
         </ul>

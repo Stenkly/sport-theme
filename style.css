@@ -1307,9 +1307,9 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     color: var(--c-black);
     text-decoration: none;
 }
-/* "PRIMA SQUADRA" giallo a destra */
+/* "PRIMA SQUADRA" bianco a destra */
 .hs-menu-switch a {
-    color: var(--c-primary) !important;
+    color: var(--c-white) !important;
 }
 
 /* Hamburger (nascosto su desktop) */
