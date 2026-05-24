@@ -117,52 +117,8 @@ get_header();
     </section>
 
     <!-- SEZIONE 4: Instagram Feed -->
-    <section class="contatti-instagram container">
-        <div class="instagram-header">
-            <div class="instagram-profile">
-                <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/img/logo.png" alt="AC Taverne" class="instagram-avatar" onerror="this.src='https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=80&auto=format&fit=crop';">
-                <div class="instagram-info">
-                    <h3 class="instagram-name">AC Taverne</h3>
-                    <p class="instagram-handle">@ac_taverne</p>
-                </div>
-                <div class="instagram-stats">
-                    <div class="instagram-stat">
-                        <span class="stat-number">688</span>
-                        <span class="stat-label">post</span>
-                    </div>
-                    <div class="instagram-stat">
-                        <span class="stat-number">4.2K</span>
-                        <span class="stat-label">follower</span>
-                    </div>
-                    <div class="instagram-stat">
-                        <span class="stat-number">95</span>
-                        <span class="stat-label">profili seguiti</span>
-                    </div>
-                </div>
-                <a href="https://www.instagram.com/ac_taverne?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="instagram-follow-btn">Segui</a>
-            </div>
-        </div>
-
-        <div class="instagram-grid">
-            <?php
-            $insta_imgs = array(
-                'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=400&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1508344928928-7137b29de218?q=80&w=400&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=400&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1553147573-0ff7d2b45053?q=80&w=400&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1518622358385-8ea7d0794bf6?q=80&w=400&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1522778526582-12002162a043?q=80&w=400&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1551280857-2b9eb02029c3?q=80&w=400&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?q=80&w=400&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1560272564-c83b66b1ad12?q=80&w=400&auto=format&fit=crop',
-            );
-            foreach ($insta_imgs as $idx => $img_url) :
-            ?>
-                <div class="instagram-item">
-                    <img src="<?php echo esc_url($img_url); ?>" alt="Instagram post <?php echo $idx + 1; ?>" loading="lazy">
-                </div>
-            <?php endforeach; ?>
-        </div>
+    <section class="ps-section container text-center" style="padding-top: 10px; padding-bottom: 50px;">
+        <?php echo do_shortcode('[instagram-feed]'); ?>
     </section>
 
 </main>

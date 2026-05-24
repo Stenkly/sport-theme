@@ -184,6 +184,11 @@ $btn_inactive = "padding: 10px 40px; font-weight: 700; text-transform: uppercase
         <?php sport_theme_render_global_sponsors(); ?>
     </section>
 
+    <!-- INSTAGRAM -->
+    <section class="ps-section container text-center" style="padding-top: 10px; padding-bottom: 50px;">
+        <?php echo do_shortcode('[instagram-feed]'); ?>
+    </section>
+
 </main>
 
 <?php get_footer(); ?>

@@ -378,79 +378,9 @@ get_header();
         <?php sport_theme_render_global_sponsors(); ?>
     </section>
 
-    <!-- INSTAGRAM MOCKUP GRID -->
-    <section class="ps-section container" style="padding-top: 10px; padding-bottom: 50px;">
-        
-        <!-- Instagram Header -->
-        <div class="ig-header" style="display: flex; align-items: center; justify-content: center; gap: 30px; margin-bottom: 20px; flex-wrap: wrap; text-align: left;">
-            
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo.png' ); ?>" alt="AC Taverne" style="width: 50px; height: 50px; border-radius: 50%; border: 1px solid #333; object-fit: contain; padding: 2px;">
-                <div>
-                    <div class="text-white" style="font-weight: 700; font-size: 16px; line-height: 1.2;">AC Taverne</div>
-                    <div style="color: #888; font-size: 13px;">@ac_taverne</div>
-                </div>
-            </div>
-
-            <div style="display: flex; gap: 20px; text-align: center;">
-                <div>
-                    <div class="text-white" style="font-weight: 700; font-size: 15px;">125</div>
-                    <div style="color: #888; font-size: 12px;">post</div>
-                </div>
-                <div>
-                    <div class="text-white" style="font-weight: 700; font-size: 15px;">4.3K</div>
-                    <div style="color: #888; font-size: 12px;">follower</div>
-                </div>
-                <div>
-                    <div class="text-white" style="font-weight: 700; font-size: 15px;">95</div>
-                    <div style="color: #888; font-size: 12px;">seguiti</div>
-                </div>
-            </div>
-
-            <div>
-                <a href="https://www.instagram.com/ac_taverne?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="btn" style="background-color: #0095f6; color: white; padding: 6px 20px; border-radius: 4px; font-weight: 600; font-size: 14px; display: inline-block;">Segui</a>
-            </div>
-
-        </div>
-
-        <!-- Instagram Grid 4x2 -->
-        <div class="ig-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;">
-            <?php 
-            // Array of placeholder images to mimic the mockup
-            $ig_images = [
-                'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=400',
-                'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=400',
-                'https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=400',
-                'https://images.unsplash.com/photo-1518605368461-1e1e38ce8ba9?q=80&w=400',
-                'https://images.unsplash.com/photo-1551280857-2b9bbe5260fc?q=80&w=400',
-                'https://images.unsplash.com/photo-1574629810360-7efbb1b37d40?q=80&w=400',
-                'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=400',
-                'https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=400'
-            ];
-            foreach($ig_images as $index => $img): 
-            ?>
-                <a href="https://www.instagram.com/ac_taverne?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" style="display: block; aspect-ratio: 1/1; position: relative; overflow: hidden;" class="ig-static-item">
-                    <div class="cover-bg" style="background-image: url('<?php echo esc_url($img); ?>'); width: 100%; height: 100%; transition: transform 0.4s ease;"></div>
-                    
-                    <!-- Icon in top right (like video/carousel) -->
-                    <div style="position: absolute; top: 10px; right: 10px; color: white; opacity: 0.9;">
-                        <?php if($index % 3 == 0) echo '<i class="fa-solid fa-play"></i>'; else echo '<i class="fa-solid fa-clone"></i>'; ?>
-                    </div>
-
-                    <div class="ig-overlay" style="position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); opacity: 0; transition: opacity 0.3s ease; display: flex; align-items: center; justify-content: center;">
-                        <i class="fa-brands fa-instagram" style="color: white; font-size: 32px;"></i>
-                    </div>
-                </a>
-            <?php endforeach; ?>
-        </div>
-        
-        <style>
-            .ig-static-item:hover .cover-bg { transform: scale(1.05); }
-            .ig-static-item:hover .ig-overlay { opacity: 1 !important; }
-            @media(max-width: 768px) {
-                .ig-grid { grid-template-columns: repeat(2, 1fr) !important; }
-            }
-        </style>
+    <!-- INSTAGRAM -->
+    <section class="ps-section container text-center" style="padding-top: 10px; padding-bottom: 50px;">
+        <?php echo do_shortcode('[instagram-feed]'); ?>
     </section>
 
 </main>
