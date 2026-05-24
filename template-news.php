@@ -139,7 +139,6 @@ get_header();
     <!-- INSTAGRAM PLUGIN -->
     <section class="ps-section container text-center" style="padding-top: 10px; padding-bottom: 50px;">
         <?php echo do_shortcode('[instagram-feed]'); ?>
-        <p style="font-size: 15px; color: #aaaaaa; margin-top: 20px;">[ Sezione Instagram: Installa il plugin "Smash Balloon" per attivare questa area ]</p>
     </section>
 
 </main>
