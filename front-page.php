@@ -77,6 +77,7 @@
         justify-content: center;
         text-decoration: none;
         min-height: 450px;
+        border: 2px solid #fff;
     }
     .hp-card img {
         position: absolute;
@@ -173,11 +174,11 @@
     .hp-footer-copy {
         background: #f2c800;
         color: #000;
-        font-size: 11px;
+        font-size: 13px;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
-        padding: 12px 20px;
+        padding: 16px 20px;
         display: flex;
         justify-content: center;
         align-items: center;
