@@ -223,7 +223,7 @@
         <div class="hp-card-content">
             <h2>PRIMA SQUADRA</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            <a href="<?php echo esc_url(site_url('/prima-squadra')); ?>" class="hp-btn">CALENDARIO</a>
+            <a href="<?php echo esc_url(site_url('/prima-squadra')); ?>" class="hp-btn">ENTRA</a>
             <div class="hp-card-social">
                 <a href="https://www.instagram.com/ac_taverne/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                 <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
@@ -241,7 +241,7 @@
         <div class="hp-card-content">
             <h2>AC TAVERNE</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            <a href="<?php echo esc_url(site_url('/ac-taverne')); ?>" class="hp-btn">CALENDARIO</a>
+            <a href="<?php echo esc_url(site_url('/ac-taverne')); ?>" class="hp-btn">ENTRA</a>
             <div class="hp-card-social">
                 <a href="https://www.instagram.com/ac_taverne/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                 <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
