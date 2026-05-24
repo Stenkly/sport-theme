@@ -347,6 +347,8 @@ function sport_theme_giocatore_metabox() {
 add_action('add_meta_boxes', 'sport_theme_giocatore_metabox');
 
 function sport_theme_giocatore_meta_html($post) {
+    $nome        = get_post_meta($post->ID, '_nome_calciatore', true);
+    $cognome     = get_post_meta($post->ID, '_cognome_calciatore', true);
     $numero      = get_post_meta($post->ID, '_numero_maglia', true);
     $data        = get_post_meta($post->ID, '_data_nascita', true);
     $altezza     = get_post_meta($post->ID, '_altezza', true);
@@ -359,6 +361,12 @@ function sport_theme_giocatore_meta_html($post) {
     ?>
     <style>.g-meta input { width:100%; max-width:400px; margin-bottom:10px; }</style>
     <div class="g-meta">
+        <label><b>Nome/i (es. Mario Achille):</b></label><br>
+        <input type="text" name="_nome_calciatore" value="<?php echo esc_attr($nome); ?>" placeholder="Lascia vuoto per rilevare dal titolo"><br>
+        
+        <label><b>Cognome/i (es. Casanova):</b></label><br>
+        <input type="text" name="_cognome_calciatore" value="<?php echo esc_attr($cognome); ?>" placeholder="Lascia vuoto per rilevare dal titolo"><br>
+
         <label><b>Numero Maglia (es. 10):</b></label><br>
         <input type="number" name="_numero_maglia" value="<?php echo esc_attr($numero); ?>">
         
@@ -387,7 +395,7 @@ function sport_theme_salva_giocatore_meta($post_id) {
     if (!isset($_POST['giocatore_meta_nonce']) || !wp_verify_nonce($_POST['giocatore_meta_nonce'], 'salva_giocatore_meta')) return;
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
     
-    $fields = ['_numero_maglia', '_data_nascita', '_altezza', '_peso', '_nazionalita', '_htp', '_shop_url'];
+    $fields = ['_nome_calciatore', '_cognome_calciatore', '_numero_maglia', '_data_nascita', '_altezza', '_peso', '_nazionalita', '_htp', '_shop_url'];
     foreach($fields as $field) {
         if(isset($_POST[$field])) {
             update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
@@ -395,6 +403,29 @@ function sport_theme_salva_giocatore_meta($post_id) {
     }
 }
 add_action('save_post_giocatore', 'sport_theme_salva_giocatore_meta');
+
+/**
+ * Ritorna nome e cognome separati per il giocatore, supportando i campi personalizzati
+ * per distinguere nomi e cognomi composti.
+ */
+function sport_theme_get_giocatore_split_name($post_id) {
+    $nome_custom = get_post_meta($post_id, '_nome_calciatore', true);
+    $cognome_custom = get_post_meta($post_id, '_cognome_calciatore', true);
+    
+    if (!empty($nome_custom) || !empty($cognome_custom)) {
+        return array(
+            'nome' => $nome_custom,
+            'cognome' => $cognome_custom
+        );
+    }
+    
+    $title = get_the_title($post_id);
+    $parti = explode(' ', $title, 2);
+    return array(
+        'nome' => $parti[0],
+        'cognome' => isset($parti[1]) ? $parti[1] : ''
+    );
+}
 
 /**
  * ----------------------------------------------------

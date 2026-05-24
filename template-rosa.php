@@ -101,9 +101,9 @@ get_header();
                 $ruolo_str   = sport_theme_get_singular_role($nome_ruolo);
                 
                 // Dividiamo il nome su due righe per emulare il design "Nome \n Cognome"
-                $parti_nome = explode(' ', get_the_title(), 2);
-                $nome_riga1 = $parti_nome[0];
-                $nome_riga2 = isset($parti_nome[1]) ? $parti_nome[1] : '';
+                $split_name = sport_theme_get_giocatore_split_name(get_the_ID());
+                $nome_riga1 = $split_name['nome'];
+                $nome_riga2 = $split_name['cognome'];
             ?>
             
             <!-- Card Giocatore Pixel Perfect -->

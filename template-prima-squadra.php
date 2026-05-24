@@ -281,9 +281,9 @@ get_header();
                         $shop_url  = get_post_meta(get_the_ID(), '_shop_url', true);
                         $ruoli     = get_the_terms(get_the_ID(), 'ruolo_giocatore');
                         $ruolo_str = $ruoli && !is_wp_error($ruoli) ? sport_theme_get_singular_role($ruoli[0]->name) : '-';
-                        $parti_nome = explode(' ', get_the_title(), 2);
-                        $nome_riga1 = $parti_nome[0];
-                        $nome_riga2 = isset($parti_nome[1]) ? $parti_nome[1] : '';
+                        $split_name = sport_theme_get_giocatore_split_name(get_the_ID());
+                        $nome_riga1 = $split_name['nome'];
+                        $nome_riga2 = $split_name['cognome'];
                 ?>
                 <a href="#" class="open-player-modal team-slide"
                    data-foto="<?php echo esc_attr($foto); ?>"

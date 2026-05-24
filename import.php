@@ -75,6 +75,8 @@ foreach ($players_data as $p) {
     wp_set_object_terms($post_id, $term_name, 'ruolo_giocatore');
 
     // Meta Data
+    update_post_meta($post_id, '_nome_calciatore', $p['nome']);
+    update_post_meta($post_id, '_cognome_calciatore', ucfirst(strtolower($p['cognome'])));
     update_post_meta($post_id, '_numero_maglia', $p['numero']);
     update_post_meta($post_id, '_data_nascita', $p['data']);
     update_post_meta($post_id, '_altezza', $p['alt']);
