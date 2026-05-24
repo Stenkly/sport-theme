@@ -138,32 +138,37 @@
     }
     .hp-card-content .hp-btn:hover { background: #fff; }
 
-    /* ── Footer ── */
-    .hp-footer {
-        background: #000;
-        text-align: center;
-        padding: 25px 20px 0;
-    }
-    .hp-footer-social {
+    /* ── Card Socials ── */
+    .hp-card-social {
         display: flex;
         justify-content: center;
-        gap: 15px;
-        margin-bottom: 20px;
+        gap: 12px;
+        margin-top: 25px;
     }
-    .hp-footer-social a {
-        width: 40px;
-        height: 40px;
+    .hp-card-social a {
+        width: 35px;
+        height: 35px;
         background: #f2c800;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         color: #000;
-        font-size: 18px;
+        font-size: 16px;
         text-decoration: none;
         transition: background 0.2s, color 0.2s;
     }
-    .hp-footer-social a:hover { background: #fff; color: #000; }
+    .hp-card-social a:hover {
+        background: #fff;
+        color: #000;
+    }
+
+    /* ── Footer ── */
+    .hp-footer {
+        background: #000;
+        text-align: center;
+        padding: 0;
+    }
     
     .hp-footer-copy {
         background: #f2c800;
@@ -172,10 +177,11 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
-        padding: 10px 20px;
+        padding: 12px 20px;
         display: flex;
         justify-content: center;
-        gap: 30px;
+        align-items: center;
+        gap: 5px;
         flex-wrap: wrap;
     }
     .hp-footer-copy a { color: #000; text-decoration: none; }
@@ -217,7 +223,14 @@
         <div class="hp-card-content">
             <h2>PRIMA SQUADRA</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            <a href="<?php echo esc_url(site_url('/prima-squadra')); ?>" class="hp-btn">ENTRA</a>
+            <a href="<?php echo esc_url(site_url('/prima-squadra')); ?>" class="hp-btn">CALENDARIO</a>
+            <div class="hp-card-social">
+                <a href="https://www.instagram.com/ac_taverne/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+            </div>
         </div>
     </div>
 
@@ -228,7 +241,12 @@
         <div class="hp-card-content">
             <h2>AC TAVERNE</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            <a href="<?php echo esc_url(site_url('/ac-taverne')); ?>" class="hp-btn">ENTRA</a>
+            <a href="<?php echo esc_url(site_url('/ac-taverne')); ?>" class="hp-btn">CALENDARIO</a>
+            <div class="hp-card-social">
+                <a href="https://www.instagram.com/ac_taverne/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+            </div>
         </div>
     </div>
 
@@ -236,16 +254,8 @@
 
 <!-- Footer -->
 <footer class="hp-footer">
-    <div class="hp-footer-social">
-        <a href="https://www.instagram.com/ac_taverne/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-        <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-        <a href="#" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-        <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-    </div>
     <div class="hp-footer-copy">
-        <span>Copyright &copy; AC TAVERNE</span>
-        <a href="<?php echo esc_url(site_url('/privacy-policy')); ?>">Privacy Policy</a>
+        <span>Copyright &copy; AC TAVERNE &middot; <a href="<?php echo esc_url(site_url('/privacy-policy')); ?>">Privacy Policy</a></span>
     </div>
 </footer>
 
