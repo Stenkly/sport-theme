@@ -341,21 +341,30 @@ function sport_theme_cpt_giocatore() {
 }
 add_action('init', 'sport_theme_cpt_giocatore');
 
+function sport_theme_admin_scripts($hook) {
+    global $post_type;
+    if ('giocatore' === $post_type) {
+        wp_enqueue_media();
+    }
+}
+add_action('admin_enqueue_scripts', 'sport_theme_admin_scripts');
+
 function sport_theme_giocatore_metabox() {
     add_meta_box('giocatore_meta', 'Dettagli Calciatore', 'sport_theme_giocatore_meta_html', 'giocatore', 'normal', 'high');
 }
 add_action('add_meta_boxes', 'sport_theme_giocatore_metabox');
 
 function sport_theme_giocatore_meta_html($post) {
-    $nome        = get_post_meta($post->ID, '_nome_calciatore', true);
-    $cognome     = get_post_meta($post->ID, '_cognome_calciatore', true);
-    $numero      = get_post_meta($post->ID, '_numero_maglia', true);
-    $data        = get_post_meta($post->ID, '_data_nascita', true);
-    $altezza     = get_post_meta($post->ID, '_altezza', true);
-    $peso        = get_post_meta($post->ID, '_peso', true);
-    $nazionalita = get_post_meta($post->ID, '_nazionalita', true);
-    $htp         = get_post_meta($post->ID, '_htp', true);
-    $shop_url    = get_post_meta($post->ID, '_shop_url', true);
+    $nome           = get_post_meta($post->ID, '_nome_calciatore', true);
+    $cognome        = get_post_meta($post->ID, '_cognome_calciatore', true);
+    $foto_esultanza = get_post_meta($post->ID, '_foto_esultanza', true);
+    $numero         = get_post_meta($post->ID, '_numero_maglia', true);
+    $data           = get_post_meta($post->ID, '_data_nascita', true);
+    $altezza        = get_post_meta($post->ID, '_altezza', true);
+    $peso           = get_post_meta($post->ID, '_peso', true);
+    $nazionalita    = get_post_meta($post->ID, '_nazionalita', true);
+    $htp            = get_post_meta($post->ID, '_htp', true);
+    $shop_url       = get_post_meta($post->ID, '_shop_url', true);
     
     wp_nonce_field('salva_giocatore_meta', 'giocatore_meta_nonce');
     ?>
@@ -366,6 +375,17 @@ function sport_theme_giocatore_meta_html($post) {
         
         <label><b>Cognome/i (es. Casanova):</b></label><br>
         <input type="text" name="_cognome_calciatore" value="<?php echo esc_attr($cognome); ?>" placeholder="Lascia vuoto per rilevare dal titolo"><br>
+
+        <label><b>Foto Esultanza / Azione (mostrata nella card della Rosa):</b></label><br>
+        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
+            <input type="text" id="foto_esultanza_url" name="_foto_esultanza" value="<?php echo esc_url($foto_esultanza); ?>" style="width:100%; max-width:300px; margin-bottom:0;" placeholder="Seleziona o carica un'immagine...">
+            <button type="button" id="upload_esultanza_btn" class="button button-secondary">Scegli Immagine</button>
+        </div>
+        <div id="esultanza_preview" style="margin-top: 5px; margin-bottom: 15px;">
+            <?php if (!empty($foto_esultanza)) : ?>
+                <img src="<?php echo esc_url($foto_esultanza); ?>" style="max-width: 150px; height: auto; border: 1px solid #ccc; display: block;">
+            <?php endif; ?>
+        </div>
 
         <label><b>Numero Maglia (es. 10):</b></label><br>
         <input type="number" name="_numero_maglia" value="<?php echo esc_attr($numero); ?>">
@@ -388,6 +408,25 @@ function sport_theme_giocatore_meta_html($post) {
         <br><label><b>URL Shop Personale (opzionale):</b></label><br>
         <input type="text" name="_shop_url" value="<?php echo esc_attr($shop_url); ?>" placeholder="https://...">
     </div>
+    
+    <script>
+    jQuery(document).ready(function($){
+        $('#upload_esultanza_btn').click(function(e) {
+            e.preventDefault();
+            var imageFrame = wp.media({
+                title: 'Seleziona Foto Esultanza',
+                multiple: false,
+                library: { type: 'image' }
+            }).on('select', function() {
+                var attachment = imageFrame.state().get('selection').first().toJSON();
+                $('#foto_esultanza_url').val(attachment.url);
+                
+                var preview = $('#esultanza_preview');
+                preview.html('<img src="' + attachment.url + '" style="max-width:150px; height:auto; border:1px solid #ccc; display:block;">');
+            }).open();
+        });
+    });
+    </script>
     <?php
 }
 
@@ -395,7 +434,7 @@ function sport_theme_salva_giocatore_meta($post_id) {
     if (!isset($_POST['giocatore_meta_nonce']) || !wp_verify_nonce($_POST['giocatore_meta_nonce'], 'salva_giocatore_meta')) return;
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
     
-    $fields = ['_nome_calciatore', '_cognome_calciatore', '_numero_maglia', '_data_nascita', '_altezza', '_peso', '_nazionalita', '_htp', '_shop_url'];
+    $fields = ['_nome_calciatore', '_cognome_calciatore', '_foto_esultanza', '_numero_maglia', '_data_nascita', '_altezza', '_peso', '_nazionalita', '_htp', '_shop_url'];
     foreach($fields as $field) {
         if(isset($_POST[$field])) {
             update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
