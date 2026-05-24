@@ -28,7 +28,9 @@ while ( have_posts() ) : the_post();
     $nome_riga1 = $split_name['nome'];
     $nome_riga2 = $split_name['cognome'];
     
-    $foto = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'full') : 'https://via.placeholder.com/600x800/111111/FFFFFF?text=' . get_the_title();
+    $foto_ritratto = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'full') : 'https://via.placeholder.com/600x800/111111/FFFFFF?text=' . get_the_title();
+    $foto_esultanza = get_post_meta(get_the_ID(), '_foto_esultanza', true);
+    $foto = !empty($foto_esultanza) ? $foto_esultanza : $foto_ritratto;
 
 ?>
 

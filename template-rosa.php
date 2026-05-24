@@ -92,7 +92,7 @@ get_header();
                 $ruolo_spec = get_post_meta(get_the_ID(), '_ruolo_specifico', true);
                 $foto_ritratto = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'large') : 'https://via.placeholder.com/300x400/222222/FFFFFF?text=' . get_the_title();
                 $foto_esultanza = get_post_meta(get_the_ID(), '_foto_esultanza', true);
-                $foto_card = !empty($foto_esultanza) ? $foto_esultanza : $foto_ritratto;
+                $foto_dettaglio = !empty($foto_esultanza) ? $foto_esultanza : $foto_ritratto;
                 
                 $data        = get_post_meta(get_the_ID(), '_data_nascita', true) ?: '-';
                 $altezza     = get_post_meta(get_the_ID(), '_altezza', true) ?: '-';
@@ -110,7 +110,7 @@ get_header();
             
             <!-- Card Giocatore Pixel Perfect -->
             <a href="#" class="open-player-modal" 
-               data-foto="<?php echo esc_attr($foto_ritratto); ?>" 
+               data-foto="<?php echo esc_attr($foto_dettaglio); ?>" 
                data-numero="<?php echo esc_attr($numero); ?>" 
                data-nome1="<?php echo esc_attr($nome_riga1); ?>" 
                data-nome2="<?php echo esc_attr($nome_riga2); ?>" 
@@ -123,7 +123,7 @@ get_header();
                data-ruolo="<?php echo esc_attr($ruolo_str); ?>"
                style="text-decoration: none; display: block; border-radius: 4px; overflow: hidden; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                 <div class="player-card" style="position: relative; aspect-ratio: 3/4; overflow: hidden; background-color: #111;">
-                    <div class="player-photo cover-bg" style="background-image: url('<?php echo esc_url($foto_card); ?>'); width: 100%; height: 100%; border: none; transition: transform 0.5s ease;"></div>
+                    <div class="player-photo cover-bg" style="background-image: url('<?php echo esc_url($foto_ritratto); ?>'); width: 100%; height: 100%; border: none; transition: transform 0.5s ease;"></div>
                     <!-- Velo Sfumato dal Basso -->
                     <div class="player-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%); pointer-events: none;"></div>
                     
