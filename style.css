@@ -176,12 +176,14 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .main-navigation ul > li.current_page_parent > a,
 .main-navigation ul > li > a.current-menu-item {
     text-decoration: underline !important;
+    text-decoration-color: var(--c-white) !important;
     text-underline-offset: 6px;
 }
 
 /* Sottolineatura mobile per menu attivo */
 .mob-active {
     text-decoration: underline !important;
+    text-decoration-color: var(--c-white) !important;
     text-underline-offset: 6px;
 }
 
