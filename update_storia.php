@@ -7,12 +7,13 @@ if (!$page) {
     die();
 }
 
-$subtitle = "La storia della prima squadra di Taverne affonda le sue radici negli anni Venti, quando nacque il Football Club Stella Taverne, prima vera formazione locale, seppur con notizie frammentarie e denominazioni variabili. Inizialmente si giocava nella zona di Livorno, lungo il corso del Vedeggio, con una caratteristica maglia nera impreziosita da una stella bianca sul petto. Successivamente il campo si spostò a Taverne Superiore, nel Comune di Sigirino, e negli anni Quaranta, con il F.C. Taverne, nell’area della stazione, tra il fiume e la ferrovia.";
+$subtitle = "La storia dell'AC Taverne affonda le sue radici negli anni Venti: un percorso di passione, successi e crescita costante.";
 
 $content = <<<HTML
 <h2>IDENTITÀ DEL CLUB</h2>
 <h3>Nel secondo dopoguerra nacque l’Associazione Calcio Taverne, sostenuta da grande entusiasmo popolare.</h3>
-<p>La società divenne un punto di riferimento sportivo per tutta la valle, grazie a un ambiente favorevole, buoni allenatori e una solida comunità. A questo periodo, definito “eroico”, sono legati nomi importanti come Mario Banfi, Flaminio Petrocchi e Gino Gova, mentre già negli anni Trenta si distinsero a livello regionali i fratelli Zambelli, in particolare il portiere Emilio, soprannominato “Zamorra”.</p>
+<p>Le origini della prima squadra di Taverne affondano le proprie radici negli anni Venti, con la nascita del Football Club Stella Taverne, prima vera formazione locale. Inizialmente si giocava nella zona di Livorno, lungo il corso del Vedeggio, indossando una maglia nera con una stella bianca sul petto. Negli anni successivi, il campo fu spostato a Taverne Superiore e, negli anni Quaranta, nell'area della stazione.</p>
+<p>La società divenne rapidamente un punto di riferimento sportivo per tutta la valle, grazie a un ambiente favorevole, ottimi allenatori e ad una solida comunità. A questo periodo eroico sono legati nomi importanti come Mario Banfi, Flaminio Petrocchi e Gino Gova, mentre già negli anni Trenta si distinsero i fratelli Zambelli, in particolare il portiere Emilio, detto "Zamorra".</p>
 <p>Un momento chiave arrivò nel 1950, quando l’AC Taverne entrò ufficialmente nella Federazione calcistica ticinese partecipando al campionato di Quarta Divisione, ottenendo subito la promozione in Terza. La crescita proseguì fino alla stagione 1956-57, in cui, sotto la guida di Bruno Passardi, la squadra conquistò il titolo di campione di Terza Divisione. L’anno successivo, con Dino Leoni alla guida, il Taverne si confermò vincendo sia il campionato sia il Trofeo Ticino, segnando una delle pagine più significative della sua storia.</p>
 
 <h2>RUOLO DELLA PRIMA SQUADRA</h2>
