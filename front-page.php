@@ -219,7 +219,7 @@
 
     <!-- Prima Squadra -->
     <div class="hp-card">
-        <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1200&auto=format&fit=crop" alt="Prima Squadra" loading="lazy">
+        <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/prima-squadra-gateway.jpg'); ?>" alt="Prima Squadra" loading="lazy">
         <div class="hp-card-overlay"></div>
         <div class="hp-card-content">
             <h2>PRIMA SQUADRA</h2>
