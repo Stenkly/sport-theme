@@ -179,12 +179,11 @@ $btn_inactive = "padding: 10px 40px; font-weight: 700; text-transform: uppercase
                 else :
                     // Mockup Segnaposto per STORIA
                 ?>
-                    <figure class="wp-block-image"><img src="https://images.unsplash.com/photo-1518622358385-8ea7d0794bf6?q=80&w=800&auto=format&fit=crop" style="filter: grayscale(1);"></figure>
-                    <figure class="wp-block-image"><img src="https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=1000&auto=format&fit=crop" style="filter: grayscale(1);"></figure>
-                    <figure class="wp-block-image"><img src="https://images.unsplash.com/photo-1551280857-2b9eb02029c3?q=80&w=800&auto=format&fit=crop" style="filter: grayscale(1);"></figure>
-                    <figure class="wp-block-image"><img src="https://images.unsplash.com/photo-1522778526582-12002162a043?q=80&w=800&auto=format&fit=crop" style="filter: grayscale(1);"></figure>
-                    <figure class="wp-block-image"><img src="https://images.unsplash.com/photo-1508344928928-7137b29de218?q=80&w=800&auto=format&fit=crop" style="filter: grayscale(1);"></figure>
-                    <figure class="wp-block-image"><img src="https://images.unsplash.com/photo-1553147573-0ff7d2b45053?q=80&w=800&auto=format&fit=crop" style="filter: grayscale(1);"></figure>
+                    <figure class="wp-block-image"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/storia/storia-1.jpg'); ?>" alt="Storia 1"></figure>
+                    <figure class="wp-block-image"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/storia/storia-2.jpg'); ?>" alt="Storia 2"></figure>
+                    <figure class="wp-block-image"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/storia/storia-3.jpg'); ?>" alt="Storia 3"></figure>
+                    <figure class="wp-block-image"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/storia/storia-4.jpg'); ?>" alt="Storia 4"></figure>
+                    <figure class="wp-block-image"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/storia/storia-5.jpg'); ?>" alt="Storia 5"></figure>
                 <?php endif; ?>
             </div>
         <?php else : ?>
