@@ -748,11 +748,17 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     margin-bottom: 15px;
     line-height: 1.4;
 }
-.club-content p {
+.club-content p, .club-content ul {
     color: #cccccc;
     font-size: 13px;
     line-height: 1.6;
     margin-bottom: 20px;
+}
+.club-content ul {
+    padding-left: 20px;
+}
+.club-content li {
+    margin-bottom: 10px;
 }
 
 /* --- WORDPRESS GALLERY IN CLUB PAGE --- */

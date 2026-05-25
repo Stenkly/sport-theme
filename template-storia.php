@@ -17,112 +17,45 @@ get_header();
         } else {
             $hero_image_url = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=2000&auto=format&fit=crop';
         }
-        $subtitle = get_the_excerpt();
+        
+        $hero_title = get_the_title();
+        if ( strtolower($hero_title) === 'storia' ) {
+            $hero_title = 'Storia del Club';
+        }
+
+        // Setup active states for the submenu
+        $is_storia = true;
+        $is_progetto = false;
+
+        // Style helpers
+        $btn_active = "padding: 10px 40px; font-weight: 700; text-transform: uppercase; font-size: 14px; text-decoration: none; border: 2px solid var(--c-primary); background-color: var(--c-primary); color: var(--c-black);";
+        $btn_inactive = "padding: 10px 40px; font-weight: 700; text-transform: uppercase; font-size: 14px; text-decoration: none; border: 2px solid white; background-color: transparent; color: white; transition: all 0.3s;";
         ?>
-        <style>
-        .storia-hero-title {
-            font-size: 70px;
-            font-weight: 800;
-            text-transform: uppercase;
-            margin: 0 0 15px 0;
-            letter-spacing: 2px;
-            color: white;
-        }
-        .club-submenu {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .club-submenu a {
-            padding: 10px 30px;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 13px;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-        .club-submenu a.active-btn {
-            border: 2px solid var(--c-primary);
-            background-color: var(--c-primary);
-            color: var(--c-black);
-        }
-        .club-submenu a.outline-btn {
-            border: 2px solid white;
-            background-color: transparent;
-            color: white;
-            transition: all 0.3s;
-        }
-        @media (max-width: 768px) {
-            .storia-hero-title { font-size: 36px; letter-spacing: 1px; }
-            .club-submenu { gap: 8px; }
-            .club-submenu a { padding: 8px 18px; font-size: 11px; }
-            .storia-hero-content { bottom: 20px !important; }
-        }
-        @media (max-width: 480px) {
-            .storia-hero-title { font-size: 28px; }
-            .club-submenu { flex-direction: column; gap: 8px; }
-            .club-submenu a { text-align: center; }
-        }
-        </style>
 
         <div class="club-hero-wrapper">
-            <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block;" alt="<?php echo esc_attr(get_the_title()); ?>">
-            <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 80%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
+            <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block;" alt="<?php echo esc_attr($hero_title); ?>">
+            <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 70%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
             
-            <div class="news-hero-content storia-hero-content container" style="position: absolute; bottom: 60px; left: 0; right: 0; text-align: left;">
-                <h1 class="club-hero-title"><?php echo get_the_title(); ?></h1>
+            <div class="news-hero-content container" style="position: absolute; bottom: 40px; left: 0; right: 0; text-align: left;">
+                <h1 class="club-hero-title"><?php echo esc_html($hero_title); ?></h1>
+                
+                <?php if (has_excerpt()) : ?>
+                <p class="hero-subtitle text-white" style="font-size: 22px; font-weight: 700; text-transform: uppercase; max-width: 800px; margin-top: 15px; line-height: 1.4;"><?php echo get_the_excerpt(); ?></p>
+                <?php endif; ?>
 
-                <hr style="border: 0; border-top: 2px solid white; margin: 15px 0;">
-
-                <div class="club-submenu">
-                    <a href="<?php echo esc_url( site_url('/organigramma') ); ?>" class="outline-btn">ORGANIGRAMMA</a>
-                    <a href="<?php echo esc_url( site_url('/storia') ); ?>" class="active-btn">STORIA</a>
-                    <a href="<?php echo esc_url( site_url('/progetto-sportivo') ); ?>" class="outline-btn">PROGETTO SPORTIVO</a>
+                <hr style="border: 0; border-top: 2px solid white; margin: 20px 0;">
+                
+                <div class="page-submenu" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                    <a href="<?php echo esc_url( site_url('/organigramma') ); ?>" class="btn-outline-hover" style="<?php echo $btn_inactive; ?>">ORGANIGRAMMA</a>
+                    <a href="<?php echo esc_url( site_url('/storia') ); ?>" class="<?php echo $is_storia ? '' : 'btn-outline-hover'; ?>" style="<?php echo $is_storia ? $btn_active : $btn_inactive; ?>">STORIA</a>
+                    <a href="<?php echo esc_url( site_url('/progetto-sportivo') ); ?>" class="<?php echo $is_progetto ? '' : 'btn-outline-hover'; ?>" style="<?php echo $is_progetto ? $btn_active : $btn_inactive; ?>">PROGETTO SPORTIVO</a>
                 </div>
             </div>
         </div>
     </section>
 
-
-    <section class="ps-section container" style="padding-top: 60px; padding-bottom: 60px;">
-        <style>
-            .storia-content h2 {
-                color: var(--c-primary);
-                font-size: 28px;
-                font-weight: 700;
-                text-transform: uppercase;
-                margin-top: 60px;
-                margin-bottom: 20px;
-                letter-spacing: 1px;
-            }
-            .storia-content h3 {
-                color: white;
-                font-size: 18px;
-                font-weight: 700;
-                text-transform: uppercase;
-                margin-bottom: 15px;
-                line-height: 1.4;
-            }
-            .storia-content p {
-                color: #ffffff;
-                font-size: 15px;
-                line-height: 1.6;
-                font-weight: 400;
-                margin-bottom: 20px;
-            }
-            .storia-content ul {
-                color: #ffffff;
-                font-size: 15px;
-                line-height: 1.6;
-                font-weight: 400;
-                margin-bottom: 20px;
-                padding-left: 20px;
-            }
-            .storia-content li {
-                margin-bottom: 10px;
-            }
-        </style>
-        <div class="storia-content" style="max-width: 100%;">
+    <!-- CONTENT -->
+    <div class="container club-content" style="padding-top: 60px; padding-bottom: 30px;">
             <?php 
             if ( have_posts() ) :
                 while ( have_posts() ) : the_post();
@@ -168,8 +101,7 @@ get_header();
                 endwhile;
             endif;
             ?>
-        </div>
-    </section>
+    </div>
 
     <!-- DYNAMIC FOTOGALLERY (dal Custom Post Type Foto Gallery) -->
     <?php
