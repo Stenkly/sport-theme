@@ -10,19 +10,24 @@ if (!$page) {
 $subtitle = "La storia della prima squadra di Taverne affonda le sue radici negli anni Venti, quando nacque il Football Club Stella Taverne, prima vera formazione locale, seppur con notizie frammentarie e denominazioni variabili. Inizialmente si giocava nella zona di Livorno, lungo il corso del Vedeggio, con una caratteristica maglia nera impreziosita da una stella bianca sul petto. Successivamente il campo si spostò a Taverne Superiore, nel Comune di Sigirino, e negli anni Quaranta, con il F.C. Taverne, nell’area della stazione, tra il fiume e la ferrovia.";
 
 $content = <<<HTML
-<h3>IDENTITÀ DEL CLUB</h3>
-<h4>Nel secondo dopoguerra nacque l’Associazione Calcio Taverne, sostenuta da grande entusiasmo popolare.</h4>
-<p>La società divenne un punto di riferimento sportivo per tutta la valle, grazie a un ambiente favorevole, buoni allenatori e una solida comunità. A questo periodo, definito “eroico”, sono legati nomi importanti come Mario Banfi, Flaminio Petrocchi e Gino Gova, mentre già negli anni Trenta si distinsero a livello regionale i fratelli Zambelli, in particolare il portiere Emilio, soprannominato “Zamorra”.</p>
+<h2>IDENTITÀ DEL CLUB</h2>
+<h3>Nel secondo dopoguerra nacque l’Associazione Calcio Taverne, sostenuta da grande entusiasmo popolare.</h3>
+<p>La società divenne un punto di riferimento sportivo per tutta la valle, grazie a un ambiente favorevole, buoni allenatori e una solida comunità. A questo periodo, definito “eroico”, sono legati nomi importanti come Mario Banfi, Flaminio Petrocchi e Gino Gova, mentre già negli anni Trenta si distinsero a livello regionali i fratelli Zambelli, in particolare il portiere Emilio, soprannominato “Zamorra”.</p>
 <p>Un momento chiave arrivò nel 1950, quando l’AC Taverne entrò ufficialmente nella Federazione calcistica ticinese partecipando al campionato di Quarta Divisione, ottenendo subito la promozione in Terza. La crescita proseguì fino alla stagione 1956-57, in cui, sotto la guida di Bruno Passardi, la squadra conquistò il titolo di campione di Terza Divisione. L’anno successivo, con Dino Leoni alla guida, il Taverne si confermò vincendo sia il campionato sia il Trofeo Ticino, segnando una delle pagine più significative della sua storia.</p>
 
-<h3>EVOLUZIONE NEL TEMPO</h3>
-<h4>Nel corso della sua storia, il Taverne ha costruito un percorso solido e coerente, caratterizzato da tappe significative e da una crescita costante nel panorama calcistico regionale e nazionale.</h4>
+<h2>RUOLO DELLA PRIMA SQUADRA</h2>
+<h3>La prima squadra come traino dell'intera attività agonistica e societaria dell'AC Taverne.</h3>
+<p>La prima squadra rappresenta la vetrina principale del club e il traguardo naturale per tutti i giovani che crescono nel settore giovanile. Nel corso degli anni, essa ha svolto il ruolo di traino per l'intera comunità sportiva di Taverne, ispirando generazioni di atleti locali e promuovendo l'attaccamento ai colori gialloneri.</p>
+<p>Oggi, la prima squadra partecipa a campionati di livello nazionale, portando con orgoglio il nome del club e del territorio oltre i confini regionali, sempre guidata dai valori storici di lealtà, dedizione e passione.</p>
+
+<h2>EVOLUZIONE NEL TEMPO</h2>
+<h3>Nel corso della sua storia, il Taverne ha costruito un percorso solido e coerente, caratterizzato da tappe significative e da una crescita costante nel panorama calcistico regionale e nazionale.</h3>
 <p>Tra gli anni Ottanta e Novanta, la prima squadra ha partecipato con regolarità ai campionati di Seconda e Terza Lega, consolidando la propria presenza e gettando le basi per i successi futuri. Un primo importante salto di qualità si registra nella stagione 2009-2010, quando il Taverne conquista il terzo rango in Seconda Lega regionale ottenendo la promozione in Seconda Lega Interregionale. Si tratta di un traguardo storico, che segna l’ingresso del club, a partire dal 2010, in un contesto di competizione nazionale.</p>
 <p>Nel campionato 2011-2012, il Taverne tenta la scalata alla Seconda Lega élite, categoria già raggiunta con merito due anni prima e sfortunatamente persa nella stagione successiva. L’annata seguente, 2012-2013, si apre con segnali positivi: la squadra si presenta briosa e promettente, mantenendo il primo posto in classifica al termine del girone d’andata.</p>
 <p>A partire dalla stagione 2019-2020, il Taverne milita stabilmente in Prima Lega Classic, raggiungendo il livello più alto nella storia della società dopo alcune stagioni di consolidamento nei campionati interregionali.</p>
 
-<h3>IL SETTORE GIOVANILE E I SUCCESSI</h3>
-<h4>Parallelamente ai risultati della prima squadra, il club ha sempre attribuito grande importanza al settore giovanile. I ragazzi delle categorie Allievi, sempre più numerosi, rappresentano una risorsa fondamentale e una prospettiva concreta per il futuro.</h4>
+<h2>IL SETTORE GIOVANILE E I SUCCESSI</h2>
+<h3>Parallelamente ai risultati della prima squadra, il club ha sempre attribuito grande importanza al settore giovanile. I ragazzi delle categorie Allievi, sempre più numerosi, rappresentano una risorsa fondamentale e una prospettiva concreta per il futuro.</h3>
 <p>Il loro sviluppo è affidato a dirigenti, allenatori e preparatori che privilegiano una crescita progressiva e duratura rispetto ai risultati immediati.</p>
 <p>Nel corso degli anni, il club ha collezionato numerosi successi, tra cui:</p>
 <ul>
@@ -47,4 +52,4 @@ wp_update_post([
     'post_excerpt' => $subtitle
 ]);
 
-echo "Storia aggiornata con successo!";
+echo "Storia del Club aggiornata con successo!";
