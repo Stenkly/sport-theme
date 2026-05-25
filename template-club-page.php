@@ -71,10 +71,13 @@ $btn_inactive = "padding: 10px 40px; font-weight: 700; text-transform: uppercase
                     echo '<h2>RUOLO DELLA PRIMA SQUADRA</h2>' . $lorem_h3 . $lorem_p;
                     echo '<h2>EVOLUZIONE NEL TEMPO</h2>' . $lorem_h3 . $lorem_p;
                 } else if ($current_slug === 'progetto-sportivo' || strpos($titolo_check, 'progetto') !== false) {
-                    echo '<h2>VISIONE, OBIETTIVI E VALORI SPORTIVI</h2>' . $lorem_h3 . $lorem_p;
-                    echo '<h2>FILOSOFIA DI GIOCO</h2>' . $lorem_h3 . $lorem_p;
-                    echo '<h2>OBIETTIVI SPORTIVI</h2>' . $lorem_h3 . $lorem_p;
-                    echo '<h2>VALORI</h2>' . $lorem_h3 . $lorem_p;
+                    echo '<h3>VISIONE & OBIETTIVI</h3>';
+                    echo '<h4>La Prima Squadra del Taverne si fonda su una filosofia chiara: unire un calcio dinamico, giovane e di qualità.</h4>';
+                    echo '<p>Elemento distintivo è proprio la giovane età del gruppo, punto di forza su cui costruire presente e futuro. L’obiettivo è esprimere un gioco moderno e propositivo, capace di valorizzare il talento e favorire la crescita dei giocatori, sempre nel rispetto dei valori fondamentali dello sport.</p>';
+                    echo '<h3>VALORI E SVILUPPO DEI TALENTI</h3>';
+                    echo '<h4>Particolare attenzione è rivolta allo sviluppo dei giovani talenti del panorama ticinese e non solo.</h4>';
+                    echo '<p>Il nostro obiettivo è accompagnare i ragazzi in un percorso che mira a portarli al livello più alto possibile. Eleganza, rispetto e spirito di sacrificio guidano ogni allenamento e ogni partita. Il lavoro quotidiano, svolto con serietà e determinazione, è la base su cui costruire prestazioni convincenti.</p>';
+                    echo '<p>Giocare bene non è solo un obiettivo estetico, ma il modo più autentico per rappresentare e onorare gli ideali del club.</p>';
                 }
             } else {
                 the_content();
