@@ -704,7 +704,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 .fm-col-links a { margin-bottom: 10px; font-size: 14px; }
 
-.footer-bottom-bar { background-color: var(--c-primary); text-align: center; padding: 15px 20px; }
+.footer-bottom-bar { background-color: var(--c-light-yellow); text-align: center; padding: 15px 20px; }
 .footer-bottom-bar p { margin: 0; color: #000; font-size: 12px; font-weight: 700; }
 .footer-bottom-bar a { color: #000; text-decoration: none; }
 .footer-bottom-bar a:hover { text-decoration: underline; }
@@ -1926,7 +1926,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 /* Fascia gialla copyright */
 .hs-footer-bar {
-    background-color: var(--c-primary);
+    background-color: var(--c-light-yellow);
     text-align: center;
     padding: 12px 20px;
 }
