@@ -693,6 +693,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 /* --- FOOTER GLOBALE (MEGA) --- */
 .site-footer { background-color: #000; border-top: 1px solid #222; }
 .footer-mega { display: grid; grid-template-columns: 1.5fr repeat(4, 1fr); gap: 30px; padding: 60px 20px; }
+.fm-col { text-align: left; }
 .fm-col p { color: #ffffff; font-size: 13px; line-height: 1.8; margin: 0; display: block; }
 .fm-col a { color: #ffffff; font-size: 13px; line-height: 1.8; text-decoration: none; margin: 0; display: block; transition: color 0.3s; }
 .fm-col a:hover { color: var(--c-primary); }
@@ -719,6 +720,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 @media (max-width: 768px) {
     .footer-mega { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+    .fm-col, .fm-col-1 { text-align: center; }
     .fm-social { justify-content: center; }
 }
 
