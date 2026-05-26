@@ -555,7 +555,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .player-name { font-size: 17px; font-weight: 700; text-transform: uppercase; }
 
 /* Sponsors */
-.ps-sponsors { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 30px; padding: 40px 0; border-top: 1px solid var(--c-gray); border-bottom: 1px solid var(--c-gray); }
+.ps-sponsors { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 30px; padding: 40px 0; border-bottom: 3px solid var(--c-gray); }
 .ps-sponsors img { max-height: 80px; opacity: 1; transition: transform 0.3s; }
 .ps-sponsors img:hover { transform: scale(1.05); }
 
