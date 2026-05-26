@@ -43,7 +43,7 @@
             <div class="fm-col fm-col-links">
                 <a href="<?php echo site_url('/contatti'); ?>"><b>Contatti</b></a>
                 <a href="<?php echo site_url('/shop'); ?>"><b>Shop</b></a>
-                <a href="<?php echo site_url('/'); ?>" style="color: var(--c-light-yellow);"><b>AC Taverne</b></a>
+                <a href="<?php echo site_url('/'); ?>" style="color: var(--c-primary);"><b>AC Taverne</b></a>
             </div>
         </div>
 
