@@ -697,12 +697,12 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .fm-col a:hover { color: var(--c-primary); }
 .fm-col h4 { color: white; font-size: 16px; font-weight: 800; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
 
-.fm-col-1 { text-align: center; }
-.fm-col-1 p { margin-bottom: 20px; }
+.fm-col-1 { text-align: left; }
+.fm-col-1 p { margin-bottom: 12px; line-height: 1.5; }
 .fm-col-1 a { color: var(--c-light-yellow); text-decoration: none; transition: color 0.3s; }
 .fm-col-1 a:hover { color: white; }
 
-.fm-social { display: flex; gap: 15px; justify-content: center; }
+.fm-social { display: flex; gap: 10px; justify-content: flex-start; }
 .fm-social a { display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--c-light-yellow); background-color: transparent; color: var(--c-light-yellow); font-size: 16px; transition: all 0.3s; }
 .fm-social a:hover { background-color: var(--c-light-yellow); color: #000; transform: scale(1.1); }
 
