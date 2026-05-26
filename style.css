@@ -701,8 +701,8 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 .fm-col-1 { text-align: left; }
 .fm-col-1 p { margin-bottom: 12px; line-height: 1.5; font-size: 15px; }
-.fm-col-1 a { color: #ffffff; font-size: 15px; text-decoration: none; transition: color 0.3s; }
-.fm-col-1 a:hover { color: var(--c-primary); }
+.fm-col-1 a { color: var(--c-primary); font-size: 15px; text-decoration: none; transition: color 0.3s; }
+.fm-col-1 a:hover { color: #ffffff; }
 
 .fm-social { display: flex; gap: 10px; justify-content: flex-start; }
 .fm-social a { display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--c-primary); background-color: var(--c-primary); color: #000; font-size: 16px; transition: all 0.3s; }
