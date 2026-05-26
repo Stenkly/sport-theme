@@ -11,7 +11,7 @@
         <div class="footer-mega container">
             <div class="fm-col fm-col-1">
                 <p>AC TAVERNE<br>
-                Via Taverne 2<br>
+                Via Traversone 2<br>
                 CP 703 - 6807 Taverne<br>
                 <a href="mailto:info@actaverne.com">info@actaverne.com</a><br>
                 <a href="mailto:scoutingactaverne@gmail.com">scoutingactaverne@gmail.com</a></p>
