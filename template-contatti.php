@@ -42,7 +42,9 @@ get_header();
             <div class="contatti-info">
                 <div class="contatti-info-block">
                     <h3 class="contatti-label">EMAIL</h3>
-                    <p><a href="mailto:primasquadra@actaverne.ch">primasquadra@actaverne.ch</a></p>
+                    <p style="margin-bottom: 15px;"><strong>INFO:</strong><br><a href="mailto:primasquadra@actaverne.com">primasquadra@actaverne.com</a></p>
+                    <p style="margin-bottom: 15px;"><strong>COMUNICAZIONE:</strong><br><a href="mailto:comunicazione@actaverne.com">comunicazione@actaverne.com</a></p>
+                    <p style="margin-bottom: 0;"><strong>SCOUTING:</strong><br><a href="mailto:scouting@actaverne.com">scouting@actaverne.com</a></p>
                 </div>
 
                 <div class="contatti-info-block">
