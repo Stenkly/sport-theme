@@ -705,8 +705,8 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .fm-col-1 a:hover { color: #ffffff; }
 
 .fm-social { display: flex; gap: 10px; justify-content: flex-start; }
-.fm-social a { display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--c-primary); background-color: var(--c-primary); color: #000; font-size: 16px; transition: all 0.3s; }
-.fm-social a:hover { background-color: transparent; color: var(--c-primary); transform: scale(1.1); }
+.fm-social a { display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--c-light-yellow); background-color: var(--c-light-yellow); color: #000; font-size: 16px; transition: all 0.3s; }
+.fm-social a:hover { background-color: transparent; color: var(--c-light-yellow); border-color: var(--c-light-yellow); transform: scale(1.1); }
 
 .fm-col-links a { margin-bottom: 10px; font-size: 14px; }
 
