@@ -2383,6 +2383,8 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 
 .article-body-wrapper .entry-content p {
+    font-size: 22px;
+    line-height: 1.8;
     margin-bottom: 25px;
 }
 
@@ -2429,10 +2431,12 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .article-body-wrapper .entry-content ol {
     margin-bottom: 25px;
     padding-left: 20px;
+    font-size: 22px;
 }
 
 .article-body-wrapper .entry-content li {
     margin-bottom: 10px;
+    font-size: 22px;
 }
 
 /* Social Share Box */
