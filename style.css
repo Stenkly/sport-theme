@@ -575,6 +575,12 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .vs { font-weight: 700; color: var(--c-white); font-size: 18px; }
 
 /* Spaced out logo layout for Next Matches cards */
+.match-card:not(.match-row) .match-date {
+    font-size: 22px;
+}
+.match-card:not(.match-row) .match-venue {
+    font-size: 22px;
+}
 .match-card:not(.match-row) .match-teams {
     display: grid;
     grid-template-columns: 1.5fr 0.8fr 0.5fr 0.8fr 1.5fr;
