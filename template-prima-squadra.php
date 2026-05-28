@@ -39,7 +39,7 @@ get_header();
         <h2 class="section-title text-white" style="margin-bottom:30px; font-weight:800;">FOTOGALLERY</h2>
 
         <!-- Gallery carousel -->
-        <div id="gallery-carousel" style="display:flex; gap:16px; overflow:hidden; scroll-behavior:smooth;">
+        <div id="gallery-carousel" style="display:flex; gap:12px; overflow:hidden; scroll-behavior:smooth;">
             <?php
             $gallery_query = new WP_Query(array(
                 'post_type'      => 'fotogallery',
@@ -96,7 +96,7 @@ get_header();
 
             function slideWidth() {
                 var s = car.querySelector('.gallery-slide');
-                return s ? s.offsetWidth + 16 : 0;
+                return s ? s.offsetWidth + 12 : 0;
             }
 
             function updateActiveState(index) {
