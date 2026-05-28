@@ -8,7 +8,7 @@ Version: 1.0.3
 Text Domain: sport-theme
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700;800;900&display=swap');
 
 :root {
     --c-primary: #F2E302;       /* YELLOW */
@@ -150,7 +150,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 .main-navigation ul li a {
     font-size: 13px; /* Aumentato un po' il font size */
-    font-weight: 700;
+    font-weight: 800;
     text-transform: uppercase;
     color: var(--c-white);
     letter-spacing: 1px;

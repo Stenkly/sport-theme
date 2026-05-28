@@ -10,8 +10,8 @@
 
         <div class="footer-mega container">
             <div class="fm-col fm-col-1">
-                <p>AC TAVERNE<br>
-                Via Traversone 2<br>
+                <h4>AC TAVERNE</h4>
+                <p>Via Traversone 2<br>
                 CP 703 - 6807 Taverne<br>
                 <a href="mailto:info@actaverne.com">info@actaverne.com</a>
                 <a href="mailto:scoutingactaverne@gmail.com">scoutingactaverne@gmail.com</a></p>
