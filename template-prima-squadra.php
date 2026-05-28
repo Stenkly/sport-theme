@@ -36,7 +36,7 @@ get_header();
 
     <!-- FOTOGALLERY -->
     <section class="ps-section container">
-        <h2 class="section-title text-white" style="margin-bottom:30px; font-weight:800;">FOTOGALLERY</h2>
+        <h2 class="section-title text-white" style="margin-bottom:30px;">FOTOGALLERY</h2>
 
         <!-- Gallery carousel -->
         <div id="gallery-carousel" style="display:flex; gap:12px; align-items:center; overflow:hidden; scroll-behavior:smooth;">
