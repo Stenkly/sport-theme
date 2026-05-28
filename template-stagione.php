@@ -87,11 +87,11 @@ get_header();
                 <div class="match-teams">
                     <div class="team">
                         <span class="d-none-mobile"><?php echo esc_html($t1_name); ?></span>
-                        <img src="<?php echo esc_url($t1_logo); ?>" alt="<?php echo esc_attr($t1_name); ?>" style="max-height:52px;">
+                        <img class="match-row-logo" src="<?php echo esc_url($t1_logo); ?>" alt="<?php echo esc_attr($t1_name); ?>">
                     </div>
                     <div class="vs">VS</div>
                     <div class="team">
-                        <img src="<?php echo esc_url($t2_logo); ?>" alt="<?php echo esc_attr($t2_name); ?>" style="max-height:52px;">
+                        <img class="match-row-logo" src="<?php echo esc_url($t2_logo); ?>" alt="<?php echo esc_attr($t2_name); ?>">
                         <span class="d-none-mobile"><?php echo esc_html($t2_name); ?></span>
                     </div>
                 </div>
@@ -138,11 +138,11 @@ get_header();
                 <div class="match-teams">
                     <div class="team">
                         <span class="d-none-mobile"><?php echo esc_html($t1_name); ?></span>
-                        <img src="<?php echo esc_url($t1_logo); ?>" alt="<?php echo esc_attr($t1_name); ?>" style="max-height:52px;">
+                        <img class="match-row-logo" src="<?php echo esc_url($t1_logo); ?>" alt="<?php echo esc_attr($t1_name); ?>">
                     </div>
                     <div class="score" style="font-size: 24px; font-weight: 700; color: white; letter-spacing: 2px;"><?php echo esc_html($risultato); ?></div>
                     <div class="team">
-                        <img src="<?php echo esc_url($t2_logo); ?>" alt="<?php echo esc_attr($t2_name); ?>" style="max-height:52px;">
+                        <img class="match-row-logo" src="<?php echo esc_url($t2_logo); ?>" alt="<?php echo esc_attr($t2_name); ?>">
                         <span class="d-none-mobile"><?php echo esc_html($t2_name); ?></span>
                     </div>
                 </div>

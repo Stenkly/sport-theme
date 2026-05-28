@@ -408,7 +408,9 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     padding: 25px 40px;
 }
 .match-row .match-info { flex: 1; text-align: left; }
-.match-row .match-teams { flex: 2; justify-content: center; }
+.match-row .match-teams { flex: 2; justify-content: center; gap: 30px; }
+.match-row .team { display: flex; align-items: center; gap: 15px; }
+.match-row-logo { max-height: 75px; max-width: 100%; width: auto; object-fit: contain; }
 .match-row .match-action { flex: 1; display: flex; justify-content: flex-end; align-items: center; }
 .vertical-divider { width: 2px; height: 30px; background-color: var(--c-primary); margin-right: 30px; opacity: 0.5; }
 
@@ -599,7 +601,8 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     align-items: center;
 }
 .match-card:not(.match-row) .team-logo {
-    max-height: 60px; /* Slightly larger logos */
+    max-height: 110px;
+    max-width: 100%;
     width: auto;
     object-fit: contain;
     transition: transform 0.3s ease;
@@ -627,6 +630,12 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     .match-card:not(.match-row) .team-1-name,
     .match-card:not(.match-row) .team-2-name {
         text-align: center;
+    }
+    .match-card:not(.match-row) .team-logo {
+        max-height: 85px;
+    }
+    .match-row-logo {
+        max-height: 60px;
     }
 }
 
