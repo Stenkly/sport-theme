@@ -560,7 +560,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     display: flex; 
     flex-direction: column; 
     justify-content: space-between; 
-    min-height: 265px; 
+    min-height: 290px; 
     box-sizing: border-box;
 }
 .match-info p { margin-bottom: 5px; }
