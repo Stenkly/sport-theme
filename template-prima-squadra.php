@@ -44,7 +44,7 @@ get_header();
         <h2 class="section-title text-white" style="margin-bottom:30px;">FOTOGALLERY</h2>
 
         <!-- Gallery carousel -->
-        <div id="gallery-carousel" style="display:flex; gap:12px; align-items:center; overflow:hidden; scroll-behavior:smooth;">
+        <div id="gallery-carousel" style="display:flex; gap:20px; align-items:center; overflow:hidden; scroll-behavior:smooth;">
             <?php
             $gallery_query = new WP_Query(array(
                 'post_type'      => 'fotogallery',
@@ -102,7 +102,7 @@ get_header();
             function getScrollPosition(index) {
                 var pos = 0;
                 for (var i = 0; i < index; i++) {
-                    pos += slides[i].offsetWidth + 12; // width + gap
+                    pos += slides[i].offsetWidth + 20; // width + gap
                 }
                 return pos;
             }
