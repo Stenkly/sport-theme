@@ -795,28 +795,28 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 .player-modal-content {
     position: relative; width: 95%; max-width: 1350px; margin: 15px auto;
-    background: #000000; border-radius: 0px;
+    height: 300px; background: #000000; border-radius: 0px;
     border: 2px solid #ffffff; display: flex; flex-wrap: wrap; box-shadow: 0 20px 50px rgba(0,0,0,0.9);
 }
 .player-modal-close {
-    position: absolute; top: 15px; right: 15px; background: transparent;
-    border: 2px solid white; border-radius: 0px; width: 40px; height: 40px; display: flex; align-items: center;
-    justify-content: center; color: white; font-size: 20px; cursor: pointer; z-index: 10; font-family: sans-serif; font-weight: bold;
+    position: absolute; top: 10px; right: 10px; background: transparent;
+    border: 2px solid white; border-radius: 0px; width: 35px; height: 35px; display: flex; align-items: center;
+    justify-content: center; color: white; font-size: 18px; cursor: pointer; z-index: 10; font-family: sans-serif; font-weight: bold;
 }
 .player-modal-close:hover { background: white; color: #000; }
 .player-modal-img-col { flex: 1.2; min-width: 300px; -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(to right, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%); }
 .player-modal-img-col img {
-    width: 100%; height: 100%; object-fit: cover; object-position: top center; min-height: 320px; display: block;
+    width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block;
 }
 .player-modal-data-col {
-    flex: 1; min-width: 300px; padding: 20px 40px; display: flex; flex-direction: column; justify-content: center;
+    flex: 1; min-width: 300px; padding: 15px 30px; display: flex; flex-direction: column; justify-content: center;
 }
-.player-modal-numero { font-size: 45px; font-weight: 800; color: #F9EA86; line-height: 1; margin-bottom: 15px; }
-.player-modal-name { color: white; font-size: 32px; font-weight: 700; line-height: 1.1; margin: 0 0 20px 0; text-transform: none; }
-.player-modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px 20px; font-size: 14px; text-transform: uppercase; }
-.player-modal-label { color: #F9EA86; margin-bottom: 8px; font-weight: 700; font-size: 14px; letter-spacing: 1px; }
-.player-modal-value { color: var(--c-white); font-weight: 400; font-size: 13px; }
-.player-modal-shop-btn { display: block; width: 100%; max-width: 300px; padding: 12px 20px; font-weight: 700; background-color: #F9EA86; color: #000 !important; text-align: center; text-decoration: none; margin-top: 20px; border-radius: 0px; font-size: 17px; letter-spacing: 1px; transition: all 0.3s ease; border: 2px solid #F9EA86; }
+.player-modal-numero { font-size: 38px; font-weight: 800; color: #F9EA86; line-height: 1; margin-bottom: 5px; }
+.player-modal-name { color: white; font-size: 26px; font-weight: 700; line-height: 1.1; margin: 0 0 15px 0; text-transform: none; }
+.player-modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 15px; font-size: 13px; text-transform: uppercase; }
+.player-modal-label { color: #F9EA86; margin-bottom: 3px; font-weight: 700; font-size: 12px; letter-spacing: 1px; }
+.player-modal-value { color: var(--c-white); font-weight: 400; font-size: 12px; }
+.player-modal-shop-btn { display: block; width: 100%; max-width: 250px; padding: 8px 20px; font-weight: 700; background-color: #F9EA86; color: #000 !important; text-align: center; text-decoration: none; margin-top: 15px; border-radius: 0px; font-size: 15px; letter-spacing: 1px; transition: all 0.3s ease; border: 2px solid #F9EA86; }
 .player-modal-shop-btn:hover { background: transparent; color: #F9EA86 !important; }
  
 /* Mobile Fix Modal */
