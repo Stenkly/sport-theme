@@ -386,7 +386,7 @@ get_header();
                    onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                     <div class="player-card" style="position: relative; aspect-ratio: 3/4; overflow: hidden; background-color: #111;">
                         <div class="player-photo cover-bg" style="background-image: url('<?php echo esc_url($foto_ritratto); ?>'); background-size: <?php echo esc_attr($zoom_foto); ?>; background-position: <?php echo esc_attr($allineamento_foto); ?>; width: 100%; height: 100%; border: none; transition: transform 0.5s ease;"></div>
-                        <div class="player-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%); pointer-events: none;"></div>
+                        <div class="player-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 80%; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%); pointer-events: none;"></div>
                         <div class="player-info" style="position: absolute; bottom: 2px; left: 12px; z-index: 2; flex-direction: column; gap: 0; padding: 0;">
                             <?php if(!empty($numero)): ?>
                             <span class="player-number" style="display: block; font-size: 50px; font-weight: 700; margin-bottom: 20px; line-height: 1; color: #F2E302;"><?php echo esc_html($numero); ?></span>
