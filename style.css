@@ -2613,17 +2613,20 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     }
 }
 
-/* Allineamento larghezza immagine hero per Rosa e Staff */
+/* Allineamento larghezza e sporgenza immagine hero per Rosa, Staff e Prima Squadra */
 @media (min-width: 769px) {
     .page-rosa .news-hero-wrapper,
-    .page-staff .news-hero-wrapper {
+    .page-staff .news-hero-wrapper,
+    .page-prima-squadra .news-hero .container {
         position: relative !important;
-        width: calc(100% + 40px) !important;
-        max-width: 1440px !important;
-        margin: 0 auto !important;
-        left: -40px !important;
-        padding-right: 0 !important;
+        margin-left: -60px !important;
+        margin-right: auto !important;
+        width: calc(100% + 120px) !important;
+        max-width: calc(100% + 120px) !important;
         box-sizing: border-box !important;
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+        left: 0 !important;
     }
     
     .page-rosa .news-hero-wrapper,
@@ -2644,6 +2647,15 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
         padding-right: 0 !important;
     }
 }
+@media (min-width: 1400px) {
+    .page-rosa .news-hero-wrapper,
+    .page-staff .news-hero-wrapper,
+    .page-prima-squadra .news-hero .container {
+        margin-left: calc((100% - 1400px) / 2 - 60px) !important;
+        width: 1520px !important;
+        max-width: 1520px !important;
+    }
+}
 
 .page-rosa .news-hero-overlay,
 .page-staff .news-hero-overlay {
@@ -2659,26 +2671,6 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 @media (max-width: 768px) {
     .page-prima-squadra .news-hero .container img {
         margin-top: -60px !important;
-    }
-}
-
-/* Allineamento larghezza e sporgenza immagine hero Prima Squadra */
-@media (min-width: 769px) {
-    .page-prima-squadra .news-hero .container {
-        position: relative !important;
-        margin-left: -60px !important;
-        width: calc(100% + 120px) !important;
-        max-width: calc(100% + 120px) !important;
-        box-sizing: border-box !important;
-        padding-right: 0 !important;
-        padding-left: 0 !important;
-    }
-}
-@media (min-width: 1400px) {
-    .page-prima-squadra .news-hero .container {
-        margin-left: calc((100% - 1400px) / 2 - 60px) !important;
-        width: 1520px !important;
-        max-width: 1520px !important;
     }
 }
 
