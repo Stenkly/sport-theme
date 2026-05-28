@@ -392,7 +392,7 @@ get_header();
                             <?php elseif(!empty($ruolo_spec)): ?>
                             <span class="staff-role text-primary" style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 2px; letter-spacing: 1px;"><?php echo esc_html($ruolo_spec); ?></span>
                             <?php endif; ?>
-                            <span class="player-name text-white" style="display: block; font-size: 34px; font-weight: 700; line-height: 1.2; text-transform: capitalize; margin-top: 5px;">
+                            <span class="player-name text-white" style="display: block; font-size: 34px; font-weight: 700; line-height: 1.2; margin-top: 5px;">
                                 <?php echo esc_html($nome_riga1); ?><br>
                                 <span style="color: #F9EA86; display:block; margin-top:2px;"><?php echo esc_html($nome_riga2); ?></span>
                             </span>
