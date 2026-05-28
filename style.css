@@ -796,7 +796,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .player-modal-content {
     position: relative; width: 95%; max-width: 1450px; margin: 140px auto 60px;
     height: calc(95vw * 0.75 - 300px); max-height: 787px; background: #000000; border-radius: 0px;
-    border: 2px solid #ffffff; display: flex; flex-wrap: nowrap; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+    border: 2px solid #ffffff; display: flex; flex-wrap: nowrap; justify-content: flex-end; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.9);
 }
 .player-modal-close {
     position: absolute; top: 15px; right: 15px; background: transparent;
@@ -804,12 +804,17 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     justify-content: center; color: white; font-size: 20px; cursor: pointer; z-index: 10; font-family: sans-serif; font-weight: bold;
 }
 .player-modal-close:hover { background: white; color: #000; }
-.player-modal-img-col { flex: 1; min-width: 300px; height: 100%; overflow: hidden; -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(to right, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 100%); }
+.player-modal-img-col {
+    position: absolute; top: 0; left: 0; width: 65%; height: 100%; overflow: hidden; z-index: 1;
+    -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);
+    mask-image: linear-gradient(to right, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);
+}
 .player-modal-img-col img {
-    width: 80%; height: 100%; object-fit: cover; object-position: top center; display: block;
+    width: 61.5%; height: 100%; object-fit: cover; object-position: top center; display: block;
 }
 .player-modal-data-col {
-    flex: 1; min-width: 300px; padding: 50px 60px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;
+    width: 50%; flex: 0 0 50%; padding: 50px 60px; height: 100%; box-sizing: border-box;
+    display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 2;
 }
 .player-modal-numero { font-size: 55px; font-weight: 800; color: #F9EA86; line-height: 1; margin-bottom: 20px; }
 .player-modal-name { color: white; font-size: 48px; font-weight: 700; line-height: 1.05; margin: 0 0 35px 0; text-transform: none; }
@@ -822,9 +827,9 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 /* Mobile Fix Modal */
 @media (max-width: 768px) {
     .player-modal-content { flex-direction: column; width: 92%; max-width: 100%; margin: 40px auto 20px; height: auto; aspect-ratio: auto; }
-    .player-modal-img-col { min-width: 100%; -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%); }
+    .player-modal-img-col { position: relative; width: 100%; height: auto; min-width: 100%; -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%); }
     .player-modal-img-col img { min-height: 300px; height: 300px; width: 100%; }
-    .player-modal-data-col { min-width: 100%; padding: 30px 20px; }
+    .player-modal-data-col { min-width: 100%; width: 100%; flex: none; padding: 30px 20px; }
     .player-modal-overlay { padding: 15px 10px; }
     .player-modal-close { top: 15px; right: 15px; width: 40px; height: 40px; font-size: 20px; }
     .player-modal-name { font-size: 38px !important; margin-bottom: 30px !important; }
