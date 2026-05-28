@@ -636,7 +636,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .news-date { position: relative; z-index: 2; font-weight: 700; font-size: 32px; }
 .news-content { position: relative; z-index: 2; }
 .news-title { font-weight: 700; font-size: 24px; line-height: 1.3; margin-bottom: 20px; text-transform: uppercase; }
-.news-card .btn-primary { font-size: 15px; padding: 10px 30px; }
+.news-card .btn-primary { font-size: 17px; padding: 12px 40px; }
 
 /* Player Card */
 .player-photo { height: 350px; }
