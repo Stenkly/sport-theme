@@ -554,14 +554,13 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     opacity: 1;
 }
 
-/* Match Card */
 .match-card { 
     background-color: var(--c-gray); 
     padding: 35px 30px; 
     display: flex; 
     flex-direction: column; 
     justify-content: space-between; 
-    min-height: 230px; 
+    min-height: 265px; 
     box-sizing: border-box;
 }
 .match-info p { margin-bottom: 5px; }
