@@ -795,7 +795,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 .player-modal-content {
     position: relative; width: 95%; max-width: 1450px; margin: 140px auto 60px;
-    height: calc(95vw * 0.75 - 250px); max-height: 837px; background: #000000; border-radius: 0px;
+    height: calc(95vw * 0.75 - 300px); max-height: 787px; background: #000000; border-radius: 0px;
     border: 2px solid #ffffff; display: flex; flex-wrap: nowrap; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.9);
 }
 .player-modal-close {
