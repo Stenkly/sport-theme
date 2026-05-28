@@ -119,7 +119,7 @@ get_header();
     $gallery_query = new WP_Query($gallery_args);
     ?>
     <section class="container club-content ps-section" style="padding-bottom: 60px;">
-        <h2 class="text-white" style="font-size: 32px; font-weight: 800; text-transform: uppercase; margin-bottom: 20px; color: white;">FOTOGALLERY</h2>
+        <h2 class="section-title text-white" style="margin-bottom: 30px;">FOTOGALLERY</h2>
         
         <div class="custom-cpt-gallery wp-block-gallery">
             <?php 

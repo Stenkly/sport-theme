@@ -159,7 +159,7 @@ $btn_inactive = "padding: 10px 40px; font-weight: 700; text-transform: uppercase
     $gallery_query = new WP_Query($gallery_args);
     ?>
     <section class="container <?php echo $current_slug === 'storia' ? 'club-content' : ''; ?> ps-section" style="padding-bottom: 60px;">
-        <h2 class="<?php echo $current_slug === 'storia' ? 'text-white' : 'section-title text-white'; ?>" style="<?php echo $current_slug === 'storia' ? 'font-size: 28px; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; color: white;' : 'margin-bottom: 30px;'; ?>">FOTOGALLERY</h2>
+        <h2 class="section-title text-white" style="margin-bottom: 30px;">FOTOGALLERY</h2>
         
         <?php if ($current_slug === 'storia') : ?>
             <!-- Layout MASONRY per Storia -->
