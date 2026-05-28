@@ -597,7 +597,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     position: absolute;
     font-size: 28px; /* slightly larger */
     font-weight: 900;
-    -webkit-text-stroke: 1.5px var(--c-primary); /* makes the icon thicker */
+    -webkit-text-stroke: 3px var(--c-primary); /* makes the icon thicker */
 }
 .gallery-nav #gallery-prev {
     left: 0;
