@@ -130,11 +130,11 @@ get_header();
                     <!-- Nome e numero stampigliati -->
                     <div class="player-info" style="position: absolute; bottom: 2px; left: 12px; z-index: 2; flex-direction: column; gap: 0; padding: 0;">
                         <?php if(!empty($numero)): ?>
-                        <span class="player-number" style="display: block; font-size: 50px; font-weight: 700; margin-bottom: 27px; line-height: 1; color: #F9EA86;"><?php echo esc_html($numero); ?></span>
+                        <span class="player-number" style="display: block; font-size: 50px; font-weight: 700; margin-bottom: 30px; line-height: 1; color: #F9EA86;"><?php echo esc_html($numero); ?></span>
                         <?php endif; ?>
                         <span class="player-name text-white" style="display: block; font-size: 34px; font-weight: 700; line-height: 1.2; margin-top: 0px;">
                             <?php echo esc_html($nome_riga1); ?><br>
-                            <span style="color: #F9EA86; display:block; margin-top:0px;"><?php echo esc_html($nome_riga2); ?></span>
+                            <span style="color: #F9EA86; display:block; margin-top:-3px;"><?php echo esc_html($nome_riga2); ?></span>
                         </span>
                     </div>
                 </div>
