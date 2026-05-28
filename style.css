@@ -588,13 +588,12 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     font-weight: 800;
     font-size: 20px;
     text-transform: none;
-    text-align: center;
 }
 .match-card:not(.match-row) .team-1-name {
-    text-align: center;
+    text-align: left;
 }
 .match-card:not(.match-row) .team-2-name {
-    text-align: center;
+    text-align: right;
 }
 .match-card:not(.match-row) .team-logo-container {
     display: flex;
