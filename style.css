@@ -103,7 +103,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .main-navigation ul {
     list-style: none;
     padding: 0;
-    margin: 20px 0 0 0;
+    margin: 30px 0 0 0;
     display: flex;
     justify-content: center;
     gap: 30px;
@@ -149,11 +149,11 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     background-color: var(--c-gray);
 }
 .main-navigation ul li a {
-    font-size: 13px; /* Aumentato un po' il font size */
+    font-size: 12px;
     font-weight: 800;
     text-transform: uppercase;
     color: var(--c-white);
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
     transition: color 0.3s;
 }
 .main-navigation ul li a:hover {
@@ -568,7 +568,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 /* Header e Icone a destra */
 .site-header {
     background-color: var(--c-black);
-    padding: 20px 0 35px;
+    padding: 20px 0 25px;
 }
 .header-top {
     display: flex;
