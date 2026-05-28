@@ -2620,6 +2620,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
         position: relative !important;
         width: calc(100% + 40px) !important;
         max-width: 1440px !important;
+        height: 55vh !important;
         margin: 0 auto !important;
         left: -40px !important;
         padding-right: 0 !important;
