@@ -588,8 +588,20 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .nav-dots .active { color: var(--c-primary); }
 
 .gallery-nav {
+    position: relative;
+    display: flex;
     justify-content: center;
-    gap: 30px;
+    align-items: center;
+}
+.gallery-nav .nav-arrow {
+    position: absolute;
+    font-size: 26px; /* slightly larger */
+}
+.gallery-nav #gallery-prev {
+    left: 0;
+}
+.gallery-nav #gallery-next {
+    right: 0;
 }
 .gallery-nav .nav-dots {
     gap: 12px;
