@@ -557,7 +557,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 .match-card { 
     background-color: var(--c-gray); 
-    padding: 35px 30px; 
+    padding: 38px 33px; 
     display: flex; 
     flex-direction: column; 
     justify-content: space-between; 
