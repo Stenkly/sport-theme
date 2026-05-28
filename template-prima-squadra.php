@@ -394,7 +394,7 @@ get_header();
                             <?php endif; ?>
                             <span class="player-name text-white" style="display: block; font-size: 34px; font-weight: 700; line-height: 1.2; text-transform: capitalize; margin-top: 5px;">
                                 <?php echo esc_html($nome_riga1); ?><br>
-                                <span style="color: var(--c-primary); display:block; margin-top:2px;"><?php echo esc_html($nome_riga2); ?></span>
+                                <span style="color: #F9EA86; display:block; margin-top:2px;"><?php echo esc_html($nome_riga2); ?></span>
                             </span>
                         </div>
                     </div>
