@@ -338,7 +338,7 @@ get_header();
 
         <!-- Carousel wrapper -->
         <div style="position: relative;">
-            <div id="team-carousel" style="display: flex; gap: 16px; overflow: hidden; scroll-behavior: smooth;">
+            <div id="team-carousel" style="display: flex; gap: 20px; overflow: hidden; scroll-behavior: smooth;">
                 <?php
                 $hp_team_query = new WP_Query(array(
                     'post_type'      => 'giocatore',
@@ -381,7 +381,7 @@ get_header();
                    data-htp="<?php echo esc_attr($htp); ?>"
                    data-shop="<?php echo esc_attr($shop_url); ?>"
                    data-ruolo="<?php echo esc_attr($ruolo_str); ?>"
-                   style="text-decoration: none; flex: 0 0 calc(25% - 12px); min-width: 0; display: block; overflow: hidden; transition: transform 0.3s;"
+                   style="text-decoration: none; flex: 0 0 calc(25% - 15px); min-width: 0; display: block; overflow: hidden; transition: transform 0.3s;"
                    onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                     <div class="player-card" style="position: relative; aspect-ratio: 3/4; overflow: hidden; background-color: #111;">
                         <div class="player-photo cover-bg" style="background-image: url('<?php echo esc_url($foto_ritratto); ?>'); width: 100%; height: 100%; border: none; transition: transform 0.5s ease;"></div>
@@ -433,7 +433,7 @@ get_header();
 
             function slideWidth() {
                 var card = carousel.querySelector('.team-slide');
-                return card ? card.offsetWidth + 16 : 0;
+                return card ? card.offsetWidth + 20 : 0;
             }
             function go(n) {
                 var total = carousel.querySelectorAll('.team-slide').length;
