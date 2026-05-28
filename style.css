@@ -819,7 +819,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     width: 50%; flex: 0 0 50%; padding: 50px 60px; height: 100%; box-sizing: border-box;
     display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 2;
 }
-.player-modal-numero { font-size: 55px; font-weight: 800; color: #F9EA86; line-height: 1; margin-bottom: 20px; }
+.player-modal-numero { font-size: 55px; font-weight: 800; color: #F2E302; line-height: 1; margin-bottom: 20px; }
 .player-modal-name { color: white; font-size: 48px; font-weight: 700; line-height: 1.05; margin: 0 0 35px 0; text-transform: none; }
 .player-modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px 40px; font-size: 14px; text-transform: uppercase; }
 .player-modal-label { color: #F9EA86; margin-bottom: 8px; font-weight: 700; font-size: 14px; letter-spacing: 1px; }
