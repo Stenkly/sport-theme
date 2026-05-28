@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function() {
             <div id="modalNumero" class="player-modal-numero"></div>
             <h2 class="player-modal-name">
                 <span id="modalNome1"></span><br>
-                <span id="modalNome2" class="text-primary" style="display:block; margin-top:5px;"></span>
+                <span id="modalNome2" style="display:block; margin-top:5px; color: #F9EA86;"></span>
             </h2>
             
             <div class="player-modal-grid">

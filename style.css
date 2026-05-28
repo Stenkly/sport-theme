@@ -811,7 +811,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .player-modal-data-col {
     flex: 1; min-width: 300px; padding: 40px; display: flex; flex-direction: column; justify-content: center;
 }
-.player-modal-numero { font-size: 50px; font-weight: 900; color: var(--c-primary); line-height: 1; margin-bottom: 15px; }
+.player-modal-numero { font-size: 50px; font-weight: 900; color: #F9EA86; line-height: 1; margin-bottom: 15px; }
 .player-modal-name { color: white; font-size: 35px; font-weight: 700; line-height: 1.1; margin: 0 0 30px 0; text-transform: capitalize; }
 .player-modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 14px; text-transform: uppercase; }
 .player-modal-label { color: var(--c-primary); margin-bottom: 5px; font-weight: 700; font-size: 14px; letter-spacing: 1px; }
