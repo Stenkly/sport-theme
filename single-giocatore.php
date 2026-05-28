@@ -41,7 +41,7 @@ while ( have_posts() ) : the_post();
     </div>
 
     <!-- Hero Player -->
-    <div class="container player-single-layout" style="display: flex; flex-wrap: wrap; margin-top: 40px; background: linear-gradient(to right, #111, #000); border-radius: 4px; overflow: hidden; border: 1px solid #333;">
+    <div class="container player-single-layout" style="display: flex; flex-wrap: wrap; margin-top: 40px; background: linear-gradient(to right, #111, #000); overflow: hidden; border: 1px solid #333;">
         
         <!-- Left: Image -->
         <div class="player-single-img" style="flex: 1; min-width: 300px;">

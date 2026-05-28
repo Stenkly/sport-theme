@@ -381,7 +381,7 @@ get_header();
                    data-htp="<?php echo esc_attr($htp); ?>"
                    data-shop="<?php echo esc_attr($shop_url); ?>"
                    data-ruolo="<?php echo esc_attr($ruolo_str); ?>"
-                   style="text-decoration: none; flex: 0 0 calc(25% - 3px); min-width: 0; display: block; border-radius: 4px; overflow: hidden; transition: transform 0.3s;"
+                   style="text-decoration: none; flex: 0 0 calc(25% - 3px); min-width: 0; display: block; overflow: hidden; transition: transform 0.3s;"
                    onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                     <div class="player-card" style="position: relative; aspect-ratio: 3/4; overflow: hidden; background-color: #111;">
                         <div class="player-photo cover-bg" style="background-image: url('<?php echo esc_url($foto_ritratto); ?>'); width: 100%; height: 100%; border: none; transition: transform 0.5s ease;"></div>
