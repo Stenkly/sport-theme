@@ -2641,3 +2641,9 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     }
 }
 
+.page-rosa .news-hero-overlay,
+.page-staff .news-hero-overlay {
+    height: 75% !important;
+}
+
+
