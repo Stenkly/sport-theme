@@ -611,6 +611,14 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .match-card:not(.match-row) .team-logo:hover {
     transform: scale(1.08);
 }
+.team-logo[src*="mendrisio-logo.png"] {
+    padding: 8px;
+    box-sizing: border-box;
+}
+.match-row-logo[src*="mendrisio-logo.png"] {
+    padding: 6px;
+    box-sizing: border-box;
+}
 .match-card:not(.match-row) .vs {
     font-weight: 700;
     color: var(--c-white);
