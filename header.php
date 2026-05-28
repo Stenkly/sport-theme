@@ -256,5 +256,13 @@
             if (icon) icon.style.transform = open ? '' : 'rotate(180deg)';
         });
     });
+
+    // Assicura che la voce di menu "AC TAVERNE" sia sempre colorata in giallo
+    var menuLinks = document.querySelectorAll('.main-navigation a, #mobile-menu-overlay a');
+    menuLinks.forEach(function(link) {
+        if (link.textContent.trim().toUpperCase() === 'AC TAVERNE') {
+            link.style.setProperty('color', 'var(--c-primary)', 'important');
+        }
+    });
 })();
 </script>

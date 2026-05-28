@@ -170,7 +170,10 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 /* "AC Taverne" giallo nel menu */
 .main-navigation ul > li.menu-item-ac-taverne > a,
 .main-navigation ul > li > a[href$="/ac-taverne/"],
-.main-navigation ul > li > a[href$="/ac-taverne"] {
+.main-navigation ul > li > a[href$="/ac-taverne"],
+.main-navigation ul > li > a[href*="/ac-taverne/"],
+.main-navigation ul > li > a[href*="/ac-taverne"],
+.main-navigation ul > li[class*="ac-taverne"] > a {
     color: var(--c-primary) !important;
 }
 
