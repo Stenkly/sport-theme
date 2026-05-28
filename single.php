@@ -64,8 +64,11 @@ get_header();
                     <a href="https://api.whatsapp.com/send?text=<?php echo $share_title . ' ' . $share_url; ?>" target="_blank" class="share-btn whatsapp-btn">
                         <i class="fa-brands fa-whatsapp"></i> WhatsApp
                     </a>
-                    <a href="https://twitter.com/intent/tweet?url=<?php echo $share_url; ?>&text=<?php echo $share_title; ?>" target="_blank" class="share-btn twitter-btn">
-                        <i class="fa-brands fa-twitter"></i> Twitter
+                    <a href="https://twitter.com/intent/tweet?url=<?php echo $share_url; ?>&text=<?php echo $share_title; ?>" target="_blank" class="share-btn x-btn">
+                        <i class="fa-brands fa-x-twitter"></i> X
+                    </a>
+                    <a href="https://www.instagram.com/ac_taverne/" target="_blank" class="share-btn instagram-btn">
+                        <i class="fa-brands fa-instagram"></i> Instagram
                     </a>
                 </div>
             </div>

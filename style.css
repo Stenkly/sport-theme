@@ -2493,10 +2493,16 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     color: #fff;
 }
 
-.social-share-box .twitter-btn:hover {
-    background-color: #1da1f2;
-    border-color: #1da1f2;
-    color: #fff;
+.social-share-box .x-btn:hover {
+    background-color: #000000;
+    border-color: #ffffff;
+    color: #ffffff;
+}
+
+.social-share-box .instagram-btn:hover {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important;
+    border-color: #e6683c;
+    color: #ffffff !important;
 }
 
 /* Related News */
