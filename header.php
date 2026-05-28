@@ -156,7 +156,7 @@
             </div>
 
             <!-- Icone in alto a destra (Instagram e Facebook come nel design) -->
-            <div class="header-right-icons" style="position: absolute; top: 30px; right: 30px; display: flex; gap: 15px;">
+            <div class="header-right-icons" style="position: absolute; top: 30px; right: 50px; display: flex; gap: 15px;">
                 <a href="https://www.instagram.com/ac_taverne?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank"><i class="fa-brands fa-instagram"></i></a>
                 <a href="https://www.facebook.com/share/1BZrVQUTfb/?mibextid=wwXIfr" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
             </div>
