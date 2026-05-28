@@ -68,7 +68,7 @@ get_header();
                data-shop=""
                data-ruolo="<?php echo esc_attr($ruolo_spec ?: '-'); ?>"
                style="text-decoration: none; display: block; overflow: hidden; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-                <div class="player-card" style="position: relative; aspect-ratio: 3/4; overflow: hidden; background-color: #111; border: 1px solid rgba(255,255,255,0.5);">
+                <div class="player-card" style="position: relative; aspect-ratio: 3/4; overflow: hidden; background-color: #111;">
                     <div class="player-photo cover-bg" style="background-image: url('<?php echo esc_url($foto); ?>'); width: 100%; height: 100%; border: none; transition: transform 0.5s ease;"></div>
                     <div class="player-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%); pointer-events: none;"></div>
                     
