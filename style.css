@@ -586,7 +586,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 .match-card:not(.match-row) .team-name {
     font-weight: 800;
-    font-size: 22px;
+    font-size: 20px;
     text-transform: none;
 }
 .match-card:not(.match-row) .team-1-name {
