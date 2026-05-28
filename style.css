@@ -568,7 +568,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 /* Header e Icone a destra */
 .site-header {
     background-color: var(--c-black);
-    padding: 20px 0;
+    padding: 20px 0 35px;
 }
 .header-top {
     display: flex;
@@ -578,10 +578,27 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 .header-empty-left, .header-right-icons { flex: 1; }
 .header-right-icons {
-    display: flex; justify-content: flex-end; gap: 15px; color: var(--c-primary); font-size: 20px;
+    display: flex; justify-content: flex-end; gap: 15px;
 }
-.header-right-icons a { color: var(--c-primary); transition: color 0.3s; }
-.header-right-icons a:hover { color: var(--c-white); }
+.header-right-icons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid var(--c-light-yellow);
+    background-color: var(--c-light-yellow);
+    color: #000 !important;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+.header-right-icons a:hover {
+    background-color: transparent;
+    color: var(--c-light-yellow) !important;
+    border-color: var(--c-light-yellow);
+    transform: scale(1.1);
+}
 .site-logo { flex: 1; text-align: center; }
 
 /* Nuovo bottone outline dorato fine */
@@ -1853,7 +1870,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 
 /* ---------- FOOTER SOCIETÀ ---------- */
-.site-header {
+.societa-site .site-header {
     background-color: var(--c-black);
     padding: 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
