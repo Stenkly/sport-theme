@@ -94,8 +94,8 @@ $ricerca = isset($_GET['ricerca']) ? sanitize_text_field($_GET['ricerca']) : '';
             <i class="fas fa-chevron-left" style="cursor: pointer;"></i>
             <div style="display: flex; gap: 10px;">
                 <i class="fa-solid fa-circle" style="font-size: 10px;"></i>
-                <i class="fa-regular fa-circle" style="font-size: 10px; color: white;"></i>
-                <i class="fa-regular fa-circle" style="font-size: 10px; color: white;"></i>
+                <i class="fa-regular fa-circle" style="font-size: 10px;"></i>
+                <i class="fa-regular fa-circle" style="font-size: 10px;"></i>
             </div>
             <i class="fas fa-chevron-right" style="cursor: pointer;"></i>
         </div>
@@ -205,8 +205,8 @@ $ricerca = isset($_GET['ricerca']) ? sanitize_text_field($_GET['ricerca']) : '';
             <i class="fas fa-chevron-left" style="cursor: pointer;"></i>
             <div style="display: flex; gap: 10px;">
                 <i class="fa-solid fa-circle" style="font-size: 10px;"></i>
-                <i class="fa-regular fa-circle" style="font-size: 10px; color: white;"></i>
-                <i class="fa-regular fa-circle" style="font-size: 10px; color: white;"></i>
+                <i class="fa-regular fa-circle" style="font-size: 10px;"></i>
+                <i class="fa-regular fa-circle" style="font-size: 10px;"></i>
             </div>
             <i class="fas fa-chevron-right" style="cursor: pointer;"></i>
         </div>
@@ -314,8 +314,8 @@ $ricerca = isset($_GET['ricerca']) ? sanitize_text_field($_GET['ricerca']) : '';
             <i class="fas fa-chevron-left" style="cursor: pointer;"></i>
             <div style="display: flex; gap: 10px;">
                 <i class="fa-solid fa-circle" style="font-size: 10px;"></i>
-                <i class="fa-regular fa-circle" style="font-size: 10px; color: white;"></i>
-                <i class="fa-regular fa-circle" style="font-size: 10px; color: white;"></i>
+                <i class="fa-regular fa-circle" style="font-size: 10px;"></i>
+                <i class="fa-regular fa-circle" style="font-size: 10px;"></i>
             </div>
             <i class="fas fa-chevron-right" style="cursor: pointer;"></i>
         </div>
