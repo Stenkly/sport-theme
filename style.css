@@ -11,7 +11,7 @@ Text Domain: sport-theme
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700;800;900&display=swap');
 
 :root {
-    --c-primary: #F9EA86;       /* YELLOW */
+    --c-primary: #F2E302;       /* YELLOW */
     --c-light-yellow: #F9EA86;  /* LIGHT YELLOW */
     --c-black: #000000;         /* BLACK */
     --c-gray: #3C4146;          /* GRAY */
