@@ -39,7 +39,7 @@ get_header();
         </div>
     </section>
 
-    <div style="padding-top: 40px;">
+    <div style="padding-top: 0px;">
     <?php
     $team_query = new WP_Query(array(
         'post_type' => 'membro_staff',
@@ -49,7 +49,7 @@ get_header();
 
     if($team_query->have_posts()):
     ?>
-    <section class="ps-section container team-section" style="padding-top: 40px; padding-bottom: 40px;">
+    <section class="ps-section container team-section" style="padding-top: 10px; padding-bottom: 40px;">
         <div class="ps-grid grid-4 ps-team">
             <?php while($team_query->have_posts()): $team_query->the_post(); 
                 $ruolo_spec = get_post_meta(get_the_ID(), '_ruolo_specifico', true);

@@ -41,7 +41,7 @@ get_header();
     </section>
 
     <!-- LISTA GIOCATORI SECONDO I REPARTI -->
-    <div style="padding-top: 40px;">
+    <div style="padding-top: 0px;">
     <?php
     $found_any = false;
 
@@ -88,8 +88,8 @@ get_header();
                 $found_any = true;
                 $nome_ruolo = strtoupper($term->name);
     ?>
-    <section class="ps-section container team-section" style="padding-top: 20px; padding-bottom: 20px;">
-        <h2 class="section-title text-white" style="margin-bottom: 30px;"><?php echo $nome_ruolo; ?></h2>
+    <section class="ps-section container team-section" style="padding-top: 10px; padding-bottom: 20px;">
+        <h2 class="section-title text-white" style="margin-bottom: 15px;"><?php echo $nome_ruolo; ?></h2>
         <div class="ps-grid grid-4 ps-team">
             <?php while($team_query->have_posts()): $team_query->the_post(); 
                 $numero = get_post_meta(get_the_ID(), '_numero_maglia', true);
