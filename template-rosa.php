@@ -88,7 +88,7 @@ get_header();
                 $found_any = true;
                 $nome_ruolo = strtoupper($term->name);
     ?>
-    <section class="ps-section container team-section" style="padding-top: 10px; padding-bottom: 20px;">
+    <section class="ps-section container team-section" style="padding-top: 45px; padding-bottom: 20px;">
         <h2 class="section-title text-white" style="margin-bottom: 45px;"><?php echo $nome_ruolo; ?></h2>
         <div class="ps-grid grid-4 ps-team">
             <?php while($team_query->have_posts()): $team_query->the_post(); 
