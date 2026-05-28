@@ -150,7 +150,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     background-color: var(--c-gray);
 }
 .main-navigation ul li a {
-    font-size: 14px;
+    font-size: 22px;
     font-weight: 800;
     text-transform: uppercase;
     color: var(--c-white);
