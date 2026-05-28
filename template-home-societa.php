@@ -145,7 +145,7 @@ get_header('societa');
     top: 14px; left: 14px;
     background: rgba(0,0,0,0.75);
     color: #fff;
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 700;
     padding: 5px 12px;
     z-index: 2;
@@ -153,7 +153,7 @@ get_header('societa');
 .hs-news-body { padding: 20px; }
 .hs-news-body h3 {
     color: #fff;
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 700;
     text-transform: uppercase;
     line-height: 1.4;
@@ -221,7 +221,7 @@ get_header('societa');
     background: rgba(0,0,0,0.85);
     border-left: 4px solid var(--c-primary);
     color: #fff;
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 700;
     padding: 5px 12px;
     z-index: 2;
@@ -229,7 +229,7 @@ get_header('societa');
 .hs-event-body { padding: 20px; }
 .hs-event-body h3 {
     color: #fff;
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 700;
     text-transform: uppercase;
     line-height: 1.4;
