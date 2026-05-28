@@ -16,7 +16,7 @@ get_header();
         if ( has_post_thumbnail() ) {
             $hero_image_url = get_the_post_thumbnail_url( get_the_ID(), 'full' );
         } else {
-            $hero_image_url = 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=2000&auto=format&fit=crop';
+            $hero_image_url = get_template_directory_uri() . '/assets/images/team-hero.jpg';
         }
         ?>
         <div class="container" style="overflow: hidden; position: relative; line-height: 0;">

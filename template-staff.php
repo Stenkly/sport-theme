@@ -15,7 +15,7 @@ get_header();
         if ( has_post_thumbnail() ) {
             $hero_image_url = get_the_post_thumbnail_url( get_the_ID(), 'full' );
         } else {
-            $hero_image_url = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=2000&auto=format&fit=crop';
+            $hero_image_url = get_template_directory_uri() . '/assets/images/team-hero.jpg';
         }
         ?>
         <div class="news-hero-wrapper" style="position: relative; width: 100%; height: 50vh;">
