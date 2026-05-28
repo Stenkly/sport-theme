@@ -553,13 +553,22 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 
 /* Match Card */
-.match-card { background-color: var(--c-gray); padding: 30px; display: flex; justify-content: space-between; align-items: center; }
+.match-card { 
+    background-color: var(--c-gray); 
+    padding: 35px 30px; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between; 
+    min-height: 230px; 
+    box-sizing: border-box;
+}
 .match-info p { margin-bottom: 5px; }
-.match-date { font-weight: 700; font-size: 15px; }
-.match-teams { display: flex; align-items: center; gap: 20px; }
-.team { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; }
-.team img { max-width: 35px; }
-.vs { font-weight: 700; color: var(--c-white); font-size: 20px; }
+.match-date { font-weight: 700; font-size: 16px; text-transform: uppercase; }
+.match-venue { font-weight: 700; font-size: 13px; color: var(--c-primary) !important; margin-top: 8px; }
+.match-teams { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 25px; }
+.team { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 15px; text-transform: uppercase; }
+.team img { max-height: 50px; width: auto; object-fit: contain; }
+.vs { font-weight: 700; color: var(--c-white); font-size: 18px; }
 @media (max-width: 600px) { .match-card { flex-direction: column; text-align: center; gap: 20px; } .match-teams { flex-direction: column; } }
 
 /* News Card */

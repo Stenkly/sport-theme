@@ -203,17 +203,17 @@ get_header();
             ?>
             <div class="match-card">
                 <div class="match-info">
-                    <p class="match-date text-white" style="margin-bottom:0; font-weight:700;"><?php echo esc_html($data_p); ?><br><?php echo esc_html($ora_p); ?></p>
-                    <p class="match-venue text-primary" style="margin-top:0; font-size:12px;"><?php echo esc_html($stadio); ?></p>
+                    <p class="match-date text-white"><?php echo esc_html($data_p); ?><br><?php echo esc_html($ora_p); ?></p>
+                    <p class="match-venue"><?php echo esc_html($stadio); ?></p>
                 </div>
                 <div class="match-teams">
                     <div class="team">
                         <span><?php echo esc_html($t1_name); ?></span>
-                        <img src="<?php echo esc_url($t1_logo); ?>" alt="<?php echo esc_attr($t1_name); ?>" style="max-height:40px;">
+                        <img src="<?php echo esc_url($t1_logo); ?>" alt="<?php echo esc_attr($t1_name); ?>">
                     </div>
                     <div class="vs">VS</div>
                     <div class="team">
-                        <img src="<?php echo esc_url($t2_logo); ?>" alt="<?php echo esc_attr($t2_name); ?>" style="max-height:40px;">
+                        <img src="<?php echo esc_url($t2_logo); ?>" alt="<?php echo esc_attr($t2_name); ?>">
                         <span><?php echo esc_html($t2_name); ?></span>
                     </div>
                 </div>
