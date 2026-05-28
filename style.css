@@ -457,13 +457,13 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 /* ---- DESKTOP: Gallery → 4 foto, News → 3 articoli visibili ---- */
 .gallery-slide {
-    flex: 0 0 calc(24.5% - 15px); /* standard width for inactive slides */
+    flex: 0 0 calc(24.5% - 25px); /* standard width for inactive slides */
     min-width: 0;
     display: block;
     transition: flex-basis 0.3s ease;
 }
 .gallery-slide.active {
-    flex: 0 0 calc(26.5% - 15px); /* larger width for active slide */
+    flex: 0 0 calc(26.5% + 15px); /* larger width for active slide */
 }
 .news-slide {
     flex: 0 0 calc(33.333% - 11px); /* 3 news alla volta */
