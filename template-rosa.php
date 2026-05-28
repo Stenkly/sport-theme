@@ -41,7 +41,7 @@ get_header();
     </section>
 
     <!-- LISTA GIOCATORI SECONDO I REPARTI -->
-    <div style="padding-top: 0px;">
+    <div style="padding-top: 20px;">
     <?php
     $found_any = false;
 
