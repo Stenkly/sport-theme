@@ -36,7 +36,7 @@ get_header();
 
     <!-- FOTOGALLERY -->
     <section class="ps-section container">
-        <h2 class="section-title text-white">FOTOGALLERY</h2>
+        <h2 class="section-title text-white" style="margin-bottom:30px; font-weight:800;">FOTOGALLERY</h2>
 
         <!-- Gallery carousel -->
         <div id="gallery-carousel" style="display:flex; gap:16px; overflow:hidden; scroll-behavior:smooth;">
@@ -57,7 +57,8 @@ get_header();
                 while ( $gallery_query->have_posts() ) {
                     $gallery_query->the_post();
                     $img_url = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'large') : 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=800';
-                    echo '<a data-fancybox="gallery" href="' . esc_url($img_url) . '" class="gallery-slide"><div class="gallery-item cover-bg" style="background-image: url(\'' . esc_url($img_url) . '\')"></div></a>';
+                    $active_class = ($foto_count === 0) ? ' active' : '';
+                    echo '<a data-fancybox="gallery" href="' . esc_url($img_url) . '" class="gallery-slide' . $active_class . '"><div class="gallery-item cover-bg" style="background-image: url(\'' . esc_url($img_url) . '\')"></div></a>';
                     $foto_count++;
                 }
                 wp_reset_postdata();
@@ -65,18 +66,19 @@ get_header();
                 $foto_count = 4;
                 for($i=0; $i<4; $i++) {
                     $demo_url = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=800';
-                    echo '<a data-fancybox="gallery" href="' . esc_url($demo_url) . '" class="gallery-slide"><div class="gallery-item cover-bg" style="background-image: url(\'' . esc_url($demo_url) . '\')"></div></a>';
+                    $active_class = ($i === 0) ? ' active' : '';
+                    echo '<a data-fancybox="gallery" href="' . esc_url($demo_url) . '" class="gallery-slide' . $active_class . '"><div class="gallery-item cover-bg" style="background-image: url(\'' . esc_url($demo_url) . '\')"></div></a>';
                 }
             }
             ?>
         </div>
 
         <!-- Navigation arrows + dots -->
-        <div class="carousel-nav" style="margin-top:15px;">
+        <div class="carousel-nav gallery-nav" style="margin-top:15px;">
             <span class="nav-arrow text-primary" id="gallery-prev" style="cursor:pointer;"><i class="fa-solid fa-chevron-left"></i></span>
             <span class="nav-dots" id="gallery-dots">
                 <?php for($i=0; $i<$foto_count; $i++): ?>
-                <i class="fa-solid fa-circle<?php echo $i===0 ? ' active' : ''; ?>" data-page="<?php echo $i; ?>"></i>
+                <i class="<?php echo $i===0 ? 'fa-solid' : 'fa-regular'; ?> fa-circle<?php echo $i===0 ? ' active' : ''; ?>" data-page="<?php echo $i; ?>"></i>
                 <?php endfor; ?>
             </span>
             <span class="nav-arrow text-primary" id="gallery-next" style="cursor:pointer;"><i class="fa-solid fa-chevron-right"></i></span>
@@ -88,21 +90,63 @@ get_header();
             var prev  = document.getElementById('gallery-prev');
             var next  = document.getElementById('gallery-next');
             var dots  = document.querySelectorAll('#gallery-dots .fa-circle');
+            var slides = car.querySelectorAll('.gallery-slide');
             var cur   = 0;
+            var isAnimating = false;
 
             function slideWidth() {
                 var s = car.querySelector('.gallery-slide');
                 return s ? s.offsetWidth + 16 : 0;
             }
-            function go(n) {
-                var max = car.querySelectorAll('.gallery-slide').length - 1;
-                cur = Math.max(0, Math.min(n, max));
-                car.scrollLeft = cur * slideWidth();
-                dots.forEach(function(d,i){ d.classList.toggle('active', i===cur); });
+
+            function updateActiveState(index) {
+                cur = index;
+                dots.forEach(function(d,i){
+                    if (i === cur) {
+                        d.classList.remove('fa-regular');
+                        d.classList.add('fa-solid', 'active');
+                    } else {
+                        d.classList.remove('fa-solid', 'active');
+                        d.classList.add('fa-regular');
+                    }
+                });
+                slides.forEach(function(s,i){ s.classList.toggle('active', i===cur); });
             }
+
+            function go(n) {
+                var visibleSlides = window.innerWidth <= 768 ? 1 : 4;
+                var max = slides.length - 1;
+                cur = Math.max(0, Math.min(n, max));
+                
+                var maxScrollIndex = Math.max(0, slides.length - visibleSlides);
+                var targetScroll = Math.min(cur, maxScrollIndex) * slideWidth();
+                
+                isAnimating = true;
+                car.scrollTo({
+                    left: targetScroll,
+                    behavior: 'smooth'
+                });
+                
+                updateActiveState(cur);
+                
+                setTimeout(function() {
+                    isAnimating = false;
+                }, 400);
+            }
+
             prev.addEventListener('click', function(){ go(cur - 1); });
             next.addEventListener('click', function(){ go(cur + 1); });
             dots.forEach(function(d,i){ d.addEventListener('click', function(){ go(i); }); });
+
+            car.addEventListener('scroll', function() {
+                if (isAnimating) return;
+                var sw = slideWidth();
+                if (sw <= 0) return;
+                var index = Math.round(car.scrollLeft / sw);
+                if (index !== cur && index >= 0 && index < slides.length) {
+                    updateActiveState(index);
+                }
+            });
         })();
         </script>
     </section>
