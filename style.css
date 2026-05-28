@@ -2676,3 +2676,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     }
 }
 
+.page-prima-squadra .news-hero .container > div {
+    height: 45% !important;
+}
+
