@@ -906,7 +906,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 /* --- PLAYER CARD BORDER --- */
 .open-player-modal {
-    border: 1px solid #ffffff !important;
+    border: 2px solid #ffffff !important;
 }
 @media (min-width: 769px) {
     .open-player-modal {
