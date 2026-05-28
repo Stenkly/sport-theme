@@ -579,7 +579,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     font-size: 22px;
 }
 .match-card:not(.match-row) .match-venue {
-    font-size: 22px;
+    font-size: 17px;
 }
 .match-card:not(.match-row) .match-teams {
     display: grid;
