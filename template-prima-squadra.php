@@ -388,9 +388,9 @@ get_header();
                         <div class="player-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%); pointer-events: none;"></div>
                         <div class="player-info" style="position: absolute; bottom: 2px; left: 12px; z-index: 2; flex-direction: column; gap: 0; padding: 0;">
                             <?php if(!empty($numero)): ?>
-                            <span class="player-number" style="display: block; font-size: 50px; font-weight: 700; margin-bottom: 30px; line-height: 1; color: #F9EA86;"><?php echo esc_html($numero); ?></span>
+                            <span class="player-number" style="display: block; font-size: 50px; font-weight: 700; margin-bottom: 25px; line-height: 1; color: #F9EA86;"><?php echo esc_html($numero); ?></span>
                             <?php elseif(!empty($ruolo_spec)): ?>
-                            <span class="staff-role text-primary" style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 30px; letter-spacing: 1px;"><?php echo esc_html($ruolo_spec); ?></span>
+                            <span class="staff-role text-primary" style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 25px; letter-spacing: 1px;"><?php echo esc_html($ruolo_spec); ?></span>
                             <?php endif; ?>
                             <span class="player-name text-white" style="display: block; font-size: 34px; font-weight: 700; line-height: 1.2; margin-top: 0px;">
                                 <?php echo esc_html($nome_riga1); ?><br>
