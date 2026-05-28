@@ -794,7 +794,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     overflow-y: auto; -webkit-overflow-scrolling: touch;
 }
 .player-modal-content {
-    position: relative; width: 95%; max-width: 1400px; margin: 140px auto 60px;
+    position: relative; width: 95%; max-width: 1430px; margin: 140px auto 60px;
     height: 600px; background: #000000; border-radius: 0px;
     border: 2px solid #ffffff; display: flex; flex-wrap: nowrap; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.9);
 }
