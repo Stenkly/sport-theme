@@ -301,7 +301,7 @@ get_header();
             <span class="nav-arrow text-primary" id="news-prev" style="cursor:pointer;"><i class="fa-solid fa-chevron-left"></i></span>
             <span class="nav-dots" id="news-dots">
                 <?php for($i=0; $i<$news_count; $i++): ?>
-                <i class="fa-solid fa-circle<?php echo $i===0 ? ' active' : ''; ?>"></i>
+                <i class="<?php echo $i===0 ? 'fa-solid' : 'fa-regular'; ?> fa-circle<?php echo $i===0 ? ' active' : ''; ?>"></i>
                 <?php endfor; ?>
             </span>
             <span class="nav-arrow text-primary" id="news-next" style="cursor:pointer;"><i class="fa-solid fa-chevron-right"></i></span>
@@ -323,7 +323,15 @@ get_header();
                 var max = car.querySelectorAll('.news-slide').length - 1;
                 cur = Math.max(0, Math.min(n, max));
                 car.scrollLeft = cur * slideWidth();
-                dots.forEach(function(d, i){ d.classList.toggle('active', i === cur); });
+                dots.forEach(function(d, i){
+                    if (i === cur) {
+                        d.classList.remove('fa-regular');
+                        d.classList.add('fa-solid', 'active');
+                    } else {
+                        d.classList.remove('fa-solid', 'active');
+                        d.classList.add('fa-regular');
+                    }
+                });
             }
             prev.addEventListener('click', function(){ go(cur - 1); });
             next.addEventListener('click', function(){ go(cur + 1); });
@@ -423,8 +431,9 @@ get_header();
                 $pages = ceil($total_players / 4);
                 for($i = 0; $i < $pages; $i++):
                     $active = $i === 0 ? ' active' : '';
+                    $icon_class = $i === 0 ? 'fa-solid' : 'fa-regular';
                 ?>
-                <i class="fa-solid fa-circle<?php echo $active; ?>" data-page="<?php echo $i; ?>"></i>
+                <i class="<?php echo $icon_class; ?> fa-circle<?php echo $active; ?>" data-page="<?php echo $i; ?>"></i>
                 <?php endfor; ?>
             </span>
             <span class="nav-arrow text-primary" id="team-next" style="cursor:pointer;"><i class="fa-solid fa-chevron-right"></i></span>
@@ -448,7 +457,14 @@ get_header();
                 carousel.scrollLeft = cur * slideWidth();
                 dots.forEach(function(d, i) {
                     // Dot attivo: uno ogni 4 giocatori
-                    d.classList.toggle('active', Math.floor(cur / 4) === i);
+                    var isActive = Math.floor(cur / 4) === i;
+                    if (isActive) {
+                        d.classList.remove('fa-regular');
+                        d.classList.add('fa-solid', 'active');
+                    } else {
+                        d.classList.remove('fa-solid', 'active');
+                        d.classList.add('fa-regular');
+                    }
                 });
             }
             prevBtn.addEventListener('click', function() { go(cur - 1); });

@@ -450,7 +450,7 @@ get_header('societa');
             <span class="nav-arrow" id="hs-news-prev"><i class="fa-solid fa-chevron-left"></i></span>
             <div class="hs-nav-dots" id="hs-news-dots">
                 <?php for ($i = 0; $i < max(1, ceil($news_count/3)); $i++): ?>
-                <i class="fa-solid fa-circle<?php echo $i === 0 ? ' active' : ''; ?>"></i>
+                <i class="<?php echo $i === 0 ? 'fa-solid' : 'fa-regular'; ?> fa-circle<?php echo $i === 0 ? ' active' : ''; ?>"></i>
                 <?php endfor; ?>
             </div>
             <span class="nav-arrow" id="hs-news-next"><i class="fa-solid fa-chevron-right"></i></span>
@@ -522,7 +522,7 @@ get_header('societa');
             <span class="nav-arrow" id="hs-ev-prev"><i class="fa-solid fa-chevron-left"></i></span>
             <div class="hs-nav-dots" id="hs-ev-dots">
                 <?php for ($i = 0; $i < max(1, ceil($eventi_count/3)); $i++): ?>
-                <i class="fa-solid fa-circle<?php echo $i === 0 ? ' active' : ''; ?>"></i>
+                <i class="<?php echo $i === 0 ? 'fa-solid' : 'fa-regular'; ?> fa-circle<?php echo $i === 0 ? ' active' : ''; ?>"></i>
                 <?php endfor; ?>
             </div>
             <span class="nav-arrow" id="hs-ev-next"><i class="fa-solid fa-chevron-right"></i></span>
@@ -618,7 +618,15 @@ get_header('societa');
         function updateDots() {
             if (!dots) return;
             var ds = dots.querySelectorAll('i');
-            ds.forEach(function(d, i){ d.classList.toggle('active', i === current); });
+            ds.forEach(function(d, i){
+                if (i === current) {
+                    d.classList.remove('fa-regular');
+                    d.classList.add('fa-solid', 'active');
+                } else {
+                    d.classList.remove('fa-solid', 'active');
+                    d.classList.add('fa-regular');
+                }
+            });
         }
 
         function scrollTo(idx) {
@@ -638,6 +646,13 @@ get_header('societa');
 
         if (prev) prev.addEventListener('click', function(){ scrollTo(current - 1); });
         if (next) next.addEventListener('click', function(){ scrollTo(current + 1); });
+        if (dots) {
+            var ds = dots.querySelectorAll('i');
+            ds.forEach(function(d, i){
+                d.style.cursor = 'pointer';
+                d.addEventListener('click', function(){ scrollTo(i); });
+            });
+        }
         updateDots();
     }
 
