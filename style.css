@@ -2617,12 +2617,14 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 @media (min-width: 769px) {
     .page-rosa .news-hero-wrapper,
     .page-staff .news-hero-wrapper {
-        padding-right: 80px !important;
+        max-width: 1420px !important;
+        margin: 0 auto;
+        padding-right: 0 !important;
         box-sizing: border-box !important;
     }
     .page-rosa .news-hero-content,
     .page-staff .news-hero-content {
-        right: 80px !important;
+        right: 0 !important;
     }
 }
 
