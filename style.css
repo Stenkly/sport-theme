@@ -572,10 +572,62 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .teams-logos-center { display: flex; align-items: center; gap: 15px; }
 .teams-logos-center img { max-height: 50px; width: auto; object-fit: contain; }
 .vs { font-weight: 700; color: var(--c-white); font-size: 18px; }
+
+/* Spaced out logo layout for Next Matches cards */
+.match-card:not(.match-row) .match-teams {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto 1fr 1fr;
+    align-items: center;
+    width: 100%;
+    margin-top: 25px;
+    gap: 10px;
+}
+.match-card:not(.match-row) .team-name {
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+.match-card:not(.match-row) .team-1-name {
+    text-align: left;
+}
+.match-card:not(.match-row) .team-2-name {
+    text-align: right;
+}
+.match-card:not(.match-row) .team-logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.match-card:not(.match-row) .team-logo {
+    max-height: 60px; /* Slightly larger logos */
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+.match-card:not(.match-row) .team-logo:hover {
+    transform: scale(1.08);
+}
+.match-card:not(.match-row) .vs {
+    font-weight: 700;
+    color: var(--c-white);
+    font-size: 18px;
+    text-align: center;
+}
+
 @media (max-width: 600px) { 
     .match-card { flex-direction: column; text-align: center; gap: 20px; } 
     .match-teams { flex-direction: column; gap: 15px; } 
     .team-1-name, .team-2-name { text-align: center; } 
+    .match-card:not(.match-row) .match-teams {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+    .match-card:not(.match-row) .team-1-name,
+    .match-card:not(.match-row) .team-2-name {
+        text-align: center;
+    }
 }
 
 /* News Card */

@@ -2705,6 +2705,22 @@ function sport_theme_get_match_stadium($post_id) {
     return $stadio;
 }
 
+/**
+ * Ottiene l'URL del logo dell'avversario.
+ * Se non è impostato, tenta di mappare loghi locali se disponibili.
+ */
+function sport_theme_get_opponent_logo($post_id) {
+    $logo = get_post_meta($post_id, '_logo_avversario', true);
+    $avversario = get_post_meta($post_id, '_avversario', true);
+
+    if (empty($logo) || stripos($logo, 'placeholder') !== false || stripos($logo, 'via.placeholder.com') !== false) {
+        if (stripos($avversario, 'Mendrisio') !== false) {
+            return get_stylesheet_directory_uri() . '/assets/images/mendrisio-logo.png';
+        }
+    }
+    return $logo ? $logo : 'https://via.placeholder.com/40';
+}
+
 // TEMPORARY SCRIPT TO FIX STADIUMS IN DB
 add_action('init', 'sport_theme_fix_stadiums_in_db');
 function sport_theme_fix_stadiums_in_db() {

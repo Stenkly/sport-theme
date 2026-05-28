@@ -69,7 +69,7 @@ get_header();
                 $ora_p = get_post_meta($post->ID, '_ora_partita', true);
                 $stadio = sport_theme_get_match_stadium($post->ID);
                 $avversario = get_post_meta($post->ID, '_avversario', true) ? get_post_meta($post->ID, '_avversario', true) : 'Sfidante';
-                $logo_avversario = get_post_meta($post->ID, '_logo_avversario', true) ? get_post_meta($post->ID, '_logo_avversario', true) : 'https://via.placeholder.com/40';
+                $logo_avversario = sport_theme_get_opponent_logo($post->ID);
                 $in_casa = get_post_meta($post->ID, '_in_casa', true);
 
                 $t1_name = $in_casa == '1' ? 'AC Taverne' : $avversario;
@@ -87,11 +87,11 @@ get_header();
                 <div class="match-teams">
                     <div class="team">
                         <span class="d-none-mobile"><?php echo esc_html($t1_name); ?></span>
-                        <img src="<?php echo esc_url($t1_logo); ?>" alt="<?php echo esc_attr($t1_name); ?>" style="max-height:40px;">
+                        <img src="<?php echo esc_url($t1_logo); ?>" alt="<?php echo esc_attr($t1_name); ?>" style="max-height:52px;">
                     </div>
                     <div class="vs">VS</div>
                     <div class="team">
-                        <img src="<?php echo esc_url($t2_logo); ?>" alt="<?php echo esc_attr($t2_name); ?>" style="max-height:40px;">
+                        <img src="<?php echo esc_url($t2_logo); ?>" alt="<?php echo esc_attr($t2_name); ?>" style="max-height:52px;">
                         <span class="d-none-mobile"><?php echo esc_html($t2_name); ?></span>
                     </div>
                 </div>
@@ -119,7 +119,7 @@ get_header();
                 $ora_p = get_post_meta($post->ID, '_ora_partita', true);
                 $stadio = sport_theme_get_match_stadium($post->ID);
                 $avversario = get_post_meta($post->ID, '_avversario', true) ? get_post_meta($post->ID, '_avversario', true) : 'Sfidante';
-                $logo_avversario = get_post_meta($post->ID, '_logo_avversario', true) ? get_post_meta($post->ID, '_logo_avversario', true) : 'https://via.placeholder.com/40';
+                $logo_avversario = sport_theme_get_opponent_logo($post->ID);
                 $in_casa = get_post_meta($post->ID, '_in_casa', true);
                 $risultato = get_post_meta($post->ID, '_risultato', true);
 
@@ -138,11 +138,11 @@ get_header();
                 <div class="match-teams">
                     <div class="team">
                         <span class="d-none-mobile"><?php echo esc_html($t1_name); ?></span>
-                        <img src="<?php echo esc_url($t1_logo); ?>" alt="<?php echo esc_attr($t1_name); ?>" style="max-height:40px;">
+                        <img src="<?php echo esc_url($t1_logo); ?>" alt="<?php echo esc_attr($t1_name); ?>" style="max-height:52px;">
                     </div>
                     <div class="score" style="font-size: 24px; font-weight: 700; color: white; letter-spacing: 2px;"><?php echo esc_html($risultato); ?></div>
                     <div class="team">
-                        <img src="<?php echo esc_url($t2_logo); ?>" alt="<?php echo esc_attr($t2_name); ?>" style="max-height:40px;">
+                        <img src="<?php echo esc_url($t2_logo); ?>" alt="<?php echo esc_attr($t2_name); ?>" style="max-height:52px;">
                         <span class="d-none-mobile"><?php echo esc_html($t2_name); ?></span>
                     </div>
                 </div>

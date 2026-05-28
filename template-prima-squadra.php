@@ -218,7 +218,7 @@ get_header();
                 $ora_p = get_post_meta($post->ID, '_ora_partita', true);
                 $stadio = sport_theme_get_match_stadium($post->ID);
                 $avversario = get_post_meta($post->ID, '_avversario', true) ? get_post_meta($post->ID, '_avversario', true) : 'Sfidante';
-                $logo_avversario = get_post_meta($post->ID, '_logo_avversario', true) ? get_post_meta($post->ID, '_logo_avversario', true) : 'https://via.placeholder.com/40';
+                $logo_avversario = sport_theme_get_opponent_logo($post->ID);
                 $in_casa = get_post_meta($post->ID, '_in_casa', true);
 
                 $t1_name = $in_casa == '1' ? 'AC Taverne' : $avversario;
@@ -236,9 +236,11 @@ get_header();
                 </div>
                 <div class="match-teams">
                     <span class="team-name team-1-name"><?php echo esc_html($t1_name); ?></span>
-                    <div class="teams-logos-center">
+                    <div class="team-logo-container team-1-logo-container">
                         <img class="team-logo" src="<?php echo esc_url($t1_logo); ?>" alt="<?php echo esc_attr($t1_name); ?>">
-                        <span class="vs">VS</span>
+                    </div>
+                    <span class="vs">VS</span>
+                    <div class="team-logo-container team-2-logo-container">
                         <img class="team-logo" src="<?php echo esc_url($t2_logo); ?>" alt="<?php echo esc_attr($t2_name); ?>">
                     </div>
                     <span class="team-name team-2-name"><?php echo esc_html($t2_name); ?></span>
