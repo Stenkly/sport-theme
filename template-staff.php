@@ -74,7 +74,7 @@ get_header();
                     
                     <div class="player-info" style="position: absolute; bottom: 2px; left: 12px; z-index: 2; flex-direction: column; gap: 0; padding: 0;">
                         <?php if(!empty($ruolo_spec)): ?>
-                        <span class="staff-role text-primary" style="display: block; font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 25px; letter-spacing: 1px;"><?php echo esc_html($ruolo_spec); ?></span>
+                        <span class="staff-role text-primary" style="display: block; font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 1px;"><?php echo esc_html($ruolo_spec); ?></span>
                         <?php endif; ?>
                         <span class="player-name text-white" style="display: block; font-size: 22px; font-weight: 700; line-height: 1.1; margin-top: 0;">
                             <?php echo esc_html($nome_riga1); ?><br>
