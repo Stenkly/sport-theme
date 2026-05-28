@@ -72,10 +72,10 @@ $ricerca = isset($_GET['ricerca']) ? sanitize_text_field($_GET['ricerca']) : '';
                         <img src="<?php echo esc_url($img); ?>" style="width: 100%; height: 100%; object-fit: cover;" alt="<?php echo esc_attr(get_the_title()); ?>">
                         <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 60%);"></div>
                         
-                        <div style="position: absolute; top: 20px; left: 20px; color: white; font-weight: bold; font-size: 24px;"><?php echo $data_format; ?></div>
+                        <div style="position: absolute; top: 20px; left: 20px; color: white; font-weight: bold; font-size: 28px;"><?php echo $data_format; ?></div>
                         
                         <div style="position: absolute; bottom: 20px; left: 20px; right: 20px;">
-                            <h3 style="color: white; font-size: 20px; font-weight: bold; margin-bottom: 15px; line-height: 1.4; text-transform: uppercase;">
+                            <h3 style="color: white; font-size: 28px; font-weight: bold; margin-bottom: 15px; line-height: 1.4; text-transform: uppercase;">
                                 <?php echo wp_trim_words( get_the_title(), 8, '...' ); ?>
                             </h3>
                             <a href="<?php the_permalink(); ?>" style="display: inline-block; background-color: var(--c-primary); color: #000; font-weight: bold; font-size: 12px; padding: 8px 15px; text-decoration: none; text-transform: uppercase;">LEGGI ARTICOLO</a>
@@ -166,10 +166,10 @@ $ricerca = isset($_GET['ricerca']) ? sanitize_text_field($_GET['ricerca']) : '';
                         <div style="position: absolute; inset: 0; background-image: url('<?php echo esc_url(get_template_directory_uri() . '/assets/images/logo.png'); ?>'); background-size: 150%; background-position: center; background-repeat: no-repeat; opacity: 0.15;"></div>
                         <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 70%);"></div>
                         
-                        <div style="position: absolute; top: 20px; left: 20px; color: white; font-weight: bold; font-size: 24px; z-index: 2;"><?php echo esc_html($data_format); ?></div>
+                        <div style="position: absolute; top: 20px; left: 20px; color: white; font-weight: bold; font-size: 28px; z-index: 2;"><?php echo esc_html($data_format); ?></div>
                         
                         <div style="position: relative; z-index: 2;">
-                            <h3 style="color: white; font-size: 20px; font-weight: bold; margin-bottom: 10px; line-height: 1.4; text-transform: uppercase;">
+                            <h3 style="color: white; font-size: 28px; font-weight: bold; margin-bottom: 10px; line-height: 1.4; text-transform: uppercase;">
                                 <?php echo esc_html(get_the_title()); ?>
                             </h3>
                             <a href="<?php the_permalink(); ?>" style="color: white; font-size: 13px; text-decoration: none; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">SCOPRI <span style="margin-left: 5px; opacity: 0.7;">|</span></a>
@@ -188,9 +188,9 @@ $ricerca = isset($_GET['ricerca']) ? sanitize_text_field($_GET['ricerca']) : '';
                         ?>
                         <div class="event-card" style="position: relative; height: 350px; background-color: var(--c-primary); overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px;">
                             <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 70%);"></div>
-                            <div style="position: absolute; top: 20px; left: 20px; color: white; font-weight: bold; font-size: 24px; z-index: 2;">28.02</div>
+                            <div style="position: absolute; top: 20px; left: 20px; color: white; font-weight: bold; font-size: 28px; z-index: 2;">28.02</div>
                             <div style="position: relative; z-index: 2;">
-                                <h3 style="color: white; font-size: 20px; font-weight: bold; margin-bottom: 10px; line-height: 1.4; text-transform: uppercase;">DESCRIZIONE EVENTO DI ESEMPIO</h3>
+                                <h3 style="color: white; font-size: 28px; font-weight: bold; margin-bottom: 10px; line-height: 1.4; text-transform: uppercase;">DESCRIZIONE EVENTO DI ESEMPIO</h3>
                                 <a href="#" onclick="alert('Questo è solo un evento finto di prova per mostrarti la grafica! Crea un evento VERO su WordPress, assegnagli la categoria Settore Giovanile e la Data, e poi cliccaci per vedere la bellissima pagina che ho progettato per te!'); return false;" style="color: white; font-size: 13px; text-decoration: none; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">SCOPRI <span style="margin-left: 5px; opacity: 0.7;">|</span></a>
                             </div>
                         </div>
@@ -276,10 +276,10 @@ $ricerca = isset($_GET['ricerca']) ? sanitize_text_field($_GET['ricerca']) : '';
                         <div style="position: absolute; inset: 0; background-image: url('<?php echo esc_url(get_template_directory_uri() . '/assets/images/logo.png'); ?>'); background-size: 150%; background-position: center; background-repeat: no-repeat; opacity: 0.15;"></div>
                         <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 70%);"></div>
                         
-                        <div style="position: absolute; top: 20px; left: 20px; color: white; font-weight: bold; font-size: 24px; z-index: 2;"><?php echo esc_html($data_format); ?></div>
+                        <div style="position: absolute; top: 20px; left: 20px; color: white; font-weight: bold; font-size: 28px; z-index: 2;"><?php echo esc_html($data_format); ?></div>
                         
                         <div style="position: relative; z-index: 2;">
-                            <h3 style="color: white; font-size: 20px; font-weight: bold; margin-bottom: 10px; line-height: 1.4; text-transform: uppercase;">
+                            <h3 style="color: white; font-size: 28px; font-weight: bold; margin-bottom: 10px; line-height: 1.4; text-transform: uppercase;">
                                 <?php echo esc_html(get_the_title()); ?>
                             </h3>
                             <a href="<?php the_permalink(); ?>" style="color: white; font-size: 13px; text-decoration: none; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">GALLERY <span style="margin-left: 5px; opacity: 0.7;">|</span></a>
@@ -297,9 +297,9 @@ $ricerca = isset($_GET['ricerca']) ? sanitize_text_field($_GET['ricerca']) : '';
                         ?>
                         <div class="event-card" style="position: relative; height: 350px; background-color: var(--c-primary); overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px;">
                             <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 70%);"></div>
-                            <div style="position: absolute; top: 20px; left: 20px; color: white; font-weight: bold; font-size: 24px; z-index: 2;">28.02</div>
+                            <div style="position: absolute; top: 20px; left: 20px; color: white; font-weight: bold; font-size: 28px; z-index: 2;">28.02</div>
                             <div style="position: relative; z-index: 2;">
-                                <h3 style="color: white; font-size: 20px; font-weight: bold; margin-bottom: 10px; line-height: 1.4; text-transform: uppercase;">DESCRIZIONE EVENTO DI ESEMPIO</h3>
+                                <h3 style="color: white; font-size: 28px; font-weight: bold; margin-bottom: 10px; line-height: 1.4; text-transform: uppercase;">DESCRIZIONE EVENTO DI ESEMPIO</h3>
                                 <a href="#" onclick="alert('Questo è solo un evento finto di prova per mostrarti la grafica! Crea un evento VERO su WordPress, assegnagli la categoria Settore Giovanile e la Data, e poi cliccaci per vedere la bellissima pagina che ho progettato per te!'); return false;" style="color: white; font-size: 13px; text-decoration: none; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">GALLERY <span style="margin-left: 5px; opacity: 0.7;">|</span></a>
                             </div>
                         </div>
