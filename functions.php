@@ -2677,3 +2677,80 @@ HTML;
     echo "<h1>Storia Aggiornata!</h1><p>Testo formattato inserito con successo.</p><h2>Rimuovi '?update_storia=true' dall'URL.</h2></div>";
     die();
 }
+
+/**
+ * Ottiene il nome dello stadio per una partita.
+ * Se lo stadio è impostato su 'Trasferta' o è vuoto, effettua un mapping dinamico in base all'avversario.
+ */
+function sport_theme_get_match_stadium($post_id) {
+    $stadio = get_post_meta($post_id, '_stadio', true);
+    $avversario = get_post_meta($post_id, '_avversario', true);
+    $in_casa = get_post_meta($post_id, '_in_casa', true);
+
+    if ($in_casa == '1') {
+        if ($stadio === 'Trasferta' || empty($stadio)) {
+            return 'Stadio Comunale Taverne';
+        }
+    } else {
+        if ($stadio === 'Trasferta' || empty($stadio)) {
+            if (stripos($avversario, 'Juventus') !== false) {
+                return 'Utogrund';
+            } elseif (stripos($avversario, 'Mendrisio') !== false) {
+                return 'Campo Comunale Mendrisio';
+            } elseif (stripos($avversario, 'Widnau') !== false) {
+                return 'Sportanlage Aegeten';
+            }
+        }
+    }
+    return $stadio;
+}
+
+// TEMPORARY SCRIPT TO FIX STADIUMS IN DB
+add_action('init', 'sport_theme_fix_stadiums_in_db');
+function sport_theme_fix_stadiums_in_db() {
+    if (!isset($_GET['fix_stadiums'])) return;
+    if (!current_user_can('manage_options')) return;
+
+    $args = [
+        'post_type' => 'partita',
+        'posts_per_page' => -1
+    ];
+    $query = new WP_Query($args);
+    
+    echo "<div style='background:#fff; padding:30px; position:absolute; z-index:9999; top:0; left:0; right:0; bottom:0;'>";
+    echo "<h1>Aggiornamento Stadi in corso...</h1><ul>";
+    
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
+            $id = get_the_ID();
+            $stadio = get_post_meta($id, '_stadio', true);
+            $avversario = get_post_meta($id, '_avversario', true);
+            
+            if ($stadio === 'Trasferta' || empty($stadio)) {
+                $new_stadio = '';
+                if (stripos($avversario, 'Juventus') !== false) {
+                    $new_stadio = 'Utogrund';
+                } elseif (stripos($avversario, 'Mendrisio') !== false) {
+                    $new_stadio = 'Campo Comunale Mendrisio';
+                } elseif (stripos($avversario, 'Widnau') !== false) {
+                    $new_stadio = 'Sportanlage Aegeten';
+                }
+                
+                if ($new_stadio) {
+                    update_post_meta($id, '_stadio', $new_stadio);
+                    echo "<li>Partita: <b>" . get_the_title() . "</b> - Stadio aggiornato da 'Trasferta' a: <b>" . $new_stadio . "</b></li>";
+                } else {
+                    echo "<li>Partita: <b>" . get_the_title() . "</b> - Stadio è 'Trasferta', nessun mapping trovato per avversario: <b>" . $avversario . "</b></li>";
+                }
+            } else {
+                echo "<li>Partita: <b>" . get_the_title() . "</b> - Stadio già impostato a: " . $stadio . "</li>";
+            }
+        }
+        wp_reset_postdata();
+    }
+    
+    echo "</ul><h2>Finito! Rimuovi '?fix_stadiums=true' dall'URL.</h2></div>";
+    die();
+}
+

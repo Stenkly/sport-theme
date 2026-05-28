@@ -216,7 +216,7 @@ get_header();
             foreach($hp_calendario as $post) : setup_postdata($post);
                 $data_p = get_post_meta($post->ID, '_data_partita', true);
                 $ora_p = get_post_meta($post->ID, '_ora_partita', true);
-                $stadio = get_post_meta($post->ID, '_stadio', true);
+                $stadio = sport_theme_get_match_stadium($post->ID);
                 $avversario = get_post_meta($post->ID, '_avversario', true) ? get_post_meta($post->ID, '_avversario', true) : 'Sfidante';
                 $logo_avversario = get_post_meta($post->ID, '_logo_avversario', true) ? get_post_meta($post->ID, '_logo_avversario', true) : 'https://via.placeholder.com/40';
                 $in_casa = get_post_meta($post->ID, '_in_casa', true);
