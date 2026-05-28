@@ -101,6 +101,8 @@ get_header();
                 $htp         = get_post_meta(get_the_ID(), '_htp', true) ?: '-';
                 $shop_url    = get_post_meta(get_the_ID(), '_shop_url', true);
                 $ruolo_str   = sport_theme_get_singular_role($nome_ruolo);
+                $zoom_foto   = get_post_meta(get_the_ID(), '_zoom_foto', true) ?: 'cover';
+                $allineamento_foto = get_post_meta(get_the_ID(), '_allineamento_foto', true) ?: 'center top';
                 
                 // Dividiamo il nome su due righe per emulare il design "Nome \n Cognome"
                 $split_name = sport_theme_get_giocatore_split_name(get_the_ID());
@@ -123,7 +125,7 @@ get_header();
                data-ruolo="<?php echo esc_attr($ruolo_str); ?>"
                style="text-decoration: none; display: block; overflow: hidden; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                 <div class="player-card" style="position: relative; aspect-ratio: 3/4; overflow: hidden; background-color: #111;">
-                    <div class="player-photo cover-bg" style="background-image: url('<?php echo esc_url($foto_ritratto); ?>'); width: 100%; height: 100%; border: none; transition: transform 0.5s ease;"></div>
+                    <div class="player-photo cover-bg" style="background-image: url('<?php echo esc_url($foto_ritratto); ?>'); background-size: <?php echo esc_attr($zoom_foto); ?>; background-position: <?php echo esc_attr($allineamento_foto); ?>; width: 100%; height: 100%; border: none; transition: transform 0.5s ease;"></div>
                     <!-- Velo Sfumato dal Basso -->
                     <div class="player-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%); pointer-events: none;"></div>
                     

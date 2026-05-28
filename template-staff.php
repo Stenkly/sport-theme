@@ -54,6 +54,8 @@ get_header();
                 $parti_nome = explode(' ', get_the_title(), 2);
                 $nome_riga1 = $parti_nome[0];
                 $nome_riga2 = isset($parti_nome[1]) ? $parti_nome[1] : '';
+                $zoom_foto   = get_post_meta(get_the_ID(), '_zoom_foto', true) ?: 'cover';
+                $allineamento_foto = get_post_meta(get_the_ID(), '_allineamento_foto', true) ?: 'center top';
             ?>
             <a href="#" class="open-player-modal" 
                data-foto="<?php echo esc_attr($foto); ?>" 
@@ -69,7 +71,7 @@ get_header();
                data-ruolo="<?php echo esc_attr($ruolo_spec ?: '-'); ?>"
                style="text-decoration: none; display: block; overflow: hidden; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                 <div class="player-card" style="position: relative; aspect-ratio: 3/4; overflow: hidden; background-color: #111;">
-                    <div class="player-photo cover-bg" style="background-image: url('<?php echo esc_url($foto); ?>'); width: 100%; height: 100%; border: none; transition: transform 0.5s ease;"></div>
+                    <div class="player-photo cover-bg" style="background-image: url('<?php echo esc_url($foto); ?>'); background-size: <?php echo esc_attr($zoom_foto); ?>; background-position: <?php echo esc_attr($allineamento_foto); ?>; width: 100%; height: 100%; border: none; transition: transform 0.5s ease;"></div>
                     <div class="player-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%); pointer-events: none;"></div>
                     
                     <div class="player-info" style="position: absolute; bottom: 2px; left: 12px; z-index: 2; flex-direction: column; gap: 0; padding: 0;">

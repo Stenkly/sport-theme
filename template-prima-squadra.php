@@ -367,7 +367,8 @@ get_header();
                         $ruolo_str = $ruoli && !is_wp_error($ruoli) ? sport_theme_get_singular_role($ruoli[0]->name) : '-';
                         $split_name = sport_theme_get_giocatore_split_name(get_the_ID());
                         $nome_riga1 = $split_name['nome'];
-                        $nome_riga2 = $split_name['cognome'];
+                        $zoom_foto   = get_post_meta(get_the_ID(), '_zoom_foto', true) ?: 'cover';
+                        $allineamento_foto = get_post_meta(get_the_ID(), '_allineamento_foto', true) ?: 'center top';
                 ?>
                 <a href="#" class="open-player-modal team-slide"
                    data-foto="<?php echo esc_attr($foto_dettaglio); ?>"
@@ -384,7 +385,7 @@ get_header();
                    style="text-decoration: none; flex: 0 0 calc(25% - 15px); min-width: 0; display: block; overflow: hidden; transition: transform 0.3s;"
                    onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                     <div class="player-card" style="position: relative; aspect-ratio: 3/4; overflow: hidden; background-color: #111;">
-                        <div class="player-photo cover-bg" style="background-image: url('<?php echo esc_url($foto_ritratto); ?>'); width: 100%; height: 100%; border: none; transition: transform 0.5s ease;"></div>
+                        <div class="player-photo cover-bg" style="background-image: url('<?php echo esc_url($foto_ritratto); ?>'); background-size: <?php echo esc_attr($zoom_foto); ?>; background-position: <?php echo esc_attr($allineamento_foto); ?>; width: 100%; height: 100%; border: none; transition: transform 0.5s ease;"></div>
                         <div class="player-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%); pointer-events: none;"></div>
                         <div class="player-info" style="position: absolute; bottom: 2px; left: 12px; z-index: 2; flex-direction: column; gap: 0; padding: 0;">
                             <?php if(!empty($numero)): ?>

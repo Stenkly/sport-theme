@@ -407,6 +407,12 @@ function sport_theme_giocatore_meta_html($post) {
         
         <br><label><b>URL Shop Personale (opzionale):</b></label><br>
         <input type="text" name="_shop_url" value="<?php echo esc_attr($shop_url); ?>" placeholder="https://...">
+
+        <br><label><b>Zoom Foto in Evidenza (es. cover, 110%, 120%, 150% - default: cover):</b></label><br>
+        <input type="text" name="_zoom_foto" value="<?php echo esc_attr(get_post_meta($post->ID, '_zoom_foto', true) ?: 'cover'); ?>" style="width:100%; max-width:400px; margin-bottom:10px;"><br>
+        
+        <br><label><b>Allineamento Foto (es. center top, center 10%, center 20% - default: center top):</b></label><br>
+        <input type="text" name="_allineamento_foto" value="<?php echo esc_attr(get_post_meta($post->ID, '_allineamento_foto', true) ?: 'center top'); ?>" style="width:100%; max-width:400px; margin-bottom:10px;">
     </div>
     
     <script>
@@ -434,7 +440,7 @@ function sport_theme_salva_giocatore_meta($post_id) {
     if (!isset($_POST['giocatore_meta_nonce']) || !wp_verify_nonce($_POST['giocatore_meta_nonce'], 'salva_giocatore_meta')) return;
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
     
-    $fields = ['_nome_calciatore', '_cognome_calciatore', '_foto_esultanza', '_numero_maglia', '_data_nascita', '_altezza', '_peso', '_nazionalita', '_htp', '_shop_url'];
+    $fields = ['_nome_calciatore', '_cognome_calciatore', '_foto_esultanza', '_numero_maglia', '_data_nascita', '_altezza', '_peso', '_nazionalita', '_htp', '_shop_url', '_zoom_foto', '_allineamento_foto'];
     foreach($fields as $field) {
         if(isset($_POST[$field])) {
             update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
@@ -557,12 +563,20 @@ function sport_theme_staff_meta_html($post) {
     ?>
     <p><label><b>Qualifica/Ruolo (es. Allenatore, Preparatore):</b></label><br>
     <input type="text" name="_ruolo_specifico" value="<?php echo esc_attr($ruolo_spec); ?>" style="width:100%; max-width:400px;"></p>
+
+    <p><label><b>Zoom Foto in Evidenza (es. cover, 110%, 120%, 150% - default: cover):</b></label><br>
+    <input type="text" name="_zoom_foto" value="<?php echo esc_attr(get_post_meta($post->ID, '_zoom_foto', true) ?: 'cover'); ?>" style="width:100%; max-width:400px;"></p>
+    
+    <p><label><b>Allineamento Foto (es. center top, center 10%, center 20% - default: center top):</b></label><br>
+    <input type="text" name="_allineamento_foto" value="<?php echo esc_attr(get_post_meta($post->ID, '_allineamento_foto', true) ?: 'center top'); ?>" style="width:100%; max-width:400px;"></p>
     <?php
 }
 
 function sport_theme_salva_staff_meta($post_id) {
     if (!isset($_POST['staff_meta_nonce']) || !wp_verify_nonce($_POST['staff_meta_nonce'], 'salva_staff_meta')) return;
     if (isset($_POST['_ruolo_specifico'])) update_post_meta($post_id, '_ruolo_specifico', sanitize_text_field($_POST['_ruolo_specifico']));
+    if (isset($_POST['_zoom_foto'])) update_post_meta($post_id, '_zoom_foto', sanitize_text_field($_POST['_zoom_foto']));
+    if (isset($_POST['_allineamento_foto'])) update_post_meta($post_id, '_allineamento_foto', sanitize_text_field($_POST['_allineamento_foto']));
 }
 add_action('save_post_membro_staff', 'sport_theme_salva_staff_meta');
 
