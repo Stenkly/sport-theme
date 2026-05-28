@@ -396,7 +396,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 /* Paginazione News */
 .pagination-numbers .page-numbers {
     display: inline-flex; justify-content: center; align-items: center; width: 30px; height: 30px;
-    border-radius: 0px; border: 1px solid var(--c-primary); color: var(--c-primary);
+    border-radius: 50%; border: 1px solid var(--c-primary); color: var(--c-primary);
     font-size: 12px; font-weight: 700; text-decoration: none; transition: all 0.3s;
 }
 .pagination-numbers .page-numbers.current, .pagination-numbers .page-numbers:hover {
@@ -681,25 +681,8 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 /* Carousel Nav */
 .carousel-nav { display: flex; justify-content: space-between; align-items: center; padding: 25px 0; }
-.nav-arrow {
-    display: inline-flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    width: 40px !important;
-    height: 40px !important;
-    border: 2px solid var(--c-primary) !important;
-    border-radius: 0px !important;
-    background-color: transparent !important;
-    color: var(--c-primary) !important;
-    font-size: 18px !important;
-    cursor: pointer;
-    transition: all 0.3s ease !important;
-    opacity: 1 !important;
-}
-.nav-arrow:hover {
-    background-color: var(--c-primary) !important;
-    color: var(--c-black) !important;
-}
+.nav-arrow { font-size: 22px; cursor: pointer; transition: opacity 0.2s ease; }
+.nav-arrow:hover { opacity: 0.7; }
 .nav-dots { display: flex; gap: 8px; color: var(--c-primary); font-size: 10px; }
 .nav-dots .active { color: var(--c-primary); }
 
@@ -710,10 +693,10 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     align-items: center;
 }
 .gallery-nav .nav-arrow {
-    position: absolute !important;
-    font-size: 18px !important;
-    font-weight: normal !important;
-    -webkit-text-stroke: 0px !important;
+    position: absolute;
+    font-size: 28px; /* slightly larger */
+    font-weight: 900;
+    -webkit-text-stroke: 3px var(--c-primary); /* makes the icon thicker */
 }
 .gallery-nav #gallery-prev {
     left: 0;
