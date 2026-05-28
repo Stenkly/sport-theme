@@ -1005,9 +1005,19 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .club-hero-wrapper {
     position: relative;
     width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
     height: 55vh;       /* Altezza uniforme su tutte e tre le pagine */
     overflow: hidden;
     background: #000;
+}
+
+.news-hero-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    overflow: hidden;
 }
 
 .club-hero-title {
@@ -2602,3 +2612,17 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
         font-size: 16px;
     }
 }
+
+/* Allineamento larghezza immagine hero per Rosa e Staff */
+@media (min-width: 769px) {
+    .page-rosa .news-hero-wrapper,
+    .page-staff .news-hero-wrapper {
+        padding-right: 80px !important;
+        box-sizing: border-box !important;
+    }
+    .page-rosa .news-hero-content,
+    .page-staff .news-hero-content {
+        right: 80px !important;
+    }
+}
+
