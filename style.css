@@ -2645,3 +2645,15 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-staff .news-hero-overlay {
     height: 85% !important;
 }
+
+/* Ritaglio superiore immagine hero Prima Squadra */
+@media (min-width: 769px) {
+    .page-prima-squadra .news-hero .container img {
+        margin-top: -100px !important;
+    }
+}
+@media (max-width: 768px) {
+    .page-prima-squadra .news-hero .container img {
+        margin-top: -40px !important;
+    }
+}
