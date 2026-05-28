@@ -716,10 +716,19 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 /* Nuovo bottone outline dorato fine */
 .btn-outline {
-    border: 1px solid var(--c-primary);
+    border: 2px solid var(--c-primary);
     color: var(--c-primary);
     background: transparent;
     padding: 8px 32px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+.btn-outline:hover {
+    background-color: var(--c-primary);
+    color: var(--c-black) !important;
+    border-color: var(--c-primary);
+    transform: translateY(-2px);
 }
 
 /* Instagram Widget */

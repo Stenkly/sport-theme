@@ -255,7 +255,7 @@ get_header();
         <div class="section-header">
             <h2 class="section-title text-white">NEWS</h2>
             <?php $news_page = get_page_by_title('News'); ?>
-            <a href="<?php echo $news_page ? esc_url(get_permalink($news_page->ID)) : '#'; ?>" class="btn-sm btn-primary">SCOPRI</a>
+            <a href="<?php echo $news_page ? esc_url(get_permalink($news_page->ID)) : '#'; ?>" class="btn-sm btn-outline">SCOPRI</a>
         </div>
 
         <div id="news-carousel" style="display:flex; gap:16px; overflow:hidden; scroll-behavior:smooth;">
@@ -333,7 +333,7 @@ get_header();
         <div class="section-header">
             <h2 class="section-title text-white">TEAM</h2>
             <?php $rosa_page = get_page_by_title('Rosa'); ?>
-            <a href="<?php echo $rosa_page ? esc_url(get_permalink($rosa_page->ID)) : '#'; ?>" class="btn-sm btn-primary">SCOPRI</a>
+            <a href="<?php echo $rosa_page ? esc_url(get_permalink($rosa_page->ID)) : '#'; ?>" class="btn-sm btn-outline">SCOPRI</a>
         </div>
 
         <!-- Carousel wrapper -->
