@@ -903,6 +903,10 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .open-player-modal:hover {
     border-color: #ffffff !important;
 }
+.ps-grid.ps-team {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+}
 
 /* --- CLUB PAGE TYPOGRAPHY (Storia, Progetto) --- */
 .club-content {
