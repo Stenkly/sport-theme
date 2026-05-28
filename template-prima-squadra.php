@@ -231,7 +231,7 @@ get_header();
             ?>
             <div class="match-card">
                 <div class="match-info">
-                    <p class="match-date text-white"><?php echo esc_html($formatted_date); ?><br><?php echo esc_html($ora_p); ?></p>
+                    <p class="match-date text-white"><span class="match-date-day"><?php echo esc_html($formatted_date); ?></span><span class="match-date-time"><?php echo esc_html($ora_p); ?></span></p>
                     <p class="match-venue"><?php echo esc_html($stadio); ?></p>
                 </div>
                 <div class="match-teams">

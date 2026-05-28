@@ -80,8 +80,9 @@ get_header();
             <div class="match-card match-row">
                 <div class="match-info">
                     <div class="match-date text-white">
-                        <?php echo esc_html($data_p); ?><br><?php echo esc_html($ora_p); ?><br>
-                        <span class="text-light-yellow" style="font-weight:400; font-size:12px;"><?php echo esc_html($stadio); ?></span>
+                        <span class="match-date-day"><?php echo esc_html($data_p); ?></span>
+                        <span class="match-date-time"><?php echo esc_html($ora_p); ?></span>
+                        <span class="text-light-yellow" style="font-weight:400; font-size:12px; display: block; margin-top: 4px;"><?php echo esc_html($stadio); ?></span>
                     </div>
                 </div>
                 <div class="match-teams">
@@ -131,8 +132,9 @@ get_header();
             <div class="match-card match-row">
                 <div class="match-info">
                     <div class="match-date text-white">
-                        <?php echo esc_html($data_p); ?><br><?php echo esc_html($ora_p); ?><br>
-                        <span class="text-light-yellow" style="font-weight:400; font-size:12px;"><?php echo esc_html($stadio); ?></span>
+                        <span class="match-date-day"><?php echo esc_html($data_p); ?></span>
+                        <span class="match-date-time"><?php echo esc_html($ora_p); ?></span>
+                        <span class="text-light-yellow" style="font-weight:400; font-size:12px; display: block; margin-top: 4px;"><?php echo esc_html($stadio); ?></span>
                     </div>
                 </div>
                 <div class="match-teams">
