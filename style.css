@@ -908,12 +908,6 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .open-player-modal {
     border: 1px solid rgba(255, 255, 255, 0.5) !important;
 }
-@media (min-width: 769px) {
-    .open-player-modal {
-        max-width: calc(100% - 16px);
-        margin: 0 auto;
-    }
-}
 .open-player-modal:hover {
     border-color: #ffffff !important;
 }
