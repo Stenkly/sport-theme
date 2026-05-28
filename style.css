@@ -910,9 +910,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 @media (min-width: 769px) {
     .open-player-modal {
-        width: 90%;
-        margin-left: 0;
-        margin-right: auto;
+        width: 100%;
     }
 }
 .open-player-modal:hover {
@@ -921,13 +919,12 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .ps-grid.ps-team {
     margin-left: 0 !important;
     padding-left: 0 !important;
-    gap: 4px;
+    gap: 16px;
 }
 @media (min-width: 769px) {
-    .page-rosa .ps-section,
-    .page-staff .ps-section {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
+    .team-section {
+        padding-left: 40px !important;
+        padding-right: 40px !important;
     }
 }
 
