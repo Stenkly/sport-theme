@@ -122,7 +122,7 @@
 <div id="page" class="site">
 	
 	<header id="masthead" class="site-header">
-        <div class="site-header-inner container" style="position: relative; text-align: center; padding: 20px 0 10px;">
+        <div class="site-header-inner container" style="position: relative; text-align: center; padding: 20px 0 0px;">
             
             <!-- Hamburger button (solo mobile) -->
             <button id="mobile-menu-open" style="

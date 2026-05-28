@@ -103,7 +103,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .main-navigation ul {
     list-style: none;
     padding: 0;
-    margin: 30px 0 0 0;
+    margin: 15px 0 0 0;
     display: flex;
     justify-content: center;
     gap: 30px;
@@ -149,7 +149,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     background-color: var(--c-gray);
 }
 .main-navigation ul li a {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 800;
     text-transform: uppercase;
     color: var(--c-white);
@@ -568,7 +568,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 /* Header e Icone a destra */
 .site-header {
     background-color: var(--c-black);
-    padding: 20px 0 25px;
+    padding: 20px 0 15px;
 }
 .header-top {
     display: flex;
