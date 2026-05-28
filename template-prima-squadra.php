@@ -367,6 +367,7 @@ get_header();
                         $ruolo_str = $ruoli && !is_wp_error($ruoli) ? sport_theme_get_singular_role($ruoli[0]->name) : '-';
                         $split_name = sport_theme_get_giocatore_split_name(get_the_ID());
                         $nome_riga1 = $split_name['nome'];
+                        $nome_riga2 = $split_name['cognome'];
                         $zoom_foto   = get_post_meta(get_the_ID(), '_zoom_foto', true) ?: 'cover';
                         $allineamento_foto = get_post_meta(get_the_ID(), '_allineamento_foto', true) ?: 'center top';
                 ?>
