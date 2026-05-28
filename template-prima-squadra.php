@@ -388,7 +388,7 @@ get_header();
                         <div class="player-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%); pointer-events: none;"></div>
                         <div class="player-info" style="position: absolute; bottom: 15px; left: 15px; z-index: 2; flex-direction: column; gap: 0;">
                             <?php if(!empty($numero)): ?>
-                            <span class="player-number" style="display: block; font-size: 32px; font-weight: 700; line-height: 1; color: #F9EA86;"><?php echo esc_html($numero); ?></span>
+                            <span class="player-number" style="display: block; font-size: 50px; font-weight: 700; line-height: 1; color: #F9EA86;"><?php echo esc_html($numero); ?></span>
                             <?php elseif(!empty($ruolo_spec)): ?>
                             <span class="staff-role text-primary" style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 2px; letter-spacing: 1px;"><?php echo esc_html($ruolo_spec); ?></span>
                             <?php endif; ?>
