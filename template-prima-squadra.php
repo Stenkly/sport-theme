@@ -39,7 +39,7 @@ get_header();
         <h2 class="section-title text-white" style="margin-bottom:30px; font-weight:800;">FOTOGALLERY</h2>
 
         <!-- Gallery carousel -->
-        <div id="gallery-carousel" style="display:flex; gap:12px; overflow:hidden; scroll-behavior:smooth;">
+        <div id="gallery-carousel" style="display:flex; gap:12px; align-items:center; overflow:hidden; scroll-behavior:smooth;">
             <?php
             $gallery_query = new WP_Query(array(
                 'post_type'      => 'fotogallery',
@@ -94,9 +94,12 @@ get_header();
             var cur   = 0;
             var isAnimating = false;
 
-            function slideWidth() {
-                var s = car.querySelector('.gallery-slide');
-                return s ? s.offsetWidth + 12 : 0;
+            function getScrollPosition(index) {
+                var pos = 0;
+                for (var i = 0; i < index; i++) {
+                    pos += slides[i].offsetWidth + 12; // width + gap
+                }
+                return pos;
             }
 
             function updateActiveState(index) {
@@ -114,12 +117,11 @@ get_header();
             }
 
             function go(n) {
-                var visibleSlides = window.innerWidth <= 768 ? 1 : 4;
                 var max = slides.length - 1;
                 cur = Math.max(0, Math.min(n, max));
                 
-                var maxScrollIndex = Math.max(0, slides.length - visibleSlides);
-                var targetScroll = Math.min(cur, maxScrollIndex) * slideWidth();
+                var maxScroll = car.scrollWidth - car.clientWidth;
+                var targetScroll = Math.min(getScrollPosition(cur), maxScroll);
                 
                 isAnimating = true;
                 car.scrollTo({
@@ -140,11 +142,19 @@ get_header();
 
             car.addEventListener('scroll', function() {
                 if (isAnimating) return;
-                var sw = slideWidth();
-                if (sw <= 0) return;
-                var index = Math.round(car.scrollLeft / sw);
-                if (index !== cur && index >= 0 && index < slides.length) {
-                    updateActiveState(index);
+                var scrollLeft = car.scrollLeft;
+                var closestIndex = 0;
+                var minDiff = Infinity;
+                for (var i = 0; i < slides.length; i++) {
+                    var slidePos = getScrollPosition(i);
+                    var diff = Math.abs(slidePos - scrollLeft);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        closestIndex = i;
+                    }
+                }
+                if (closestIndex !== cur && closestIndex >= 0 && closestIndex < slides.length) {
+                    updateActiveState(closestIndex);
                 }
             });
         })();
