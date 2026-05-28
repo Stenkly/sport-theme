@@ -166,7 +166,7 @@ get_header();
         <div class="section-header">
             <h2 class="section-title text-primary">PROSSIMI INCONTRI</h2>
             <?php $stagione_page = get_page_by_title('Stagione'); ?>
-            <a href="<?php echo $stagione_page ? esc_url(get_permalink($stagione_page->ID)) : '#'; ?>" class="btn-sm btn-primary" style="display:inline-block">CALENDARIO</a>
+            <a href="<?php echo $stagione_page ? esc_url(get_permalink($stagione_page->ID)) : '#'; ?>" class="btn-sm btn-primary" style="display:inline-block; font-size: 22px; font-weight: 700;">CALENDARIO</a>
         </div>
         <div class="ps-grid grid-2">
             <?php
