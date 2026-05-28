@@ -911,7 +911,8 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 @media (min-width: 769px) {
     .open-player-modal {
         width: 90%;
-        margin: 0 auto;
+        margin-left: 0;
+        margin-right: auto;
     }
 }
 .open-player-modal:hover {
