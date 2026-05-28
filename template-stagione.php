@@ -178,18 +178,20 @@ get_header();
                 border-collapse: collapse;
                 text-align: center;
                 color: white;
-                font-size: 15px;
+                font-size: 17px;
+                font-weight: 700;
                 background-color: #383b3e;
             }
             .custom-classifica-wrapper table thead tr {
                 background-color: var(--c-primary);
                 color: #000;
-                font-size: 14px;
+                font-size: 17px;
+                font-weight: 700;
             }
             .custom-classifica-wrapper table th {
                 padding: 15px 10px;
                 border: 1px solid #000;
-                font-weight: bold;
+                font-weight: 700;
             }
             .custom-classifica-wrapper table th:nth-child(2) {
                 text-align: left;
@@ -198,19 +200,20 @@ get_header();
             .custom-classifica-wrapper table td {
                 padding: 15px 10px;
                 border: 1px solid #000;
+                font-weight: 700;
             }
             .custom-classifica-wrapper table td:nth-child(1) {
-                font-weight: bold;
-                font-size: 16px;
+                font-weight: 700;
+                font-size: 17px;
             }
             .custom-classifica-wrapper table td:nth-child(2) {
                 text-align: left;
                 padding-left: 20px;
-                font-weight: 600;
-                font-size: 14px;
+                font-weight: 700;
+                font-size: 17px;
             }
             .custom-classifica-wrapper table td:last-child {
-                font-weight: bold;
+                font-weight: 700;
             }
             .custom-classifica-wrapper table tbody tr {
                 transition: background 0.3s;
