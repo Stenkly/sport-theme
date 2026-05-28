@@ -907,6 +907,13 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     margin-left: 0 !important;
     padding-left: 0 !important;
 }
+@media (min-width: 769px) {
+    .page-rosa .ps-section,
+    .page-staff .ps-section {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}
 
 /* --- CLUB PAGE TYPOGRAPHY (Storia, Progetto) --- */
 .club-content {
