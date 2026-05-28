@@ -170,6 +170,31 @@ get_header();
         </div>
         <div class="ps-grid grid-2">
             <?php
+            if (!function_exists('get_it_day_of_week')) {
+                function get_it_day_of_week($date_str) {
+                    $date_str = str_replace(array('-', '/'), '.', $date_str);
+                    $parts = explode('.', $date_str);
+                    if (count($parts) === 3) {
+                        if (strlen($parts[0]) === 4) {
+                            $year = intval($parts[0]);
+                            $month = intval($parts[1]);
+                            $day = intval($parts[2]);
+                        } else {
+                            $day = intval($parts[0]);
+                            $month = intval($parts[1]);
+                            $year = intval($parts[2]);
+                        }
+                        $timestamp = mktime(0, 0, 0, $month, $day, $year);
+                        if ($timestamp !== false) {
+                            $w = date('w', $timestamp);
+                            $days = array('DOM', 'LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB');
+                            return $days[$w];
+                        }
+                    }
+                    return '';
+                }
+            }
+
             // Ottieni dinamicamente le prossime 2 partite future (senza risultato)
             $all_hp_matches = new WP_Query(array('post_type' => 'partita', 'posts_per_page' => -1, 'order' => 'ASC'));
             $hp_calendario = [];
@@ -200,10 +225,13 @@ get_header();
                 $t1_logo = $in_casa == '1' ? $taverne_logo : $logo_avversario;
                 $t2_name = $in_casa == '1' ? $avversario : 'AC Taverne';
                 $t2_logo = $in_casa == '1' ? $logo_avversario : $taverne_logo;
+
+                $giorno = get_it_day_of_week($data_p);
+                $formatted_date = ($giorno ? $giorno . ', ' : '') . $data_p;
             ?>
             <div class="match-card">
                 <div class="match-info">
-                    <p class="match-date text-white"><?php echo esc_html($data_p); ?><br><?php echo esc_html($ora_p); ?></p>
+                    <p class="match-date text-white"><?php echo esc_html($formatted_date); ?><br><?php echo esc_html($ora_p); ?></p>
                     <p class="match-venue"><?php echo esc_html($stadio); ?></p>
                 </div>
                 <div class="match-teams">
