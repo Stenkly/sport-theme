@@ -387,7 +387,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 .section-title { font-size: 42px; text-transform: uppercase; font-weight: 700; }
 .text-white { color: var(--c-white) !important; }
-.btn-sm { padding: 8px 24px; font-size: 13px; font-weight: 700; letter-spacing: 1px; }
+.btn-sm { padding: 8px 24px; font-size: 22px; font-weight: 700; letter-spacing: 1px; }
 
 /* Bottoni Identici al Design */
 .btn-primary { background-color: var(--c-primary); color: var(--c-black); border: 2px solid var(--c-primary); }
