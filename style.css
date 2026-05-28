@@ -920,7 +920,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .ps-grid.ps-team {
     margin-left: 0 !important;
     padding-left: 0 !important;
-    gap: 8px;
+    gap: 4px;
 }
 @media (min-width: 769px) {
     .page-rosa .ps-section,
