@@ -15,7 +15,12 @@ get_header();
         if ( has_post_thumbnail() ) {
             $hero_image_url = get_the_post_thumbnail_url( get_the_ID(), 'full' );
         } else {
-            $hero_image_url = get_template_directory_uri() . '/assets/images/team-hero.jpg';
+            $team_page = get_page_by_path( 'team' );
+            if ( $team_page && has_post_thumbnail( $team_page->ID ) ) {
+                $hero_image_url = get_the_post_thumbnail_url( $team_page->ID, 'full' );
+            } else {
+                $hero_image_url = get_template_directory_uri() . '/assets/images/team-hero.jpg';
+            }
         }
         ?>
         <div class="news-hero-wrapper" style="position: relative; width: 100%; height: 50vh;">
