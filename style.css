@@ -410,7 +410,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .match-row .match-info { flex: 1; text-align: left; }
 .match-row .match-teams { flex: 2; justify-content: center; gap: 30px; }
 .match-row .team { display: flex; align-items: center; gap: 15px; }
-.match-row-logo { max-height: 65px; max-width: 100%; width: auto; object-fit: contain; }
+.match-row-logo { max-height: 60px; max-width: 100%; width: auto; object-fit: contain; }
 .match-row .match-action { flex: 1; display: flex; justify-content: flex-end; align-items: center; }
 .vertical-divider { width: 2px; height: 30px; background-color: var(--c-primary); margin-right: 30px; opacity: 0.5; }
 
@@ -578,7 +578,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 /* Spaced out logo layout for Next Matches cards */
 .match-card:not(.match-row) .match-teams {
     display: grid;
-    grid-template-columns: 1.5fr 1fr auto 1fr 1.5fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     align-items: center;
     width: 100%;
     margin-top: 25px;
@@ -588,12 +588,13 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     font-weight: 800;
     font-size: 20px;
     text-transform: none;
+    text-align: center;
 }
 .match-card:not(.match-row) .team-1-name {
-    text-align: left;
+    text-align: center;
 }
 .match-card:not(.match-row) .team-2-name {
-    text-align: right;
+    text-align: center;
 }
 .match-card:not(.match-row) .team-logo-container {
     display: flex;
@@ -601,7 +602,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     align-items: center;
 }
 .match-card:not(.match-row) .team-logo {
-    max-height: 95px;
+    max-height: 80px;
     max-width: 100%;
     width: auto;
     object-fit: contain;
@@ -632,10 +633,10 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
         text-align: center;
     }
     .match-card:not(.match-row) .team-logo {
-        max-height: 75px;
+        max-height: 65px;
     }
     .match-row-logo {
-        max-height: 52px;
+        max-height: 48px;
     }
 }
 
