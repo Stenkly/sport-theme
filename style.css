@@ -2680,3 +2680,8 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     height: 55% !important;
 }
 
+/* Avvicinamento fotogallery alla hero */
+.page-prima-squadra .news-hero + .ps-section {
+    padding-top: 25px !important;
+}
+
