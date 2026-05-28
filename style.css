@@ -2649,11 +2649,11 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 /* Ritaglio superiore immagine hero Prima Squadra */
 @media (min-width: 769px) {
     .page-prima-squadra .news-hero .container img {
-        margin-top: -100px !important;
+        margin-top: -150px !important;
     }
 }
 @media (max-width: 768px) {
     .page-prima-squadra .news-hero .container img {
-        margin-top: -40px !important;
+        margin-top: -60px !important;
     }
 }
