@@ -681,7 +681,13 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 /* Carousel Nav */
 .carousel-nav { display: flex; justify-content: space-between; align-items: center; padding: 25px 0; }
-.nav-arrow { font-size: 22px; cursor: pointer; transition: opacity 0.2s ease; }
+.nav-arrow {
+    font-size: 28px !important;
+    font-weight: 900 !important;
+    -webkit-text-stroke: 3px var(--c-primary) !important;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
 .nav-arrow:hover { opacity: 0.7; }
 .nav-dots { display: flex; gap: 8px; color: var(--c-primary); font-size: 10px; }
 .nav-dots .active { color: var(--c-primary); }
@@ -694,9 +700,6 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 .gallery-nav .nav-arrow {
     position: absolute;
-    font-size: 28px; /* slightly larger */
-    font-weight: 900;
-    -webkit-text-stroke: 3px var(--c-primary); /* makes the icon thicker */
 }
 .gallery-nav #gallery-prev {
     left: 0;
