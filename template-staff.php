@@ -72,9 +72,9 @@ get_header();
                     <div class="player-photo cover-bg" style="background-image: url('<?php echo esc_url($foto); ?>'); width: 100%; height: 100%; border: none; transition: transform 0.5s ease;"></div>
                     <div class="player-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%); pointer-events: none;"></div>
                     
-                    <div class="player-info" style="position: absolute; bottom: 8px; left: 12px; z-index: 2; flex-direction: column; gap: 0;">
+                    <div class="player-info" style="position: absolute; bottom: 4px; left: 12px; z-index: 2; flex-direction: column; gap: 0;">
                         <?php if(!empty($ruolo_spec)): ?>
-                        <span class="staff-role text-primary" style="display: block; font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;"><?php echo esc_html($ruolo_spec); ?></span>
+                        <span class="staff-role text-primary" style="display: block; font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 1px;"><?php echo esc_html($ruolo_spec); ?></span>
                         <?php endif; ?>
                         <span class="player-name text-white" style="display: block; font-size: 22px; font-weight: 700; line-height: 1.1; margin-top: 0;">
                             <?php echo esc_html($nome_riga1); ?><br>
