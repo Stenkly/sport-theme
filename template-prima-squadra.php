@@ -19,9 +19,9 @@ get_header();
             $hero_image_url = 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=2000&auto=format&fit=crop';
         }
         ?>
-        <div style="overflow: hidden; position: relative; line-height: 0;">
+        <div class="container" style="overflow: hidden; position: relative; line-height: 0;">
             <img src="<?php echo esc_url( $hero_image_url ); ?>" 
-                 style="width: 100%; height: auto; display: block; margin-top: -12%; animation: heroFadeIn 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;" 
+                 style="width: 100%; height: auto; display: block; animation: heroFadeIn 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;" 
                  alt="<?php echo esc_attr(get_the_title()); ?>">
             <!-- Sfumatura nera in basso per fondersi con il resto della pagina -->
             <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 30%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
