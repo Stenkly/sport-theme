@@ -81,7 +81,7 @@ get_header();
                 <div class="match-info">
                     <div class="match-date text-white">
                         <?php echo esc_html($data_p); ?><br><?php echo esc_html($ora_p); ?><br>
-                        <span class="text-primary" style="font-weight:400; font-size:12px;"><?php echo esc_html($stadio); ?></span>
+                        <span class="text-light-yellow" style="font-weight:400; font-size:12px;"><?php echo esc_html($stadio); ?></span>
                     </div>
                 </div>
                 <div class="match-teams">
@@ -132,7 +132,7 @@ get_header();
                 <div class="match-info">
                     <div class="match-date text-white">
                         <?php echo esc_html($data_p); ?><br><?php echo esc_html($ora_p); ?><br>
-                        <span class="text-primary" style="font-weight:400; font-size:12px;"><?php echo esc_html($stadio); ?></span>
+                        <span class="text-light-yellow" style="font-weight:400; font-size:12px;"><?php echo esc_html($stadio); ?></span>
                     </div>
                 </div>
                 <div class="match-teams">

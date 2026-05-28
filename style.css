@@ -54,6 +54,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .p3 { font-size: 12px; font-weight: 700; } /* Footer */
 
 .text-primary { color: var(--c-primary) !important; }
+.text-light-yellow { color: var(--c-light-yellow) !important; }
 
 /* --- BUTTONS --- */
 .btn {
@@ -565,7 +566,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 .match-info p { margin-bottom: 5px; }
 .match-date { font-weight: 700; font-size: 16px; text-transform: uppercase; }
-.match-venue { font-weight: 700; font-size: 13px; color: var(--c-primary) !important; margin-top: 8px; }
+.match-venue { font-weight: 700; font-size: 13px; color: var(--c-light-yellow) !important; margin-top: 8px; }
 .match-teams { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 25px; }
 .team-name { font-weight: 700; font-size: 15px; text-transform: uppercase; }
 .team-1-name { text-align: left; }
