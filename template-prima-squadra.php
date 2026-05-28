@@ -207,15 +207,13 @@ get_header();
                     <p class="match-venue"><?php echo esc_html($stadio); ?></p>
                 </div>
                 <div class="match-teams">
-                    <div class="team">
-                        <span><?php echo esc_html($t1_name); ?></span>
-                        <img src="<?php echo esc_url($t1_logo); ?>" alt="<?php echo esc_attr($t1_name); ?>">
+                    <span class="team-name team-1-name"><?php echo esc_html($t1_name); ?></span>
+                    <div class="teams-logos-center">
+                        <img class="team-logo" src="<?php echo esc_url($t1_logo); ?>" alt="<?php echo esc_attr($t1_name); ?>">
+                        <span class="vs">VS</span>
+                        <img class="team-logo" src="<?php echo esc_url($t2_logo); ?>" alt="<?php echo esc_attr($t2_name); ?>">
                     </div>
-                    <div class="vs">VS</div>
-                    <div class="team">
-                        <img src="<?php echo esc_url($t2_logo); ?>" alt="<?php echo esc_attr($t2_name); ?>">
-                        <span><?php echo esc_html($t2_name); ?></span>
-                    </div>
+                    <span class="team-name team-2-name"><?php echo esc_html($t2_name); ?></span>
                 </div>
             </div>
             <?php endforeach; wp_reset_postdata(); ?>

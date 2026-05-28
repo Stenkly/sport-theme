@@ -566,10 +566,17 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .match-date { font-weight: 700; font-size: 16px; text-transform: uppercase; }
 .match-venue { font-weight: 700; font-size: 13px; color: var(--c-primary) !important; margin-top: 8px; }
 .match-teams { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 25px; }
-.team { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 15px; text-transform: uppercase; }
-.team img { max-height: 50px; width: auto; object-fit: contain; }
+.team-name { font-weight: 700; font-size: 15px; text-transform: uppercase; }
+.team-1-name { text-align: left; }
+.team-2-name { text-align: right; }
+.teams-logos-center { display: flex; align-items: center; gap: 15px; }
+.teams-logos-center img { max-height: 50px; width: auto; object-fit: contain; }
 .vs { font-weight: 700; color: var(--c-white); font-size: 18px; }
-@media (max-width: 600px) { .match-card { flex-direction: column; text-align: center; gap: 20px; } .match-teams { flex-direction: column; } }
+@media (max-width: 600px) { 
+    .match-card { flex-direction: column; text-align: center; gap: 20px; } 
+    .match-teams { flex-direction: column; gap: 15px; } 
+    .team-1-name, .team-2-name { text-align: center; } 
+}
 
 /* News Card */
 .news-card { height: 350px; position: relative; padding: 25px; display: flex; flex-direction: column; justify-content: space-between; }
