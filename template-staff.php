@@ -39,7 +39,7 @@ get_header();
         </div>
     </section>
 
-    <div style="padding-top: 20px;">
+    <div style="padding-top: 0px;">
     <?php
     $team_query = new WP_Query(array(
         'post_type' => 'membro_staff',
