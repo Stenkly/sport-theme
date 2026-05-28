@@ -539,20 +539,20 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     border: 2px solid transparent;
     opacity: 0.35;
     box-sizing: border-box;
-    transform: scale(0.93); /* slightly smaller inactive photos */
+    transform: scale(0.90); /* smaller inactive photos */
 }
 .gallery-slide.active .gallery-item {
     border: 2px solid #ffffff;
     opacity: 1;
-    transform: scale(1.0); /* full size active photo */
+    transform: scale(1.05); /* selected photo is slightly larger */
 }
 .gallery-item:hover {
-    transform: scale(0.97); /* slightly larger on hover if inactive */
+    transform: scale(0.95); /* slightly larger on hover if inactive */
     z-index: 1;
     opacity: 1;
 }
 .gallery-slide.active .gallery-item:hover {
-    transform: scale(1.03); /* slightly larger on hover if active */
+    transform: scale(1.08); /* slightly larger on hover if active */
 }
 
 /* Match Card */
