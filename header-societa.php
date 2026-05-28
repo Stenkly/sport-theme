@@ -124,7 +124,7 @@
             </div>
 
             <!-- Icone social top-right -->
-            <div class="header-right-icons" style="position: absolute; top: 30px; right: 50px; display: flex; gap: 15px;">
+            <div class="header-right-icons" style="position: absolute; top: 30px; right: 70px; display: flex; gap: 15px;">
                 <a href="https://www.instagram.com/ac_taverne/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
                 <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
             </div>
