@@ -89,7 +89,7 @@ get_header();
                 $nome_ruolo = strtoupper($term->name);
     ?>
     <section class="ps-section container team-section" style="padding-top: 10px; padding-bottom: 20px;">
-        <h2 class="section-title text-white" style="margin-bottom: 15px;"><?php echo $nome_ruolo; ?></h2>
+        <h2 class="section-title text-white" style="margin-bottom: 25px;"><?php echo $nome_ruolo; ?></h2>
         <div class="ps-grid grid-4 ps-team">
             <?php while($team_query->have_posts()): $team_query->the_post(); 
                 $numero = get_post_meta(get_the_ID(), '_numero_maglia', true);
