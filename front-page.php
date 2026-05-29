@@ -52,7 +52,7 @@
         color: #fff;
     }
     .hp-welcome h1 span { color: #f2c800; }
-    .hp-welcome p {
+    .hp-welcome h2 {
         font-size: 17px;
         font-weight: 700;
         text-transform: uppercase;
@@ -211,7 +211,7 @@
 <!-- Benvenuto -->
 <div class="hp-welcome">
     <h1>BENVENUTO IN <span>AC TAVERNE</span></h1>
-    <p>PASSIONE, VALORI E FUTURO. DAL 1950, INSIEME.</p>
+    <h2>PASSIONE, VALORI E FUTURO. DAL 1950, INSIEME.</h2>
 </div>
 
 <!-- Split Cards -->
