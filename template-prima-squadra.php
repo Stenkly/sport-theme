@@ -192,7 +192,7 @@ get_header();
                         $timestamp = mktime(0, 0, 0, $month, $day, $year);
                         if ($timestamp !== false) {
                             $w = date('w', $timestamp);
-                            $days = array('DOM', 'LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB');
+                            $days = array('Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato');
                             return $days[$w];
                         }
                     }
