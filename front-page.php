@@ -127,14 +127,14 @@
         display: inline-block;
         width: 100%;
         max-width: 320px;
-        background: #f9ea86;
+        background: #f2c800;
         text-decoration: none;
         text-align: center;
         transition: background 0.2s;
         padding: 12px 20px;
     }
     .hp-card-content .hp-btn h3 {
-        font-size: 32px;
+        font-size: 28px;
         font-weight: bold;
         color: #000;
         text-transform: uppercase;
@@ -201,7 +201,7 @@
         .hp-welcome h3 { font-size: 22px; }
         .hp-card-content h2 { font-size: 30px; }
         .hp-card-content h4 { font-size: 15px; }
-        .hp-card-content .hp-btn h3 { font-size: 20px; }
+        .hp-card-content .hp-btn h3 { font-size: 18px; }
         .hp-card-content .hp-btn { max-width: 200px; padding: 8px 15px; }
         .hp-top img { max-height: 70px; }
     }
