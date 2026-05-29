@@ -99,7 +99,7 @@
         z-index: 2;
         padding: 30px;
         width: 100%;
-        max-width: 500px;
+        max-width: 560px;
         text-align: center;
         display: flex;
         flex-direction: column;
@@ -121,7 +121,7 @@
         color: rgba(255,255,255,0.9);
         line-height: 1.6;
         margin-bottom: 25px;
-        max-width: 480px;
+        max-width: 500px;
     }
     .hp-card-content .hp-btn {
         display: inline-block;
@@ -236,7 +236,7 @@
         <div class="hp-card-overlay"></div>
         <div class="hp-card-content">
             <h2>PRIMA SQUADRA</h2>
-            <h4>La massima espressione sportiva del nostro club. Passione, determinazione e spirito di squadra per onorare i colori gialloneri in ogni partita e puntare a traguardi sempre più alti.</h4>
+            <h4>La massima espressione sportiva del nostro club. Passione, determinazione e spirito di squadra per onorare i colori gialloneri e puntare a traguardi sempre più alti.</h4>
             <a href="<?php echo esc_url(site_url('/prima-squadra')); ?>" class="hp-btn"><h3>ENTRA</h3></a>
         </div>
         <div class="hp-card-social">
@@ -254,7 +254,7 @@
         <div class="hp-card-overlay"></div>
         <div class="hp-card-content">
             <h2>AC TAVERNE</h2>
-            <h4>Esplora il mondo societario giallonero. Trova le informazioni per la Scuola Calcio e le sezioni giovanili, i moduli di iscrizione, la nostra storia e i contatti della sede.</h4>
+            <h4>Esplora il mondo societario giallonero. Trova le informazioni per la Scuola Calcio, le sezioni giovanili, i moduli di iscrizione, la nostra storia e i contatti.</h4>
             <a href="<?php echo esc_url(site_url('/ac-taverne')); ?>" class="hp-btn"><h3>ENTRA</h3></a>
         </div>
         <div class="hp-card-social">
