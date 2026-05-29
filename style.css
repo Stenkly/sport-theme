@@ -686,9 +686,36 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .player-name { font-size: 34px; font-weight: 700; text-transform: none; }
 
 /* Sponsors */
-.ps-sponsors { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 30px; padding: 40px 0; border-bottom: 3px solid var(--c-gray); }
-.ps-sponsors img { max-height: 80px; opacity: 1; transition: transform 0.3s; }
-.ps-sponsors img:hover { transform: scale(1.05); }
+.ps-sponsors { 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    flex-wrap: wrap; 
+    gap: 40px 50px; 
+    padding: 45px 0; 
+    border-bottom: 3px solid var(--c-gray); 
+}
+.ps-sponsors img { 
+    max-height: 55px; 
+    max-width: 140px; 
+    width: auto; 
+    height: auto; 
+    object-fit: contain; 
+    opacity: 0.85; 
+    transition: transform 0.3s, opacity 0.3s; 
+}
+.ps-sponsors img:hover { 
+    transform: scale(1.08); 
+    opacity: 1; 
+}
+
+/* Specific overrides for logos that have high transparent margins or are visually small */
+.ps-sponsors img[src*="Farm-Carvina"] {
+    transform: scale(1.45);
+}
+.ps-sponsors img[src*="Farm-Carvina"]:hover {
+    transform: scale(1.55);
+}
 
 /* Carousel Nav */
 .carousel-nav { display: flex; justify-content: space-between; align-items: center; padding: 25px 0; }
