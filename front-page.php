@@ -64,7 +64,7 @@
     .hp-split {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        width: calc(100% - 60px);
+        width: calc(100% - 100px);
         margin: 0 auto;
         flex: 1;
         border-top: 1px solid rgba(255,255,255,0.1);
@@ -189,7 +189,7 @@
         text-transform: uppercase;
         letter-spacing: 1px;
         padding: 16px 20px;
-        width: calc(100% - 60px);
+        width: calc(100% - 100px);
         margin: 0 auto;
         display: flex;
         justify-content: center;
