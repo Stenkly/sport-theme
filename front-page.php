@@ -116,12 +116,12 @@
         line-height: 1.1;
     }
     .hp-card-content h4 {
-        font-size: 22px;
-        font-weight: bold;
+        font-size: 17px;
+        font-weight: normal;
         color: rgba(255,255,255,0.9);
         line-height: 1.6;
         margin-bottom: 25px;
-        max-width: 440px;
+        max-width: 400px;
     }
     .hp-card-content .hp-btn {
         display: inline-block;
