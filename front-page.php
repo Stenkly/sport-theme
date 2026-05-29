@@ -40,7 +40,7 @@
     /* ── Benvenuto ── */
     .hp-welcome {
         text-align: center;
-        padding: 0 20px 30px;
+        padding: 0 20px 45px;
         background: #000;
     }
     .hp-welcome h2 {
