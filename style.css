@@ -921,6 +921,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .fm-col h4 { color: white; font-size: 12px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
 
 .fm-col-1 { text-align: left; }
+.fm-col-1 h4 { margin-bottom: 5px; }
 .fm-col-1 p { margin-bottom: 12px; line-height: 1.5; font-size: 12px; font-weight: 700; }
 .fm-col-1 a { color: var(--c-primary); font-size: 12px; font-weight: 700; text-decoration: none; transition: color 0.3s; }
 .fm-col-1 a:hover { color: #ffffff; }
