@@ -44,7 +44,7 @@
         background: #000;
     }
     .hp-welcome h2 {
-        font-size: 60px;
+        font-size: 42px;
         font-weight: bold;
         text-transform: uppercase;
         letter-spacing: 1px;
@@ -53,7 +53,7 @@
     }
     .hp-welcome h2 span { color: #f2c800; }
     .hp-welcome h3 {
-        font-size: 42px;
+        font-size: 34px;
         font-weight: bold;
         text-transform: uppercase;
         letter-spacing: 2px;
@@ -107,7 +107,7 @@
         justify-content: center;
     }
     .hp-card-content h2 {
-        font-size: 60px;
+        font-size: 42px;
         font-weight: bold;
         text-transform: uppercase;
         color: #fff;
