@@ -64,7 +64,8 @@
     .hp-split {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        width: 100%;
+        width: calc(100% - 60px);
+        margin: 0 auto;
         flex: 1;
         border-top: 1px solid rgba(255,255,255,0.1);
         border-bottom: 1px solid rgba(255,255,255,0.1);
