@@ -163,7 +163,6 @@ get_header();
     endif;
     ?>
     </div>
-    </div>
 
     <!-- PARTNER E SPONSOR -->
     <section class="ps-section container">

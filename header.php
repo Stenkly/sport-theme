@@ -30,18 +30,17 @@
     <!-- Top bar: X + Logo -->
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;">
         <button id="mobile-menu-close" style="background:none; border:none; color:white; font-size:26px; cursor:pointer; padding:0;">✕</button>
+        <?php if ( has_custom_logo() ): the_custom_logo(); else: ?>
         <a href="<?php echo esc_url( home_url('/') ); ?>">
-            <?php if ( has_custom_logo() ): the_custom_logo(); else: ?>
             <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo.png' ); ?>" alt="AC Taverne" style="max-height:70px;">
-            <?php endif; ?>
         </a>
+        <?php endif; ?>
         <div style="width:40px;"></div><!-- Spacer for centering -->
     </div>
 
     <hr style="border-color: rgba(255,255,255,0.15); margin-bottom: 10px;">
 
     <!-- Nav items -->
-    <nav style="flex: 1;">
     <nav style="flex: 1;">
         <ul style="list-style:none; margin:0; padding:0;">
 
