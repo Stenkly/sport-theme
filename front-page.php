@@ -152,19 +152,19 @@
         transform: translateX(-50%);
         display: flex;
         justify-content: center;
-        gap: 12px;
+        gap: 14px;
         z-index: 3;
     }
     .hp-card-social a {
-        width: 35px;
-        height: 35px;
+        width: 45px;
+        height: 45px;
         background: #F9EA86;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         color: #000;
-        font-size: 16px;
+        font-size: 20px;
         text-decoration: none;
         transition: background 0.2s, color 0.2s;
     }
