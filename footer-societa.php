@@ -22,8 +22,8 @@
 				<div class="hs-footer-info">
 					<p><strong>AC TAVERNE</strong></p>
 					<p>Via Taverne 2, CP 703 - 6807 Taverne</p>
-					<p><a href="mailto:info@actaverne.com">info@actaverne.com</a></p>
 					<p><a href="mailto:scoutingactaverne@gmail.com">scoutingactaverne@gmail.com</a></p>
+					<p><a href="mailto:a.spoggi@actaverne.com">a.spoggi@actaverne.com</a></p>
 				</div>
 
 				<div class="hs-footer-social">
