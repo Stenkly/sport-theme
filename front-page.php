@@ -126,17 +126,21 @@
     .hp-card-content .hp-btn {
         display: inline-block;
         width: 100%;
-        max-width: 220px;
+        max-width: 250px;
         background: #f2c800;
-        color: #000;
-        font-size: 13px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        padding: 12px 20px;
         text-decoration: none;
         text-align: center;
         transition: background 0.2s;
+        padding: 10px 20px;
+    }
+    .hp-card-content .hp-btn h2 {
+        font-size: 42px;
+        font-weight: bold;
+        color: #000;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin: 0;
+        line-height: 1.1;
     }
     .hp-card-content .hp-btn:hover { background: #fff; }
 
@@ -197,6 +201,8 @@
         .hp-welcome h3 { font-size: 22px; }
         .hp-card-content h2 { font-size: 30px; }
         .hp-card-content h4 { font-size: 15px; }
+        .hp-card-content .hp-btn h2 { font-size: 24px; }
+        .hp-card-content .hp-btn { max-width: 180px; padding: 6px 15px; }
         .hp-top img { max-height: 70px; }
     }
     </style>
@@ -227,7 +233,7 @@
         <div class="hp-card-content">
             <h2>PRIMA SQUADRA</h2>
             <h4>La massima espressione sportiva del nostro club. Passione, determinazione e spirito di squadra per onorare i colori gialloneri in ogni partita e puntare a traguardi sempre più alti.</h4>
-            <a href="<?php echo esc_url(site_url('/prima-squadra')); ?>" class="hp-btn">ENTRA</a>
+            <a href="<?php echo esc_url(site_url('/prima-squadra')); ?>" class="hp-btn"><h2>ENTRA</h2></a>
             <div class="hp-card-social">
                 <a href="https://www.instagram.com/ac_taverne?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                 <a href="https://www.facebook.com/share/1BZrVQUTfb/?mibextid=wwXIfr" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
@@ -245,7 +251,7 @@
         <div class="hp-card-content">
             <h2>AC TAVERNE</h2>
             <h4>Esplora il mondo societario giallonero. Trova le informazioni per la Scuola Calcio e le sezioni giovanili, i moduli di iscrizione, la nostra storia e i contatti della sede.</h4>
-            <a href="<?php echo esc_url(site_url('/ac-taverne')); ?>" class="hp-btn">ENTRA</a>
+            <a href="<?php echo esc_url(site_url('/ac-taverne')); ?>" class="hp-btn"><h2>ENTRA</h2></a>
             <div class="hp-card-social">
                 <a href="https://www.instagram.com/ac_taverne/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                 <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
