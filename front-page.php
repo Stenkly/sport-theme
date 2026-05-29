@@ -189,6 +189,8 @@
         text-transform: uppercase;
         letter-spacing: 1px;
         padding: 16px 20px;
+        width: calc(100% - 60px);
+        margin: 0 auto;
         display: flex;
         justify-content: center;
         align-items: center;
