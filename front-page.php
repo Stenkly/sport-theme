@@ -43,7 +43,7 @@
         padding: 0 20px 30px;
         background: #000;
     }
-    .hp-welcome h1 {
+    .hp-welcome h2 {
         font-size: 60px;
         font-weight: bold;
         text-transform: uppercase;
@@ -51,8 +51,8 @@
         margin-bottom: 8px;
         color: #fff;
     }
-    .hp-welcome h1 span { color: #f2c800; }
-    .hp-welcome h2 {
+    .hp-welcome h2 span { color: #f2c800; }
+    .hp-welcome h3 {
         font-size: 42px;
         font-weight: bold;
         text-transform: uppercase;
@@ -106,7 +106,7 @@
         align-items: center;
         justify-content: center;
     }
-    .hp-card-content h1 {
+    .hp-card-content h2 {
         font-size: 60px;
         font-weight: bold;
         text-transform: uppercase;
@@ -193,9 +193,9 @@
     @media (max-width: 768px) {
         .hp-split { grid-template-columns: 1fr; }
         .hp-card  { min-height: 350px; }
-        .hp-welcome h1 { font-size: 36px; }
-        .hp-welcome h2 { font-size: 22px; }
-        .hp-card-content h1 { font-size: 30px; }
+        .hp-welcome h2 { font-size: 36px; }
+        .hp-welcome h3 { font-size: 22px; }
+        .hp-card-content h2 { font-size: 30px; }
         .hp-card-content h4 { font-size: 15px; }
         .hp-top img { max-height: 70px; }
     }
@@ -213,8 +213,8 @@
 
 <!-- Benvenuto -->
 <div class="hp-welcome">
-    <h1>BENVENUTO IN <span>AC TAVERNE</span></h1>
-    <h2>PASSIONE, VALORI E FUTURO. DAL 1950, INSIEME.</h2>
+    <h2>BENVENUTO IN <span>AC TAVERNE</span></h2>
+    <h3>PASSIONE, VALORI E FUTURO. DAL 1950, INSIEME.</h3>
 </div>
 
 <!-- Split Cards -->
@@ -225,7 +225,7 @@
         <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/prima-squadra-gateway.jpg'); ?>" alt="Prima Squadra" loading="lazy">
         <div class="hp-card-overlay"></div>
         <div class="hp-card-content">
-            <h1>PRIMA SQUADRA</h1>
+            <h2>PRIMA SQUADRA</h2>
             <h4>La massima espressione sportiva del nostro club. Passione, determinazione e spirito di squadra per onorare i colori gialloneri in ogni partita e puntare a traguardi sempre più alti.</h4>
             <a href="<?php echo esc_url(site_url('/prima-squadra')); ?>" class="hp-btn">ENTRA</a>
             <div class="hp-card-social">
@@ -243,7 +243,7 @@
         <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/campo-taverne.jpg'); ?>" alt="AC Taverne" loading="lazy">
         <div class="hp-card-overlay"></div>
         <div class="hp-card-content">
-            <h1>AC TAVERNE</h1>
+            <h2>AC TAVERNE</h2>
             <h4>Esplora il mondo societario giallonero. Trova le informazioni per la Scuola Calcio e le sezioni giovanili, i moduli di iscrizione, la nostra storia e i contatti della sede.</h4>
             <a href="<?php echo esc_url(site_url('/ac-taverne')); ?>" class="hp-btn">ENTRA</a>
             <div class="hp-card-social">
