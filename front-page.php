@@ -121,7 +121,7 @@
         color: rgba(255,255,255,0.9);
         line-height: 1.6;
         margin-bottom: 25px;
-        max-width: 400px;
+        max-width: 480px;
     }
     .hp-card-content .hp-btn {
         display: inline-block;
