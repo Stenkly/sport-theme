@@ -126,12 +126,12 @@
     .hp-card-content .hp-btn {
         display: inline-block;
         width: 100%;
-        max-width: 320px;
+        max-width: 280px;
         background: #f2c800;
         text-decoration: none;
         text-align: center;
         transition: background 0.2s;
-        padding: 12px 20px;
+        padding: 10px 20px;
     }
     .hp-card-content .hp-btn h3 {
         font-size: 22px;
