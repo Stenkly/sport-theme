@@ -106,21 +106,22 @@
         align-items: center;
         justify-content: center;
     }
-    .hp-card-content h2 {
-        font-size: 38px;
-        font-weight: 800;
+    .hp-card-content h1 {
+        font-size: 60px;
+        font-weight: bold;
         text-transform: uppercase;
         color: #fff;
         letter-spacing: 2px;
         margin-bottom: 15px;
         line-height: 1.1;
     }
-    .hp-card-content p {
-        font-size: 13px;
+    .hp-card-content h4 {
+        font-size: 22px;
+        font-weight: bold;
         color: rgba(255,255,255,0.9);
         line-height: 1.6;
         margin-bottom: 25px;
-        max-width: 380px;
+        max-width: 440px;
     }
     .hp-card-content .hp-btn {
         display: inline-block;
@@ -194,7 +195,8 @@
         .hp-card  { min-height: 350px; }
         .hp-welcome h1 { font-size: 36px; }
         .hp-welcome h2 { font-size: 22px; }
-        .hp-card-content h2 { font-size: 30px; }
+        .hp-card-content h1 { font-size: 30px; }
+        .hp-card-content h4 { font-size: 15px; }
         .hp-top img { max-height: 70px; }
     }
     </style>
@@ -223,8 +225,8 @@
         <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/prima-squadra-gateway.jpg'); ?>" alt="Prima Squadra" loading="lazy">
         <div class="hp-card-overlay"></div>
         <div class="hp-card-content">
-            <h2>PRIMA SQUADRA</h2>
-            <p>La massima espressione sportiva del nostro club. Passione, determinazione e spirito di squadra per onorare i colori gialloneri in ogni partita e puntare a traguardi sempre più alti.</p>
+            <h1>PRIMA SQUADRA</h1>
+            <h4>La massima espressione sportiva del nostro club. Passione, determinazione e spirito di squadra per onorare i colori gialloneri in ogni partita e puntare a traguardi sempre più alti.</h4>
             <a href="<?php echo esc_url(site_url('/prima-squadra')); ?>" class="hp-btn">ENTRA</a>
             <div class="hp-card-social">
                 <a href="https://www.instagram.com/ac_taverne?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
@@ -241,8 +243,8 @@
         <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/campo-taverne.jpg'); ?>" alt="AC Taverne" loading="lazy">
         <div class="hp-card-overlay"></div>
         <div class="hp-card-content">
-            <h2>AC TAVERNE</h2>
-            <p>Esplora il mondo societario giallonero. Trova le informazioni per la Scuola Calcio e le sezioni giovanili, i moduli di iscrizione, la nostra storia e i contatti della sede.</p>
+            <h1>AC TAVERNE</h1>
+            <h4>Esplora il mondo societario giallonero. Trova le informazioni per la Scuola Calcio e le sezioni giovanili, i moduli di iscrizione, la nostra storia e i contatti della sede.</h4>
             <a href="<?php echo esc_url(site_url('/ac-taverne')); ?>" class="hp-btn">ENTRA</a>
             <div class="hp-card-social">
                 <a href="https://www.instagram.com/ac_taverne/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
