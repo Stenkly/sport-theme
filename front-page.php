@@ -44,7 +44,7 @@
         background: #000;
     }
     .hp-welcome h2 {
-        font-size: 42px;
+        font-size: 48px;
         font-weight: bold;
         text-transform: uppercase;
         letter-spacing: 1px;
@@ -53,7 +53,7 @@
     }
     .hp-welcome h2 span { color: #f2c800; }
     .hp-welcome h3 {
-        font-size: 34px;
+        font-size: 24px;
         font-weight: bold;
         text-transform: uppercase;
         letter-spacing: 2px;
@@ -202,7 +202,7 @@
         .hp-split { grid-template-columns: 1fr; }
         .hp-card  { min-height: 350px; }
         .hp-welcome h2 { font-size: 36px; }
-        .hp-welcome h3 { font-size: 22px; }
+        .hp-welcome h3 { font-size: 18px; }
         .hp-card-content h2 { font-size: 30px; }
         .hp-card-content h4 { font-size: 15px; }
         .hp-card-content .hp-btn h3 { font-size: 18px; }
