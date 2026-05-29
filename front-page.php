@@ -148,7 +148,7 @@
     /* ── Card Socials ── */
     .hp-card-social {
         position: absolute;
-        bottom: 25px;
+        bottom: 35px;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
