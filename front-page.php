@@ -117,7 +117,7 @@
     }
     .hp-card-content h4 {
         font-size: 17px;
-        font-weight: normal;
+        font-weight: bold;
         color: rgba(255,255,255,0.9);
         line-height: 1.6;
         margin-bottom: 25px;
