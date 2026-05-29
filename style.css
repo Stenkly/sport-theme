@@ -2668,7 +2668,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 /* Ritaglio immagine hero Prima Squadra (sopra e sotto) */
 @media (min-width: 769px) {
     .page-prima-squadra .news-hero .container img {
-        margin-top: -180px !important;
+        margin-top: -210px !important;
         margin-bottom: -30px !important;
     }
 }
