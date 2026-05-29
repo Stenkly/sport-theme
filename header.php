@@ -189,13 +189,8 @@
 							</ul>
 						</li>
 						<li class="<?php if (is_page_template('template-stagione.php') || is_page('stagione')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( site_url('/stagione') ); ?>">Stagione</a></li>
-						<li class="menu-item-has-children <?php if (is_page_template('template-organigramma.php') || is_page_template('template-storia.php') || is_page_template('template-club-page.php') || is_page('organigramma') || is_page('storia') || is_page('progetto-sportivo')) echo 'current-menu-item'; ?>">
-							<a href="#">Club</a>
-							<ul class="sub-menu">
-								<li><a href="<?php echo esc_url( site_url('/organigramma') ); ?>">Organigramma</a></li>
-								<li><a href="<?php echo esc_url( site_url('/storia') ); ?>">Storia del Club</a></li>
-								<li><a href="<?php echo esc_url( site_url('/progetto-sportivo') ); ?>">Progetto</a></li>
-							</ul>
+						<li class="<?php if (is_page_template('template-organigramma.php') || is_page_template('template-storia.php') || is_page_template('template-club-page.php') || is_page('organigramma') || is_page('storia') || is_page('progetto-sportivo')) echo 'current-menu-item'; ?>">
+							<a href="<?php echo esc_url( site_url('/organigramma') ); ?>">Club</a>
 						</li>
 						<li class="<?php if (is_page_template('template-partner.php') || is_page('partner') || is_page('sponsor')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( site_url('/partner') ); ?>">Partner</a></li>
 						<li class="<?php if (is_page_template('template-contatti.php') || is_page('contatti')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( site_url('/contatti') ); ?>">Contatti</a></li>

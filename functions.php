@@ -1076,6 +1076,58 @@ function sport_theme_auto_provision_v5() {
 add_action( 'init', 'sport_theme_auto_provision_v5' );
 
 /**
+ * V6 - Rimuove il sotto-menu da Club nel menu di WordPress (solo per desktop, responsive è gestito staticamente)
+ */
+function sport_theme_auto_provision_v6() {
+    if ( get_option( 'sport_theme_provisioned_v6' ) ) {
+        return;
+    }
+
+    $menu_name = 'Menu Principale';
+    $menu_exists = wp_get_nav_menu_object( $menu_name );
+
+    if ( $menu_exists ) {
+        $menu_id = $menu_exists->term_id;
+        $menu_items = wp_get_nav_menu_items( $menu_id );
+        
+        $club_item_id = 0;
+        
+        if ( $menu_items ) {
+            foreach ( $menu_items as $item ) {
+                if ( $item->title === 'Club' || strtolower($item->title) === 'club' || strtolower($item->post_title) === 'club' ) {
+                    $club_item_id = $item->ID;
+                }
+            }
+        }
+
+        if ( $club_item_id ) {
+            // Eliminiamo tutti i figli di Club (Organigramma, Storia del Club, Progetto sportivo)
+            foreach ( $menu_items as $item ) {
+                if ( $item->menu_item_parent == $club_item_id ) {
+                    wp_delete_post( $item->ID, true );
+                }
+            }
+            
+            // Fai puntare l'elemento "Club" alla pagina "Organigramma"
+            $orga_page = get_page_by_title( 'Organigramma' );
+            if ( $orga_page ) {
+                wp_update_nav_menu_item( $menu_id, $club_item_id, array(
+                    'menu-item-title'   => 'Club',
+                    'menu-item-object-id' => $orga_page->ID,
+                    'menu-item-object'  => 'page',
+                    'menu-item-status'  => 'publish',
+                    'menu-item-type'    => 'post_type',
+                    'menu-item-parent-id' => 0, 
+                ) );
+            }
+        }
+    }
+
+    update_option( 'sport_theme_provisioned_v6', true );
+}
+add_action( 'init', 'sport_theme_auto_provision_v6' );
+
+/**
  * Inserisce Dummy Content per far vedere subito il mockup "Storia" e "Progetto sportivo"
  */
 function sport_theme_populate_dummy_content() {
