@@ -696,8 +696,8 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     border-bottom: 3px solid var(--c-gray); 
 }
 .ps-sponsors img { 
-    max-height: 95px; 
-    max-width: 220px; 
+    max-height: 120px; 
+    max-width: 280px; 
     width: auto; 
     height: auto; 
     object-fit: contain; 
@@ -711,10 +711,10 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 /* Specific overrides for logos that have high transparent margins or are visually small */
 .ps-sponsors img[src*="Farm-Carvina"] {
-    transform: scale(1.30);
+    transform: scale(1.25);
 }
 .ps-sponsors img[src*="Farm-Carvina"]:hover {
-    transform: scale(1.40);
+    transform: scale(1.35);
 }
 
 /* Carousel Nav */
