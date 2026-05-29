@@ -134,7 +134,7 @@
         padding: 12px 20px;
     }
     .hp-card-content .hp-btn h3 {
-        font-size: 28px;
+        font-size: 22px;
         font-weight: bold;
         color: #000;
         text-transform: uppercase;
