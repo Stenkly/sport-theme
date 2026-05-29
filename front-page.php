@@ -183,7 +183,7 @@
     .hp-footer-copy {
         background: #F9EA86;
         color: #000;
-        font-size: 17px;
+        font-size: 20px;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
