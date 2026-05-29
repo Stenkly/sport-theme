@@ -53,7 +53,7 @@
     }
     .hp-welcome h2 span { color: #f2c800; }
     .hp-welcome h3 {
-        font-size: 24px;
+        font-size: 28px;
         font-weight: bold;
         text-transform: uppercase;
         letter-spacing: 2px;
