@@ -78,6 +78,7 @@ get_header('societa');
             } else {
                 $others[] = $item;
             }
+        }
         wp_reset_postdata();
 
         // Ordina leaders: Presidente prima di Vice Presidente
