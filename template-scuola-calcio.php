@@ -42,7 +42,7 @@ $formatori_portieri = get_post_meta( get_the_ID(), '_sc_formatori_portieri', tru
             <div class="news-hero-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
             
             <div class="news-hero-content container" style="position: absolute; bottom: 0px; left: 0; right: 0; text-align: left; padding-bottom: 20px;">
-                <h1 class="text-white" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">SCUOLA CALCIO</h1>
+                <h1 class="text-white" style="font-size: 60px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">SCUOLA CALCIO</h1>
             </div>
         </div>
     </section>
