@@ -231,8 +231,8 @@ get_header('societa');
                         
                         <div style="display: flex; gap: 20px; margin-bottom: 25px; flex-wrap: wrap;">
                             <div style="flex: 1; min-width: 200px;">
-                                <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 15px;">Azienda*</label>
-                                <input type="text" name="pr_azienda" required style="width: 100%; background: transparent; border: 1px solid white; color: white; padding: 12px; font-size: 17px;" placeholder="Azienda">
+                                <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 15px;">Azienda</label>
+                                <input type="text" name="pr_azienda" style="width: 100%; background: transparent; border: 1px solid white; color: white; padding: 12px; font-size: 17px;" placeholder="Azienda">
                             </div>
                             <div style="flex: 1; min-width: 200px;">
                                 <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 15px;">Oggetto*</label>
