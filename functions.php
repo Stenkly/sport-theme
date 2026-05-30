@@ -508,7 +508,7 @@ function sport_theme_cpt_dirigente() {
         ),
         'public' => true,
         'has_archive' => false,
-        'supports' => array('title', 'thumbnail', 'editor'),
+        'supports' => array('title', 'thumbnail', 'editor', 'page-attributes'),
         'menu_icon' => 'dashicons-groups',
     ));
 }
