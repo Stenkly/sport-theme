@@ -267,7 +267,7 @@ get_header();
                         <?php echo esc_html($nome_riga1); ?><br>
                         <span style="color: var(--c-primary);"><?php echo esc_html($nome_riga2); ?></span>
                     </div>
-                    <div class="dirigente-desc text-white" style="font-size: 14px; line-height: 1.6;">
+                    <div class="dirigente-desc text-white" style="font-size: 16px; line-height: 1.6;">
                         <?php the_content(); ?>
                     </div>
                 </div>

@@ -107,7 +107,7 @@ get_header('societa');
                                 <?php echo esc_html($p['nome_riga1']); ?><br>
                                 <span style="color: var(--c-primary);"><?php echo esc_html($p['nome_riga2']); ?></span>
                             </div>
-                            <div class="dirigente-desc text-white" style="font-size: 14px; line-height: 1.6;">
+                            <div class="dirigente-desc text-white" style="font-size: 16px; line-height: 1.6;">
                                 <?php echo wpautop($p['content']); ?>
                             </div>
                         </div>
@@ -132,7 +132,7 @@ get_header('societa');
                                 <?php echo esc_html($l['nome_riga1']); ?><br>
                                 <span style="color: var(--c-primary);"><?php echo esc_html($l['nome_riga2']); ?></span>
                             </div>
-                            <div class="dirigente-desc text-white" style="font-size: 14px; line-height: 1.6;">
+                            <div class="dirigente-desc text-white" style="font-size: 16px; line-height: 1.6;">
                                 <?php echo wpautop($l['content']); ?>
                             </div>
                         </div>
@@ -157,7 +157,7 @@ get_header('societa');
                                 <?php echo esc_html($o['nome_riga1']); ?><br>
                                 <span style="color: var(--c-primary);"><?php echo esc_html($o['nome_riga2']); ?></span>
                             </div>
-                            <div class="dirigente-desc text-white" style="font-size: 14px; line-height: 1.6;">
+                            <div class="dirigente-desc text-white" style="font-size: 16px; line-height: 1.6;">
                                 <?php echo wpautop($o['content']); ?>
                             </div>
                         </div>
