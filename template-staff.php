@@ -88,9 +88,9 @@ get_header();
                         <?php if(!empty($ruolo_spec)): ?>
                         <span class="staff-role text-primary" style="display: block; font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 1px;"><?php echo esc_html($ruolo_spec); ?></span>
                         <?php endif; ?>
-                        <span class="player-name text-white" style="display: block; font-size: 22px; font-weight: 700; line-height: 1.1; margin-top: 0;">
+                        <span class="player-name text-white" style="display: block; font-size: 34px; font-weight: 700; line-height: 1.2; margin-top: 0px;">
                             <?php echo esc_html($nome_riga1); ?><br>
-                            <?php echo esc_html($nome_riga2); ?>
+                            <span style="color: #F9EA86; display:block; margin-top:-3px;"><?php echo esc_html($nome_riga2); ?></span>
                         </span>
                     </div>
                 </div>
