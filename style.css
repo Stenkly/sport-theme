@@ -2105,7 +2105,6 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 /* ---------- FOOTER SOCIETÀ ---------- */
 .societa-site .site-header {
     background-color: var(--c-black);
-    padding: 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
