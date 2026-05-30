@@ -38,7 +38,7 @@ get_header('societa');
     </section>
 
     <!-- CONTENT TABS -->
-    <div class="container" style="padding-top: 50px; padding-bottom: 60px;">
+    <div class="container" style="padding-top: 15px; padding-bottom: 60px;">
         
         <?php
         $testo_campo = get_post_meta( get_the_ID(), '_infra_testo_campo', true ) ?: "L'AC TAVERNE METTE A DISPOSIZIONE LE SUE STRUTTURE SPORTIVE PER IL NOLEGGIO, OFFRENDO CAMPI DA CALCIO E ALTRE INFRASTRUTTURE PER EVENTI SPORTIVI, ALLENAMENTI, TORNEI, INCONTRI AZIENDALI E ATTIVITÀ RICREATIVE. SCOPRITE LE NOSTRE ECCELLENTI STRUTTURE E LE MODALITÀ DI NOLEGGIO.";
