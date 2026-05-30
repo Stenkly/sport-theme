@@ -48,6 +48,7 @@ get_header('societa');
 
     if($dirigenti_query->have_posts()):
         $presidents = array();
+        $leaders = array();
         $others = array();
         
         while($dirigenti_query->have_posts()) {
@@ -60,6 +61,7 @@ get_header('societa');
             $nome_riga2 = isset($parti_nome[1]) ? $parti_nome[1] : '';
             
             $is_pres_onorario = (stripos($ruolo, 'presidente onorario') !== false);
+            $is_leader = !$is_pres_onorario && (stripos($ruolo, 'vice presidente') !== false || strcasecmp(trim($ruolo), 'presidente') === 0);
             
             $item = array(
                 'nome_riga1' => $nome_riga1,
@@ -71,6 +73,8 @@ get_header('societa');
             
             if ($is_pres_onorario) {
                 $presidents[] = $item;
+            } elseif ($is_leader) {
+                $leaders[] = $item;
             } else {
                 $others[] = $item;
             }
@@ -103,7 +107,32 @@ get_header('societa');
             </div>
         <?php endif; ?>
 
-        <!-- Resto del Comitato -->
+        <!-- Sezione Presidente e Vice Presidente (affiancati) -->
+        <?php if (!empty($leaders)): ?>
+            <div class="dirigenti-grid" style="margin-bottom: 40px;">
+                <?php foreach ($leaders as $l): ?>
+                    <div class="dirigente-card">
+                        <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($l['foto']); ?>');">
+                            <div class="dirigente-photo-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); pointer-events: none;"></div>
+                            <div class="dirigente-name" style="position: absolute; bottom: 15px; left: 15px; z-index: 2;">
+                                <?php echo esc_html($l['nome_riga1']); ?><br>
+                                <span style="color: var(--c-primary);"><?php echo esc_html($l['nome_riga2']); ?></span>
+                            </div>
+                        </div>
+                        <div class="dirigente-info">
+                            <?php if(!empty($l['ruolo'])): ?>
+                            <div class="dirigente-role"><?php echo esc_html($l['ruolo']); ?></div>
+                            <?php endif; ?>
+                            <div class="dirigente-desc text-white" style="font-size: 12px; line-height: 1.6;">
+                                <?php echo wpautop($l['content']); ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- Resto del Comitato (altri membri) -->
         <?php if (!empty($others)): ?>
             <div class="dirigenti-grid">
                 <?php foreach ($others as $o): ?>
