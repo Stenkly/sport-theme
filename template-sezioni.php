@@ -382,7 +382,8 @@ if(!function_exists('print_sezione_panel')) {
             <div class="news-hero-content container" style="position: absolute; bottom: 0; left: 0; right: 0; text-align: left; padding-bottom: 20px;">
                 <h1 class="text-white" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">SEZIONI</h1>
                 <hr class="sc-divider" style="border: 0; border-top: 2px solid rgba(255,255,255,1); margin: 20px 0;">
-                
+                <?php sport_theme_render_societa_submenu(); ?>
+                <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin-top: 20px; margin-bottom: 20px;">
                 <!-- MENU TABS LIVELLO 1 (CATEGORIE PRINCIPALI) -->
                 <div class="sezioni-tabs-l1" style="display: flex; gap: 20px; margin-top: 30px; margin-bottom: 30px; flex-wrap: wrap;">
                     <?php 

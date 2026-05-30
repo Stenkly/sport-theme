@@ -2708,13 +2708,18 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     }
 }
 
-/* Allineamento larghezza e sporgenza immagine hero per Rosa, Staff e Prima Squadra */
+/* Allineamento larghezza e sporgenza immagine hero per Rosa, Staff, Prima Squadra e Pagine Società */
 @media (min-width: 769px) {
     .page-rosa .news-hero-wrapper,
     .page-staff .news-hero-wrapper,
-    .page-prima-squadra .news-hero .container,
-    .page-home-societa .hs-hero-wrapper,
-    .page-home-societa .hs-sezioni-band {
+    .page-la-societa .news-hero-wrapper,
+    .page-sezioni .news-hero-wrapper,
+    .page-scuola-calcio .news-hero-wrapper,
+    .page-infrastruttura .news-hero-wrapper,
+    .page-news-societa .news-hero-wrapper,
+    .page-iscritti .news-hero-wrapper,
+    .page-contatti .news-hero-wrapper,
+    .page-prima-squadra .news-hero .container {
         position: relative !important;
         margin-left: -60px !important;
         margin-right: auto !important;
@@ -2727,12 +2732,26 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     }
     
     .page-rosa .news-hero-wrapper,
-    .page-staff .news-hero-wrapper {
+    .page-staff .news-hero-wrapper,
+    .page-la-societa .news-hero-wrapper,
+    .page-sezioni .news-hero-wrapper,
+    .page-scuola-calcio .news-hero-wrapper,
+    .page-infrastruttura .news-hero-wrapper,
+    .page-news-societa .news-hero-wrapper,
+    .page-iscritti .news-hero-wrapper,
+    .page-contatti .news-hero-wrapper {
         height: 55vh !important;
     }
     
     .page-rosa .news-hero-content,
-    .page-staff .news-hero-content {
+    .page-staff .news-hero-content,
+    .page-la-societa .news-hero-content,
+    .page-sezioni .news-hero-content,
+    .page-scuola-calcio .news-hero-content,
+    .page-infrastruttura .news-hero-content,
+    .page-news-societa .news-hero-content,
+    .page-iscritti .news-hero-content,
+    .page-contatti .news-hero-content {
         position: absolute !important;
         bottom: 40px !important;
         left: 60px !important;
@@ -2747,6 +2766,13 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 @media (min-width: 1400px) {
     .page-rosa .news-hero-wrapper,
     .page-staff .news-hero-wrapper,
+    .page-la-societa .news-hero-wrapper,
+    .page-sezioni .news-hero-wrapper,
+    .page-scuola-calcio .news-hero-wrapper,
+    .page-infrastruttura .news-hero-wrapper,
+    .page-news-societa .news-hero-wrapper,
+    .page-iscritti .news-hero-wrapper,
+    .page-contatti .news-hero-wrapper,
     .page-prima-squadra .news-hero .container,
     .page-home-societa .hs-hero-wrapper,
     .page-home-societa .hs-sezioni-band {

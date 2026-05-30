@@ -26,9 +26,10 @@ get_header('societa');
             <div class="news-hero-content container" style="position: absolute; bottom: 0; left: 0; right: 0; text-align: left; padding-bottom: 20px;">
                 <h1 class="text-white" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">INFRASTRUTTURA</h1>
                 <hr class="sc-divider" style="border: 0; border-top: 2px solid rgba(255,255,255,1); margin: 20px 0;">
-                
+                <?php sport_theme_render_societa_submenu(); ?>
+                <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin-top: 20px; margin-bottom: 20px;">
                 <!-- MENU TABS -->
-                <div class="infra-tabs" style="display: flex; gap: 20px; margin-top: 30px; margin-bottom: 10px; flex-wrap: wrap;">
+                <div class="infra-tabs" style="display: flex; gap: 20px; margin-top: 10px; margin-bottom: 10px; flex-wrap: wrap;">
                     <button class="infra-tab-btn active" data-target="tab-campo" style="background-color: var(--c-primary); color: #000; border: 2px solid var(--c-primary); padding: 10px 30px; font-weight: bold; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: 0.3s; width: 220px;">CAMPO SPORTIVO</button>
                     <button class="infra-tab-btn" data-target="tab-buvette" style="background-color: transparent; color: white; border: 2px solid white; padding: 10px 30px; font-weight: bold; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: 0.3s; width: 220px;">BUVETTE</button>
                     <button class="infra-tab-btn" data-target="tab-occupazione" style="background-color: transparent; color: white; border: 2px solid white; padding: 10px 30px; font-weight: bold; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: 0.3s; width: 220px;">OCCUPAZIONE</button>

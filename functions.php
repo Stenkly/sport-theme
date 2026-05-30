@@ -2862,3 +2862,50 @@ function sport_theme_fix_stadiums_in_db() {
     die();
 }
 
+/**
+ * Renders the horizontal sub-menu for the AC Taverne (La Societa) section.
+ */
+function sport_theme_render_societa_submenu() {
+    $menu_items = [
+        'Società'        => site_url('/societa'),
+        'Sezioni'        => site_url('/sezioni'),
+        'Scuola Calcio'  => site_url('/scuola-calcio'),
+        'Infrastruttura' => site_url('/infrastruttura'),
+        'News'           => site_url('/news-societa'),
+        'Iscriviti'      => site_url('/iscritti'),
+        'Contatti'       => site_url('/contatti-societa'),
+    ];
+
+    echo '<div class="page-submenu" style="display: flex; gap: 20px; margin-top: 30px; margin-bottom: 10px; flex-wrap: wrap; justify-content: flex-start; z-index: 10; position: relative;">';
+    foreach ( $menu_items as $label => $url ) {
+        $is_active = false;
+        
+        if ( $label === 'Società' && (is_page('societa') || is_page_template('template-la-societa.php') || is_page_template('template-comitato-societa.php') || is_page_template('template-club-dei-100.php')) ) {
+            $is_active = true;
+        } elseif ( $label === 'Sezioni' && (is_page('sezioni') || is_page_template('template-sezioni.php')) ) {
+            $is_active = true;
+        } elseif ( $label === 'Scuola Calcio' && (is_page('scuola-calcio') || is_page_template('template-scuola-calcio.php')) ) {
+            $is_active = true;
+        } elseif ( $label === 'Infrastruttura' && (is_page('infrastruttura') || is_page_template('template-infrastruttura.php')) ) {
+            $is_active = true;
+        } elseif ( $label === 'News' && (is_page('news-societa') || is_page_template('template-news-societa.php') || is_singular('evento') || is_page('eventi-societa')) ) {
+            $is_active = true;
+        } elseif ( $label === 'Iscriviti' && (is_page('iscritti') || is_page_template('template-iscritti.php')) ) {
+            $is_active = true;
+        } elseif ( $label === 'Contatti' && (is_page('contatti-societa') || is_page_template('template-contatti-societa.php')) ) {
+            $is_active = true;
+        }
+
+        $bg_color     = $is_active ? 'var(--c-primary)' : 'transparent';
+        $text_color   = $is_active ? '#000' : 'white';
+        $border_color = $is_active ? 'var(--c-primary)' : 'white';
+        $hover_class  = $is_active ? '' : 'btn-outline-hover';
+
+        echo '<h4 style="margin: 0; display: inline-block;">';
+        echo '<a href="' . esc_url($url) . '" class="' . $hover_class . '" style="padding: 10px 30px; font-weight: 700; text-transform: uppercase; font-size: 13px; text-decoration: none; border: 2px solid ' . $border_color . '; background-color: ' . $bg_color . '; color: ' . $text_color . '; transition: all 0.3s; display: inline-block; text-align: center; min-width: 150px;">' . esc_html($label) . '</a>';
+        echo '</h4>';
+    }
+    echo '</div>';
+}
+
+
