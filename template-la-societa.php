@@ -57,7 +57,7 @@ get_header('societa');
             <?php if ($sottotitolo_1): ?>
                 <h3 class="text-white" style="font-size: 18px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; line-height: 1.4;"><?php echo esc_html($sottotitolo_1); ?></h3>
             <?php endif; ?>
-            <p class="text-white" style="font-size: 17px; line-height: 1.7;"><?php echo nl2br(esc_html($testo_1)); ?></p>
+            <p class="text-white" style="font-size: 19px; line-height: 1.7;"><?php echo nl2br(esc_html($testo_1)); ?></p>
         </div>
 
         <!-- Sezione 2 -->
@@ -66,7 +66,7 @@ get_header('societa');
             <?php if ($sottotitolo_2): ?>
                 <h3 class="text-white" style="font-size: 18px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; line-height: 1.4;"><?php echo esc_html($sottotitolo_2); ?></h3>
             <?php endif; ?>
-            <p class="text-white" style="font-size: 17px; line-height: 1.7;"><?php echo nl2br(esc_html($testo_2)); ?></p>
+            <p class="text-white" style="font-size: 19px; line-height: 1.7;"><?php echo nl2br(esc_html($testo_2)); ?></p>
         </div>
 
         <!-- Sezione 3 -->
@@ -75,7 +75,7 @@ get_header('societa');
             <?php if ($sottotitolo_3): ?>
                 <h3 class="text-white" style="font-size: 18px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; line-height: 1.4;"><?php echo esc_html($sottotitolo_3); ?></h3>
             <?php endif; ?>
-            <p class="text-white" style="font-size: 17px; line-height: 1.7;"><?php echo nl2br(esc_html($testo_3)); ?></p>
+            <p class="text-white" style="font-size: 19px; line-height: 1.7;"><?php echo nl2br(esc_html($testo_3)); ?></p>
         </div>
 
         <!-- Sezione 4 -->
