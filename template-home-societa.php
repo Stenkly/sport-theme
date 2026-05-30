@@ -371,7 +371,7 @@ get_header('societa');
     <section class="hs-sezioni-band container">
         <?php
         $sezioni = [
-            ['label' => 'SCUOLA CALCIO', 'url' => '/scuola-calcio',          'img' => 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=800&auto=format&fit=crop'],
+            ['label' => 'SCUOLA CALCIO', 'url' => '/scuola-calcio',          'img' => get_template_directory_uri() . '/assets/images/scuola-calcio.jpg'],
             ['label' => 'ALLIEVI',       'url' => '/sezioni?cat=allievi',    'img' => 'https://images.unsplash.com/photo-1508344928928-7137b29de218?q=80&w=800&auto=format&fit=crop'],
             ['label' => 'FEMMINILE',     'url' => '/sezioni?cat=femminile',  'img' => 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=800&auto=format&fit=crop'],
         ];

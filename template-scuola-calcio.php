@@ -30,7 +30,7 @@ $formatori_portieri = get_post_meta( get_the_ID(), '_sc_formatori_portieri', tru
             $hero_image_url = get_the_post_thumbnail_url( get_the_ID(), 'full' );
         } else {
             // Immagine bambini default placeholder
-            $hero_image_url = 'https://images.unsplash.com/photo-1518622358385-8ea7d0794bf6?q=80&w=2000&auto=format&fit=crop';
+            $hero_image_url = get_template_directory_uri() . '/assets/images/scuola-calcio.jpg';
         }
         ?>
         <div class="news-hero-wrapper" style="position: relative; width: 100%; height: 50vh; min-height: 400px;">
