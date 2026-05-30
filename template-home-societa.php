@@ -403,10 +403,9 @@ get_header('societa');
 
     <!-- ═══ 3. NEWS ═══ -->
     <section class="ps-section container">
-        <div class="hs-section-header">
-            <h2>NEWS</h2>
-            <div class="sep"></div>
-            <a href="<?php echo esc_url(site_url('/news')); ?>">SCOPRI</a>
+        <div class="section-header">
+            <h2 class="section-title text-white">NEWS</h2>
+            <a href="<?php echo esc_url(site_url('/news-societa')); ?>" class="btn-sm btn-outline">SCOPRI</a>
         </div>
 
         <?php
@@ -466,10 +465,9 @@ get_header('societa');
 
     <!-- ═══ 4. EVENTI ═══ -->
     <section class="ps-section container">
-        <div class="hs-section-header">
-            <h2>EVENTI</h2>
-            <div class="sep"></div>
-            <a href="<?php echo esc_url(site_url('/eventi')); ?>">SCOPRI</a>
+        <div class="section-header">
+            <h2 class="section-title text-white">EVENTI</h2>
+            <a href="<?php echo esc_url(site_url('/eventi')); ?>" class="btn-sm btn-outline">SCOPRI</a>
         </div>
 
         <?php
