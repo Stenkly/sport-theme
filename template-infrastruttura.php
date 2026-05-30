@@ -24,7 +24,7 @@ get_header('societa');
             <div class="news-hero-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
             
             <div class="news-hero-content container" style="position: absolute; bottom: 0; left: 0; right: 0; text-align: left; padding-bottom: 20px;">
-                <h1 class="text-white" style="font-size: 42px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">INFRASTRUTTURA</h1>
+                <h1 class="text-white" style="font-size: 60px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">INFRASTRUTTURA</h1>
                 <hr class="sc-divider" style="border: 0; border-top: 5px solid #ffffff; opacity: 1; margin: 20px 0;">
                 
                 <!-- MENU TABS -->
