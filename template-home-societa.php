@@ -11,7 +11,7 @@ get_header('societa');
 .hs-hero-wrapper {
     position: relative;
     width: 100%;
-    height: 90vh;
+    height: 55vh;
     overflow: hidden;
     background: #000;
 }
