@@ -24,7 +24,7 @@ get_header('societa');
             <div class="news-hero-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
             
             <div class="news-hero-content container" style="position: absolute; bottom: 0; left: 0; right: 0; text-align: left; padding-bottom: 20px;">
-                <h1 class="text-white" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">INFRASTRUTTURA</h1>
+                <h1 class="text-white" style="font-size: 42px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">INFRASTRUTTURA</h1>
                 <hr class="sc-divider" style="border: 0; border-top: 5px solid #ffffff; opacity: 1; margin: 20px 0;">
                 
                 <!-- MENU TABS -->
@@ -56,7 +56,7 @@ get_header('societa');
 
         <!-- TAB: CAMPO SPORTIVO -->
         <div id="tab-campo" class="infra-tab-content" style="display: block;">
-            <h2 class="text-white" style="font-size: 30px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">CAMPO SPORTIVO E INFRASTRUTTURE</h2>
+            <h2 class="text-white" style="font-size: 42px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">CAMPO SPORTIVO E INFRASTRUTTURE</h2>
             <p style="color: white; font-size: 14px; line-height: 1.8; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 30px; max-width: 900px;">
                 <?php echo nl2br(esc_html($testo_campo)); ?>
             </p>
@@ -116,7 +116,7 @@ get_header('societa');
 
         <!-- TAB: BUVETTE -->
         <div id="tab-buvette" class="infra-tab-content" style="display: none;">
-            <h2 class="text-white" style="font-size: 30px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">BUVETTE</h2>
+            <h2 class="text-white" style="font-size: 42px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">BUVETTE</h2>
             <p style="color: white; font-size: 14px; line-height: 1.8; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 40px; max-width: 900px;">
                 <?php echo nl2br(esc_html($testo_buvette)); ?>
             </p>
@@ -150,7 +150,7 @@ get_header('societa');
 
         <!-- TAB: OCCUPAZIONE -->
         <div id="tab-occupazione" class="infra-tab-content" style="display: none;">
-            <h2 class="text-white" style="font-size: 30px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">OCCUPAZIONE CAMPI</h2>
+            <h2 class="text-white" style="font-size: 42px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">OCCUPAZIONE CAMPI</h2>
             <div style="color: white; font-size: 14px; line-height: 1.8; margin-bottom: 20px;">
                 <?php echo wpautop(wp_kses_post($testo_occupazione)); ?>
             </div>
@@ -169,7 +169,7 @@ get_header('societa');
 
         <div id="prenotazioni-wrapper">
             <!-- SEZIONE PRENOTAZIONI -->
-            <h2 class="text-white" style="font-size: 35px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">PRENOTAZIONI?</h2>
+            <h2 class="text-white" style="font-size: 42px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">PRENOTAZIONI?</h2>
             <hr class="sc-divider" style="border: 0; border-top: 5px solid #ffffff; opacity: 1; margin-bottom: 40px;">
 
             <div class="prenotazioni-section" style="display: flex; flex-wrap: wrap; gap: 50px;">
