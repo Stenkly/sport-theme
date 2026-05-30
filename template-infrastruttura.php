@@ -25,7 +25,7 @@ get_header('societa');
             
             <div class="news-hero-content container" style="position: absolute; bottom: 0; left: 0; right: 0; text-align: left; padding-bottom: 20px;">
                 <h1 class="text-white" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">INFRASTRUTTURA</h1>
-                <hr class="sc-divider" style="border: 0; border-top: 2px solid rgba(255,255,255,1); margin: 20px 0;">
+                <hr class="sc-divider" style="border: 0; border-top: 5px solid #ffffff; opacity: 1; margin: 20px 0;">
                 
                 <!-- MENU TABS -->
                 <div class="infra-tabs" style="display: flex; gap: 20px; margin-top: 30px; margin-bottom: 10px; flex-wrap: wrap;">
@@ -170,7 +170,7 @@ get_header('societa');
         <div id="prenotazioni-wrapper">
             <!-- SEZIONE PRENOTAZIONI -->
             <h2 class="text-white" style="font-size: 35px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">PRENOTAZIONI?</h2>
-            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.4); margin-bottom: 40px;">
+            <hr class="sc-divider" style="border: 0; border-top: 5px solid #ffffff; opacity: 1; margin-bottom: 40px;">
 
             <div class="prenotazioni-section" style="display: flex; flex-wrap: wrap; gap: 50px;">
                 
@@ -270,7 +270,7 @@ get_header('societa');
             </div>
         </div>
 
-        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.4); margin-top: 60px; margin-bottom: 40px;">
+        <hr class="sc-divider" style="border: 0; border-top: 5px solid #ffffff; opacity: 1; margin-top: 60px; margin-bottom: 40px;">
 
         <!-- SPONSOR -->
         <h3 class="text-white" style="font-size: 26px; font-weight: 700; text-transform: uppercase; margin-bottom: 30px; letter-spacing: 1px;">SPONSOR</h3>
