@@ -36,7 +36,14 @@ get_header('societa');
         'post_type' => 'dirigente',
         'posts_per_page' => -1,
         'order' => 'ASC',
-        'orderby' => 'menu_order title'
+        'orderby' => 'menu_order title',
+        'meta_query' => array(
+            array(
+                'key' => '_sezione_comitato',
+                'value' => 'settore-giovanile',
+                'compare' => '='
+            )
+        )
     ));
 
     if($dirigenti_query->have_posts()):
