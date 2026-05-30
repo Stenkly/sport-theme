@@ -82,14 +82,22 @@ get_header('societa');
 .hs-sez-label {
     position: absolute;
     bottom: 25px;
-    left: 0;
-    right: 0;
-    text-align: center;
+    left: 50%;
+    transform: translateX(-50%);
     color: #fff;
     font-size: 30px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 2px;
+    border: 2px solid #fff;
+    padding: 10px 30px;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+.hs-sez-item:hover .hs-sez-label {
+    background-color: var(--c-primary);
+    border-color: var(--c-primary);
+    color: var(--c-black);
 }
 
 /* Section header */
