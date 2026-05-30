@@ -24,12 +24,8 @@ get_header('societa');
 }
 .hs-hero-overlay {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 30%;
-    background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%);
-    pointer-events: none;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
 }
 .hs-hero-content {
     position: absolute;
