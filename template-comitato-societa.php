@@ -78,8 +78,16 @@ get_header('societa');
             } else {
                 $others[] = $item;
             }
-        }
         wp_reset_postdata();
+
+        // Ordina leaders: Presidente prima di Vice Presidente
+        usort($leaders, function($a, $b) {
+            $is_a_vice = (stripos($a['ruolo'], 'vice') !== false);
+            $is_b_vice = (stripos($b['ruolo'], 'vice') !== false);
+            if ($is_a_vice && !$is_b_vice) return 1;
+            if (!$is_a_vice && $is_b_vice) return -1;
+            return 0;
+        });
     ?>
     <section class="ps-section container" style="padding-top: 20px; padding-bottom: 60px;">
         <!-- Sezione Presidente Onorario (in cima, centrato) -->
