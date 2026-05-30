@@ -359,7 +359,7 @@ get_header('societa');
 
     <!-- ═══ 1. HERO ═══ -->
     <section>
-        <div class="hs-hero-wrapper">
+        <div class="hs-hero-wrapper container">
             <?php
             $hero_img = has_post_thumbnail()
                 ? get_the_post_thumbnail_url(get_the_ID(), 'full')
@@ -377,7 +377,7 @@ get_header('societa');
     </section>
 
     <!-- ═══ 2. SEZIONI ═══ -->
-    <section class="hs-sezioni-band">
+    <section class="hs-sezioni-band container">
         <?php
         $sezioni = [
             ['label' => 'SCUOLA CALCIO', 'url' => '/scuola-calcio',          'img' => 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=800&auto=format&fit=crop'],
@@ -580,7 +580,7 @@ get_header('societa');
             </div>
         </div>
 
-        <div class="hs-insta-grid">
+        <div class="hs-insta-grid container">
             <?php
             $insta_imgs = [
                 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=400&auto=format&fit=crop',
