@@ -2663,7 +2663,8 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     .page-rosa .news-hero-wrapper,
     .page-staff .news-hero-wrapper,
     .page-prima-squadra .news-hero .container,
-    .page-home-societa .hs-hero-wrapper {
+    .page-home-societa .hs-hero-wrapper,
+    .page-home-societa .hs-sezioni-band {
         position: relative !important;
         margin-left: -60px !important;
         margin-right: auto !important;
@@ -2697,7 +2698,8 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     .page-rosa .news-hero-wrapper,
     .page-staff .news-hero-wrapper,
     .page-prima-squadra .news-hero .container,
-    .page-home-societa .hs-hero-wrapper {
+    .page-home-societa .hs-hero-wrapper,
+    .page-home-societa .hs-sezioni-band {
         margin-left: calc((100% - 1400px) / 2 - 60px) !important;
         width: 1520px !important;
         max-width: 1520px !important;
