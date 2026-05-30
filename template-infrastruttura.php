@@ -184,17 +184,17 @@ get_header('societa');
                     
                     <div style="margin-bottom: 30px;">
                         <h4 style="color: var(--c-primary); font-size: 22px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;">EMAIL</h4>
-                        <a href="mailto:<?php echo esc_attr($gen_email); ?>" style="color: white; font-size: 18px; text-decoration: none;"><?php echo esc_html($gen_email); ?></a>
+                        <a href="mailto:<?php echo esc_attr($gen_email); ?>" style="color: white; font-size: 17px; text-decoration: none;"><?php echo esc_html($gen_email); ?></a>
                     </div>
 
                     <div style="margin-bottom: 30px;">
                         <h4 style="color: var(--c-primary); font-size: 22px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;">TELEFONO</h4>
-                        <a href="tel:<?php echo esc_attr(str_replace(' ', '', $gen_tel)); ?>" style="color: white; font-size: 18px; text-decoration: none;"><?php echo esc_html($gen_tel); ?></a>
+                        <a href="tel:<?php echo esc_attr(str_replace(' ', '', $gen_tel)); ?>" style="color: white; font-size: 17px; text-decoration: none;"><?php echo esc_html($gen_tel); ?></a>
                     </div>
 
                     <div style="margin-bottom: 30px;">
                         <h4 style="color: var(--c-primary); font-size: 22px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;">INDIRIZZO</h4>
-                        <div style="color: white; font-size: 18px; line-height: 1.6;">
+                        <div style="color: white; font-size: 17px; line-height: 1.6;">
                             <?php echo nl2br(esc_html($gen_ind)); ?>
                         </div>
                     </div>
