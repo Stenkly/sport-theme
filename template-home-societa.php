@@ -267,7 +267,6 @@ get_header('societa');
 .hs-sponsor-row img {
     max-height: 40px;
     width: auto;
-    filter: brightness(0) invert(1);
 }
 
 /* Instagram */
