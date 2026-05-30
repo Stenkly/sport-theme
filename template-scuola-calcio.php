@@ -51,7 +51,7 @@ $formatori_portieri = get_post_meta( get_the_ID(), '_sc_formatori_portieri', tru
     <div class="container scuola-calcio-content" style="padding-top: 10px; padding-bottom: 60px;">
         
         <!-- Linea separatrice sotto l'header (allineata al container) -->
-        <hr class="sc-divider" style="border: 0; border-top: 1px solid rgba(255,255,255,0.7); margin-bottom: 40px; margin-top: 0;">
+        <hr class="sc-divider" style="border: 0; border-top: 3px solid rgba(255,255,255,0.9); margin-bottom: 40px; margin-top: 0;">
 
         <!-- VUOI PROVARE -->
         <div class="sc-section" style="margin-bottom: 40px;">
@@ -71,7 +71,7 @@ $formatori_portieri = get_post_meta( get_the_ID(), '_sc_formatori_portieri', tru
             </p>
         </div>
 
-        <hr class="sc-divider" style="border: 0; border-top: 1px solid rgba(255,255,255,0.7); margin-bottom: 40px;">
+        <hr class="sc-divider" style="border: 0; border-top: 3px solid rgba(255,255,255,0.9); margin-bottom: 40px;">
 
         <!-- GIORNI DI ALLENAMENTO -->
         <div class="sc-section" style="margin-bottom: 30px;">
@@ -125,7 +125,7 @@ $formatori_portieri = get_post_meta( get_the_ID(), '_sc_formatori_portieri', tru
             </div>
         </div>
 
-        <hr class="sc-divider" style="border: 0; border-top: 1px solid rgba(255,255,255,0.7); margin-bottom: 40px;">
+        <hr class="sc-divider" style="border: 0; border-top: 3px solid rgba(255,255,255,0.9); margin-bottom: 40px;">
 
         <!-- SPONSOR -->
         <div class="sc-section">
