@@ -60,7 +60,7 @@ get_header('societa');
 .hs-sezioni-band {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 0;
     margin-top: 20px;
     margin-bottom: 20px;
 }
