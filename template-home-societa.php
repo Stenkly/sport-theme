@@ -484,15 +484,13 @@ get_header('societa');
                 $data_ev = get_post_meta(get_the_ID(), '_data_evento', true);
                 $date_display = $data_ev ? date('d.m', strtotime($data_ev)) : get_the_date('d.m');
         ?>
-            <div class="hs-event-card">
-                <div class="hs-event-card-img">
-                    <span class="hs-event-date"><?php echo esc_html($date_display); ?></span>
-                    <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" loading="lazy">
-                    <div class="yellow-tint"></div>
-                </div>
-                <div class="hs-event-body">
-                    <h3><?php echo esc_html(get_the_title()); ?></h3>
-                    <a href="<?php echo esc_url(get_permalink()); ?>" class="hs-event-link">SCOPRI <span>|</span></a>
+            <div class="news-slide">
+                <div class="news-card cover-bg" style="background-image: url('<?php echo esc_url($thumb); ?>'); height: 350px;">
+                    <div class="news-date"><?php echo $date_display; ?></div>
+                    <div class="news-content">
+                        <h3 class="news-title text-white"><?php echo wp_trim_words(get_the_title(), 7, '...'); ?></h3>
+                        <a href="<?php echo esc_url(get_permalink()); ?>" class="btn-sm btn-primary" style="display:inline-block;">SCOPRI</a>
+                    </div>
                 </div>
             </div>
         <?php
@@ -502,15 +500,13 @@ get_header('societa');
             $eventi_count = 3;
             for ($i = 0; $i < 3; $i++):
         ?>
-            <div class="hs-event-card">
-                <div class="hs-event-card-img">
-                    <span class="hs-event-date">28.02</span>
-                    <img src="<?php echo $ev_imgs[$i]; ?>" alt="Evento" loading="lazy">
-                    <div class="yellow-tint"></div>
-                </div>
-                <div class="hs-event-body">
-                    <h3>DESCRIZIONE EVENTO<br>(TORNEO, CENA)</h3>
-                    <a href="#" class="hs-event-link">SCOPRI <span>|</span></a>
+            <div class="news-slide">
+                <div class="news-card cover-bg" style="background-image: url('https://images.unsplash.com/photo-1508344928928-7137b29de218?q=80&w=600&auto=format&fit=crop'); height: 350px;">
+                    <div class="news-date">15.03</div>
+                    <div class="news-content">
+                        <h3 class="news-title text-white">TORNEO PASQUALE ALLIEVI E...</h3>
+                        <a href="#" class="btn-sm btn-primary" style="display:inline-block;">SCOPRI</a>
+                    </div>
                 </div>
             </div>
         <?php endfor; endif;
