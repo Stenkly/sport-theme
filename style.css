@@ -1198,7 +1198,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 .contatti-label {
     color: var(--c-primary);
-    font-size: 16px;
+    font-size: 22px;
     font-weight: 700;
     text-transform: uppercase;
     margin-bottom: 8px;
@@ -1211,7 +1211,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .contatti-info-block p,
 .contatti-info-block a {
     color: var(--c-white);
-    font-size: 14px;
+    font-size: 18px;
     line-height: 1.7;
     margin-top: 6px;
 }
