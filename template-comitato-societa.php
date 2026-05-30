@@ -57,8 +57,11 @@ get_header('societa');
                 $parti_nome = explode(' ', get_the_title(), 2);
                 $nome_riga1 = $parti_nome[0];
                 $nome_riga2 = isset($parti_nome[1]) ? $parti_nome[1] : '';
+                
+                $is_pres_onorario = (stripos($ruolo, 'presidente onorario') !== false);
+                $card_style = $is_pres_onorario ? 'grid-column: 1 / -1; justify-self: center; width: 100%; max-width: 580px; margin-bottom: 20px;' : '';
             ?>
-            <div class="dirigente-card">
+            <div class="dirigente-card" style="<?php echo esc_attr($card_style); ?>">
                 <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($foto); ?>');">
                     <div class="dirigente-photo-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); pointer-events: none;"></div>
                     <div class="dirigente-name" style="position: absolute; bottom: 15px; left: 15px; z-index: 2;">
