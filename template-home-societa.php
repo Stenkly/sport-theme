@@ -60,7 +60,9 @@ get_header('societa');
 .hs-sezioni-band {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0;
+    gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 .hs-sez-item {
     position: relative;
@@ -68,6 +70,8 @@ get_header('societa');
     overflow: hidden;
     display: block;
     text-decoration: none;
+    border: 2px solid #fff;
+    box-sizing: border-box;
 }
 .hs-sez-item img {
     width: 100%; height: 100%;
