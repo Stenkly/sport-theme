@@ -137,6 +137,12 @@ get_header();
         .org-card-photo {
             flex: 0 0 45%;
             max-width: 45%;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: border-color 0.3s ease;
+        }
+        .org-card:hover .org-card-photo {
+            border-color: var(--c-primary);
         }
         .org-card-photo img {
             width: 100%;
@@ -144,6 +150,11 @@ get_header();
             display: block;
             aspect-ratio: 4/5;
             object-fit: cover;
+            object-position: center center;
+            transition: transform 0.3s ease;
+        }
+        .org-card:hover .org-card-photo img {
+            transform: scale(1.05);
         }
         .org-card-info {
             flex: 1;
