@@ -55,18 +55,18 @@ $formatori_portieri = get_post_meta( get_the_ID(), '_sc_formatori_portieri', tru
 
         <!-- VUOI PROVARE -->
         <div class="sc-section" style="margin-bottom: 40px;">
-            <h2 class="text-primary" style="font-size: 34px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">VUOI PROVARE?</h2>
+            <h2 class="text-primary" style="font-size: 42px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">VUOI PROVARE?</h2>
             
-            <p style="font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; color: white; letter-spacing: 0.5px;">
+            <p style="font-size: 17px; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; color: white; letter-spacing: 0.5px;">
                 CONTATTA LA SOCIETÀ ALL'E-MAIL <a href="mailto:<?php echo esc_attr(strtolower($email)); ?>" class="text-primary"><?php echo esc_html($email); ?></a>
             </p>
             
-            <p style="font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 30px; color: white; letter-spacing: 0.5px; line-height: 1.5;">
+            <p style="font-size: 17px; font-weight: 700; text-transform: uppercase; margin-bottom: 30px; color: white; letter-spacing: 0.5px; line-height: 1.5;">
                 OPPURE PRESENTATI DAL RESPONSABILE SUL CAMPO ALLE <span class="text-primary"><?php echo esc_html($orario_prova); ?></span>.<br>
                 <span class="text-primary"><?php echo esc_html($testo_prova); ?></span>
             </p>
             
-            <p style="font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 40px; color: white; letter-spacing: 0.5px;">
+            <p style="font-size: 17px; font-weight: 700; text-transform: uppercase; margin-bottom: 40px; color: white; letter-spacing: 0.5px;">
                 <?php echo esc_html($inizio_stagione); ?>
             </p>
         </div>
@@ -75,22 +75,22 @@ $formatori_portieri = get_post_meta( get_the_ID(), '_sc_formatori_portieri', tru
 
         <!-- GIORNI DI ALLENAMENTO -->
         <div class="sc-section" style="margin-bottom: 30px;">
-            <h3 class="text-white" style="font-size: 22px; font-weight: 700; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px;">GIORNI DI ALLENAMENTO</h3>
-            <p style="font-size: 14px; font-weight: 400; color: white; letter-spacing: 0.5px;"><?php echo esc_html($giorni_allenamento); ?></p>
+            <h3 class="text-white" style="font-size: 42px; font-weight: 700; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px;">GIORNI DI ALLENAMENTO</h3>
+            <p style="font-size: 17px; font-weight: 700; color: white; letter-spacing: 0.5px;"><?php echo esc_html($giorni_allenamento); ?></p>
         </div>
 
         <!-- EDUCATORI -->
         <div class="sc-section" style="margin-bottom: 30px;">
-            <h3 class="text-white" style="font-size: 22px; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 1px;">EDUCATORI</h3>
+            <h3 class="text-white" style="font-size: 42px; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 1px;">EDUCATORI</h3>
             <div style="margin-bottom: 20px;">
-                <p class="text-primary" style="font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;">RESPONSABILE TECNICO SCUOLA CALCIO</p>
-                <p style="font-size: 14px; font-weight: 400; color: white; letter-spacing: 0.5px;"><?php echo esc_html($responsabile); ?></p>
+                <p class="text-primary" style="font-size: 22px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;">RESPONSABILE TECNICO SCUOLA CALCIO</p>
+                <p style="font-size: 17px; font-weight: 700; color: white; letter-spacing: 0.5px;"><?php echo esc_html($responsabile); ?></p>
             </div>
         </div>
 
         <!-- FORMATORI -->
         <div class="sc-section" style="margin-bottom: 60px;">
-            <h3 class="text-white" style="font-size: 22px; font-weight: 700; text-transform: uppercase; margin-bottom: 25px; letter-spacing: 1px;">FORMATORI</h3>
+            <h3 class="text-white" style="font-size: 42px; font-weight: 700; text-transform: uppercase; margin-bottom: 25px; letter-spacing: 1px;">FORMATORI</h3>
             
             <div class="formatori-grid">
                 <!-- Colonna 1 -->
@@ -129,7 +129,7 @@ $formatori_portieri = get_post_meta( get_the_ID(), '_sc_formatori_portieri', tru
 
         <!-- SPONSOR -->
         <div class="sc-section">
-            <h3 class="text-white" style="font-size: 26px; font-weight: 700; text-transform: uppercase; margin-bottom: 30px; letter-spacing: 1px;">SPONSOR</h3>
+            <h3 class="text-white" style="font-size: 42px; font-weight: 700; text-transform: uppercase; margin-bottom: 30px; letter-spacing: 1px;">SPONSOR</h3>
             <?php sport_theme_render_global_sponsors(); ?>
         </div>
     </div>

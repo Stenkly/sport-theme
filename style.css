@@ -2422,7 +2422,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 
 .formatore-title {
-    font-size: 13px;
+    font-size: 22px;
     font-weight: 700;
     text-transform: uppercase;
     margin-bottom: 15px;
@@ -2430,8 +2430,8 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 
 .formatore-names {
-    font-size: 14px;
-    font-weight: 400;
+    font-size: 17px;
+    font-weight: 700;
     line-height: 1.8;
     color: white;
     letter-spacing: 0.5px;
