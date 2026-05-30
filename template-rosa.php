@@ -79,6 +79,8 @@ get_header();
             $team_query = new WP_Query(array(
                 'post_type' => 'giocatore',
                 'posts_per_page' => -1,
+                'orderby' => 'meta_value_num',
+                'meta_key' => '_numero_maglia',
                 'order' => 'ASC',
                 'tax_query' => array(
                     array(
