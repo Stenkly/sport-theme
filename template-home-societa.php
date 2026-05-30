@@ -34,8 +34,8 @@ get_header('societa');
     text-align: center;
 }
 .hs-hero-title {
-    font-size: 60px;
-    font-weight: 800;
+    font-size: 42px;
+    font-weight: 700;
     text-transform: uppercase;
     color: #fff;
     line-height: 1.1;
