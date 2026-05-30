@@ -1142,7 +1142,8 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     justify-content: flex-start;
     padding-top: 10px;
     padding-left: 20px;
-    border-left: 1px solid var(--c-primary);
+    border-left: 3px solid var(--c-primary);
+    min-height: 300px;
 }
 .dirigente-role {
     color: var(--c-primary);
@@ -1172,6 +1173,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     .dirigenti-grid { grid-template-columns: 1fr; gap: 40px; }
     .dirigente-photo { width: 150px; margin-right: 20px; }
     .dirigente-name { font-size: 24px; }
+    .dirigente-info { min-height: 188px; }
 }
 
 /* ============================

@@ -160,7 +160,7 @@ get_header();
             flex: 1;
             margin-left: 20px;
             padding: 10px 0 0 20px;
-            border-left: 1px solid var(--c-primary);
+            border-left: 3px solid var(--c-primary);
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
