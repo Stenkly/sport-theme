@@ -57,7 +57,7 @@ get_header('societa');
         <!-- TAB: CAMPO SPORTIVO -->
         <div id="tab-campo" class="infra-tab-content" style="display: block;">
             <h2 class="text-white" style="font-size: 42px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">CAMPO SPORTIVO E INFRASTRUTTURE</h2>
-            <p style="color: white; font-size: 14px; line-height: 1.8; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 30px; max-width: 900px;">
+            <p style="color: white; font-size: 32px; line-height: 1.3; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 30px; max-width: 900px;">
                 <?php echo nl2br(esc_html($testo_campo)); ?>
             </p>
 
@@ -117,7 +117,7 @@ get_header('societa');
         <!-- TAB: BUVETTE -->
         <div id="tab-buvette" class="infra-tab-content" style="display: none;">
             <h2 class="text-white" style="font-size: 42px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">BUVETTE</h2>
-            <p style="color: white; font-size: 14px; line-height: 1.8; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 40px; max-width: 900px;">
+            <p style="color: white; font-size: 32px; line-height: 1.3; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 40px; max-width: 900px;">
                 <?php echo nl2br(esc_html($testo_buvette)); ?>
             </p>
 
