@@ -534,7 +534,23 @@ get_header('societa');
         <div style="width:100%; height:1px; background:rgba(255,255,255,0.1); margin-bottom:35px;"></div>
         <div class="hs-sponsor-row">
             <?php
-            $sp_q = new WP_Query(['post_type' => 'sponsor', 'posts_per_page' => -1]);
+            $sp_q = new WP_Query([
+                'post_type' => 'sponsor',
+                'posts_per_page' => -1,
+                'meta_query' => [
+                    'relation' => 'OR',
+                    [
+                        'key' => '_destinazione_sponsor',
+                        'value' => 'societa',
+                        'compare' => '='
+                    ],
+                    [
+                        'key' => '_destinazione_sponsor',
+                        'value' => 'entrambi',
+                        'compare' => '='
+                    ]
+                ]
+            ]);
             if ($sp_q->have_posts()):
                 while ($sp_q->have_posts()): $sp_q->the_post();
                     $sito = get_post_meta(get_the_ID(), '_sito_url', true);

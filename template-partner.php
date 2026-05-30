@@ -49,10 +49,28 @@ get_header(); ?>
                 'post_type' => 'sponsor',
                 'posts_per_page' => -1,
                 'meta_query' => [
+                    'relation' => 'AND',
                     [
                         'key' => '_livello_sponsor',
                         'value' => 'main',
                         'compare' => '='
+                    ],
+                    [
+                        'relation' => 'OR',
+                        [
+                            'key' => '_destinazione_sponsor',
+                            'value' => 'prima_squadra',
+                            'compare' => '='
+                        ],
+                        [
+                            'key' => '_destinazione_sponsor',
+                            'value' => 'entrambi',
+                            'compare' => '='
+                        ],
+                        [
+                            'key' => '_destinazione_sponsor',
+                            'compare' => 'NOT EXISTS'
+                        ]
                     ]
                 ]
             ]);
@@ -93,10 +111,28 @@ get_header(); ?>
                 'post_type' => 'sponsor',
                 'posts_per_page' => -1,
                 'meta_query' => [
+                    'relation' => 'AND',
                     [
                         'key' => '_livello_sponsor',
                         'value' => 'partner',
                         'compare' => '='
+                    ],
+                    [
+                        'relation' => 'OR',
+                        [
+                            'key' => '_destinazione_sponsor',
+                            'value' => 'prima_squadra',
+                            'compare' => '='
+                        ],
+                        [
+                            'key' => '_destinazione_sponsor',
+                            'value' => 'entrambi',
+                            'compare' => '='
+                        ],
+                        [
+                            'key' => '_destinazione_sponsor',
+                            'compare' => 'NOT EXISTS'
+                        ]
                     ]
                 ]
             ]);

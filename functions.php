@@ -667,6 +667,7 @@ add_action('add_meta_boxes', 'sport_theme_sponsor_metabox');
 
 function sport_theme_sponsor_meta_html($post) {
     $livello = get_post_meta($post->ID, '_livello_sponsor', true) ?: 'partner';
+    $destinazione = get_post_meta($post->ID, '_destinazione_sponsor', true) ?: 'entrambi';
     $sito_url = get_post_meta($post->ID, '_sito_url', true);
     wp_nonce_field('salva_sponsor_meta', 'sponsor_meta_nonce');
     ?>
@@ -674,6 +675,12 @@ function sport_theme_sponsor_meta_html($post) {
     <select name="_livello_sponsor" style="width:100%; max-width:400px;">
         <option value="main" <?php selected($livello, 'main'); ?>>Main Sponsor</option>
         <option value="partner" <?php selected($livello, 'partner'); ?>>Partner</option>
+    </select></p>
+    <p><label><b>Destinazione Sponsor:</b></label><br>
+    <select name="_destinazione_sponsor" style="width:100%; max-width:400px;">
+        <option value="entrambi" <?php selected($destinazione, 'entrambi'); ?>>Entrambi</option>
+        <option value="prima_squadra" <?php selected($destinazione, 'prima_squadra'); ?>>Prima Squadra</option>
+        <option value="societa" <?php selected($destinazione, 'societa'); ?>>Società / Club</option>
     </select></p>
     <p><label><b>URL Sito Web (opzionale):</b></label><br>
     <input type="text" name="_sito_url" value="<?php echo esc_attr($sito_url); ?>" placeholder="https://..." style="width:100%; max-width:400px;"></p>
@@ -683,6 +690,7 @@ function sport_theme_sponsor_meta_html($post) {
 function sport_theme_salva_sponsor_meta($post_id) {
     if (!isset($_POST['sponsor_meta_nonce']) || !wp_verify_nonce($_POST['sponsor_meta_nonce'], 'salva_sponsor_meta')) return;
     if (isset($_POST['_livello_sponsor'])) update_post_meta($post_id, '_livello_sponsor', sanitize_text_field($_POST['_livello_sponsor']));
+    if (isset($_POST['_destinazione_sponsor'])) update_post_meta($post_id, '_destinazione_sponsor', sanitize_text_field($_POST['_destinazione_sponsor']));
     if (isset($_POST['_sito_url'])) update_post_meta($post_id, '_sito_url', esc_url_raw($_POST['_sito_url']));
 }
 add_action('save_post_sponsor', 'sport_theme_salva_sponsor_meta');
@@ -824,7 +832,23 @@ function sport_theme_render_global_sponsors() {
     $sponsor_query = new WP_Query([
         'post_type' => 'sponsor',
         'posts_per_page' => -1,
-        // Nessun meta query, prendiamo sia Main che Partner
+        'meta_query' => [
+            'relation' => 'OR',
+            [
+                'key' => '_destinazione_sponsor',
+                'value' => 'prima_squadra',
+                'compare' => '='
+            ],
+            [
+                'key' => '_destinazione_sponsor',
+                'value' => 'entrambi',
+                'compare' => '='
+            ],
+            [
+                'key' => '_destinazione_sponsor',
+                'compare' => 'NOT EXISTS'
+            ]
+        ]
     ]);
 
     if ($sponsor_query->have_posts()) {
