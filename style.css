@@ -927,7 +927,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .fm-col-1 a:hover { color: #ffffff; }
 
 .fm-social { display: flex; gap: 10px; justify-content: flex-start; }
-.fm-social a { display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--c-light-yellow); background-color: var(--c-light-yellow); color: #000; font-size: 16px; transition: all 0.3s; margin-bottom: 0; }
+.fm-social a { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--c-light-yellow); background-color: var(--c-light-yellow); color: #000; font-size: 18px; transition: all 0.3s; margin-bottom: 0; }
 .fm-social a:hover { background-color: transparent; color: var(--c-light-yellow); border-color: var(--c-light-yellow); transform: scale(1.1); }
 
 .fm-col-links a { margin-bottom: 18px; font-size: 17px; font-weight: 700; }
