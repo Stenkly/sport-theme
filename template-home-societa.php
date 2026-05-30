@@ -354,7 +354,7 @@ get_header('societa');
             <?php
             $hero_img = has_post_thumbnail()
                 ? get_the_post_thumbnail_url(get_the_ID(), 'full')
-                : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1920&auto=format&fit=crop';
+                : get_template_directory_uri() . '/assets/images/campo-taverne-aereo.jpg';
             ?>
             <img src="<?php echo esc_url($hero_img); ?>" alt="AC Taverne" loading="eager">
             <div class="hs-hero-overlay"></div>
