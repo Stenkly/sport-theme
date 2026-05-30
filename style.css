@@ -913,7 +913,8 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 /* --- FOOTER GLOBALE (MEGA) --- */
 .site-footer { background-color: #000; border-top: none; }
-.footer-mega { display: grid; grid-template-columns: auto auto auto auto auto; justify-content: space-between; padding: 60px 20px; }
+.footer-mega { display: grid; grid-template-columns: auto auto auto auto auto; justify-content: space-between; padding: 25px 20px 60px 20px; }
+.site-main > section:last-of-type { padding-bottom: 10px !important; }
 .fm-col { text-align: left; }
 .fm-col p { color: #ffffff; font-size: 17px; font-weight: 700; line-height: 1.4; margin: 0; display: block; }
 .fm-col a { color: #ffffff; font-size: 17px; font-weight: 700; line-height: 1.4; text-decoration: none; margin-bottom: 18px; display: block; transition: color 0.3s; }
