@@ -8,7 +8,7 @@
 get_header('societa');
 ?>
 
-<main id="primary" class="site-main page-organigramma">
+<main id="primary" class="site-main page-comitato">
 
     <section class="news-hero">
         <?php
@@ -22,10 +22,10 @@ get_header('societa');
             <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="height: 100%; width: 100%; object-fit: cover; object-position: center;" alt="<?php echo esc_attr(get_the_title()); ?>">
             <div class="news-hero-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
             
-            <div class="news-hero-content container" style="position: absolute; bottom: 40px; left: 0; right: 0; text-align: left;">
+            <div class="news-hero-content container" style="position: absolute; bottom: 0; left: 0; right: 0; text-align: left; padding-bottom: 30px;">
                 <h1 class="text-white" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">COMITATO</h1>
-                <hr style="border: 0; border-top: 2px solid white; margin: 20px 0;">
-                <!-- Nessun sottomenu Prima Squadra qui -->
+                <hr class="sc-divider" style="border: 0; border-top: 2px solid rgba(255,255,255,1); margin: 20px 0;">
+                <?php sport_theme_render_societa_submenu(); ?>
             </div>
         </div>
     </section>

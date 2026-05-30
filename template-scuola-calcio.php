@@ -39,8 +39,6 @@ $formatori_portieri = get_post_meta( get_the_ID(), '_sc_formatori_portieri', tru
             
             <div class="news-hero-content container" style="position: absolute; bottom: 0px; left: 0; right: 0; text-align: left; padding-bottom: 20px;">
                 <h1 class="text-white" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">SCUOLA CALCIO</h1>
-                <hr class="sc-divider" style="border: 0; border-top: 2px solid rgba(255,255,255,1); margin: 20px 0;">
-                <?php sport_theme_render_societa_submenu(); ?>
             </div>
         </div>
     </section>

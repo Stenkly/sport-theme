@@ -26,7 +26,8 @@ get_header('societa');
             <div class="news-hero-content container" style="position: absolute; bottom: 0; left: 0; right: 0; text-align: left; padding-bottom: 30px;">
                 <h1 class="text-white" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">AREA ALLENATORI</h1>
                 <hr class="sc-divider" style="border: 0; border-top: 2px solid rgba(255,255,255,1); margin: 20px 0;">
-                <p class="text-white" style="font-size: 24px; font-weight: 700; text-transform: uppercase; margin: 0; line-height: 1.3;">
+                <?php sport_theme_render_societa_submenu(); ?>
+                <p class="text-white" style="font-size: 24px; font-weight: 700; text-transform: uppercase; margin: 20px 0 0 0; line-height: 1.3;">
                     DOCUMENTI E MODULISTICA<br>PER GLI STAFF TECNICI
                 </p>
             </div>

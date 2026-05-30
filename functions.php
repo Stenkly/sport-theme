@@ -2867,32 +2867,23 @@ function sport_theme_fix_stadiums_in_db() {
  */
 function sport_theme_render_societa_submenu() {
     $menu_items = [
-        'Società'        => site_url('/societa'),
-        'Sezioni'        => site_url('/sezioni'),
-        'Scuola Calcio'  => site_url('/scuola-calcio'),
-        'Infrastruttura' => site_url('/infrastruttura'),
-        'News'           => site_url('/news-societa'),
-        'Iscriviti'      => site_url('/iscritti'),
-        'Contatti'       => site_url('/contatti-societa'),
+        'La Società'     => site_url('/la-societa'),
+        'Comitato'       => site_url('/comitato'),
+        'Club dei 100'   => site_url('/club-dei-100'),
+        'Area Riservata' => site_url('/area-allenatori'),
     ];
 
     echo '<div class="page-submenu" style="display: flex; gap: 20px; margin-top: 30px; margin-bottom: 10px; flex-wrap: wrap; justify-content: flex-start; z-index: 10; position: relative;">';
     foreach ( $menu_items as $label => $url ) {
         $is_active = false;
         
-        if ( $label === 'Società' && (is_page('societa') || is_page_template('template-la-societa.php') || is_page_template('template-comitato-societa.php') || is_page_template('template-club-dei-100.php')) ) {
+        if ( $label === 'La Società' && (is_page('la-societa') || is_page_template('template-la-societa.php')) ) {
             $is_active = true;
-        } elseif ( $label === 'Sezioni' && (is_page('sezioni') || is_page_template('template-sezioni.php')) ) {
+        } elseif ( $label === 'Comitato' && (is_page('comitato') || is_page_template('template-comitato-societa.php')) ) {
             $is_active = true;
-        } elseif ( $label === 'Scuola Calcio' && (is_page('scuola-calcio') || is_page_template('template-scuola-calcio.php')) ) {
+        } elseif ( $label === 'Club dei 100' && (is_page('club-dei-100') || is_page_template('template-club-dei-100.php')) ) {
             $is_active = true;
-        } elseif ( $label === 'Infrastruttura' && (is_page('infrastruttura') || is_page_template('template-infrastruttura.php')) ) {
-            $is_active = true;
-        } elseif ( $label === 'News' && (is_page('news-societa') || is_page_template('template-news-societa.php') || is_singular('evento') || is_page('eventi-societa')) ) {
-            $is_active = true;
-        } elseif ( $label === 'Iscriviti' && (is_page('iscritti') || is_page_template('template-iscritti.php')) ) {
-            $is_active = true;
-        } elseif ( $label === 'Contatti' && (is_page('contatti-societa') || is_page_template('template-contatti-societa.php')) ) {
+        } elseif ( $label === 'Area Riservata' && (is_page('area-allenatori') || is_page_template('template-allenatori.php')) ) {
             $is_active = true;
         }
 

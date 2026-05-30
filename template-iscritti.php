@@ -21,8 +21,6 @@ while ( have_posts() ) : the_post();
         <div style="position:absolute; bottom:0; left:0; width:100%; height:70%; background:linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events:none;"></div>
         <div class="news-hero-content container" style="position:absolute; bottom:40px; left:0; right:0; text-align:left;">
             <h1 class="club-hero-title" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; color: white; letter-spacing: 2px;"><?php the_title(); ?></h1>
-            <hr class="sc-divider" style="border: 0; border-top: 2px solid rgba(255,255,255,1); margin: 20px 0;">
-            <?php sport_theme_render_societa_submenu(); ?>
         </div>
     </div>
 </section>
