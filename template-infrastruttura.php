@@ -216,55 +216,55 @@ get_header('societa');
                         
                         <div style="display: flex; gap: 20px; margin-bottom: 25px; flex-wrap: wrap;">
                             <div style="flex: 1; min-width: 200px;">
-                                <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 13px;">Nome e Cognome*</label>
-                                <input type="text" name="pr_nome" required style="width: 100%; background: transparent; border: 1px solid white; color: white; padding: 12px; font-size: 14px;" placeholder="Nome e Cognome">
+                                <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 15px;">Nome e Cognome*</label>
+                                <input type="text" name="pr_nome" required style="width: 100%; background: transparent; border: 1px solid white; color: white; padding: 12px; font-size: 17px;" placeholder="Nome e Cognome">
                             </div>
                             <div style="flex: 1; min-width: 200px;">
-                                <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 13px;">Numero di telefono*</label>
-                                <input type="text" name="pr_telefono" required style="width: 100%; background: transparent; border: 1px solid white; color: white; padding: 12px; font-size: 14px;" placeholder="Numero di telefono">
+                                <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 15px;">Numero di telefono*</label>
+                                <input type="text" name="pr_telefono" required style="width: 100%; background: transparent; border: 1px solid white; color: white; padding: 12px; font-size: 17px;" placeholder="Numero di telefono">
                             </div>
                             <div style="flex: 1; min-width: 200px;">
-                                <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 13px;">E-mail*</label>
-                                <input type="email" name="pr_email" required style="width: 100%; background: transparent; border: 1px solid white; color: white; padding: 12px; font-size: 14px;" placeholder="E-mail">
+                                <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 15px;">E-mail*</label>
+                                <input type="email" name="pr_email" required style="width: 100%; background: transparent; border: 1px solid white; color: white; padding: 12px; font-size: 17px;" placeholder="E-mail">
                             </div>
                         </div>
                         
                         <div style="display: flex; gap: 20px; margin-bottom: 25px; flex-wrap: wrap;">
                             <div style="flex: 1; min-width: 200px;">
-                                <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 13px;">Azienda*</label>
-                                <input type="text" name="pr_azienda" required style="width: 100%; background: transparent; border: 1px solid white; color: white; padding: 12px; font-size: 14px;" placeholder="Azienda">
+                                <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 15px;">Azienda*</label>
+                                <input type="text" name="pr_azienda" required style="width: 100%; background: transparent; border: 1px solid white; color: white; padding: 12px; font-size: 17px;" placeholder="Azienda">
                             </div>
                             <div style="flex: 1; min-width: 200px;">
-                                <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 13px;">Oggetto*</label>
-                                <input type="text" name="pr_oggetto" required style="width: 100%; background: transparent; border: 1px solid white; color: white; padding: 12px; font-size: 14px;" placeholder="Oggetto">
+                                <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 15px;">Oggetto*</label>
+                                <input type="text" name="pr_oggetto" required style="width: 100%; background: transparent; border: 1px solid white; color: white; padding: 12px; font-size: 17px;" placeholder="Oggetto">
                             </div>
                             <div style="flex: 1; min-width: 200px;">
-                                <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 13px;">Periodo*</label>
-                                <input type="text" name="pr_periodo" required style="width: 100%; background: transparent; border: 1px solid white; color: white; padding: 12px; font-size: 14px;" placeholder="Periodo">
+                                <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 15px;">Periodo*</label>
+                                <input type="text" name="pr_periodo" required style="width: 100%; background: transparent; border: 1px solid white; color: white; padding: 12px; font-size: 17px;" placeholder="Periodo">
                             </div>
                         </div>
 
                         <div style="margin-bottom: 25px;">
-                            <label class="text-white" style="display: block; margin-bottom: 12px; font-size: 13px;">Infrastruttura*</label>
+                            <label class="text-white" style="display: block; margin-bottom: 12px; font-size: 15px;">Infrastruttura*</label>
                             <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-                                <label style="color: white; font-size: 13px; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <label style="color: white; font-size: 15px; display: flex; align-items: center; gap: 8px; cursor: pointer;">
                                     <input type="checkbox" name="pr_infra[]" value="Campo sportivo" style="accent-color: var(--c-primary); width: 16px; height: 16px;"> Campo sportivo
                                 </label>
-                                <label style="color: white; font-size: 13px; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <label style="color: white; font-size: 15px; display: flex; align-items: center; gap: 8px; cursor: pointer;">
                                     <input type="checkbox" name="pr_infra[]" value="Buvette" style="accent-color: var(--c-primary); width: 16px; height: 16px;"> Buvette
                                 </label>
-                                <label style="color: white; font-size: 13px; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <label style="color: white; font-size: 15px; display: flex; align-items: center; gap: 8px; cursor: pointer;">
                                     <input type="checkbox" name="pr_infra[]" value="Infrastruttura" style="accent-color: var(--c-primary); width: 16px; height: 16px;"> Infrastruttura
                                 </label>
                             </div>
                         </div>
 
                         <div style="margin-bottom: 30px;">
-                            <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 13px;">La tua domanda*</label>
-                            <textarea name="pr_domanda" required style="width: 100%; background: transparent; border: 1px solid white; color: white; padding: 12px; font-size: 14px; min-height: 100px;" placeholder="Domanda"></textarea>
+                            <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 15px;">La tua domanda*</label>
+                            <textarea name="pr_domanda" required style="width: 100%; background: transparent; border: 1px solid white; color: white; padding: 12px; font-size: 17px; min-height: 100px;" placeholder="Domanda"></textarea>
                         </div>
 
-                        <button type="submit" style="background-color: var(--c-primary); color: #000; border: none; padding: 14px 40px; font-weight: bold; text-transform: uppercase; cursor: pointer; letter-spacing: 1px; font-size: 14px; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">INVIA RICHIESTA</button>
+                        <button type="submit" style="background-color: var(--c-primary); color: #000; border: none; padding: 14px 40px; font-weight: bold; text-transform: uppercase; cursor: pointer; letter-spacing: 1px; font-size: 17px; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">INVIA RICHIESTA</button>
                     </form>
                 </div>
             </div>
