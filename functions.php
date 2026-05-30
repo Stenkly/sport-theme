@@ -343,7 +343,7 @@ add_action('init', 'sport_theme_cpt_giocatore');
 
 function sport_theme_admin_scripts($hook) {
     global $post_type;
-    if ('giocatore' === $post_type) {
+    if ('giocatore' === $post_type || 'page' === $post_type) {
         wp_enqueue_media();
     }
 }
@@ -2204,18 +2204,20 @@ function sport_theme_infrastruttura_meta_html( $post ) {
     echo "<textarea name='_infra_testo_occupazione' style='width:100%;height:80px;'>" . esc_textarea($testo_occupazione) . "</textarea>";
     
     echo "<hr><h3>Galleria Immagini (Campo Sportivo)</h3>";
-    echo "<p>Inserisci gli URL delle immagini. Lascia vuoto per mostrare i riquadri vuoti come nel mockup.</p>";
+    echo "<p>Inserisci gli URL delle immagini o selezionale dalla libreria media.</p>";
     for($i=1; $i<=6; $i++) {
         $img = get_post_meta( $post->ID, "_infra_img_$i", true );
         echo "<label style='display:block;margin-top:10px;'>Immagine $i (URL):</label>";
-        echo "<input type='text' name='_infra_img_$i' value='" . esc_attr($img) . "' style='width:100%;max-width:600px;'>";
+        echo "<input type='text' id='infra_img_$i' name='_infra_img_$i' value='" . esc_attr($img) . "' style='width:100%;max-width:500px;vertical-align:middle;'>";
+        echo "<button type='button' class='button upload_file_button' data-input-id='infra_img_$i' style='margin-left: 5px; vertical-align: middle;'>Seleziona</button>";
     }
 
     echo "<hr><h3>Galleria Immagini (Buvette)</h3>";
     for($i=1; $i<=6; $i++) {
         $img = get_post_meta( $post->ID, "_infra_buvette_img_$i", true );
         echo "<label style='display:block;margin-top:10px;'>Immagine Buvette $i (URL):</label>";
-        echo "<input type='text' name='_infra_buvette_img_$i' value='" . esc_attr($img) . "' style='width:100%;max-width:600px;'>";
+        echo "<input type='text' id='infra_buvette_img_$i' name='_infra_buvette_img_$i' value='" . esc_attr($img) . "' style='width:100%;max-width:500px;vertical-align:middle;'>";
+        echo "<button type='button' class='button upload_file_button' data-input-id='infra_buvette_img_$i' style='margin-left: 5px; vertical-align: middle;'>Seleziona</button>";
     }
 
     echo "<hr><h3>Calendario Google (Occupazione)</h3>";
@@ -2237,7 +2239,33 @@ function sport_theme_infrastruttura_meta_html( $post ) {
     echo "<hr><h3>Documenti</h3>";
     $regolamento = get_post_meta( $post->ID, "_infra_pdf_regolamento", true );
     echo "<label style='display:block;margin-top:10px;'>URL Regolamento (PDF):</label>";
-    echo "<input type='text' name='_infra_pdf_regolamento' value='" . esc_attr($regolamento) . "' style='width:100%;max-width:600px;'>";
+    echo "<input type='text' id='infra_pdf_regolamento' name='_infra_pdf_regolamento' value='" . esc_attr($regolamento) . "' style='width:100%;max-width:500px;vertical-align:middle;'>";
+    echo "<button type='button' class='button upload_file_button' data-input-id='infra_pdf_regolamento' style='margin-left: 5px; vertical-align: middle;'>Seleziona</button>";
+    ?>
+    <script>
+    jQuery(document).ready(function($){
+        $('.upload_file_button').click(function(e) {
+            e.preventDefault();
+            var button = $(this);
+            var input_id = button.data('input-id');
+            var input_field = $('#' + input_id);
+            
+            var custom_uploader = wp.media({
+                title: 'Seleziona File o Immagine',
+                button: {
+                    text: 'Usa questo file'
+                },
+                multiple: false
+            })
+            .on('select', function() {
+                var attachment = custom_uploader.state().get('selection').first().toJSON();
+                input_field.val(attachment.url);
+            })
+            .open();
+        });
+    });
+    </script>
+    <?php
 }
 
 function sport_theme_salva_infrastruttura_meta( $post_id ) {
