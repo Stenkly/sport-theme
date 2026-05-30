@@ -98,16 +98,16 @@ get_header('societa');
                     <div class="dirigente-card" style="justify-self: center; width: 100%; max-width: 580px;">
                         <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($p['foto']); ?>');">
                             <div class="dirigente-photo-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); pointer-events: none;"></div>
-                            <div class="dirigente-name" style="position: absolute; bottom: 15px; left: 15px; z-index: 2;">
-                                <?php echo esc_html($p['nome_riga1']); ?><br>
-                                <span style="color: var(--c-primary);"><?php echo esc_html($p['nome_riga2']); ?></span>
-                            </div>
                         </div>
                         <div class="dirigente-info">
                             <?php if(!empty($p['ruolo'])): ?>
                             <div class="dirigente-role"><?php echo esc_html($p['ruolo']); ?></div>
                             <?php endif; ?>
-                            <div class="dirigente-desc text-white" style="font-size: 12px; line-height: 1.6;">
+                            <div class="dirigente-name" style="margin-top: 5px; margin-bottom: 15px;">
+                                <?php echo esc_html($p['nome_riga1']); ?><br>
+                                <span style="color: var(--c-primary);"><?php echo esc_html($p['nome_riga2']); ?></span>
+                            </div>
+                            <div class="dirigente-desc text-white" style="font-size: 14px; line-height: 1.6;">
                                 <?php echo wpautop($p['content']); ?>
                             </div>
                         </div>
@@ -123,16 +123,16 @@ get_header('societa');
                     <div class="dirigente-card">
                         <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($l['foto']); ?>');">
                             <div class="dirigente-photo-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); pointer-events: none;"></div>
-                            <div class="dirigente-name" style="position: absolute; bottom: 15px; left: 15px; z-index: 2;">
-                                <?php echo esc_html($l['nome_riga1']); ?><br>
-                                <span style="color: var(--c-primary);"><?php echo esc_html($l['nome_riga2']); ?></span>
-                            </div>
                         </div>
                         <div class="dirigente-info">
                             <?php if(!empty($l['ruolo'])): ?>
                             <div class="dirigente-role"><?php echo esc_html($l['ruolo']); ?></div>
                             <?php endif; ?>
-                            <div class="dirigente-desc text-white" style="font-size: 12px; line-height: 1.6;">
+                            <div class="dirigente-name" style="margin-top: 5px; margin-bottom: 15px;">
+                                <?php echo esc_html($l['nome_riga1']); ?><br>
+                                <span style="color: var(--c-primary);"><?php echo esc_html($l['nome_riga2']); ?></span>
+                            </div>
+                            <div class="dirigente-desc text-white" style="font-size: 14px; line-height: 1.6;">
                                 <?php echo wpautop($l['content']); ?>
                             </div>
                         </div>
@@ -148,16 +148,16 @@ get_header('societa');
                     <div class="dirigente-card">
                         <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($o['foto']); ?>');">
                             <div class="dirigente-photo-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); pointer-events: none;"></div>
-                            <div class="dirigente-name" style="position: absolute; bottom: 15px; left: 15px; z-index: 2;">
-                                <?php echo esc_html($o['nome_riga1']); ?><br>
-                                <span style="color: var(--c-primary);"><?php echo esc_html($o['nome_riga2']); ?></span>
-                            </div>
                         </div>
                         <div class="dirigente-info">
                             <?php if(!empty($o['ruolo'])): ?>
                             <div class="dirigente-role"><?php echo esc_html($o['ruolo']); ?></div>
                             <?php endif; ?>
-                            <div class="dirigente-desc text-white" style="font-size: 12px; line-height: 1.6;">
+                            <div class="dirigente-name" style="margin-top: 5px; margin-bottom: 15px;">
+                                <?php echo esc_html($o['nome_riga1']); ?><br>
+                                <span style="color: var(--c-primary);"><?php echo esc_html($o['nome_riga2']); ?></span>
+                            </div>
+                            <div class="dirigente-desc text-white" style="font-size: 14px; line-height: 1.6;">
                                 <?php echo wpautop($o['content']); ?>
                             </div>
                         </div>
