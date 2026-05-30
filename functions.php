@@ -2233,13 +2233,18 @@ function sport_theme_infrastruttura_meta_html( $post ) {
     echo "<input type='text' name='_infra_tel' value='" . esc_attr($tel) . "' style='width:100%;max-width:400px;'>";
     echo "<label style='display:block;margin-top:10px;'>Indirizzo:</label>";
     echo "<textarea name='_infra_ind' style='width:100%;height:60px;max-width:400px;'>" . esc_textarea($ind) . "</textarea>";
+
+    echo "<hr><h3>Documenti</h3>";
+    $regolamento = get_post_meta( $post->ID, "_infra_pdf_regolamento", true );
+    echo "<label style='display:block;margin-top:10px;'>URL Regolamento (PDF):</label>";
+    echo "<input type='text' name='_infra_pdf_regolamento' value='" . esc_attr($regolamento) . "' style='width:100%;max-width:600px;'>";
 }
 
 function sport_theme_salva_infrastruttura_meta( $post_id ) {
     if ( ! isset( $_POST['infrastruttura_meta_nonce'] ) || ! wp_verify_nonce( $_POST['infrastruttura_meta_nonce'], 'salva_infrastruttura_meta' ) ) return;
     if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
     
-    $fields = ['_infra_testo_campo', '_infra_testo_buvette', '_infra_testo_occupazione', '_infra_email', '_infra_tel', '_infra_ind'];
+    $fields = ['_infra_testo_campo', '_infra_testo_buvette', '_infra_testo_occupazione', '_infra_email', '_infra_tel', '_infra_ind', '_infra_pdf_regolamento'];
     for($i=1; $i<=6; $i++) {
         $fields[] = "_infra_img_$i";
         $fields[] = "_infra_buvette_img_$i";

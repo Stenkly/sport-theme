@@ -57,9 +57,18 @@ get_header('societa');
         <!-- TAB: CAMPO SPORTIVO -->
         <div id="tab-campo" class="infra-tab-content" style="display: block;">
             <h2 class="text-white" style="font-size: 30px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">CAMPO SPORTIVO E INFRASTRUTTURE</h2>
-            <p style="color: white; font-size: 14px; line-height: 1.8; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 40px; max-width: 900px;">
+            <p style="color: white; font-size: 14px; line-height: 1.8; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 30px; max-width: 900px;">
                 <?php echo nl2br(esc_html($testo_campo)); ?>
             </p>
+
+            <?php 
+            $regolamento = get_post_meta( get_the_ID(), '_infra_pdf_regolamento', true );
+            if ( !empty($regolamento) ): 
+            ?>
+            <div style="margin-bottom: 40px;">
+                <a href="<?php echo esc_url($regolamento); ?>" target="_blank" class="infra-pdf-btn" style="display: inline-block; background-color: var(--c-primary); color: #000; border: 2px solid var(--c-primary); padding: 12px 35px; font-weight: bold; text-transform: uppercase; font-size: 13px; text-decoration: none; transition: 0.3s;" onmouseover="this.style.backgroundColor='transparent'; this.style.color='white';" onmouseout="this.style.backgroundColor='var(--c-primary)'; this.style.color='#000';">SCARICA IL REGOLAMENTO</a>
+            </div>
+            <?php endif; ?>
 
             <!-- GALLERIA IMMAGINI -->
             <div class="infra-gallery" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 80px;">
