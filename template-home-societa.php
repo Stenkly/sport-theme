@@ -270,7 +270,7 @@ get_header('societa');
 }
 .hs-sponsor-row a:hover { opacity: 1; }
 .hs-sponsor-row img {
-    max-height: 90px;
+    max-height: 130px;
     max-width: 100%;
     width: auto;
     object-fit: contain;
