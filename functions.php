@@ -829,48 +829,101 @@ add_action('save_post_evento', 'sport_theme_salva_evento_meta');
  * ----------------------------------------------------
  */
 function sport_theme_render_global_sponsors() {
-    $sponsor_query = new WP_Query([
-        'post_type' => 'sponsor',
-        'posts_per_page' => -1,
-        'meta_query' => [
-            'relation' => 'OR',
-            [
-                'key' => '_destinazione_sponsor',
-                'value' => 'prima_squadra',
-                'compare' => '='
-            ],
-            [
-                'key' => '_destinazione_sponsor',
-                'value' => 'entrambi',
-                'compare' => '='
-            ],
-            [
-                'key' => '_destinazione_sponsor',
-                'compare' => 'NOT EXISTS'
-            ]
-        ]
-    ]);
+    $is_societa_page = is_page('ac-taverne') || is_page('societa') || is_page('la-societa') || is_page('comitato') || is_page('club-dei-100') || is_page('area-allenatori') || is_page('scuola-calcio') || is_page('infrastruttura') || is_page('news-societa') || is_page('iscritti') || is_page('contatti-societa') || is_page('sezioni') ||
+        is_page_template('template-home-societa.php') || 
+        is_page_template('template-la-societa.php') || 
+        is_page_template('template-comitato-societa.php') || 
+        is_page_template('template-club-dei-100.php') || 
+        is_page_template('template-allenatori.php') || 
+        is_page_template('template-scuola-calcio.php') || 
+        is_page_template('template-infrastruttura.php') || 
+        is_page_template('template-news-societa.php') || 
+        is_page_template('template-iscritti.php') || 
+        is_page_template('template-contatti-societa.php') || 
+        is_page_template('template-sezioni.php') ||
+        (is_singular('evento') && has_category('settore-giovanile')) ||
+        (is_singular('post') && has_category('settore-giovanile'));
 
-    if ($sponsor_query->have_posts()) {
-        echo '<div class="ps-sponsors">';
-        while ($sponsor_query->have_posts()) {
-            $sponsor_query->the_post();
-            $sito = get_post_meta(get_the_ID(), '_sito_url', true);
-            $logo = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'medium') : '';
-            if ($logo) {
-                if ($sito) {
-                    echo '<a href="' . esc_url($sito) . '" target="_blank">';
-                }
-                echo '<img src="' . esc_url($logo) . '" alt="' . esc_attr(get_the_title()) . '">';
-                if ($sito) {
+    if ( $is_societa_page ) {
+        $sponsor_query = new WP_Query([
+            'post_type' => 'sponsor',
+            'posts_per_page' => -1,
+            'meta_query' => [
+                'relation' => 'OR',
+                [
+                    'key' => '_destinazione_sponsor',
+                    'value' => 'societa',
+                    'compare' => '='
+                ],
+                [
+                    'key' => '_destinazione_sponsor',
+                    'value' => 'entrambi',
+                    'compare' => '='
+                ]
+            ]
+        ]);
+        
+        if ($sponsor_query->have_posts()) {
+            echo '<div class="hs-sponsor-row">';
+            while ($sponsor_query->have_posts()) {
+                $sponsor_query->the_post();
+                $sito = get_post_meta(get_the_ID(), '_sito_url', true);
+                $logo = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'medium') : '';
+                if ($logo) {
+                    echo '<a href="' . ($sito ? esc_url($sito) : '#') . '" target="_blank">';
+                    echo '<img src="' . esc_url($logo) . '" alt="' . esc_attr(get_the_title()) . '">';
                     echo '</a>';
                 }
             }
+            echo '</div>';
+            wp_reset_postdata();
+        } else {
+            echo '<p style="color:#666;">Nessun partner inserito per la Società.</p>';
         }
-        echo '</div>';
-        wp_reset_postdata();
     } else {
-        echo '<p style="color:#666;">Nessun partner inserito.</p>';
+        $sponsor_query = new WP_Query([
+            'post_type' => 'sponsor',
+            'posts_per_page' => -1,
+            'meta_query' => [
+                'relation' => 'OR',
+                [
+                    'key' => '_destinazione_sponsor',
+                    'value' => 'prima_squadra',
+                    'compare' => '='
+                ],
+                [
+                    'key' => '_destinazione_sponsor',
+                    'value' => 'entrambi',
+                    'compare' => '='
+                ],
+                [
+                    'key' => '_destinazione_sponsor',
+                    'compare' => 'NOT EXISTS'
+                ]
+            ]
+        ]);
+
+        if ($sponsor_query->have_posts()) {
+            echo '<div class="ps-sponsors">';
+            while ($sponsor_query->have_posts()) {
+                $sponsor_query->the_post();
+                $sito = get_post_meta(get_the_ID(), '_sito_url', true);
+                $logo = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'medium') : '';
+                if ($logo) {
+                    if ($sito) {
+                        echo '<a href="' . esc_url($sito) . '" target="_blank">';
+                    }
+                    echo '<img src="' . esc_url($logo) . '" alt="' . esc_attr(get_the_title()) . '">';
+                    if ($sito) {
+                        echo '</a>';
+                    }
+                }
+            }
+            echo '</div>';
+            wp_reset_postdata();
+        } else {
+            echo '<p style="color:#666;">Nessun partner inserito.</p>';
+        }
     }
 }
 
