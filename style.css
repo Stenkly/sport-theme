@@ -913,7 +913,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 /* --- FOOTER GLOBALE (MEGA) --- */
 .site-footer { background-color: #000; border-top: none; margin-top: -20px !important; clear: both !important; display: block !important; width: 100% !important; }
-.footer-mega { display: grid !important; grid-template-columns: 1.5fr repeat(4, 1fr) !important; gap: 30px !important; padding: 0 20px 60px 20px !important; max-width: 1400px !important; margin: 0 auto !important; }
+.footer-mega { display: grid !important; grid-template-columns: 1.8fr 1.2fr 1.2fr 1.2fr 1.2fr !important; gap: 30px !important; padding: 0 20px 60px 20px !important; max-width: 1400px !important; margin: 0 auto !important; }
 .site-main > section:last-of-type { padding-bottom: 0 !important; margin-bottom: 0 !important; }
 #sb_instagram { margin-bottom: 0 !important; padding-bottom: 0 !important; }
 .fm-col { text-align: left; }
