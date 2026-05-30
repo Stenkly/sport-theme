@@ -46,7 +46,7 @@ get_header('societa');
     display: inline-block;
     background: var(--c-primary);
     color: var(--c-black);
-    font-size: 13px;
+    font-size: 22px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
