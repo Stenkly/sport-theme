@@ -256,21 +256,29 @@ get_header('societa');
 .hs-sponsor-row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 50px;
+    gap: 30px;
     align-items: center;
     justify-items: center;
 }
 .hs-sponsor-row a {
-    opacity: 0.8;
-    transition: opacity 0.3s;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    opacity: 0.9;
+    transition: opacity 0.3s, transform 0.3s;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
+    height: 150px;
+    box-sizing: border-box;
 }
-.hs-sponsor-row a:hover { opacity: 1; }
+.hs-sponsor-row a:hover {
+    opacity: 1;
+    transform: translateY(-4px);
+}
 .hs-sponsor-row img {
-    max-height: 180px;
+    max-height: 100%;
     max-width: 100%;
     width: auto;
     object-fit: contain;
