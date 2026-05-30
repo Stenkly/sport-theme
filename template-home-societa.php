@@ -417,14 +417,13 @@ get_header('societa');
                 $news_count++;
                 $thumb = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'medium_large') : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=600';
         ?>
-            <div class="hs-news-card">
-                <div class="hs-news-card-img">
-                    <span class="hs-news-date"><?php echo get_the_date('d.m'); ?></span>
-                    <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" loading="lazy">
-                </div>
-                <div class="hs-news-body">
-                    <h3><?php echo wp_trim_words(get_the_title(), 8, '...'); ?></h3>
-                    <a href="<?php echo esc_url(get_permalink()); ?>" class="btn-leggi">LEGGI ARTICOLO</a>
+            <div class="news-slide">
+                <div class="news-card cover-bg" style="background-image: url('<?php echo esc_url($thumb); ?>'); height: 350px;">
+                    <div class="news-date"><?php echo get_the_date('d.m'); ?></div>
+                    <div class="news-content">
+                        <h3 class="news-title text-white"><?php echo wp_trim_words(get_the_title(), 7, '...'); ?></h3>
+                        <a href="<?php echo esc_url(get_permalink()); ?>" class="btn-sm btn-primary" style="display:inline-block;">LEGGI ARTICOLO</a>
+                    </div>
                 </div>
             </div>
         <?php
@@ -434,21 +433,20 @@ get_header('societa');
             $news_count = 3;
             for ($i = 0; $i < 3; $i++):
         ?>
-            <div class="hs-news-card">
-                <div class="hs-news-card-img">
-                    <span class="hs-news-date">28.02</span>
-                    <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=600&auto=format&fit=crop" alt="News" loading="lazy">
-                </div>
-                <div class="hs-news-body">
-                    <h3>SI È CONCLUSO OPENAIR:<br>SIAMO LIETI DI...</h3>
-                    <a href="#" class="btn-leggi">LEGGI ARTICOLO</a>
+            <div class="news-slide">
+                <div class="news-card cover-bg" style="background-image: url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=600&auto=format&fit=crop'); height: 350px;">
+                    <div class="news-date">28.02</div>
+                    <div class="news-content">
+                        <h3 class="news-title text-white">SI È CONCLUSO OPENAIR:<br>SIAMO LIETI DI...</h3>
+                        <a href="#" class="btn-sm btn-primary" style="display:inline-block;">LEGGI ARTICOLO</a>
+                    </div>
                 </div>
             </div>
         <?php endfor; endif;
         $news_html = ob_get_clean();
         ?>
 
-        <div class="hs-news-grid" id="hs-news-carousel">
+        <div id="hs-news-carousel" style="display:flex; gap:16px; overflow:hidden; scroll-behavior:smooth;">
             <?php echo $news_html; ?>
         </div>
 

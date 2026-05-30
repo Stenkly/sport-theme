@@ -501,16 +501,19 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     }
 
     /* News: 1 articolo alla volta */
-    #news-carousel .news-slide {
+    #news-carousel .news-slide,
+    #hs-news-carousel .news-slide {
         flex: 0 0 100% !important;
         scroll-snap-align: start;
     }
-    #news-carousel {
+    #news-carousel,
+    #hs-news-carousel {
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
     }
-    #news-carousel::-webkit-scrollbar { display: none; }
+    #news-carousel::-webkit-scrollbar,
+    #hs-news-carousel::-webkit-scrollbar { display: none; }
 
     /* Vecchie classi ps-grid per retrocompatibilità */
     .ps-grid.grid-4.ps-gallery {
