@@ -1149,16 +1149,21 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 .dirigente-name {
     color: white;
-    font-size: 22px;
-    font-weight: 900;
+    font-size: 34px;
+    font-weight: 700;
     line-height: 1.2;
-    text-transform: capitalize;
+    text-transform: uppercase;
+}
+.dirigente-name span {
+    color: #F9EA86 !important;
+    display: block;
+    margin-top: -3px;
 }
 
 @media (max-width: 768px) {
     .dirigenti-grid { grid-template-columns: 1fr; gap: 40px; }
     .dirigente-photo { width: 150px; margin-right: 20px; }
-    .dirigente-name { font-size: 20px; }
+    .dirigente-name { font-size: 24px; }
 }
 
 /* ============================
