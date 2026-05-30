@@ -932,7 +932,8 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .fm-social a { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--c-light-yellow); background-color: var(--c-light-yellow); color: #000; font-size: 18px; transition: all 0.3s; margin-bottom: 0; }
 .fm-social a:hover { background-color: transparent; color: var(--c-light-yellow); border-color: var(--c-light-yellow); transform: scale(1.1); }
 
-.fm-col-links a { margin-bottom: 18px; font-size: 17px; font-weight: 700; }
+.fm-col-links { text-align: right !important; }
+.fm-col-links a { margin-bottom: 18px; font-size: 17px; font-weight: 700; text-align: right !important; }
 
 .footer-bottom-bar { background-color: var(--c-light-yellow); text-align: center; padding: 15px 20px; max-width: 1400px; margin: 0 auto; }
 .footer-bottom-bar p { margin: 0; color: #000; font-size: 12px; font-weight: 700; }
