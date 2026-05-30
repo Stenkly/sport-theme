@@ -97,8 +97,12 @@
                 </div>
                 <ul class="mob-submenu" style="display:none; list-style:none; padding: 0 0 10px 20px; margin:0;">
                     <li><a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>" class="<?php if (is_page('ac-taverne') || is_page('societa') || is_page_template('template-home-societa.php') || is_page_template('template-la-societa.php')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Società</a></li>
+                    <li><a href="<?php echo esc_url( site_url('/sezioni') ); ?>" class="<?php if (is_page('sezioni') || is_page_template('template-sezioni.php')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Sezioni</a></li>
                     <li><a href="<?php echo esc_url( site_url('/scuola-calcio') ); ?>" class="<?php if (is_page_template('template-scuola-calcio.php') || is_page('scuola-calcio')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Scuola Calcio</a></li>
                     <li><a href="<?php echo esc_url( site_url('/infrastruttura') ); ?>" class="<?php if (is_page_template('template-infrastruttura.php') || is_page('infrastruttura')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Infrastruttura</a></li>
+                    <li><a href="<?php echo esc_url( site_url('/news-societa') ); ?>" class="<?php if (is_page_template('template-news-societa.php') || is_page('news-societa')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">News</a></li>
+                    <li><a href="<?php echo esc_url( site_url('/iscritti') ); ?>" class="<?php if (is_page_template('template-iscritti.php') || is_page('iscritti')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Iscriviti</a></li>
+                    <li><a href="<?php echo esc_url( site_url('/contatti-societa') ); ?>" class="<?php if (is_page_template('template-contatti-societa.php') || is_page('contatti-societa')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Contatti</a></li>
                 </ul>
             </li>
 
@@ -197,9 +201,13 @@
 						<li class="menu-item-ac-taverne menu-item-has-children <?php if (is_page('ac-taverne') || is_page('societa') || is_page('scuola-calcio') || is_page('infrastruttura') || is_page_template('template-home-societa.php') || is_page_template('template-scuola-calcio.php') || is_page_template('template-infrastruttura.php') || is_page_template('template-la-societa.php') || is_page_template('template-comitato-societa.php') || is_page_template('template-club-dei-100.php') || is_page_template('template-sezioni.php') || is_page_template('template-news-societa.php') || is_page_template('template-contatti-societa.php') || is_page_template('template-iscritti.php')) echo 'current-menu-item'; ?>">
 							<a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>">AC Taverne</a>
 							<ul class="sub-menu">
-								<li><a href="<?php echo esc_url( site_url('/societa') ); ?>">Società</a></li>
+								<li><a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>">Società</a></li>
+								<li><a href="<?php echo esc_url( site_url('/sezioni') ); ?>">Sezioni</a></li>
 								<li><a href="<?php echo esc_url( site_url('/scuola-calcio') ); ?>">Scuola Calcio</a></li>
 								<li><a href="<?php echo esc_url( site_url('/infrastruttura') ); ?>">Infrastruttura</a></li>
+								<li><a href="<?php echo esc_url( site_url('/news-societa') ); ?>">News</a></li>
+								<li><a href="<?php echo esc_url( site_url('/iscritti') ); ?>">Iscriviti</a></li>
+								<li><a href="<?php echo esc_url( site_url('/contatti-societa') ); ?>">Contatti</a></li>
 							</ul>
 						</li>
 					</ul>
