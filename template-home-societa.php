@@ -371,7 +371,7 @@ get_header('societa');
                 <h1 class="hs-hero-title">
                     AC Taverne:<br>Passione, Valori e<br>Futuro dal 1950
                 </h1>
-                <a href="<?php echo esc_url(site_url('/iscritti')); ?>" class="hs-hero-cta">SCRIVITI ORA</a>
+                <a href="<?php echo esc_url(site_url('/iscritti')); ?>" class="hs-hero-cta">ISCRIVITI ORA</a>
             </div>
         </div>
     </section>
