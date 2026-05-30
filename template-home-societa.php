@@ -86,8 +86,8 @@ get_header('societa');
     right: 0;
     text-align: center;
     color: #fff;
-    font-size: 22px;
-    font-weight: 800;
+    font-size: 30px;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 2px;
 }
