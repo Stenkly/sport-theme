@@ -140,7 +140,7 @@ get_header();
                     <div class="player-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 90%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8) 25%, transparent 100%); pointer-events: none;"></div>
                     
                     <!-- Nome e numero stampigliati -->
-                    <div class="player-info" style="position: absolute; bottom: 2px; left: 12px; z-index: 2; flex-direction: column; gap: 0; padding: 0;">
+                    <div class="player-info" style="position: absolute; bottom: 15px; left: 12px; z-index: 2; flex-direction: column; gap: 0; padding: 0;">
                         <?php if(!empty($numero)): ?>
                         <span class="player-number" style="display: block; font-size: 50px; font-weight: 700; margin-bottom: 20px; line-height: 1; color: #F2E302;"><?php echo esc_html($numero); ?></span>
                         <?php endif; ?>
