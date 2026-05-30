@@ -254,19 +254,26 @@ get_header('societa');
 
 /* Sponsor */
 .hs-sponsor-row {
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 50px;
-    flex-wrap: wrap;
+    align-items: center;
+    justify-items: center;
 }
 .hs-sponsor-row a {
     opacity: 0.8;
     transition: opacity 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 .hs-sponsor-row a:hover { opacity: 1; }
 .hs-sponsor-row img {
     max-height: 40px;
+    max-width: 100%;
     width: auto;
+    object-fit: contain;
 }
 
 /* Instagram */
@@ -350,7 +357,7 @@ get_header('societa');
         flex: 0 0 80%;
         scroll-snap-align: start;
     }
-    .hs-sponsor-row { gap: 25px; justify-content: center; }
+    .hs-sponsor-row { grid-template-columns: repeat(2, 1fr); gap: 25px; }
     .hs-insta-grid { grid-template-columns: repeat(3, 1fr); }
     .hs-insta-stats { gap: 15px; }
 }
