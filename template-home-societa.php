@@ -81,7 +81,10 @@ get_header('societa');
 }
 .hs-sez-label {
     position: absolute;
-    bottom: 25px; left: 25px;
+    bottom: 25px;
+    left: 0;
+    right: 0;
+    text-align: center;
     color: #fff;
     font-size: 22px;
     font-weight: 800;
