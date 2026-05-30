@@ -1411,6 +1411,12 @@ function sport_theme_scuola_calcio_meta_html( $post ) {
     $inizio_stagione = get_post_meta( $post->ID, '_sc_inizio_stagione', true );
     $giorni_allenamento = get_post_meta( $post->ID, '_sc_giorni_allenamento', true );
     $responsabile = get_post_meta( $post->ID, '_sc_responsabile', true );
+    
+    $anno_1 = get_post_meta( $post->ID, '_sc_anno_1', true ) ?: '2017';
+    $anno_2 = get_post_meta( $post->ID, '_sc_anno_2', true ) ?: '2018';
+    $anno_3 = get_post_meta( $post->ID, '_sc_anno_3', true ) ?: '2019';
+    $anno_4 = get_post_meta( $post->ID, '_sc_anno_4', true ) ?: '2020';
+
     $formatori_2017 = get_post_meta( $post->ID, '_sc_formatori_2017', true );
     $formatori_2018 = get_post_meta( $post->ID, '_sc_formatori_2018', true );
     $formatori_2019 = get_post_meta( $post->ID, '_sc_formatori_2019', true );
@@ -1418,7 +1424,7 @@ function sport_theme_scuola_calcio_meta_html( $post ) {
     $formatori_portieri = get_post_meta( $post->ID, '_sc_formatori_portieri', true );
 
     ?>
-    <style>.sc-meta label { font-weight: bold; display: block; margin-top: 15px; } .sc-meta input[type="text"], .sc-meta textarea { width: 100%; max-width: 600px; padding: 5px; } .sc-meta textarea { height: 80px; }</style>
+    <style>.sc-meta label { font-weight: bold; display: block; margin-top: 15px; } .sc-meta input[type="text"], .sc-meta textarea { width: 100%; max-width: 600px; padding: 5px; } .sc-meta textarea { height: 80px; } .sc-year-input { width: 120px !important; margin-bottom: 5px; }</style>
     <div class="sc-meta">
         <h3>Sezione: Vuoi Provare?</h3>
         <label>E-mail di contatto:</label>
@@ -1442,20 +1448,37 @@ function sport_theme_scuola_calcio_meta_html( $post ) {
         <input type="text" name="_sc_responsabile" value="<?php echo esc_attr( $responsabile ?: 'Angelo Clemente' ); ?>">
         
         <hr>
-        <h3>Sezione: Formatori (uno per riga)</h3>
-        <label>Allievi 2017:</label>
-        <textarea name="_sc_formatori_2017"><?php echo esc_textarea( $formatori_2017 ?: "Mario Mesquita\nMario Mengoni\nCiro Bove" ); ?></textarea>
+        <h3>Sezione: Formatori</h3>
+        
+        <div style="background: #f9f9f9; padding: 15px; border: 1px solid #ddd; margin-bottom: 15px; max-width: 600px;">
+            <label style="margin-top:0;">Anno Gruppo 1 (es. 2017):</label>
+            <input type="text" class="sc-year-input" name="_sc_anno_1" value="<?php echo esc_attr( $anno_1 ); ?>">
+            <label>Formatori Gruppo 1 (uno per riga):</label>
+            <textarea name="_sc_formatori_2017"><?php echo esc_textarea( $formatori_2017 ?: "Mario Mesquita\nMario Mengoni\nCiro Bove" ); ?></textarea>
+        </div>
 
-        <label>Allievi 2018:</label>
-        <textarea name="_sc_formatori_2018"><?php echo esc_textarea( $formatori_2018 ?: "Ignazio Gatto\nMarcello Clemente\nLino Mazzei" ); ?></textarea>
+        <div style="background: #f9f9f9; padding: 15px; border: 1px solid #ddd; margin-bottom: 15px; max-width: 600px;">
+            <label style="margin-top:0;">Anno Gruppo 2 (es. 2018):</label>
+            <input type="text" class="sc-year-input" name="_sc_anno_2" value="<?php echo esc_attr( $anno_2 ); ?>">
+            <label>Formatori Gruppo 2 (uno per riga):</label>
+            <textarea name="_sc_formatori_2018"><?php echo esc_textarea( $formatori_2018 ?: "Ignazio Gatto\nMarcello Clemente\nLino Mazzei" ); ?></textarea>
+        </div>
 
-        <label>Allievi 2019:</label>
-        <textarea name="_sc_formatori_2019"><?php echo esc_textarea( $formatori_2019 ?: "Moritz Roth\nLorenzo Pignatiello\nDomenico Criniti" ); ?></textarea>
+        <div style="background: #f9f9f9; padding: 15px; border: 1px solid #ddd; margin-bottom: 15px; max-width: 600px;">
+            <label style="margin-top:0;">Anno Gruppo 3 (es. 2019):</label>
+            <input type="text" class="sc-year-input" name="_sc_anno_3" value="<?php echo esc_attr( $anno_3 ); ?>">
+            <label>Formatori Gruppo 3 (uno per riga):</label>
+            <textarea name="_sc_formatori_2019"><?php echo esc_textarea( $formatori_2019 ?: "Moritz Roth\nLorenzo Pignatiello\nDomenico Criniti" ); ?></textarea>
+        </div>
 
-        <label>Allievi 2020:</label>
-        <textarea name="_sc_formatori_2020"><?php echo esc_textarea( $formatori_2020 ?: "Marco Tognola\nFrancesco Foresta" ); ?></textarea>
+        <div style="background: #f9f9f9; padding: 15px; border: 1px solid #ddd; margin-bottom: 15px; max-width: 600px;">
+            <label style="margin-top:0;">Anno Gruppo 4 (es. 2020):</label>
+            <input type="text" class="sc-year-input" name="_sc_anno_4" value="<?php echo esc_attr( $anno_4 ); ?>">
+            <label>Formatori Gruppo 4 (uno per riga):</label>
+            <textarea name="_sc_formatori_2020"><?php echo esc_textarea( $formatori_2020 ?: "Marco Tognola\nFrancesco Foresta" ); ?></textarea>
+        </div>
 
-        <label>Portieri:</label>
+        <label>Portieri (uno per riga):</label>
         <textarea name="_sc_formatori_portieri"><?php echo esc_textarea( $formatori_portieri ?: "Marcello Clemente" ); ?></textarea>
     </div>
     <?php
@@ -1471,13 +1494,14 @@ function sport_theme_salva_scuola_calcio_meta( $post_id ) {
     
     $fields = array(
         '_sc_email', '_sc_orario_prova', '_sc_testo_prova', '_sc_inizio_stagione',
-        '_sc_giorni_allenamento', '_sc_responsabile', '_sc_formatori_2017',
-        '_sc_formatori_2018', '_sc_formatori_2019', '_sc_formatori_2020', '_sc_formatori_portieri'
+        '_sc_giorni_allenamento', '_sc_responsabile', 
+        '_sc_anno_1', '_sc_anno_2', '_sc_anno_3', '_sc_anno_4',
+        '_sc_formatori_2017', '_sc_formatori_2018', '_sc_formatori_2019', '_sc_formatori_2020', 
+        '_sc_formatori_portieri'
     );
     
     foreach ( $fields as $field ) {
         if ( isset( $_POST[$field] ) ) {
-            // Per le textarea usiamo wp_kses_post o sanitize_textarea_field. wp_strip_all_tags va bene ma mantiene gli a capo se non si passa un secondo parametro vero. sanitize_textarea_field va bene.
             update_post_meta( $post_id, $field, sanitize_textarea_field( $_POST[$field] ) );
         }
     }

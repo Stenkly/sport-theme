@@ -14,6 +14,10 @@ $testo_prova = get_post_meta( get_the_ID(), '_sc_testo_prova', true ) ?: 'LA PRI
 $inizio_stagione = get_post_meta( get_the_ID(), '_sc_inizio_stagione', true ) ?: '1° ALLENAMENTO DELLA STAGIONE 2025/2026 SABATO 30 AGOSTO 2025';
 $giorni_allenamento = get_post_meta( get_the_ID(), '_sc_giorni_allenamento', true ) ?: 'Sabato 10:00 - 11:30';
 $responsabile = get_post_meta( get_the_ID(), '_sc_responsabile', true ) ?: 'Angelo Clemente';
+$anno_1 = get_post_meta( get_the_ID(), '_sc_anno_1', true ) ?: '2017';
+$anno_2 = get_post_meta( get_the_ID(), '_sc_anno_2', true ) ?: '2018';
+$anno_3 = get_post_meta( get_the_ID(), '_sc_anno_3', true ) ?: '2019';
+$anno_4 = get_post_meta( get_the_ID(), '_sc_anno_4', true ) ?: '2020';
 $formatori_2017 = get_post_meta( get_the_ID(), '_sc_formatori_2017', true ) ?: "Mario Mesquita\nMario Mengoni\nCiro Bove";
 $formatori_2018 = get_post_meta( get_the_ID(), '_sc_formatori_2018', true ) ?: "Ignazio Gatto\nMarcello Clemente\nLino Mazzei";
 $formatori_2019 = get_post_meta( get_the_ID(), '_sc_formatori_2019', true ) ?: "Moritz Roth\nLorenzo Pignatiello\nDomenico Criniti";
@@ -92,22 +96,22 @@ $formatori_portieri = get_post_meta( get_the_ID(), '_sc_formatori_portieri', tru
                 <!-- Colonna 1 -->
                 <div class="formatori-col">
                     <div class="formatore-group">
-                        <p class="text-primary formatore-title">ALLIEVI 2017</p>
+                        <p class="text-primary formatore-title">ALLIEVI <?php echo esc_html($anno_1); ?></p>
                         <p class="formatore-names"><?php echo nl2br(esc_html($formatori_2017)); ?></p>
                     </div>
                     <div class="formatore-group">
-                        <p class="text-primary formatore-title">ALLIEVI 2018</p>
+                        <p class="text-primary formatore-title">ALLIEVI <?php echo esc_html($anno_2); ?></p>
                         <p class="formatore-names"><?php echo nl2br(esc_html($formatori_2018)); ?></p>
                     </div>
                 </div>
                 <!-- Colonna 2 -->
                 <div class="formatori-col">
                     <div class="formatore-group">
-                        <p class="text-primary formatore-title">ALLIEVI 2019</p>
+                        <p class="text-primary formatore-title">ALLIEVI <?php echo esc_html($anno_3); ?></p>
                         <p class="formatore-names"><?php echo nl2br(esc_html($formatori_2019)); ?></p>
                     </div>
                     <div class="formatore-group">
-                        <p class="text-primary formatore-title">ALLIEVI 2020</p>
+                        <p class="text-primary formatore-title">ALLIEVI <?php echo esc_html($anno_4); ?></p>
                         <p class="formatore-names"><?php echo nl2br(esc_html($formatori_2020)); ?></p>
                     </div>
                 </div>
