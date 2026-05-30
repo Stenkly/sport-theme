@@ -183,18 +183,18 @@ get_header('societa');
                     ?>
                     
                     <div style="margin-bottom: 30px;">
-                        <h4 style="color: var(--c-primary); font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;">EMAIL</h4>
-                        <a href="mailto:<?php echo esc_attr($gen_email); ?>" style="color: white; font-size: 14px; text-decoration: none;"><?php echo esc_html($gen_email); ?></a>
+                        <h4 style="color: var(--c-primary); font-size: 22px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;">EMAIL</h4>
+                        <a href="mailto:<?php echo esc_attr($gen_email); ?>" style="color: white; font-size: 18px; text-decoration: none;"><?php echo esc_html($gen_email); ?></a>
                     </div>
 
                     <div style="margin-bottom: 30px;">
-                        <h4 style="color: var(--c-primary); font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;">TELEFONO</h4>
-                        <a href="tel:<?php echo esc_attr(str_replace(' ', '', $gen_tel)); ?>" style="color: white; font-size: 14px; text-decoration: none;"><?php echo esc_html($gen_tel); ?></a>
+                        <h4 style="color: var(--c-primary); font-size: 22px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;">TELEFONO</h4>
+                        <a href="tel:<?php echo esc_attr(str_replace(' ', '', $gen_tel)); ?>" style="color: white; font-size: 18px; text-decoration: none;"><?php echo esc_html($gen_tel); ?></a>
                     </div>
 
                     <div style="margin-bottom: 30px;">
-                        <h4 style="color: var(--c-primary); font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;">INDIRIZZO</h4>
-                        <div style="color: white; font-size: 14px; line-height: 1.6;">
+                        <h4 style="color: var(--c-primary); font-size: 22px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;">INDIRIZZO</h4>
+                        <div style="color: white; font-size: 18px; line-height: 1.6;">
                             <?php echo nl2br(esc_html($gen_ind)); ?>
                         </div>
                     </div>
@@ -202,7 +202,7 @@ get_header('societa');
 
                 <!-- Lato Destro: Form -->
                 <div class="prenotazioni-right" style="flex: 2; min-width: 300px;">
-                    <h4 style="color: var(--c-primary); font-size: 18px; font-weight: 700; text-transform: uppercase; margin-bottom: 30px;">CONTATTACI!</h4>
+                    <h4 style="color: var(--c-primary); font-size: 22px; font-weight: 700; text-transform: uppercase; margin-bottom: 30px;">CONTATTACI!</h4>
                     
                     <?php if ( isset($_GET['prenotazione']) && $_GET['prenotazione'] == '1' ) : ?>
                         <div style="background-color: var(--c-primary); color: #000; padding: 15px; margin-bottom: 20px; font-weight: bold;">
