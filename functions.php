@@ -487,7 +487,7 @@ function sport_theme_cpt_staff() {
         ),
         'public' => true,
         'has_archive' => false,
-        'supports' => array('title', 'thumbnail'), // Titolo = Nome Cognome; Thumb = Ritratto
+        'supports' => array('title', 'thumbnail', 'page-attributes'), // Titolo = Nome Cognome; Thumb = Ritratto; Attributes = Ordinamento
         'menu_icon' => 'dashicons-businessman',
     ));
 }
@@ -2363,7 +2363,7 @@ function sport_theme_import_players_once() {
 
     echo "</ul><br><h1>Importazione Staff</h1><ul>";
     
-    foreach ($staff_data as $s) {
+    foreach ($staff_data as $index => $s) {
         $title = $s['nome'] . ' ' . $s['cognome'];
         
         // Find if they exist as 'giocatore' (from the previous run) or 'membro_staff'
@@ -2374,17 +2374,19 @@ function sport_theme_import_players_once() {
         
         if ($existing) {
             $post_id = $existing->ID;
-            // Force change to 'membro_staff' if it was incorrectly 'giocatore'
+            // Force change to 'membro_staff' if it was incorrectly 'giocatore' and set menu_order
             wp_update_post(array(
                 'ID' => $post_id,
-                'post_type' => 'membro_staff'
+                'post_type' => 'membro_staff',
+                'menu_order' => $index,
             ));
             echo "<li><strong>Aggiorno/Correggo Staff:</strong> {$title} (ID: {$post_id})</li>";
         } else {
             $post_data = array(
                 'post_title'    => $title,
                 'post_status'   => 'publish',
-                'post_type'     => 'membro_staff'
+                'post_type'     => 'membro_staff',
+                'menu_order'    => $index,
             );
             $post_id = wp_insert_post($post_data);
             echo "<li><strong>Creato Staff:</strong> {$title} (ID: {$post_id})</li>";

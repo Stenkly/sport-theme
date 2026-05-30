@@ -49,6 +49,7 @@ get_header();
     $team_query = new WP_Query(array(
         'post_type' => 'membro_staff',
         'posts_per_page' => -1,
+        'orderby' => 'menu_order',
         'order' => 'ASC',
     ));
 
