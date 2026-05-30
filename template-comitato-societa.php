@@ -95,7 +95,7 @@ get_header('societa');
         <?php if (!empty($presidents)): ?>
             <div class="dirigenti-grid" style="grid-template-columns: 1fr; margin-bottom: 40px; display: grid;">
                 <?php foreach ($presidents as $p): ?>
-                    <div class="dirigente-card" style="justify-self: center; width: 100%; max-width: 580px;">
+                    <div class="dirigente-card" style="justify-self: center; width: 100%; max-width: 800px;">
                         <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($p['foto']); ?>');">
                             <div class="dirigente-photo-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); pointer-events: none;"></div>
                         </div>
