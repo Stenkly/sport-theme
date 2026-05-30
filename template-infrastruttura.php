@@ -63,6 +63,33 @@ get_header('societa');
 
             <?php 
             $regolamento = get_post_meta( get_the_ID(), '_infra_pdf_regolamento', true );
+            
+            // Se il campo personalizzato è vuoto, cerchiamo il file caricato tra i media di WordPress
+            if ( empty( $regolamento ) ) {
+                $pdf_query = new WP_Query( array(
+                    'post_type'      => 'attachment',
+                    'post_status'    => 'any',
+                    'posts_per_page' => 1,
+                    'post_mime_type' => 'application/pdf',
+                    'name'           => 'regolamento_noleggio_campi',
+                ) );
+                
+                if ( $pdf_query->have_posts() ) {
+                    $regolamento = wp_get_attachment_url( $pdf_query->posts[0]->ID );
+                } else {
+                    $pdf_query_dash = new WP_Query( array(
+                        'post_type'      => 'attachment',
+                        'post_status'    => 'any',
+                        'posts_per_page' => 1,
+                        'post_mime_type' => 'application/pdf',
+                        'name'           => 'regolamento-noleggio-campi',
+                    ) );
+                    if ( $pdf_query_dash->have_posts() ) {
+                        $regolamento = wp_get_attachment_url( $pdf_query_dash->posts[0]->ID );
+                    }
+                }
+            }
+
             if ( !empty($regolamento) ): 
             ?>
             <div style="margin-bottom: 40px;">
