@@ -513,6 +513,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
+        overflow-x: auto !important;
     }
     #news-carousel::-webkit-scrollbar,
     #hs-news-carousel::-webkit-scrollbar,

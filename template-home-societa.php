@@ -513,7 +513,7 @@ get_header('societa');
         $eventi_html = ob_get_clean();
         ?>
 
-        <div class="hs-eventi-grid" id="hs-eventi-carousel">
+        <div id="hs-eventi-carousel" style="display:flex; gap:16px; overflow:hidden; scroll-behavior:smooth;">
             <?php echo $eventi_html; ?>
         </div>
 
