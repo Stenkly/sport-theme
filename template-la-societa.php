@@ -91,7 +91,42 @@ get_header('societa');
 
         <!-- SPONSOR -->
         <h3 class="text-white" style="font-size: 26px; font-weight: 700; text-transform: uppercase; margin-bottom: 30px; letter-spacing: 1px;">SPONSOR</h3>
-        <?php sport_theme_render_global_sponsors(); ?>
+        <div class="hs-sponsor-row">
+            <?php
+            $sp_q = new WP_Query([
+                'post_type' => 'sponsor',
+                'posts_per_page' => -1,
+                'meta_query' => [
+                    'relation' => 'OR',
+                    [
+                        'key' => '_destinazione_sponsor',
+                        'value' => 'societa',
+                        'compare' => '='
+                    ],
+                    [
+                        'key' => '_destinazione_sponsor',
+                        'value' => 'entrambi',
+                        'compare' => '='
+                    ]
+                ]
+            ]);
+            if ($sp_q->have_posts()):
+                while ($sp_q->have_posts()): $sp_q->the_post();
+                    $sito = get_post_meta(get_the_ID(), '_sito_url', true);
+                    $logo = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'medium') : '';
+                    if ($logo):
+            ?>
+                <a href="<?php echo $sito ? esc_url($sito) : '#'; ?>" target="_blank">
+                    <img src="<?php echo esc_url($logo); ?>" alt="<?php echo esc_attr(get_the_title()); ?>">
+                </a>
+            <?php   endif; endwhile; wp_reset_postdata();
+            else:
+                $names = ['BancaStato', 'BRIC&Ograve;', 'RAIFFEISEN', 'ail'];
+                foreach ($names as $n):
+            ?>
+                <span style="color:#fff; font-size:22px; font-weight:700; opacity:0.75;"><?php echo $n; ?></span>
+            <?php endforeach; endif; ?>
+        </div>
 
     </div>
 </main>

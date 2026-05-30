@@ -252,37 +252,7 @@ get_header('societa');
 }
 .hs-event-link span { opacity: 0.4; margin-left: 6px; }
 
-/* Sponsor */
-.hs-sponsor-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 30px;
-    align-items: center;
-    justify-items: center;
-}
-.hs-sponsor-row a {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    opacity: 0.9;
-    transition: opacity 0.3s, transform 0.3s;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 150px;
-    box-sizing: border-box;
-}
-.hs-sponsor-row a:hover {
-    opacity: 1;
-    transform: translateY(-4px);
-}
-.hs-sponsor-row img {
-    max-height: 100%;
-    max-width: 100%;
-    width: auto;
-    object-fit: contain;
-}
+
 
 /* Instagram */
 .hs-insta-bar {
@@ -365,7 +335,7 @@ get_header('societa');
         flex: 0 0 80%;
         scroll-snap-align: start;
     }
-    .hs-sponsor-row { grid-template-columns: repeat(2, 1fr); gap: 25px; }
+
     .hs-insta-grid { grid-template-columns: repeat(3, 1fr); }
     .hs-insta-stats { gap: 15px; }
 }
