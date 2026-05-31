@@ -311,7 +311,7 @@ get_header('societa');
 .fc-timegrid-slot {
     background-color: #111 !important;
     border-bottom: 1px solid #222 !important;
-    height: 3.5em !important;
+    height: 4.5em !important;
 }
 .fc-timegrid-slot-label-cushion {
     color: #aaa !important;
@@ -455,12 +455,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const cal = new FullCalendar.Calendar(el, {
                 initialView: 'timeGridWeek',
-                height: 600,
+                height: 800,
                 locale: 'it',
                 firstDay: 1, // Start on Monday
                 timeZone: 'Europe/Zurich',
-                slotMinTime: '08:00:00',
-                slotMaxTime: '22:00:00',
+                slotMinTime: '06:00:00',
+                slotMaxTime: '23:00:00',
                 allDaySlot: false,
                 slotDuration: '00:30:00',
                 slotLabelFormat: {
