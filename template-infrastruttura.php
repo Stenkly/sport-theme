@@ -455,7 +455,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const cal = new FullCalendar.Calendar(el, {
                 initialView: 'timeGridWeek',
-                height: 800,
+                height: 'auto',
                 locale: 'it',
                 firstDay: 1, // Start on Monday
                 timeZone: 'Europe/Zurich',
