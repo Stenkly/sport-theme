@@ -442,6 +442,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const ajaxUrl = "<?php echo esc_url(admin_url('admin-ajax.php')); ?>";
 
     function initCalendars() {
+        console.log("[FullCalendar] Initializing calendars. ICAL library present:", typeof window.ICAL !== 'undefined');
         const configs = [
             { id: 'calendar-campo', field: 'campo' },
             { id: 'calendar-buvette', field: 'buvette' },
@@ -483,6 +484,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 events: {
                     url: `${ajaxUrl}?action=get_calendar_ics&post_id=${pageId}&field=${conf.field}`,
                     format: 'ics'
+                },
+                eventSourceSuccess: function(content, response) {
+                    console.log(`[FullCalendar SUCCESS] Loaded ${conf.field} source.`);
+                    return content;
+                },
+                eventSourceFailure: function(error) {
+                    console.error(`[FullCalendar FAILURE] Failed to load ${conf.field}:`, error);
                 },
                 eventDidMount: function(info) {
                     if (info.event.extendedProps.description) {
