@@ -35,10 +35,10 @@ get_header();
                 
                 <div class="page-submenu" style="display: flex; gap: 20px;">
                     <h4 style="margin: 0; display: inline-block;">
-                        <a href="<?php echo esc_url( site_url('/rosa') ); ?>" style="padding: 10px 40px; font-weight: 700; text-transform: uppercase; font-size: 22px; text-decoration: none; border: 2px solid var(--c-primary); background-color: var(--c-primary); color: var(--c-black); display: inline-block;">ROSA</a>
+                        <a href="<?php echo esc_url( site_url('/rosa') ); ?>" style="padding: 8px 40px; font-weight: 700; text-transform: uppercase; font-size: 22px; text-decoration: none; border: 2px solid var(--c-primary); background-color: var(--c-primary); color: var(--c-black); display: inline-block;">ROSA</a>
                     </h4>
                     <h4 style="margin: 0; display: inline-block;">
-                        <a href="<?php echo esc_url( site_url('/staff') ); ?>" class="btn-outline-hover" style="padding: 10px 40px; font-weight: 700; text-transform: uppercase; font-size: 22px; text-decoration: none; border: 2px solid white; background-color: transparent; color: white; transition: all 0.3s; display: inline-block;">STAFF</a>
+                        <a href="<?php echo esc_url( site_url('/staff') ); ?>" class="btn-outline-hover" style="padding: 8px 40px; font-weight: 700; text-transform: uppercase; font-size: 22px; text-decoration: none; border: 2px solid white; background-color: transparent; color: white; transition: all 0.3s; display: inline-block;">STAFF</a>
                     </h4>
                 </div>
             </div>

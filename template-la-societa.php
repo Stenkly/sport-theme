@@ -85,7 +85,7 @@ get_header('societa');
             <?php if ($sottotitolo_4): ?>
                 <h3 class="text-white" style="font-size: 18px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; line-height: 1.4;"><?php echo esc_html($sottotitolo_4); ?></h3>
             <?php endif; ?>
-            <a href="<?php echo esc_url($file_statuto); ?>" target="_blank" class="btn-statuto" style="display: inline-block; background-color: var(--c-primary); color: var(--c-black); font-weight: 700; padding: 10px 40px; text-transform: uppercase; text-decoration: none; font-size: 14px; letter-spacing: 1px; margin-top: 10px; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">SCARICA</a>
+            <a href="<?php echo esc_url($file_statuto); ?>" target="_blank" class="btn-statuto" style="display: inline-block; background-color: var(--c-primary); color: var(--c-black); font-weight: 700; padding: 8px 40px; text-transform: uppercase; text-decoration: none; font-size: 14px; letter-spacing: 1px; margin-top: 10px; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">SCARICA</a>
         </div>
 
         <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.4); margin-bottom: 40px;">
