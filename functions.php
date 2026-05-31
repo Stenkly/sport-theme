@@ -3026,4 +3026,75 @@ function sport_theme_render_societa_submenu() {
     echo '</div>';
 }
 
+/**
+ * AJAX Handler to proxy Google Calendar ICS files (Option B)
+ */
+add_action( 'wp_ajax_get_calendar_ics', 'sport_theme_get_calendar_ics' );
+add_action( 'wp_ajax_nopriv_get_calendar_ics', 'sport_theme_get_calendar_ics' );
+
+function sport_theme_get_calendar_ics() {
+    $post_id = intval( $_GET['post_id'] ?? 0 );
+    $field = sanitize_text_field( $_GET['field'] ?? '' );
+    
+    $valid_fields = array(
+        'campo' => '_infra_calendar_iframe',
+        'buvette' => '_infra_calendar_buvette_iframe',
+        'infra' => '_infra_calendar_infra_iframe'
+    );
+    
+    if ( ! $post_id || ! isset( $valid_fields[$field] ) ) {
+        wp_die( 'Richiesta non valida', 400 );
+    }
+    
+    $iframe_code = get_post_meta( $post_id, $valid_fields[$field], true );
+    
+    // Default fallback calendar IDs if meta is empty
+    $default_ids = array(
+        'campo' => 'q5annq4orol4ue2pipv70hlmsc@group.calendar.google.com',
+        'buvette' => 'f7b2100de53n0cp2a4nc700i9s@group.calendar.google.com',
+        'infra' => 'i9i8o8n999k36rfllaua5aoes0@group.calendar.google.com'
+    );
+    
+    $calendar_id = $default_ids[$field];
+    
+    // If iframe is specified, extract the calendar ID from it
+    if ( ! empty( $iframe_code ) ) {
+        if ( preg_match( '/src=["\']([^"\']+)["\']/', $iframe_code, $matches ) ) {
+            $url = html_entity_decode( $matches[1] );
+            $parts = parse_url( $url );
+            if ( isset( $parts['query'] ) ) {
+                parse_str( $parts['query'], $query );
+                if ( isset( $query['src'] ) ) {
+                    $calendar_id = $query['src'];
+                }
+            }
+        }
+    }
+    
+    $ics_url = 'https://calendar.google.com/calendar/ical/' . urlencode( $calendar_id ) . '/public/basic.ics';
+    
+    // Fetch using WordPress HTTP API with caching
+    $transient_key = 'cal_ics_' . md5( $ics_url );
+    $body = get_transient( $transient_key );
+    
+    if ( false === $body ) {
+        $response = wp_remote_get( $ics_url, array( 'timeout' => 10 ) );
+        if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
+            $body = wp_remote_retrieve_body( $response );
+            // Cache for 10 minutes
+            set_transient( $transient_key, $body, 10 * MINUTE_IN_SECONDS );
+        }
+    }
+    
+    if ( empty( $body ) ) {
+        wp_die( 'Errore nel recupero del calendario', 500 );
+    }
+    
+    header( 'Content-Type: text/calendar; charset=utf-8' );
+    header( 'Access-Control-Allow-Origin: *' );
+    echo $body;
+    exit;
+}
+
+
 
