@@ -471,10 +471,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'timeGridWeek,timeGridDay,listWeek'
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
                 },
                 buttonText: {
                     today: 'Oggi',
+                    month: 'Mese',
                     week: 'Settimana',
                     day: 'Giorno',
                     list: 'Agenda'
