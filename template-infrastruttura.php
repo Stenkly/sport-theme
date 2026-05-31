@@ -149,19 +149,47 @@ get_header('societa');
 
         <!-- TAB: OCCUPAZIONE -->
         <div id="tab-occupazione" class="infra-tab-content" style="display: none;">
-            <h2 class="text-white" style="font-size: 42px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">PIANO OCCUPAZIONE CAMPO</h2>
-            <div style="color: white; font-size: 14px; line-height: 1.8; margin-bottom: 20px;">
+            <h2 class="text-white" style="font-size: 42px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">PIANO OCCUPAZIONE</h2>
+            <div style="color: white; font-size: 14px; line-height: 1.8; margin-bottom: 40px;">
                 <?php echo wpautop(wp_kses_post($testo_occupazione)); ?>
             </div>
-            
+
+            <!-- Calendario Campo Sportivo -->
+            <h3 class="text-white" style="font-size: 26px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Piano occupazione Campo</h3>
             <?php 
             $iframe_code = get_post_meta( get_the_ID(), '_infra_calendar_iframe', true );
             if ( $iframe_code ) {
-                echo '<div class="calendar-wrapper" style="margin-bottom: 80px; width: 100%; overflow: hidden; border: 2px solid #333; border-radius: 5px;">';
+                echo '<div class="calendar-wrapper" style="margin-bottom: 60px; width: 100%; overflow: hidden; border: 2px solid #333; border-radius: 5px;">';
                 echo $iframe_code;
                 echo '</div>';
             } else {
-                echo '<div style="margin-bottom: 80px; padding: 40px; border: 2px dashed #444; text-align: center; color: #888;">[Il calendario Google verrà mostrato qui. Inserisci il codice Iframe da WordPress]</div>';
+                echo '<div style="margin-bottom: 60px; padding: 40px; border: 2px dashed #444; text-align: center; color: #888;">[Il calendario Google del Campo verrà mostrato qui. Inserisci il codice Iframe da WordPress]</div>';
+            }
+            ?>
+
+            <!-- Calendario Buvette -->
+            <h3 class="text-white" style="font-size: 26px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Piano occupazione Buvette</h3>
+            <?php 
+            $iframe_buvette_code = get_post_meta( get_the_ID(), '_infra_calendar_buvette_iframe', true );
+            if ( $iframe_buvette_code ) {
+                echo '<div class="calendar-wrapper" style="margin-bottom: 60px; width: 100%; overflow: hidden; border: 2px solid #333; border-radius: 5px;">';
+                echo $iframe_buvette_code;
+                echo '</div>';
+            } else {
+                echo '<div style="margin-bottom: 60px; padding: 40px; border: 2px dashed #444; text-align: center; color: #888;">[Il calendario Google della Buvette verrà mostrato qui. Inserisci il codice Iframe da WordPress]</div>';
+            }
+            ?>
+
+            <!-- Calendario Infrastruttura -->
+            <h3 class="text-white" style="font-size: 26px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Piano occupazione Infrastruttura</h3>
+            <?php 
+            $iframe_infra_code = get_post_meta( get_the_ID(), '_infra_calendar_infra_iframe', true );
+            if ( $iframe_infra_code ) {
+                echo '<div class="calendar-wrapper" style="margin-bottom: 80px; width: 100%; overflow: hidden; border: 2px solid #333; border-radius: 5px;">';
+                echo $iframe_infra_code;
+                echo '</div>';
+            } else {
+                echo '<div style="margin-bottom: 80px; padding: 40px; border: 2px dashed #444; text-align: center; color: #888;">[Il calendario Google dell\'Infrastruttura verrà mostrato qui. Inserisci il codice Iframe da WordPress]</div>';
             }
             ?>
         </div>

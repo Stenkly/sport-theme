@@ -2220,10 +2220,20 @@ function sport_theme_infrastruttura_meta_html( $post ) {
         echo "<button type='button' class='button upload_file_button' data-input-id='infra_buvette_img_$i' style='margin-left: 5px; vertical-align: middle;'>Seleziona</button>";
     }
 
-    echo "<hr><h3>Calendario Google (Occupazione)</h3>";
+    echo "<hr><h3>Calendario Google (Campo Sportivo)</h3>";
     $calendar = get_post_meta( $post->ID, "_infra_calendar_iframe", true );
-    echo "<p>Incolla qui il codice HTML (Iframe) del calendario Google. Lascia vuoto per mostrare il testo segnaposto.</p>";
+    echo "<p>Incolla qui il codice HTML (Iframe) del calendario Google per il Campo Sportivo.</p>";
     echo "<textarea name='_infra_calendar_iframe' style='width:100%;height:100px;font-family:monospace;'>" . esc_textarea($calendar) . "</textarea>";
+
+    echo "<hr><h3>Calendario Google (Infrastruttura)</h3>";
+    $calendar_infra = get_post_meta( $post->ID, "_infra_calendar_infra_iframe", true );
+    echo "<p>Incolla qui il codice HTML (Iframe) del calendario Google per l'Infrastruttura.</p>";
+    echo "<textarea name='_infra_calendar_infra_iframe' style='width:100%;height:100px;font-family:monospace;'>" . esc_textarea($calendar_infra) . "</textarea>";
+
+    echo "<hr><h3>Calendario Google (Buvette)</h3>";
+    $calendar_buvette = get_post_meta( $post->ID, "_infra_calendar_buvette_iframe", true );
+    echo "<p>Incolla qui il codice HTML (Iframe) del calendario Google per la Buvette.</p>";
+    echo "<textarea name='_infra_calendar_buvette_iframe' style='width:100%;height:100px;font-family:monospace;'>" . esc_textarea($calendar_buvette) . "</textarea>";
 
     echo "<hr><h3>Contatti Prenotazione (Colonna Sinistra)</h3>";
     $email = get_post_meta( $post->ID, "_infra_email", true );
@@ -2284,20 +2294,27 @@ function sport_theme_salva_infrastruttura_meta( $post_id ) {
         }
     }
 
+    // Permetti iframe per il calendario Google
+    $iframe_rules = array(
+        'iframe' => array(
+            'src'             => true,
+            'height'          => true,
+            'width'           => true,
+            'frameborder'     => true,
+            'allowfullscreen' => true,
+            'style'           => true,
+            'scrolling'       => true
+        )
+    );
+
     if ( isset( $_POST['_infra_calendar_iframe'] ) ) {
-        // Permetti iframe per il calendario Google
-        $iframe_rules = array(
-            'iframe' => array(
-                'src'             => true,
-                'height'          => true,
-                'width'           => true,
-                'frameborder'     => true,
-                'allowfullscreen' => true,
-                'style'           => true,
-                'scrolling'       => true
-            )
-        );
         update_post_meta( $post_id, '_infra_calendar_iframe', wp_kses( wp_unslash($_POST['_infra_calendar_iframe']), $iframe_rules ) );
+    }
+    if ( isset( $_POST['_infra_calendar_infra_iframe'] ) ) {
+        update_post_meta( $post_id, '_infra_calendar_infra_iframe', wp_kses( wp_unslash($_POST['_infra_calendar_infra_iframe']), $iframe_rules ) );
+    }
+    if ( isset( $_POST['_infra_calendar_buvette_iframe'] ) ) {
+        update_post_meta( $post_id, '_infra_calendar_buvette_iframe', wp_kses( wp_unslash($_POST['_infra_calendar_buvette_iframe']), $iframe_rules ) );
     }
 }
 add_action( 'save_post', 'sport_theme_salva_infrastruttura_meta' );
