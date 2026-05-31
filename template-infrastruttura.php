@@ -99,13 +99,13 @@ get_header('societa');
             <!-- GALLERIA IMMAGINI -->
             <div class="infra-gallery" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 80px;">
                 <!-- Riga Superiore (25% - 50% - 25%) -->
-                <div style="display: flex; gap: 15px; height: 250px;">
+                <div style="display: flex; gap: 15px; height: 400px;">
                     <div style="flex: 1; background-color: #333; <?php if($img1) echo "background-image: url('".esc_url($img1)."'); background-size: cover; background-position: center;"; ?>"></div>
                     <div style="flex: 2; background-color: #333; <?php if($img2) echo "background-image: url('".esc_url($img2)."'); background-size: cover; background-position: center;"; ?>"></div>
                     <div style="flex: 1; background-color: #333; <?php if($img3) echo "background-image: url('".esc_url($img3)."'); background-size: cover; background-position: center;"; ?>"></div>
                 </div>
                 <!-- Riga Inferiore (33% - 33% - 33%) -->
-                <div style="display: flex; gap: 15px; height: 250px;">
+                <div style="display: flex; gap: 15px; height: 400px;">
                     <div style="flex: 1; background-color: #333; <?php if($img4) echo "background-image: url('".esc_url($img4)."'); background-size: cover; background-position: center;"; ?>"></div>
                     <div style="flex: 1; background-color: #333; <?php if($img5) echo "background-image: url('".esc_url($img5)."'); background-size: cover; background-position: center;"; ?>"></div>
                     <div style="flex: 1; background-color: #333; <?php if($img6) echo "background-image: url('".esc_url($img6)."'); background-size: cover; background-position: center;"; ?>"></div>
@@ -133,13 +133,13 @@ get_header('societa');
             <!-- GALLERIA IMMAGINI BUVETTE -->
             <div class="infra-gallery" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 80px;">
                 <!-- Riga Superiore (25% - 50% - 25%) -->
-                <div style="display: flex; gap: 15px; height: 250px;">
+                <div style="display: flex; gap: 15px; height: 400px;">
                     <div style="flex: 1; background-color: #333; <?php if($b_img1) echo "background-image: url('".esc_url($b_img1)."'); background-size: cover; background-position: center;"; ?>"></div>
                     <div style="flex: 2; background-color: #333; <?php if($b_img2) echo "background-image: url('".esc_url($b_img2)."'); background-size: cover; background-position: center;"; ?>"></div>
                     <div style="flex: 1; background-color: #333; <?php if($b_img3) echo "background-image: url('".esc_url($b_img3)."'); background-size: cover; background-position: center;"; ?>"></div>
                 </div>
                 <!-- Riga Inferiore (33% - 33% - 33%) -->
-                <div style="display: flex; gap: 15px; height: 250px;">
+                <div style="display: flex; gap: 15px; height: 400px;">
                     <div style="flex: 1; background-color: #333; <?php if($b_img4) echo "background-image: url('".esc_url($b_img4)."'); background-size: cover; background-position: center;"; ?>"></div>
                     <div style="flex: 1; background-color: #333; <?php if($b_img5) echo "background-image: url('".esc_url($b_img5)."'); background-size: cover; background-position: center;"; ?>"></div>
                     <div style="flex: 1; background-color: #333; <?php if($b_img6) echo "background-image: url('".esc_url($b_img6)."'); background-size: cover; background-position: center;"; ?>"></div>
