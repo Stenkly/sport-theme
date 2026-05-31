@@ -149,7 +149,7 @@ get_header('societa');
 
         <!-- TAB: OCCUPAZIONE -->
         <div id="tab-occupazione" class="infra-tab-content" style="display: none;">
-            <h2 class="text-white" style="font-size: 42px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">OCCUPAZIONE CAMPI</h2>
+            <h2 class="text-white" style="font-size: 42px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">OCCUPAZIONE CAMPO</h2>
             <div style="color: white; font-size: 14px; line-height: 1.8; margin-bottom: 20px;">
                 <?php echo wpautop(wp_kses_post($testo_occupazione)); ?>
             </div>
