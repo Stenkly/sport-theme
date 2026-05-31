@@ -478,7 +478,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     day: 'Giorno',
                     list: 'Agenda'
                 },
-                plugins: [ FullCalendar.iCalendarPlugin ],
                 events: {
                     url: `${ajaxUrl}?action=get_calendar_ics&post_id=${pageId}&field=${conf.field}`,
                     format: 'ics'
