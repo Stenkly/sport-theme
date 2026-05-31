@@ -3133,8 +3133,8 @@ function sport_theme_get_calendar_ics() {
     // Fetch using WordPress HTTP API with caching
     $transient_key = 'cal_ics_' . md5( $ics_url );
     
-    // Admins or nocache query bypass cache
-    $bypass_cache = isset( $_GET['nocache'] ) || current_user_can( 'manage_options' );
+    // Only bypass cache if explicitly requested via ?nocache=1 or ?nocache=true
+    $bypass_cache = isset( $_GET['nocache'] ) && ( $_GET['nocache'] === '1' || $_GET['nocache'] === 'true' );
     $body = $bypass_cache ? false : get_transient( $transient_key );
     
     if ( false === $body ) {
