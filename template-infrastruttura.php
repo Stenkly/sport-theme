@@ -279,10 +279,10 @@ get_header('societa');
     </div>
 </main>
 
-<!-- Load FullCalendar and dependency scripts -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.20/index.global.min.js"></script>
-<script src="https://cdnjs.cloudflare.cloudflare.com/ajax/libs/ical.js/1.5.0/ical.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.20/index.global.min.js"></script>
+<!-- Load FullCalendar and dependency scripts locally -->
+<script src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/js/fullcalendar.global.min.js"></script>
+<script src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/js/ical.min.js"></script>
+<script src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/js/icalendar.global.min.js"></script>
 
 <style>
 /* FullCalendar Premium Dark & Yellow Theme Overrides */
