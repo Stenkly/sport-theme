@@ -170,7 +170,7 @@ get_header('societa');
             <!-- Calendario Buvette -->
             <h3 class="text-white" style="font-size: 26px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Piano occupazione Buvette</h3>
             <?php 
-            $iframe_buvette_code = get_post_meta( get_the_ID(), '_infra_calendar_buvette_iframe', true );
+            $iframe_buvette_code = get_post_meta( get_the_ID(), '_infra_calendar_buvette_iframe', true ) ?: '<iframe src="https://calendar.google.com/calendar/u/0/embed?showTitle=0&amp;showTz=0&amp;mode=WEEK&amp;height=600&amp;wkst=2&amp;hl=it&amp;bgcolor=%23ffff00&amp;src=f7b2100de53n0cp2a4nc700i9s@group.calendar.google.com&amp;color=%231B887A&amp;ctz=Europe/Zurich" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>';
             if ( $iframe_buvette_code ) {
                 echo '<div class="calendar-wrapper" style="margin-bottom: 60px; width: 100%; overflow: hidden; border: 2px solid #333; border-radius: 5px;">';
                 echo $iframe_buvette_code;
