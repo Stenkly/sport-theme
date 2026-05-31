@@ -2316,6 +2316,10 @@ function sport_theme_salva_infrastruttura_meta( $post_id ) {
     if ( isset( $_POST['_infra_calendar_buvette_iframe'] ) ) {
         update_post_meta( $post_id, '_infra_calendar_buvette_iframe', wp_kses( wp_unslash($_POST['_infra_calendar_buvette_iframe']), $iframe_rules ) );
     }
+
+    // Clear calendar transient caches so changes apply immediately
+    global $wpdb;
+    $wpdb->query("DELETE FROM $wpdb->options WHERE option_name LIKE '_transient_cal_ics_%' OR option_name LIKE '_transient_timeout_cal_ics_%'");
 }
 add_action( 'save_post', 'sport_theme_salva_infrastruttura_meta' );
 
@@ -3027,6 +3031,59 @@ function sport_theme_render_societa_submenu() {
 }
 
 /**
+ * Helper to filter out past events (older than 60 days) to optimize size and parse times (Option B)
+ */
+function sport_theme_filter_old_ics_events( $ics_content ) {
+    if ( empty( $ics_content ) ) {
+        return '';
+    }
+    
+    // Normalize newlines
+    $ics_content = str_replace( array("\r\n", "\r"), "\n", $ics_content );
+    // Handle folded lines
+    $ics_content = preg_replace( "/\n[ \t]/", "", $ics_content );
+    
+    $parts = explode( "BEGIN:VEVENT", $ics_content );
+    $header = $parts[0];
+    $footer = '';
+    
+    $filtered_events = array();
+    // Keep events from up to 60 days (2 months) ago
+    $start_cutoff = time() - ( 60 * 24 * 60 * 60 );
+    
+    for ( $i = 1; $i < count( $parts ); $i++ ) {
+        $event_part = $parts[$i];
+        $subparts = explode( "END:VEVENT", $event_part );
+        $vevent_content = $subparts[0];
+        $trailing = $subparts[1] ?? '';
+        
+        if ( $i === count( $parts ) - 1 ) {
+            $footer = $trailing;
+        }
+        
+        $keep = true;
+        // Keep all recurring events as they might occur within our visible range
+        $is_recurring = ( stripos( $vevent_content, 'RRULE:' ) !== false );
+        
+        if ( ! $is_recurring ) {
+            if ( preg_match( '/^DTSTART(?:;[^:]*)?:(\d{8})/m', $vevent_content, $matches ) ) {
+                $date_str = $matches[1];
+                $event_time = strtotime( substr( $date_str, 0, 4 ) . '-' . substr( $date_str, 4, 2 ) . '-' . substr( $date_str, 6, 2 ) );
+                if ( $event_time && $event_time < $start_cutoff ) {
+                    $keep = false;
+                }
+            }
+        }
+        
+        if ( $keep ) {
+            $filtered_events[] = "BEGIN:VEVENT" . $vevent_content . "END:VEVENT";
+        }
+    }
+    
+    return $header . implode( "\n", $filtered_events ) . "\n" . $footer;
+}
+
+/**
  * AJAX Handler to proxy Google Calendar ICS files (Option B)
  */
 add_action( 'wp_ajax_get_calendar_ics', 'sport_theme_get_calendar_ics' );
@@ -3075,14 +3132,19 @@ function sport_theme_get_calendar_ics() {
     
     // Fetch using WordPress HTTP API with caching
     $transient_key = 'cal_ics_' . md5( $ics_url );
-    $body = get_transient( $transient_key );
+    
+    // Admins or nocache query bypass cache
+    $bypass_cache = isset( $_GET['nocache'] ) || current_user_can( 'manage_options' );
+    $body = $bypass_cache ? false : get_transient( $transient_key );
     
     if ( false === $body ) {
-        $response = wp_remote_get( $ics_url, array( 'timeout' => 10 ) );
+        $response = wp_remote_get( $ics_url, array( 'timeout' => 12 ) );
         if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
-            $body = wp_remote_retrieve_body( $response );
-            // Cache for 10 minutes
-            set_transient( $transient_key, $body, 10 * MINUTE_IN_SECONDS );
+            $raw_body = wp_remote_retrieve_body( $response );
+            // Filter out old events on the server side to speed up downloads and browser rendering
+            $body = sport_theme_filter_old_ics_events( $raw_body );
+            // Cache for 12 hours
+            set_transient( $transient_key, $body, 12 * HOUR_IN_SECONDS );
         }
     }
     
