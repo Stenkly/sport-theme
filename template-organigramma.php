@@ -255,40 +255,7 @@ get_header();
     <?php endif; ?>
 
 
-    <?php if(count($settore_giovanile) > 0): ?>
-    <section class="ps-section container" style="padding-top: 40px; padding-bottom: 60px;">
-        <h2 class="section-title text-white" style="margin-bottom: 30px;">SETTORE GIOVANILE</h2>
-        <div class="dirigenti-grid">
-            <?php foreach($settore_giovanile as $post): setup_postdata($post); 
-                $ruolo = get_post_meta(get_the_ID(), '_ruolo_specifico', true);
-                $foto = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'large') : 'https://via.placeholder.com/300x400/222222/FFFFFF?text=' . get_the_title();
-                $parti_nome = explode(' ', get_the_title(), 2);
-                $nome_riga1 = $parti_nome[0];
-                $nome_riga2 = isset($parti_nome[1]) ? $parti_nome[1] : '';
-            ?>
-            <div class="dirigente-card">
-                <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($foto); ?>');">
-                    <div class="dirigente-photo-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); pointer-events: none;"></div>
-                </div>
-                <div class="dirigente-info">
-                    <?php if(!empty($ruolo)): ?>
-                    <div class="dirigente-role"><?php echo esc_html($ruolo); ?></div>
-                    <?php endif; ?>
-                    <div class="dirigente-name" style="margin-top: 5px; margin-bottom: 15px;">
-                        <?php echo esc_html($nome_riga1); ?><br>
-                        <span style="color: var(--c-primary);"><?php echo esc_html($nome_riga2); ?></span>
-                    </div>
-                    <div class="dirigente-desc text-white" style="font-size: 16px; line-height: 1.6;">
-                        <?php the_content(); ?>
-                    </div>
-                </div>
-            </div>
-            <?php endforeach; wp_reset_postdata(); ?>
-        </div>
-    </section>
-    <?php endif; ?>
-    
-    <?php if(count($prima_squadra) == 0 && count($settore_giovanile) == 0): ?>
+    <?php if(count($prima_squadra) == 0): ?>
         <div class="container text-center" style="padding: 100px 0;"><h3 class="text-white">Nessun dirigente inserito. (Aggiungine uno dal menu "Dirigenza")</h3></div>
     <?php endif; ?>
     </div>
