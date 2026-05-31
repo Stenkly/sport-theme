@@ -28,9 +28,9 @@ get_header('societa');
                 <hr class="sc-divider" style="border: 0; border-top: 5px solid #ffffff; opacity: 1; margin: 20px 0;">
                 
                 <div class="infra-tabs" style="display: flex; gap: 20px; margin-top: 30px; margin-bottom: 10px; flex-wrap: wrap;">
-                    <button class="infra-tab-btn active" data-target="tab-campo" style="background-color: var(--c-primary); color: #000; border: 2px solid var(--c-primary); padding: 12px 40px; font-weight: bold; text-transform: uppercase; font-size: 22px; cursor: pointer; transition: 0.3s;">CAMPO SPORTIVO</button>
-                    <button class="infra-tab-btn" data-target="tab-buvette" style="background-color: transparent; color: white; border: 2px solid white; padding: 12px 40px; font-weight: bold; text-transform: uppercase; font-size: 22px; cursor: pointer; transition: 0.3s;">BUVETTE</button>
-                    <button class="infra-tab-btn" data-target="tab-occupazione" style="background-color: transparent; color: white; border: 2px solid white; padding: 12px 40px; font-weight: bold; text-transform: uppercase; font-size: 22px; cursor: pointer; transition: 0.3s;">OCCUPAZIONE</button>
+                    <button class="infra-tab-btn active" data-target="tab-campo" style="background-color: var(--c-primary); color: #000; border: 2px solid var(--c-primary); padding: 8px 40px; font-weight: bold; text-transform: uppercase; font-size: 22px; cursor: pointer; transition: 0.3s;">CAMPO SPORTIVO</button>
+                    <button class="infra-tab-btn" data-target="tab-buvette" style="background-color: transparent; color: white; border: 2px solid white; padding: 8px 40px; font-weight: bold; text-transform: uppercase; font-size: 22px; cursor: pointer; transition: 0.3s;">BUVETTE</button>
+                    <button class="infra-tab-btn" data-target="tab-occupazione" style="background-color: transparent; color: white; border: 2px solid white; padding: 8px 40px; font-weight: bold; text-transform: uppercase; font-size: 22px; cursor: pointer; transition: 0.3s;">OCCUPAZIONE</button>
                 </div>
             </div>
         </div>
@@ -92,7 +92,7 @@ get_header('societa');
             if ( !empty($regolamento) ): 
             ?>
             <div style="margin-bottom: 40px;">
-                <a href="<?php echo esc_url($regolamento); ?>" target="_blank" class="infra-pdf-btn" style="display: inline-block; background-color: var(--c-primary); color: #000; border: 2px solid var(--c-primary); padding: 12px 45px; font-weight: bold; text-transform: uppercase; font-size: 22px; text-decoration: none; transition: 0.3s;" onmouseover="this.style.backgroundColor='transparent'; this.style.color='white';" onmouseout="this.style.backgroundColor='var(--c-primary)'; this.style.color='#000';">SCARICA IL REGOLAMENTO</a>
+                <a href="<?php echo esc_url($regolamento); ?>" target="_blank" class="infra-pdf-btn" style="display: inline-block; background-color: var(--c-primary); color: #000; border: 2px solid var(--c-primary); padding: 8px 45px; font-weight: bold; text-transform: uppercase; font-size: 22px; text-decoration: none; transition: 0.3s;" onmouseover="this.style.backgroundColor='transparent'; this.style.color='white';" onmouseout="this.style.backgroundColor='var(--c-primary)'; this.style.color='#000';">SCARICA IL REGOLAMENTO</a>
             </div>
             <?php endif; ?>
 
@@ -263,7 +263,7 @@ get_header('societa');
                             <textarea name="pr_domanda" required style="width: 100%; background: transparent; border: 1px solid white; color: white; padding: 12px; font-size: 17px; min-height: 100px;" placeholder="Domanda"></textarea>
                         </div>
 
-                        <button type="submit" style="background-color: var(--c-primary); color: #000; border: none; padding: 14px 40px; font-weight: bold; text-transform: uppercase; cursor: pointer; letter-spacing: 1px; font-size: 22px; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">INVIA RICHIESTA</button>
+                        <button type="submit" style="background-color: var(--c-primary); color: #000; border: none; padding: 8px 40px; font-weight: bold; text-transform: uppercase; cursor: pointer; letter-spacing: 1px; font-size: 22px; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">INVIA RICHIESTA</button>
                     </form>
                 </div>
             </div>
