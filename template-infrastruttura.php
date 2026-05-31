@@ -42,7 +42,7 @@ get_header('societa');
         <?php
         $testo_campo = get_post_meta( get_the_ID(), '_infra_testo_campo', true ) ?: "L'AC TAVERNE METTE A DISPOSIZIONE LE SUE STRUTTURE SPORTIVE PER IL NOLEGGIO, OFFRENDO CAMPI DA CALCIO E ALTRE INFRASTRUTTURE PER EVENTI SPORTIVI, ALLENAMENTI, TORNEI, INCONTRI AZIENDALI E ATTIVITÀ RICREATIVE. SCOPRITE LE NOSTRE ECCELLENTI STRUTTURE E LE MODALITÀ DI NOLEGGIO.";
         $testo_buvette = get_post_meta( get_the_ID(), '_infra_testo_buvette', true ) ?: "L'AC TAVERNE OFFRE UN SERVIZIO BUVETTE DURANTE LE PARTITE CON UNA STRUTTURA ACCOGLIENTE E BEN ATTREZZATA, INOLTRE ABBIAMO LA POSSIBILITÀ DI AFFITTARE IL CAPANNONE ESTERNO ALLA BUVETTE PER FESTE, INCONTRI E ALTRE OCCASIONI, IDEALE PER OSPITARE I VOSTRI EVENTI IN UN AMBIENTE SPORTIVO E CONVIVIALE.";
-        $testo_occupazione = get_post_meta( get_the_ID(), '_infra_testo_occupazione', true ) ?: "Verifica l'occupazione dei campi e scopri gli orari disponibili per il noleggio.";
+        $testo_occupazione = get_post_meta( get_the_ID(), '_infra_testo_occupazione', true ) ?: '';
         
         // Recupero immagini galleria
         $img1 = get_post_meta( get_the_ID(), '_infra_img_1', true );
@@ -150,9 +150,11 @@ get_header('societa');
         <!-- TAB: OCCUPAZIONE -->
         <div id="tab-occupazione" class="infra-tab-content" style="display: none;">
             <h2 class="text-white" style="font-size: 42px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">PIANO OCCUPAZIONE</h2>
+            <?php if ( ! empty( $testo_occupazione ) ) : ?>
             <div style="color: white; font-size: 14px; line-height: 1.8; margin-bottom: 40px;">
                 <?php echo wpautop(wp_kses_post($testo_occupazione)); ?>
             </div>
+            <?php endif; ?>
 
             <!-- Calendario Campo Sportivo -->
             <h3 class="text-white" style="font-size: 26px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Piano occupazione Campo</h3>
