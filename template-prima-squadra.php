@@ -13,8 +13,9 @@ get_header();
     <!-- HERO IMMAGINE -->
     <section class="news-hero" style="overflow: hidden; background: #000; position: relative;">
         <?php
-        if ( has_post_thumbnail() ) {
-            $hero_image_url = get_the_post_thumbnail_url( get_the_ID(), 'full' );
+        $page_id = get_queried_object_id();
+        if ( has_post_thumbnail( $page_id ) ) {
+            $hero_image_url = get_the_post_thumbnail_url( $page_id, 'full' );
         } else {
             $team_page = get_page_by_path( 'team' );
             if ( $team_page && has_post_thumbnail( $team_page->ID ) ) {

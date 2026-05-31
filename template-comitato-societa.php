@@ -100,8 +100,12 @@ get_header('societa');
                             <div class="dirigente-photo-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); pointer-events: none;"></div>
                         </div>
                         <div class="dirigente-info">
-                            <?php if(!empty($p['ruolo'])): ?>
-                            <div class="dirigente-role"><?php echo esc_html($p['ruolo']); ?></div>
+                            <?php if(!empty($p['ruolo'])): 
+                                $ruolo_formattato = nl2br(esc_html($p['ruolo']));
+                                $ruolo_formattato = str_ireplace(array(' / ', ' + ', ' - ', ' e '), '<br>', $ruolo_formattato);
+                                $ruolo_formattato = str_replace(array('/', '+'), '<br>', $ruolo_formattato);
+                            ?>
+                            <div class="dirigente-role" style="line-height: 1.3; margin-bottom: 10px;"><?php echo $ruolo_formattato; ?></div>
                             <?php endif; ?>
                             <div class="dirigente-name" style="margin-top: 5px; margin-bottom: 15px;">
                                 <?php echo esc_html($p['nome_riga1']); ?><br>
@@ -125,8 +129,12 @@ get_header('societa');
                             <div class="dirigente-photo-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); pointer-events: none;"></div>
                         </div>
                         <div class="dirigente-info">
-                            <?php if(!empty($l['ruolo'])): ?>
-                            <div class="dirigente-role"><?php echo esc_html($l['ruolo']); ?></div>
+                            <?php if(!empty($l['ruolo'])): 
+                                $ruolo_formattato = nl2br(esc_html($l['ruolo']));
+                                $ruolo_formattato = str_ireplace(array(' / ', ' + ', ' - ', ' e '), '<br>', $ruolo_formattato);
+                                $ruolo_formattato = str_replace(array('/', '+'), '<br>', $ruolo_formattato);
+                            ?>
+                            <div class="dirigente-role" style="line-height: 1.3; margin-bottom: 10px;"><?php echo $ruolo_formattato; ?></div>
                             <?php endif; ?>
                             <div class="dirigente-name" style="margin-top: 5px; margin-bottom: 15px;">
                                 <?php echo esc_html($l['nome_riga1']); ?><br>
@@ -150,8 +158,12 @@ get_header('societa');
                             <div class="dirigente-photo-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); pointer-events: none;"></div>
                         </div>
                         <div class="dirigente-info">
-                            <?php if(!empty($o['ruolo'])): ?>
-                            <div class="dirigente-role"><?php echo esc_html($o['ruolo']); ?></div>
+                            <?php if(!empty($o['ruolo'])): 
+                                $ruolo_formattato = nl2br(esc_html($o['ruolo']));
+                                $ruolo_formattato = str_ireplace(array(' / ', ' + ', ' - ', ' e '), '<br>', $ruolo_formattato);
+                                $ruolo_formattato = str_replace(array('/', '+'), '<br>', $ruolo_formattato);
+                            ?>
+                            <div class="dirigente-role" style="line-height: 1.3; margin-bottom: 10px;"><?php echo $ruolo_formattato; ?></div>
                             <?php endif; ?>
                             <div class="dirigente-name" style="margin-top: 5px; margin-bottom: 15px;">
                                 <?php echo esc_html($o['nome_riga1']); ?><br>

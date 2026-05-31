@@ -1158,6 +1158,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     font-size: 34px;
     font-weight: 700;
     line-height: 1.2;
+    margin-top: 20px !important;
 }
 .dirigente-name span {
     color: #F9EA86 !important;
@@ -2737,6 +2738,13 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     .page-news-societa .news-hero-wrapper,
     .page-iscritti .news-hero-wrapper,
     .page-contatti .news-hero-wrapper,
+    .page-contatti .contatti-hero > div,
+    .page-stagione .news-hero-wrapper,
+    .page-partner .news-hero-wrapper,
+    .page-template-template-partner .news-hero-wrapper,
+    .page-organigramma .club-hero-wrapper,
+    .page-storia .club-hero-wrapper,
+    .page-club .club-hero-wrapper,
     .page-prima-squadra .news-hero .container {
         position: relative !important;
         margin-left: -60px !important;
@@ -2759,8 +2767,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     .page-scuola-calcio .news-hero-wrapper,
     .page-infrastruttura .news-hero-wrapper,
     .page-news-societa .news-hero-wrapper,
-    .page-iscritti .news-hero-wrapper,
-    .page-contatti .news-hero-wrapper {
+    .page-iscritti .news-hero-wrapper {
         height: 55vh !important;
     }
     
@@ -2775,7 +2782,14 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     .page-infrastruttura .news-hero-content,
     .page-news-societa .news-hero-content,
     .page-iscritti .news-hero-content,
-    .page-contatti .news-hero-content {
+    .page-contatti .news-hero-content,
+    .page-contatti .contatti-hero > div .container,
+    .page-stagione .news-hero-content,
+    .page-partner .news-hero-content,
+    .page-template-template-partner .news-hero-content,
+    .page-organigramma .news-hero-content,
+    .page-storia .news-hero-content,
+    .page-club .news-hero-content {
         position: absolute !important;
         bottom: 40px !important;
         left: 60px !important;
@@ -2800,6 +2814,13 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     .page-news-societa .news-hero-wrapper,
     .page-iscritti .news-hero-wrapper,
     .page-contatti .news-hero-wrapper,
+    .page-contatti .contatti-hero > div,
+    .page-stagione .news-hero-wrapper,
+    .page-partner .news-hero-wrapper,
+    .page-template-template-partner .news-hero-wrapper,
+    .page-organigramma .club-hero-wrapper,
+    .page-storia .club-hero-wrapper,
+    .page-club .club-hero-wrapper,
     .page-prima-squadra .news-hero .container,
     .page-home-societa .hs-hero-wrapper,
     .page-home-societa .hs-sezioni-band {
@@ -2810,21 +2831,63 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 
 .page-rosa .news-hero-overlay,
-.page-staff .news-hero-overlay {
-    height: 85% !important;
+.page-staff .news-hero-overlay,
+.page-allenatori .news-hero-overlay,
+.page-stagione .news-hero-overlay {
+    height: 55% !important;
 }
 
-/* Ritaglio immagine hero Prima Squadra (sopra e sotto) */
+/* Impostazioni hero Prima Squadra (Home, Rosa, Staff, Allenatori, Stagione) */
 @media (min-width: 769px) {
+    .page-rosa .news-hero-wrapper,
+    .page-staff .news-hero-wrapper,
+    .page-allenatori .news-hero-wrapper,
+    .page-stagione .news-hero-wrapper,
+    .page-partner .news-hero-wrapper,
+    .page-template-template-partner .news-hero-wrapper,
+    .page-organigramma .club-hero-wrapper,
+    .page-storia .club-hero-wrapper,
+    .page-club .club-hero-wrapper,
+    .page-contatti .news-hero-wrapper,
+    .page-contatti .contatti-hero > div,
+    .page-prima-squadra .news-hero .container {
+        height: 732px !important;
+    }
+
+    .page-rosa .news-hero-wrapper img,
+    .page-staff .news-hero-wrapper img,
+    .page-allenatori .news-hero-wrapper img,
+    .page-stagione .news-hero-wrapper img,
+    .page-partner .news-hero-wrapper img,
+    .page-template-template-partner .news-hero-wrapper img,
+    .page-organigramma .club-hero-wrapper img,
+    .page-storia .club-hero-wrapper img,
+    .page-club .club-hero-wrapper img,
+    .page-contatti .news-hero-wrapper img,
+    .page-contatti .contatti-hero > div img,
     .page-prima-squadra .news-hero .container img {
-        margin-top: -250px !important;
-        margin-bottom: -30px !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
+    .page-prima-squadra .news-hero .container img {
+        margin-top: -180px !important;
+        height: calc(100% + 180px) !important;
     }
 }
 @media (max-width: 768px) {
     .page-prima-squadra .news-hero .container img {
-        margin-top: -60px !important;
-        margin-bottom: -15px !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+    .page-prima-squadra .news-hero .container {
+        height: 50vh !important;
     }
 }
 
@@ -2836,4 +2899,5 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-prima-squadra .news-hero + .ps-section {
     padding-top: 25px !important;
 }
+
 

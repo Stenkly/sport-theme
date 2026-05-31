@@ -12,10 +12,16 @@ get_header();
 
     <section class="news-hero">
         <?php
-        if ( has_post_thumbnail() ) {
-            $hero_image_url = get_the_post_thumbnail_url( get_the_ID(), 'full' );
+        $page_id = get_queried_object_id();
+        if ( has_post_thumbnail( $page_id ) ) {
+            $hero_image_url = get_the_post_thumbnail_url( $page_id, 'full' );
         } else {
-            $hero_image_url = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=2000&auto=format&fit=crop';
+            $club_page = get_page_by_path( 'club' );
+            if ( $club_page && has_post_thumbnail( $club_page->ID ) ) {
+                $hero_image_url = get_the_post_thumbnail_url( $club_page->ID, 'full' );
+            } else {
+                $hero_image_url = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=2000&auto=format&fit=crop';
+            }
         }
         ?>
         <style>
@@ -123,99 +129,27 @@ get_header();
         <h2 class="section-title text-white" style="margin-bottom: 50px;">ORGANIGRAMMA</h2>
 
         <style>
-        .org-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            row-gap: 50px;
-            column-gap: 40px;
-            margin-bottom: 30px;
-        }
-        .org-card {
-            display: flex;
-            background: transparent;
-        }
-        .org-card-photo {
-            flex: 0 0 45%;
-            max-width: 45%;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            transition: border-color 0.3s ease;
-        }
-        .org-card:hover .org-card-photo {
-            border-color: var(--c-primary);
-        }
-        .org-card-photo img {
-            width: 100%;
-            height: auto;
-            display: block;
-            aspect-ratio: 4/5;
-            object-fit: cover;
-            object-position: center center;
-            transition: transform 0.3s ease;
-        }
-        .org-card:hover .org-card-photo img {
-            transform: scale(1.05);
-        }
-        .org-card-info {
-            flex: 1;
-            margin-left: 20px;
-            padding: 10px 0 0 20px;
-            border-left: 3px solid var(--c-primary);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-        }
-        .org-card-role {
-            color: var(--c-primary);
-            font-size: 14px;
-            font-weight: 800;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-            display: block;
-            line-height: 1.4;
-            max-width: 90%;
-        }
-        .org-card-name {
-            color: white;
-            font-size: 26px;
-            font-weight: 700;
-            line-height: 1.1;
-            display: block;
-        }
-
-        /* ---- MOBILE ---- */
-        @media (max-width: 768px) {
-            .org-grid {
-                grid-template-columns: 1fr;
-                row-gap: 30px;
+        /* Ingrandimento dell'immagine (foto) della card del comitato / organigramma a 335px x 447px */
+        @media (min-width: 769px) {
+            .page-organigramma .dirigente-photo {
+                width: 335px !important;
             }
-            .org-card {
-                flex-direction: row; /* mantieni foto+testo affiancati */
+            .page-organigramma .dirigente-photo::before {
+                padding-top: 133.43% !important; /* Aspect ratio 3:4 (335px x 447px) */
             }
-            .org-card-photo {
-                flex: 0 0 38%;
-                max-width: 38%;
+            .page-organigramma .dirigente-info {
+                min-height: 447px !important; /* Allineamento all'altezza della foto */
             }
-            .org-card-info {
-                margin-left: 15px;
-                padding: 8px 0 0 15px;
-            }
-            .org-card-name {
-                font-size: 18px;
-            }
-            .org-card-role {
-                font-size: 9px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .org-card-photo {
-                flex: 0 0 35%;
-                max-width: 35%;
-            }
-            .org-card-name {
-                font-size: 16px;
+            
+            /* Allineamento perfetto a sinistra con il container sottostante */
+            .page-organigramma .news-hero-content {
+                left: 50% !important;
+                right: auto !important;
+                transform: translateX(-50%) !important;
+                width: 100% !important;
+                max-width: 1400px !important;
+                padding-left: 20px !important;
+                padding-right: 20px !important;
             }
         }
         </style>
@@ -223,32 +157,39 @@ get_header();
         <?php foreach($prima_squadra_groups as $area_name => $dirigenti): ?>
             
             <?php if($area_name !== 'DIREZIONE'): ?>
-            <h3 style="color: var(--c-primary); font-size: 20px; font-weight: 700; text-transform: uppercase; margin: 40px 0 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;"><?php echo esc_html($area_name); ?></h3>
+            <h3 style="color: var(--c-primary); font-size: 20px; font-weight: 700; text-transform: uppercase; margin: 40px 0 20px 0; border-bottom: 2px solid white; padding-bottom: 10px;"><?php echo esc_html($area_name); ?></h3>
             <?php endif; ?>
             
-            <div class="org-grid">
-                <?php foreach($dirigenti as $post): setup_postdata($post); 
-                    $ruolo = get_post_meta(get_the_ID(), '_ruolo_specifico', true);
-                    $foto = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'large') : 'https://via.placeholder.com/300x400/222222/FFFFFF?text=' . get_the_title();
-                    $parti_nome = explode(' ', get_the_title(), 2);
+            <div class="dirigenti-grid">
+                <?php foreach($dirigenti as $post): 
+                    $ruolo = get_post_meta($post->ID, '_ruolo_specifico', true);
+                    $foto = has_post_thumbnail($post->ID) ? get_the_post_thumbnail_url($post->ID, 'large') : 'https://via.placeholder.com/300x400/222222/FFFFFF?text=' . get_the_title($post->ID);
+                    $parti_nome = explode(' ', get_the_title($post->ID), 2);
                     $nome_riga1 = $parti_nome[0];
                     $nome_riga2 = isset($parti_nome[1]) ? $parti_nome[1] : '';
                 ?>
-                <div class="org-card">
-                    <div class="org-card-photo">
-                        <img src="<?php echo esc_url($foto); ?>" alt="<?php echo esc_attr(get_the_title()); ?>">
+                <div class="dirigente-card">
+                    <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($foto); ?>');">
+                        <div class="dirigente-photo-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); pointer-events: none;"></div>
                     </div>
-                    <div class="org-card-info">
-                        <?php if(!empty($ruolo)): ?>
-                        <span class="org-card-role"><?php echo esc_html($ruolo); ?></span>
+                    <div class="dirigente-info">
+                        <?php if(!empty($ruolo)): 
+                            $ruolo_formattato = nl2br(esc_html($ruolo));
+                            $ruolo_formattato = str_ireplace(array(' / ', ' + ', ' - ', ' e '), '<br>', $ruolo_formattato);
+                            $ruolo_formattato = str_replace(array('/', '+'), '<br>', $ruolo_formattato);
+                        ?>
+                        <div class="dirigente-role" style="line-height: 1.3; margin-bottom: 10px;"><?php echo $ruolo_formattato; ?></div>
                         <?php endif; ?>
-                        <span class="org-card-name">
+                        <div class="dirigente-name" style="margin-top: 5px; margin-bottom: 15px;">
                             <?php echo esc_html($nome_riga1); ?><br>
-                            <?php echo esc_html($nome_riga2); ?>
-                        </span>
+                            <span style="color: var(--c-primary);"><?php echo esc_html($nome_riga2); ?></span>
+                        </div>
+                        <div class="dirigente-desc text-white" style="font-size: 16px; line-height: 1.6;">
+                            <?php echo wpautop(apply_filters('the_content', $post->post_content)); ?>
+                        </div>
                     </div>
                 </div>
-                <?php endforeach; wp_reset_postdata(); ?>
+                <?php endforeach; ?>
             </div>
         <?php endforeach; ?>
     </section>

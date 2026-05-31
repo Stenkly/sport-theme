@@ -3161,5 +3161,183 @@ function sport_theme_get_calendar_ics() {
     exit;
 }
 
+/**
+ * ----------------------------------------------------
+ * METABOX PER POSIZIONE E ZOOM DELL'IMMAGINE HERO
+ * ----------------------------------------------------
+ */
+function sport_theme_hero_settings_metabox() {
+    $post_types = array( 'page', 'post', 'evento', 'squadra_sezione' );
+    foreach ( $post_types as $post_type ) {
+        add_meta_box(
+            'sport_theme_hero_settings',
+            'Impostazioni Immagine Hero',
+            'sport_theme_hero_settings_html',
+            $post_type,
+            'normal',
+            'high'
+        );
+    }
+}
+add_action( 'add_meta_boxes', 'sport_theme_hero_settings_metabox' );
+
+function sport_theme_hero_settings_html( $post ) {
+    wp_nonce_field( 'salva_hero_settings_meta', 'hero_settings_meta_nonce' );
+
+    $position_y = get_post_meta( $post->ID, '_hero_position_y', true );
+    $zoom = get_post_meta( $post->ID, '_hero_zoom', true );
+
+    // Defaults
+    if ( $position_y === '' ) {
+        $position_y = 50; // Default to center
+    }
+    if ( $zoom === '' ) {
+        $zoom = 100; // Default to 100%
+    }
+    ?>
+    <div class="hero-settings-meta-box">
+        <style>
+            .hero-meta-field { margin-bottom: 20px; }
+            .hero-meta-field label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; }
+            .hero-meta-field input[type="range"] { width: 100%; max-width: 400px; vertical-align: middle; }
+            .hero-meta-field .val-display { font-weight: bold; font-size: 14px; color: #007cba; margin-left: 8px; }
+        </style>
+        
+        <div class="hero-meta-field">
+            <label for="hero_position_y">Posizionamento Verticale (Y): <span id="hero_pos_y_val" class="val-display"><?php echo esc_html( $position_y ); ?>%</span></label>
+            <input type="range" id="hero_position_y" name="_hero_position_y" min="0" max="100" value="<?php echo esc_attr( $position_y ); ?>" oninput="document.getElementById('hero_pos_y_val').innerText = this.value + '%';">
+            <p class="description" style="margin-top: 5px; font-size: 11px;">Muovi lo slider per spostare l'immagine verso l'alto (0% = Alto) o verso il basso (100% = Basso).</p>
+        </div>
+
+        <div class="hero-meta-field">
+            <label for="hero_zoom">Zoom Immagine: <span id="hero_zoom_val" class="val-display"><?php echo esc_html( $zoom ); ?>%</span></label>
+            <input type="range" id="hero_zoom" name="_hero_zoom" min="100" max="300" step="5" value="<?php echo esc_attr( $zoom ); ?>" oninput="document.getElementById('hero_zoom_val').innerText = this.value + '%';">
+            <p class="description" style="margin-top: 5px; font-size: 11px;">100% = Dimensione normale, fino a 300% per ingrandire.</p>
+        </div>
+    </div>
+    <?php
+}
+
+function sport_theme_save_hero_settings_meta( $post_id ) {
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+        return;
+    }
+    
+    if ( ! current_user_can( 'edit_post', $post_id ) ) {
+        return;
+    }
+
+    // Resolve parent ID if this is a revision
+    if ( $parent_id = wp_is_post_revision( $post_id ) ) {
+        $post_id = $parent_id;
+    }
+
+    if ( isset( $_POST['_hero_position_y'] ) ) {
+        $pos_y = intval( $_POST['_hero_position_y'] );
+        update_post_meta( $post_id, '_hero_position_y', $pos_y );
+    }
+
+    if ( isset( $_POST['_hero_zoom'] ) ) {
+        $zoom = intval( $_POST['_hero_zoom'] );
+        update_post_meta( $post_id, '_hero_zoom', $zoom );
+    }
+}
+add_action( 'save_post', 'sport_theme_save_hero_settings_meta' );
+
+/**
+ * Output dei CSS dinamici per l'immagine Hero
+ */
+function sport_theme_render_hero_custom_styles() {
+    $post_id = get_queried_object_id();
+    if ( ! $post_id ) {
+        return;
+    }
+
+    $position_y = get_post_meta( $post_id, '_hero_position_y', true );
+    $zoom = get_post_meta( $post_id, '_hero_zoom', true );
+
+    // Se entrambi i valori sono vuoti, verifichiamo l'ereditarietà in base al template
+    if ( $position_y === '' && $zoom === '' ) {
+        $fallback_post = null;
+        
+        // 1. Pagine Club: fallback alla pagina con slug 'club'
+        if ( is_page_template( array( 'template-organigramma.php', 'template-storia.php', 'template-club-page.php', 'template-comitato-societa.php' ) ) || is_page( array( 'organigramma', 'storia', 'progetto-sportivo' ) ) ) {
+            $fallback_post = get_page_by_path( 'club' );
+            if ( ! $fallback_post ) {
+                $fallback_post = get_page_by_title( 'Club' );
+            }
+        }
+        // 2. Pagine Team/Prima Squadra: fallback alla pagina con slug 'team'
+        elseif ( is_page_template( array( 'template-staff.php', 'template-rosa.php', 'template-prima-squadra.php' ) ) || is_page( array( 'staff', 'rosa', 'prima-squadra' ) ) ) {
+            $fallback_post = get_page_by_path( 'team' );
+            if ( ! $fallback_post ) {
+                $fallback_post = get_page_by_title( 'Team' );
+            }
+        }
+
+        if ( $fallback_post ) {
+            $position_y = get_post_meta( $fallback_post->ID, '_hero_position_y', true );
+            $zoom = get_post_meta( $fallback_post->ID, '_hero_zoom', true );
+        }
+    }
+
+    if ( $position_y === '' && $zoom === '' ) {
+        return;
+    }
+
+    $position_y = ( $position_y !== '' ) ? intval( $position_y ) : 50;
+    $zoom = ( $zoom !== '' ) ? intval( $zoom ) : 100;
+    $scale = $zoom / 100;
+    ?>
+    <style id="sport-theme-hero-custom-styles">
+        /* Attiva il contesto di impilamento (stacking context) sui contenitori padre */
+        .club-hero-wrapper,
+        .news-hero-wrapper,
+        .hs-hero-wrapper,
+        [class*="hero-wrapper"] {
+            position: relative !important;
+            z-index: 10 !important;
+            background-color: transparent !important;
+        }
+
+        /* Forza l'immagine sullo sfondo in modo assoluto */
+        [class*="hero"] img,
+        [class*="hero-wrapper"] img,
+        .news-hero-wrapper img, 
+        .hs-hero-wrapper img, 
+        .club-hero-wrapper img,
+        .news-hero-wrapper .hero-image,
+        .hs-hero-wrapper .hero-image,
+        img.hero-image {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            z-index: 1 !important;
+            object-position: center <?php echo $position_y; ?>% !important;
+            transform: scale(<?php echo $scale; ?>) !important;
+            transform-origin: center <?php echo $position_y; ?>% !important;
+        }
+
+        /* Forza tutti gli altri elementi del contenitore ad avere un z-index superiore rispetto all'immagine */
+        .news-hero-overlay,
+        .hs-hero-overlay,
+        .news-hero-content,
+        .hs-hero-content,
+        .club-hero-wrapper > div,
+        .news-hero-wrapper > div,
+        .hs-hero-wrapper > div,
+        [class*="hero-wrapper"] > div,
+        [class*="hero"] > div {
+            z-index: 20 !important;
+        }
+    </style>
+    <?php
+}
+add_action( 'wp_head', 'sport_theme_render_hero_custom_styles' );
+add_action( 'wp_footer', 'sport_theme_render_hero_custom_styles', 999 );
+
+
 
 

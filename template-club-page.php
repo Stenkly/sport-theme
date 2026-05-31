@@ -22,10 +22,16 @@ $btn_inactive = "padding: 8px 40px; font-weight: 700; text-transform: uppercase;
     <!-- HERO IMMAGINE -->
     <section class="news-hero">
         <?php
-        if ( has_post_thumbnail() ) {
-            $hero_image_url = get_the_post_thumbnail_url( get_the_ID(), 'full' );
+        $page_id = get_queried_object_id();
+        if ( has_post_thumbnail( $page_id ) ) {
+            $hero_image_url = get_the_post_thumbnail_url( $page_id, 'full' );
         } else {
-            $hero_image_url = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=2000&auto=format&fit=crop';
+            $club_page = get_page_by_path( 'club' );
+            if ( $club_page && has_post_thumbnail( $club_page->ID ) ) {
+                $hero_image_url = get_the_post_thumbnail_url( $club_page->ID, 'full' );
+            } else {
+                $hero_image_url = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=2000&auto=format&fit=crop';
+            }
         }
         ?>
         <div class="club-hero-wrapper">
