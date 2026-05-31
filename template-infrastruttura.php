@@ -281,7 +281,7 @@ get_header('societa');
 
 <!-- Load FullCalendar and dependency scripts -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.20/index.global.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/ical.js@1.5.0/dist/ical.min.js"></script>
+<script src="https://cdnjs.cloudflare.cloudflare.com/ajax/libs/ical.js/1.5.0/ical.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.20/index.global.min.js"></script>
 
 <style>
