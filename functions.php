@@ -3090,9 +3090,12 @@ function sport_theme_get_calendar_ics() {
         wp_die( 'Errore nel recupero del calendario', 500 );
     }
     
+    if ( ob_get_length() ) {
+        ob_clean();
+    }
     header( 'Content-Type: text/calendar; charset=utf-8' );
     header( 'Access-Control-Allow-Origin: *' );
-    echo $body;
+    echo trim( $body );
     exit;
 }
 

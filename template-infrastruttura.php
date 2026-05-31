@@ -422,16 +422,16 @@ document.addEventListener('DOMContentLoaded', function() {
             if (targetId === 'tab-occupazione') {
                 document.getElementById('prenotazioni-wrapper').style.display = 'none';
                 
-                // Initialize calendars on first click
-                if (!calendarsInitialized) {
-                    initCalendars();
-                    calendarsInitialized = true;
-                } else {
-                    // Update layout size to prevent rendering glitches
-                    setTimeout(() => {
+                // Initialize calendars on first click with a small delay for DOM layout
+                setTimeout(() => {
+                    if (!calendarsInitialized) {
+                        initCalendars();
+                        calendarsInitialized = true;
+                    } else {
+                        // Update layout size to prevent rendering glitches
                         calendars.forEach(cal => cal.updateSize());
-                    }, 50);
-                }
+                    }
+                }, 50);
             } else {
                 document.getElementById('prenotazioni-wrapper').style.display = 'block';
             }
@@ -454,6 +454,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const cal = new FullCalendar.Calendar(el, {
                 initialView: 'timeGridWeek',
+                height: 600,
                 locale: 'it',
                 firstDay: 1, // Start on Monday
                 timeZone: 'Europe/Zurich',
