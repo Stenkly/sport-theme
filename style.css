@@ -2941,3 +2941,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-prima-squadra .news-hero + .ps-section {
     padding-top: 25px !important;
 }
+
+.page-organigramma .club-hero-wrapper .news-hero-content {
+    bottom: 20px !important;
+}

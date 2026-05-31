@@ -169,8 +169,9 @@ get_header();
                     $nome_riga2 = isset($parti_nome[1]) ? $parti_nome[1] : '';
                 ?>
                 <?php
-                $foto_pos_y = get_post_meta($post->ID, '_foto_position_y', true);
-                $bg_pos_style = ($foto_pos_y !== '') ? ' background-position: center ' . esc_attr($foto_pos_y) . '%;' : '';
+                $zoom_foto = get_post_meta($post->ID, '_zoom_foto', true) ?: 'cover';
+                $allineamento_foto = get_post_meta($post->ID, '_allineamento_foto', true) ?: 'center top';
+                $bg_pos_style = ' background-size: ' . esc_attr($zoom_foto) . '; background-position: ' . esc_attr($allineamento_foto) . ';';
                 ?>
                 <div class="dirigente-card">
                     <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($foto); ?>');<?php echo $bg_pos_style; ?>">

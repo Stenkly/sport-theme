@@ -63,8 +63,9 @@ get_header('societa');
             $is_pres_onorario = (stripos($ruolo, 'presidente onorario') !== false);
             $is_leader = !$is_pres_onorario && (stripos($ruolo, 'vice presidente') !== false || strcasecmp(trim($ruolo), 'presidente') === 0);
             
-            $foto_pos_y = get_post_meta(get_the_ID(), '_foto_position_y', true);
-            $bg_pos = ($foto_pos_y !== '') ? ' background-position: center ' . esc_attr($foto_pos_y) . '%;' : '';
+            $zoom_foto = get_post_meta(get_the_ID(), '_zoom_foto', true) ?: 'cover';
+            $allineamento_foto = get_post_meta(get_the_ID(), '_allineamento_foto', true) ?: 'center top';
+            $bg_pos = ' background-size: ' . esc_attr($zoom_foto) . '; background-position: ' . esc_attr($allineamento_foto) . ';';
             
             $item = array(
                 'nome_riga1' => $nome_riga1,
