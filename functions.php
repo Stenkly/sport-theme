@@ -525,7 +525,11 @@ function sport_theme_dirigente_meta_html($post) {
     $ruolo_spec = get_post_meta($post->ID, '_ruolo_specifico', true);
     $sezione = get_post_meta($post->ID, '_sezione_comitato', true);
     $area = get_post_meta($post->ID, '_area_organigramma', true);
+    $foto_pos_y = get_post_meta($post->ID, '_foto_position_y', true);
+    
     if(empty($sezione)) $sezione = 'prima-squadra'; // Default
+    if($foto_pos_y === '') $foto_pos_y = 50; // Default to center
+
     wp_nonce_field('salva_dirigente_meta', 'dirigente_meta_nonce');
     ?>
     <p><label><b>Qualifica/Ruolo (es. Presidente Onorario):</b></label><br>
@@ -540,14 +544,26 @@ function sport_theme_dirigente_meta_html($post) {
         <option value="settore-giovanile" <?php selected($sezione, 'settore-giovanile'); ?>>Comitato Settore Giovanile</option>
     </select>
     </p>
+
+    <div style="margin-top: 20px; margin-bottom: 20px; border-top: 1px solid #eee; padding-top: 15px;">
+        <label for="foto_position_y" style="font-weight: bold; display: block; margin-bottom: 5px;">Posizionamento Verticale Foto Card: <span id="foto_pos_y_val" style="color: #007cba;"><?php echo esc_html( $foto_pos_y ); ?>%</span></label>
+        <input type="range" id="foto_position_y" name="_foto_position_y" min="0" max="100" value="<?php echo esc_attr( $foto_pos_y ); ?>" oninput="document.getElementById('foto_pos_y_val').innerText = this.value + '%';" style="width: 100%; max-width: 400px; vertical-align: middle;">
+        <p class="description" style="margin-top: 5px; font-size: 11px;">Muovi lo slider per allineare la foto nella card dell'organigramma (0% = Alto, 50% = Centro, 100% = Basso).</p>
+    </div>
     <?php
 }
 
 function sport_theme_salva_dirigente_meta($post_id) {
     if (!isset($_POST['dirigente_meta_nonce']) || !wp_verify_nonce($_POST['dirigente_meta_nonce'], 'salva_dirigente_meta')) return;
+    
     if (isset($_POST['_ruolo_specifico'])) update_post_meta($post_id, '_ruolo_specifico', sanitize_text_field($_POST['_ruolo_specifico']));
     if (isset($_POST['_sezione_comitato'])) update_post_meta($post_id, '_sezione_comitato', sanitize_text_field($_POST['_sezione_comitato']));
     if (isset($_POST['_area_organigramma'])) update_post_meta($post_id, '_area_organigramma', sanitize_text_field($_POST['_area_organigramma']));
+    
+    if (isset($_POST['_foto_position_y'])) {
+        $pos_y = intval($_POST['_foto_position_y']);
+        update_post_meta($post_id, '_foto_position_y', $pos_y);
+    }
 }
 add_action('save_post_dirigente', 'sport_theme_salva_dirigente_meta');
 add_action('init', 'sport_theme_cpt_staff');

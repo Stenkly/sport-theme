@@ -63,12 +63,16 @@ get_header('societa');
             $is_pres_onorario = (stripos($ruolo, 'presidente onorario') !== false);
             $is_leader = !$is_pres_onorario && (stripos($ruolo, 'vice presidente') !== false || strcasecmp(trim($ruolo), 'presidente') === 0);
             
+            $foto_pos_y = get_post_meta(get_the_ID(), '_foto_position_y', true);
+            $bg_pos = ($foto_pos_y !== '') ? ' background-position: center ' . esc_attr($foto_pos_y) . '%;' : '';
+            
             $item = array(
                 'nome_riga1' => $nome_riga1,
                 'nome_riga2' => $nome_riga2,
                 'ruolo'      => $ruolo,
                 'foto'       => $foto,
                 'content'    => get_the_content(),
+                'bg_pos'     => $bg_pos,
             );
             
             if ($is_pres_onorario) {
@@ -96,7 +100,7 @@ get_header('societa');
             <div class="dirigenti-grid" style="grid-template-columns: 1fr; margin-bottom: 40px; display: grid;">
                 <?php foreach ($presidents as $p): ?>
                     <div class="dirigente-card" style="justify-self: center; width: 100%; max-width: 800px;">
-                        <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($p['foto']); ?>');">
+                        <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($p['foto']); ?>');<?php echo $p['bg_pos']; ?>">
                             <div class="dirigente-photo-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); pointer-events: none;"></div>
                         </div>
                         <div class="dirigente-info">
@@ -125,7 +129,7 @@ get_header('societa');
             <div class="dirigenti-grid" style="margin-bottom: 40px;">
                 <?php foreach ($leaders as $l): ?>
                     <div class="dirigente-card">
-                        <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($l['foto']); ?>');">
+                        <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($l['foto']); ?>');<?php echo $l['bg_pos']; ?>">
                             <div class="dirigente-photo-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); pointer-events: none;"></div>
                         </div>
                         <div class="dirigente-info">
@@ -154,7 +158,7 @@ get_header('societa');
             <div class="dirigenti-grid">
                 <?php foreach ($others as $o): ?>
                     <div class="dirigente-card">
-                        <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($o['foto']); ?>');">
+                        <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($o['foto']); ?>');<?php echo $o['bg_pos']; ?>">
                             <div class="dirigente-photo-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); pointer-events: none;"></div>
                         </div>
                         <div class="dirigente-info">

@@ -72,13 +72,13 @@ get_header();
 
         <div class="club-hero-wrapper">
             <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block;" alt="<?php echo esc_attr(get_the_title()); ?>">
-            <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 70%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
+            <div class="club-hero-fade"></div>
             
             <div class="news-hero-content container" style="position: absolute; bottom: 40px; left: 0; right: 0; text-align: left;">
                 <h1 class="club-hero-title">ORGANIGRAMMA</h1>
-                
+
                 <hr style="border: 0; border-top: 2px solid white; margin: 15px 0;">
-                
+
                 <div class="org-submenu">
                     <a href="<?php echo esc_url( site_url('/organigramma') ); ?>" class="active-btn">ORGANIGRAMMA</a>
                     <a href="<?php echo esc_url( site_url('/storia') ); ?>" class="outline-btn">STORIA</a>
@@ -168,8 +168,12 @@ get_header();
                     $nome_riga1 = $parti_nome[0];
                     $nome_riga2 = isset($parti_nome[1]) ? $parti_nome[1] : '';
                 ?>
+                <?php
+                $foto_pos_y = get_post_meta($post->ID, '_foto_position_y', true);
+                $bg_pos_style = ($foto_pos_y !== '') ? ' background-position: center ' . esc_attr($foto_pos_y) . '%;' : '';
+                ?>
                 <div class="dirigente-card">
-                    <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($foto); ?>');">
+                    <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($foto); ?>');<?php echo $bg_pos_style; ?>">
                         <div class="dirigente-photo-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); pointer-events: none;"></div>
                     </div>
                     <div class="dirigente-info">

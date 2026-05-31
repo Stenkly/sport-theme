@@ -40,7 +40,7 @@ get_header();
 
         <div class="club-hero-wrapper">
             <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block;" alt="<?php echo esc_attr($hero_title); ?>">
-            <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 70%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
+            <div class="club-hero-fade"></div>
             
             <div class="news-hero-content container" style="position: absolute; bottom: 40px; left: 0; right: 0; text-align: left;">
                 <h1 class="club-hero-title"><?php echo esc_html($hero_title); ?></h1>
@@ -50,7 +50,7 @@ get_header();
                 <?php endif; ?>
 
                 <hr style="border: 0; border-top: 2px solid white; margin: 20px 0;">
-                
+
                 <div class="page-submenu" style="display: flex; gap: 20px; flex-wrap: wrap;">
                     <a href="<?php echo esc_url( site_url('/organigramma') ); ?>" class="btn-outline-hover" style="<?php echo $btn_inactive; ?>">ORGANIGRAMMA</a>
                     <a href="<?php echo esc_url( site_url('/storia') ); ?>" class="<?php echo $is_storia ? '' : 'btn-outline-hover'; ?>" style="<?php echo $is_storia ? $btn_active : $btn_inactive; ?>">STORIA</a>
