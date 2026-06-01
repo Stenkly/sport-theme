@@ -1165,7 +1165,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     background-size: cover;
     background-position: center center;
     margin-right: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    border: 2px solid #ffffff;
     transition: transform 0.3s ease, border-color 0.3s ease;
 }
 .dirigente-card:hover .dirigente-photo {
@@ -2942,6 +2942,94 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     padding-top: 25px !important;
 }
 
-.page-organigramma .club-hero-wrapper .news-hero-content {
-    bottom: 20px !important;
+.page-organigramma .club-hero-wrapper .news-hero-content,
+.page-storia .club-hero-wrapper .news-hero-content,
+.page-club .club-hero-wrapper .news-hero-content {
+    top: calc(100% - 150px) !important;
+    bottom: auto !important;
+    left: 24px !important;
+    width: calc(100% - 48px) !important;
+}
+
+.page-storia .club-hero-wrapper .hero-subtitle,
+.page-club .club-hero-wrapper .hero-subtitle {
+    display: none !important;
+}
+
+.page-organigramma .club-hero-wrapper .org-submenu,
+.page-storia .club-hero-wrapper .page-submenu,
+.page-club .club-hero-wrapper .page-submenu {
+    gap: 20px !important;
+}
+
+.page-organigramma .club-hero-wrapper .org-submenu a,
+.page-storia .club-hero-wrapper .page-submenu a,
+.page-club .club-hero-wrapper .page-submenu a {
+    padding: 8px 40px !important;
+    font-size: 22px !important;
+    line-height: 1.1 !important;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .page-organigramma .club-hero-wrapper .org-submenu,
+    .page-storia .club-hero-wrapper .page-submenu,
+    .page-club .club-hero-wrapper .page-submenu {
+        gap: 10px !important;
+    }
+
+    .page-organigramma .club-hero-wrapper .org-submenu a,
+    .page-storia .club-hero-wrapper .page-submenu a,
+    .page-club .club-hero-wrapper .page-submenu a {
+        padding: 6px 16px !important;
+        font-size: 12px !important;
+    }
+}
+
+.page-organigramma .club-hero-wrapper,
+.page-storia .club-hero-wrapper,
+.page-club .club-hero-wrapper {
+    width: calc(100% + 120px) !important;
+    max-width: calc(100% + 120px) !important;
+    margin-left: -60px !important;
+    margin-right: auto !important;
+}
+
+.page-organigramma .club-hero-wrapper .news-hero-content,
+.page-storia .club-hero-wrapper .news-hero-content,
+.page-club .club-hero-wrapper .news-hero-content {
+    left: 24px !important;
+    width: calc(100% - 48px) !important;
+    max-width: none !important;
+}
+
+@media (min-width: 769px) and (max-width: 1399px) {
+    .page-organigramma .club-hero-wrapper .news-hero-content {
+        left: 80px !important;
+        width: calc(100% - 160px) !important;
+    }
+}
+
+@media (min-width: 1400px) {
+    .page-organigramma .club-hero-wrapper,
+    .page-storia .club-hero-wrapper,
+    .page-club .club-hero-wrapper {
+        width: 1520px !important;
+        max-width: 1520px !important;
+        margin-left: calc((100% - 1400px) / 2 - 60px) !important;
+        margin-right: auto !important;
+    }
+
+    .page-storia .club-hero-wrapper .news-hero-content,
+    .page-club .club-hero-wrapper .news-hero-content {
+        left: 60px !important;
+        width: 1400px !important;
+        max-width: 1400px !important;
+    }
+
+    .page-organigramma .club-hero-wrapper .news-hero-content {
+        left: 80px !important;
+        width: 1360px !important;
+        max-width: 1360px !important;
+    }
 }
