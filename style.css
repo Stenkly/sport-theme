@@ -632,6 +632,10 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .match-card:not(.match-row) .match-date-time {
     margin-top: 0;
 }
+.match-card:not(.match-row) .match-date-value,
+.match-card:not(.match-row) .match-time-value {
+    font-size: 23px;
+}
 .match-card:not(.match-row) .match-venue {
     font-size: 17px;
     margin-top: 0px;

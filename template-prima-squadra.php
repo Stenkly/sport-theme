@@ -233,11 +233,11 @@ get_header();
                 $t2_logo = $in_casa == '1' ? $logo_avversario : $taverne_logo;
 
                 $giorno = get_it_day_of_week($data_p);
-                $formatted_date = ($giorno ? $giorno . ', ' : '') . $data_p;
+                $formatted_date = '<span class="match-date-label">' . esc_html($giorno ? $giorno . ', ' : '') . '</span><span class="match-date-value">' . esc_html($data_p) . '</span>';
             ?>
             <div class="match-card">
                 <div class="match-info">
-                    <p class="match-date text-white"><span class="match-date-day"><?php echo esc_html($formatted_date); ?>, </span><span class="match-date-time">ore <?php echo esc_html($ora_p); ?></span></p>
+                    <p class="match-date text-white"><span class="match-date-day"><?php echo $formatted_date; ?>, </span><span class="match-date-time"><span class="match-time-label">ore </span><span class="match-time-value"><?php echo esc_html($ora_p); ?></span></span></p>
                     <p class="match-venue"><?php echo esc_html($stadio); ?></p>
                 </div>
                 <div class="match-teams">
