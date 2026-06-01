@@ -30,7 +30,7 @@ get_header();
             <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="height: 100%; width: 100%; object-fit: cover; object-position: center;" alt="<?php echo esc_attr(get_the_title()); ?>">
             
             <!-- La Famosa "Sfumatura verso il basso" che si fonde col nero -->
-            <?php if ( is_page( 'club' ) ) : ?>
+            <?php if ( is_page( 'club' ) || is_page( 'team' ) ) : ?>
                 <div class="club-hero-fade"></div>
             <?php else : ?>
                 <div class="news-hero-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
@@ -38,6 +38,18 @@ get_header();
             
             <div class="news-hero-content container" style="position: absolute; bottom: 40px; left: 0; right: 0; text-align: left;">
                 <h1 class="text-white" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;"><?php the_title(); ?></h1>
+                <?php if ( is_page( 'team' ) ) : ?>
+                    <hr style="border: 0; border-top: 2px solid white; margin: 20px 0;">
+
+                    <div class="page-submenu" style="display: flex; gap: 20px;">
+                        <h4 style="margin: 0; display: inline-block;">
+                            <a href="<?php echo esc_url( site_url('/rosa') ); ?>" class="btn-outline-hover" style="padding: 8px 40px; font-weight: 700; text-transform: uppercase; font-size: 22px; text-decoration: none; border: 2px solid white; background-color: transparent; color: white; transition: all 0.3s; display: inline-block;">ROSA</a>
+                        </h4>
+                        <h4 style="margin: 0; display: inline-block;">
+                            <a href="<?php echo esc_url( site_url('/staff') ); ?>" class="btn-outline-hover" style="padding: 8px 40px; font-weight: 700; text-transform: uppercase; font-size: 22px; text-decoration: none; border: 2px solid white; background-color: transparent; color: white; transition: all 0.3s; display: inline-block;">STAFF</a>
+                        </h4>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </section>

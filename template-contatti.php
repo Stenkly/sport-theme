@@ -11,7 +11,7 @@ get_header();
 <main id="primary" class="site-main page-contatti">
 
     <!-- SEZIONE 1: HERO con foto squadra che sfuma al nero -->
-    <section class="contatti-hero">
+    <section class="contatti-hero news-hero">
         <?php
         if ( has_post_thumbnail() ) {
             $hero_image_url = get_the_post_thumbnail_url( get_the_ID(), 'full' );
@@ -19,18 +19,13 @@ get_header();
             $hero_image_url = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=2000&auto=format&fit=crop';
         }
         ?>
-        <div style="position: relative; width: 100%; height: 45vh; overflow: hidden;">
-            <img src="<?php echo esc_url( $hero_image_url ); ?>" style="width: 100%; height: 100%; object-fit: cover; object-position: center top;" alt="<?php echo esc_attr(get_the_title()); ?>">
-            <!-- Sfumatura: foto → nero in basso -->
-            <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 70%; background: linear-gradient(to top, #000000 0%, rgba(0,0,0,0.7) 40%, transparent 100%); pointer-events: none;"></div>
-            <!-- Titolo CONTATTI -->
-            <div class="container" style="position: absolute; bottom: 30px; left: 0; right: 0;">
-                <h1 style="font-size: 48px; font-weight: 700; text-transform: uppercase; color: white; margin: 0; letter-spacing: 2px;">Contatti</h1>
+        <div class="news-hero-wrapper" style="position: relative; width: 100%; height: 45vh; overflow: hidden;">
+            <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="width: 100%; height: 100%; object-fit: cover; object-position: center top;" alt="<?php echo esc_attr(get_the_title()); ?>">
+            <div class="club-hero-fade"></div>
+            <div class="news-hero-content container" style="position: absolute; bottom: 40px; left: 0; right: 0; text-align: left;">
+                <h1 style="font-size: 55px; font-weight: 700; line-height: 1.1; text-transform: uppercase; color: white; margin: 0; letter-spacing: 2px;">CONTATTI</h1>
+                <hr style="border: 0; border-top: 2px solid white; margin: 20px 0;">
             </div>
-        </div>
-        <!-- Linea bianca a larghezza piena -->
-        <div class="container">
-            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.4); margin: 0;">
         </div>
     </section>
 

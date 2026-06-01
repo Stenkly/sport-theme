@@ -71,6 +71,21 @@ function sport_theme_get_singular_role($role_name) {
     }
 }
 
+function sport_theme_get_page_url($slug, $title = '') {
+    $page = get_page_by_path($slug);
+
+    if (!$page && $title !== '') {
+        foreach (get_pages(array('post_status' => 'publish')) as $candidate) {
+            if (strtolower(trim($candidate->post_title)) === strtolower(trim($title))) {
+                $page = $candidate;
+                break;
+            }
+        }
+    }
+
+    return $page ? get_permalink($page->ID) : site_url('/' . trim($slug, '/'));
+}
+
 function sport_theme_scripts() {
 	wp_enqueue_style( 'sport-theme-style', get_stylesheet_uri(), array(), SPORT_THEME_VERSION );
 }
@@ -3350,7 +3365,6 @@ function sport_theme_render_hero_custom_styles() {
 }
 add_action( 'wp_head', 'sport_theme_render_hero_custom_styles' );
 add_action( 'wp_footer', 'sport_theme_render_hero_custom_styles', 999 );
-
 
 
 

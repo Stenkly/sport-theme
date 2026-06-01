@@ -57,7 +57,7 @@ $btn_inactive = "padding: 8px 40px; font-weight: 700; text-transform: uppercase;
     </section>
 
     <!-- CONTENT -->
-    <div class="container club-content" style="padding-top: 60px; padding-bottom: 30px;">
+    <div class="container club-content" style="padding-top: 16px; padding-bottom: 30px;">
         <?php
         while ( have_posts() ) :
             the_post();

@@ -61,7 +61,7 @@ get_header();
     </section>
 
     <!-- CONTENT -->
-    <div class="container club-content" style="padding-top: 60px; padding-bottom: 30px;">
+    <div class="container club-content" style="padding-top: 16px; padding-bottom: 30px;">
             <?php 
             if ( have_posts() ) :
                 while ( have_posts() ) : the_post();

@@ -147,7 +147,7 @@ get_header();
             
             <?php if($area_name !== 'DIREZIONE'): ?>
             <?php $area_margin_top = $visible_area_index === 0 ? 0 : 50; ?>
-            <h3 style="color: var(--c-primary); font-size: 28px; font-weight: 700; text-transform: uppercase; margin: <?php echo esc_attr($area_margin_top); ?>px 0 20px 0; border-bottom: 2px solid white; padding-bottom: 10px;"><?php echo esc_html($area_name); ?></h3>
+            <h3 class="organigramma-area-title" style="margin: <?php echo esc_attr($area_margin_top); ?>px 0 20px 0;"><?php echo esc_html($area_name); ?></h3>
             <?php $visible_area_index++; ?>
             <?php endif; ?>
             

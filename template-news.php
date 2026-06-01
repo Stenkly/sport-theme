@@ -22,11 +22,11 @@ get_header();
         <div class="news-hero-wrapper" style="position: relative; width: 100%; height: 500px;">
             <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="height: 100%; width: 100%; object-fit: cover; object-position: center;" alt="News">
             
-            <!-- Overlay nero graduato per far leggere il testo -->
-            <div class="news-hero-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
+            <div class="club-hero-fade"></div>
             
             <div class="news-hero-content container" style="position: absolute; bottom: 40px; left: 0; right: 0; text-align: left;">
                 <h1 class="text-white" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">NEWS</h1>
+                <hr style="border: 0; border-top: 2px solid white; margin: 20px 0;">
                 <div class="news-filters" style="margin-top: 15px; display: flex; align-items: center; gap: 20px;">
                     <?php
                     $ordine = isset($_GET['ordine']) && $_GET['ordine'] === 'asc' ? 'asc' : 'desc';
