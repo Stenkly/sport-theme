@@ -89,7 +89,7 @@ get_header();
     </section>
 
 
-    <div style="padding-top: 60px;">
+    <div style="padding-top: 0;">
     <?php
     $all_dirigenti = new WP_Query(array(
         'post_type' => 'dirigente',
@@ -125,9 +125,7 @@ get_header();
             $prima_squadra_groups[$area][] = $post;
         }
     ?>
-    <section class="ps-section container" style="padding-top: 20px; padding-bottom: 40px;">
-        <h2 class="section-title text-white" style="margin-bottom: 50px;">ORGANIGRAMMA</h2>
-
+    <section class="ps-section container" style="padding-top: 16px; padding-bottom: 40px;">
         <style>
         /* Ingrandimento dell'immagine (foto) della card del comitato / organigramma a 335px x 447px */
         @media (min-width: 769px) {
@@ -141,23 +139,16 @@ get_header();
                 min-height: 447px !important; /* Allineamento all'altezza della foto */
             }
             
-            /* Allineamento perfetto a sinistra con il container sottostante */
-            .page-organigramma .news-hero-content {
-                left: 50% !important;
-                right: auto !important;
-                transform: translateX(-50%) !important;
-                width: 100% !important;
-                max-width: 1400px !important;
-                padding-left: 20px !important;
-                padding-right: 20px !important;
-            }
         }
         </style>
 
+        <?php $visible_area_index = 0; ?>
         <?php foreach($prima_squadra_groups as $area_name => $dirigenti): ?>
             
             <?php if($area_name !== 'DIREZIONE'): ?>
-            <h3 style="color: var(--c-primary); font-size: 20px; font-weight: 700; text-transform: uppercase; margin: 40px 0 20px 0; border-bottom: 2px solid white; padding-bottom: 10px;"><?php echo esc_html($area_name); ?></h3>
+            <?php $area_margin_top = $visible_area_index === 0 ? 0 : 50; ?>
+            <h3 style="color: var(--c-primary); font-size: 28px; font-weight: 700; text-transform: uppercase; margin: <?php echo esc_attr($area_margin_top); ?>px 0 20px 0; border-bottom: 2px solid white; padding-bottom: 10px;"><?php echo esc_html($area_name); ?></h3>
+            <?php $visible_area_index++; ?>
             <?php endif; ?>
             
             <div class="dirigenti-grid">
