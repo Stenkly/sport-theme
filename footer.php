@@ -107,13 +107,54 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!modal) return;
     
     var closeBtn = document.getElementById('closeModalBtn');
+    var modalImage = document.getElementById('modalFoto');
+    var modalImgCol = document.querySelector('.player-modal-img-col');
+
+    function setModalEdgeStrip(img) {
+        if (!modalImgCol || !img || !img.naturalWidth || !img.naturalHeight) return;
+
+        try {
+            var stripWidth = Math.min(3, img.naturalWidth);
+            var canvas = document.createElement('canvas');
+            canvas.width = stripWidth;
+            canvas.height = img.naturalHeight;
+
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(
+                img,
+                img.naturalWidth - stripWidth,
+                0,
+                stripWidth,
+                img.naturalHeight,
+                0,
+                0,
+                stripWidth,
+                img.naturalHeight
+            );
+
+            modalImgCol.style.setProperty('--modal-edge-strip', 'url("' + canvas.toDataURL('image/png') + '")');
+        } catch (err) {
+            modalImgCol.style.removeProperty('--modal-edge-strip');
+        }
+    }
+
+    if (modalImage) {
+        modalImage.addEventListener('load', function() {
+            setModalEdgeStrip(modalImage);
+        });
+    }
     
     // Use event delegation for dynamically added links or just standard if they are present
     document.body.addEventListener('click', function(e) {
         var link = e.target.closest('.open-player-modal');
         if (link) {
             e.preventDefault();
-            document.getElementById('modalFoto').src = link.getAttribute('data-foto') || '';
+            var modalFotoUrl = link.getAttribute('data-foto') || '';
+            modalImage.src = modalFotoUrl;
+            if (modalImgCol) {
+                modalImgCol.style.setProperty('--modal-player-photo', modalFotoUrl ? 'url("' + modalFotoUrl + '")' : 'none');
+                modalImgCol.style.removeProperty('--modal-edge-strip');
+            }
             
             var num = link.getAttribute('data-numero');
             var numEl = document.getElementById('modalNumero');
@@ -147,7 +188,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 shopBtn.href = shopUrl;
                 shopBtn.style.display = 'inline-block';
             } else {
-                shopBtn.style.display = 'none';
+                shopBtn.href = 'https://actaverneshop.com/';
+                shopBtn.style.display = 'inline-block';
             }
             
             modal.style.display = 'block';
