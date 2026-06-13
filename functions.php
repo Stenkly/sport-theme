@@ -621,6 +621,8 @@ function sport_theme_partita_meta_html($post) {
     $logo_avversario = get_post_meta($post->ID, '_logo_avversario', true);
     $in_casa = get_post_meta($post->ID, '_in_casa', true);
     $risultato = get_post_meta($post->ID, '_risultato', true);
+    $tipo_evento = get_post_meta($post->ID, '_tipo_evento', true);
+    $tipi_evento = array('Campionato', 'Amichevole', 'Coppa', 'Torneo', 'Playoff', 'Altro');
     
     wp_nonce_field('salva_partita_meta', 'partita_meta_nonce');
     ?>
@@ -634,6 +636,13 @@ function sport_theme_partita_meta_html($post) {
         
         <br><label><b>Stadio/Campo:</b></label><br>
         <input type="text" name="_stadio" value="<?php echo esc_attr($stadio); ?>">
+
+        <br><label><b>Tipo evento:</b></label><br>
+        <select name="_tipo_evento">
+            <?php foreach($tipi_evento as $tipo) : ?>
+                <option value="<?php echo esc_attr($tipo); ?>" <?php selected($tipo_evento ?: 'Campionato', $tipo); ?>><?php echo esc_html($tipo); ?></option>
+            <?php endforeach; ?>
+        </select>
 
         <br><label><b>DOVE SI GIOCA?</b></label><br>
         <select name="_in_casa">
@@ -658,7 +667,7 @@ function sport_theme_salva_partita_meta($post_id) {
     if (!isset($_POST['partita_meta_nonce']) || !wp_verify_nonce($_POST['partita_meta_nonce'], 'salva_partita_meta')) return;
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
     
-    $fields = ['_data_partita', '_ora_partita', '_stadio', '_avversario', '_logo_avversario', '_in_casa', '_risultato'];
+    $fields = ['_data_partita', '_ora_partita', '_stadio', '_tipo_evento', '_avversario', '_logo_avversario', '_in_casa', '_risultato'];
     foreach($fields as $field) {
         if(isset($_POST[$field])) {
             update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
@@ -982,7 +991,8 @@ function sport_theme_auto_assign_templates() {
         'Allievi'       => '',
         'Femminile'     => '',
         'Infrastruttura'=> '',
-        'Iscritti'      => '',
+        'Sponsor AC Taverne' => 'template-sponsor-societa.php',
+        'Iscritti'      => 'template-iscritti.php',
     );
 
     foreach ( $map as $page_title => $template_file ) {
@@ -1023,6 +1033,48 @@ function sport_theme_force_scuola_calcio_template() {
     update_option( 'sport_theme_scuola_calcio_template_v1', true );
 }
 add_action( 'init', 'sport_theme_force_scuola_calcio_template' );
+
+function sport_theme_force_iscritti_template() {
+    $page = get_page_by_title( 'Iscritti' );
+    if ( ! $page ) {
+        $page_id = wp_insert_post( array(
+            'post_title'  => 'Iscritti',
+            'post_name'   => 'iscritti',
+            'post_type'   => 'page',
+            'post_status' => 'publish',
+        ) );
+        if ( $page_id && ! is_wp_error( $page_id ) ) {
+            update_post_meta( $page_id, '_wp_page_template', 'template-iscritti.php' );
+        }
+        return;
+    }
+
+    update_post_meta( $page->ID, '_wp_page_template', 'template-iscritti.php' );
+}
+add_action( 'init', 'sport_theme_force_iscritti_template' );
+
+function sport_theme_force_sponsor_societa_template() {
+    $page = get_page_by_path( 'sponsor-ac-taverne' );
+    if ( ! $page ) {
+        $page = get_page_by_title( 'Sponsor AC Taverne' );
+    }
+
+    if ( ! $page ) {
+        $page_id = wp_insert_post( array(
+            'post_title'  => 'Sponsor AC Taverne',
+            'post_name'   => 'sponsor-ac-taverne',
+            'post_type'   => 'page',
+            'post_status' => 'publish',
+        ) );
+        if ( $page_id && ! is_wp_error( $page_id ) ) {
+            update_post_meta( $page_id, '_wp_page_template', 'template-sponsor-societa.php' );
+        }
+        return;
+    }
+
+    update_post_meta( $page->ID, '_wp_page_template', 'template-sponsor-societa.php' );
+}
+add_action( 'init', 'sport_theme_force_sponsor_societa_template' );
 
 /**
  * Auto-cleanup del menu "Team" per rimuovere i dropdown e puntare alla pagina Rosa
@@ -3366,5 +3418,39 @@ function sport_theme_render_hero_custom_styles() {
 add_action( 'wp_head', 'sport_theme_render_hero_custom_styles' );
 add_action( 'wp_footer', 'sport_theme_render_hero_custom_styles', 999 );
 
+function sport_theme_render_single_post_share_meta() {
+    if ( ! is_singular( 'post' ) ) {
+        return;
+    }
 
+    $post_id = get_queried_object_id();
+    if ( ! $post_id ) {
+        return;
+    }
 
+    $title = get_the_title( $post_id );
+    $description = has_excerpt( $post_id )
+        ? get_the_excerpt( $post_id )
+        : wp_trim_words( wp_strip_all_tags( strip_shortcodes( get_post_field( 'post_content', $post_id ) ) ), 28, '...' );
+    $url = get_permalink( $post_id );
+    $image = has_post_thumbnail( $post_id ) ? get_the_post_thumbnail_url( $post_id, 'large' ) : '';
+
+    if ( ! $image && has_custom_logo() ) {
+        $image = wp_get_attachment_image_url( get_theme_mod( 'custom_logo' ), 'full' );
+    }
+
+    ?>
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="<?php echo esc_attr( $title ); ?>">
+    <meta property="og:description" content="<?php echo esc_attr( $description ); ?>">
+    <meta property="og:url" content="<?php echo esc_url( $url ); ?>">
+    <?php if ( $image ) : ?>
+        <meta property="og:image" content="<?php echo esc_url( $image ); ?>">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="<?php echo esc_url( $image ); ?>">
+    <?php endif; ?>
+    <meta name="twitter:title" content="<?php echo esc_attr( $title ); ?>">
+    <meta name="twitter:description" content="<?php echo esc_attr( $description ); ?>">
+    <?php
+}
+add_action( 'wp_head', 'sport_theme_render_single_post_share_meta', 5 );

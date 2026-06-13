@@ -6,6 +6,23 @@
  */
 
 get_header();
+
+if ( ! function_exists( 'sport_theme_sentence_case_label' ) ) {
+    function sport_theme_sentence_case_label( $text ) {
+        $text = trim( wp_strip_all_tags( $text ) );
+        if ( $text === '' ) {
+            return '';
+        }
+
+        if ( function_exists( 'mb_strtolower' ) && function_exists( 'mb_substr' ) && function_exists( 'mb_strtoupper' ) ) {
+            $lower = mb_strtolower( $text, 'UTF-8' );
+            return mb_strtoupper( mb_substr( $lower, 0, 1, 'UTF-8' ), 'UTF-8' ) . mb_substr( $lower, 1, null, 'UTF-8' );
+        }
+
+        $lower = strtolower( $text );
+        return ucfirst( $lower );
+    }
+}
 ?>
 
 <main id="primary" class="site-main page-stagione">
@@ -83,7 +100,7 @@ get_header();
                     <div class="match-date text-white">
                         <span class="match-date-day"><?php echo esc_html($data_p); ?></span>
                         <span class="match-date-time"><?php echo esc_html($ora_p); ?></span>
-                        <span class="text-light-yellow" style="font-weight:400; font-size:12px; display: block; margin-top: 4px;"><?php echo esc_html($stadio); ?></span>
+                        <span class="match-stadium-name text-light-yellow"><?php echo esc_html( sport_theme_sentence_case_label( $stadio ) ); ?></span>
                     </div>
                 </div>
                 <div class="match-teams">
@@ -135,7 +152,7 @@ get_header();
                     <div class="match-date text-white">
                         <span class="match-date-day"><?php echo esc_html($data_p); ?></span>
                         <span class="match-date-time"><?php echo esc_html($ora_p); ?></span>
-                        <span class="text-light-yellow" style="font-weight:400; font-size:12px; display: block; margin-top: 4px;"><?php echo esc_html($stadio); ?></span>
+                        <span class="match-stadium-name text-light-yellow"><?php echo esc_html( sport_theme_sentence_case_label( $stadio ) ); ?></span>
                     </div>
                 </div>
                 <div class="match-teams">
@@ -227,14 +244,42 @@ get_header();
         </style>
 
         <script>
-            // Trova la tabella generata da WordPress e applica la riga gialla per l'AC Taverne
+            // Trova la tabella generata da WordPress e prepara logo + nome squadra.
             document.addEventListener('DOMContentLoaded', function() {
                 var tableRows = document.querySelectorAll('.custom-classifica-wrapper tbody tr');
                 tableRows.forEach(function(row) {
                     var teamCell = row.cells[1];
-                    if(teamCell && teamCell.textContent.trim().includes('AC Taverne')) {
+                    if (!teamCell || teamCell.dataset.teamCellReady === 'true') {
+                        return;
+                    }
+
+                    var teamName = teamCell.textContent.trim();
+                    var existingLogo = teamCell.querySelector('img');
+
+                    if (teamName.includes('AC Taverne')) {
                         row.style.backgroundColor = 'rgba(255, 204, 0, 0.1)';
                     }
+
+                    var wrapper = document.createElement('span');
+                    wrapper.className = 'standings-team-cell';
+
+                    if (existingLogo) {
+                        wrapper.appendChild(existingLogo);
+                    } else if (teamName.includes('AC Taverne')) {
+                        var logo = document.createElement('img');
+                        logo.src = '<?php echo esc_js( $taverne_logo ); ?>';
+                        logo.alt = 'AC Taverne';
+                        wrapper.appendChild(logo);
+                    }
+
+                    var name = document.createElement('span');
+                    name.className = 'standings-team-name';
+                    name.textContent = teamName;
+                    wrapper.appendChild(name);
+
+                    teamCell.textContent = '';
+                    teamCell.appendChild(wrapper);
+                    teamCell.dataset.teamCellReady = 'true';
                 });
             });
         </script>

@@ -211,6 +211,35 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.ps-sponsors').forEach(function(row) {
+        if (row.dataset.marqueeReady === 'true') return;
+
+        var items = Array.prototype.slice.call(row.children);
+        if (!items.length) return;
+
+        var track = document.createElement('div');
+        track.className = 'ps-sponsors-track';
+
+        items.forEach(function(item) {
+            track.appendChild(item);
+        });
+
+        items.forEach(function(item) {
+            var clone = item.cloneNode(true);
+            clone.setAttribute('aria-hidden', 'true');
+            track.appendChild(clone);
+        });
+
+        row.appendChild(track);
+        row.classList.add('is-marquee');
+        row.dataset.marqueeReady = 'true';
+    });
+
+});
+</script>
+
 <!-- Fancybox JS per Lightbox -->
 <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
 

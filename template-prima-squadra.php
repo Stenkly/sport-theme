@@ -223,6 +223,7 @@ get_header();
                 $data_p = get_post_meta($post->ID, '_data_partita', true);
                 $ora_p = get_post_meta($post->ID, '_ora_partita', true);
                 $stadio = sport_theme_get_match_stadium($post->ID);
+                $tipo_evento = get_post_meta($post->ID, '_tipo_evento', true);
                 $avversario = get_post_meta($post->ID, '_avversario', true) ? get_post_meta($post->ID, '_avversario', true) : 'Sfidante';
                 $logo_avversario = sport_theme_get_opponent_logo($post->ID);
                 $in_casa = get_post_meta($post->ID, '_in_casa', true);
@@ -236,6 +237,7 @@ get_header();
                 $formatted_date = '<span class="match-date-label">' . esc_html($giorno ? $giorno . ', ' : '') . '</span><span class="match-date-value">' . esc_html($data_p) . '</span>';
             ?>
             <div class="match-card">
+                <span class="match-type-badge"><?php echo esc_html($tipo_evento ?: 'Campionato'); ?></span>
                 <div class="match-info">
                     <p class="match-date text-white"><span class="match-date-day"><?php echo $formatted_date; ?>, </span><span class="match-date-time"><span class="match-time-label">ore </span><span class="match-time-value"><?php echo esc_html($ora_p); ?></span></span></p>
                     <p class="match-venue"><?php echo esc_html($stadio); ?></p>
@@ -399,7 +401,8 @@ get_header();
                    data-ruolo="<?php echo esc_attr($ruolo_str); ?>"
                    style="text-decoration: none; flex: 0 0 calc(25% - 15px); min-width: 0; display: block; overflow: hidden; transition: transform 0.3s;"
                    onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-                    <div class="player-card" style="position: relative; aspect-ratio: 3/4; overflow: hidden; background-color: #111;">
+                    <div class="player-card" style="--player-card-photo: url('<?php echo esc_url($foto_ritratto); ?>'); --player-card-position: <?php echo esc_attr($allineamento_foto); ?>; --player-card-size: <?php echo esc_attr($zoom_foto); ?>; position: relative; aspect-ratio: 3/4; overflow: hidden; background-color: #111;">
+                        <div class="player-photo-fill cover-bg" style="background-image: url('<?php echo esc_url($foto_ritratto); ?>'); background-size: cover; background-position: <?php echo esc_attr($allineamento_foto); ?>; width: 100%; height: 100%; border: none; position: absolute; inset: 0;"></div>
                         <div class="player-photo cover-bg" style="background-image: url('<?php echo esc_url($foto_ritratto); ?>'); background-size: <?php echo esc_attr($zoom_foto); ?>; background-position: <?php echo esc_attr($allineamento_foto); ?>; width: 100%; height: 100%; border: none; transition: transform 0.5s ease;"></div>
                         <div class="player-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 90%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8) 25%, transparent 100%); pointer-events: none;"></div>
                         <div class="player-info" style="position: absolute; bottom: 2px; left: 12px; z-index: 2; flex-direction: column; gap: 0; padding: 0;">

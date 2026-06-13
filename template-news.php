@@ -27,32 +27,154 @@ get_header();
             <div class="news-hero-content container" style="position: absolute; bottom: 40px; left: 0; right: 0; text-align: left;">
                 <h1 class="text-white" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">NEWS</h1>
                 <hr style="border: 0; border-top: 2px solid white; margin: 20px 0;">
-                <div class="news-filters" style="margin-top: 15px; display: flex; align-items: center; gap: 20px;">
+                <div class="news-filters">
                     <?php
                     $ordine = isset($_GET['ordine']) && $_GET['ordine'] === 'asc' ? 'asc' : 'desc';
                     $ricerca = isset($_GET['ricerca']) ? sanitize_text_field($_GET['ricerca']) : '';
                     ?>
-                    <form method="GET" action="<?php echo esc_url( get_permalink() ); ?>" style="display:flex; gap:15px; align-items:center; margin:0;" class="news-filter-form">
-                        <select name="ordine" onchange="this.form.submit()" style="background:transparent; color:white; border:none; font-size:11px; font-weight:700; letter-spacing: 2px; text-transform:uppercase; outline:none; cursor:pointer; width:auto; -webkit-appearance: none; appearance: none; padding-right:15px; border-bottom: 1px solid transparent;">
-                            <option value="desc" style="color:black;" <?php selected($ordine, 'desc'); ?>>ORDINA PER: RECENTI</option>
-                            <option value="asc" style="color:black;" <?php selected($ordine, 'asc'); ?>>ORDINA PER: MENO RECENTI</option>
-                        </select>
-                        <i class="fa fa-chevron-down" style="color:white; font-size:9px; margin-left:-18px; pointer-events:none;"></i>
-                        
-                        <span style="color: #666; margin-left:10px;">|</span>
-                        
-                        <div style="position:relative; display:flex; align-items:center;">
-                            <input type="text" name="ricerca" value="<?php echo esc_attr($ricerca); ?>" placeholder="CERCA..." style="background:transparent; border:none; border-bottom:1px solid var(--c-primary); color:var(--c-primary); font-size:11px; padding:5px 0; outline:none; text-transform:uppercase; font-weight:700; letter-spacing: 2px; width:120px;">
-                            <button type="submit" style="background:transparent; border:none; color:var(--c-primary); cursor:pointer; outline:none; padding-left:10px;"><i class="fa fa-search"></i></button>
+                    <form method="GET" action="<?php echo esc_url( get_permalink() ); ?>" class="news-filter-form">
+                        <div class="news-filter-dropdown">
+                            <button type="button" class="news-filter-control news-filter-order" aria-haspopup="listbox" aria-expanded="false">
+                                ORDINA PER
+                            </button>
+                            <input type="hidden" name="ordine" value="<?php echo esc_attr($ordine); ?>">
+                            <div class="news-filter-menu" role="listbox">
+                                <button type="button" data-order="desc" class="<?php echo $ordine === 'desc' ? 'is-active' : ''; ?>">RECENTI</button>
+                                <button type="button" data-order="asc" class="<?php echo $ordine === 'asc' ? 'is-active' : ''; ?>">MENO RECENTI</button>
+                            </div>
                         </div>
+
+                        <label class="news-filter-control news-filter-search">
+                            <span>CERCA</span>
+                            <input type="text" name="ricerca" value="<?php echo esc_attr($ricerca); ?>" placeholder=" " aria-label="Cerca news">
+                        </label>
                     </form>
+                    <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        function clampNewsTitles() {
+                            document.querySelectorAll('.news-title-clamp').forEach(function(title) {
+                                var fullText = title.dataset.fullTitle || title.textContent.trim();
+                                title.dataset.fullTitle = fullText;
+                                title.textContent = fullText;
+
+                                var lineHeight = parseFloat(window.getComputedStyle(title).lineHeight);
+                                var maxHeight = lineHeight * 2;
+
+                                if (title.scrollHeight <= maxHeight + 1) {
+                                    return;
+                                }
+
+                                var words = fullText.split(/\s+/);
+                                var low = 0;
+                                var high = words.length;
+                                var best = '';
+
+                                while (low <= high) {
+                                    var mid = Math.floor((low + high) / 2);
+                                    var candidate = words.slice(0, mid).join(' ') + '...';
+                                    title.textContent = candidate;
+
+                                    if (title.scrollHeight <= maxHeight + 1) {
+                                        best = candidate;
+                                        low = mid + 1;
+                                    } else {
+                                        high = mid - 1;
+                                    }
+                                }
+
+                                title.textContent = best || words[0] + '...';
+                            });
+                        }
+
+                        clampNewsTitles();
+                        window.addEventListener('resize', clampNewsTitles);
+
+                        document.querySelectorAll('.news-filter-search input').forEach(function(input) {
+                            input.addEventListener('keydown', function(event) {
+                                if (event.key === 'Enter') {
+                                    event.preventDefault();
+                                    input.form.submit();
+                                }
+                            });
+                        });
+
+                        document.querySelectorAll('.news-filter-dropdown').forEach(function(dropdown) {
+                            var trigger = dropdown.querySelector('.news-filter-order');
+                            var hidden = dropdown.querySelector('input[name="ordine"]');
+                            var menu = dropdown.querySelector('.news-filter-menu');
+
+                            function positionMenu() {
+                                var rect = trigger.getBoundingClientRect();
+                                menu.style.left = rect.left + 'px';
+                                menu.style.top = (rect.bottom + 8) + 'px';
+                                menu.style.width = rect.width + 'px';
+                            }
+
+                            function openMenu() {
+                                positionMenu();
+                                document.body.appendChild(menu);
+                                menu.classList.add('is-floating');
+                                dropdown.classList.add('is-open');
+                                trigger.setAttribute('aria-expanded', 'true');
+                            }
+
+                            function closeMenu() {
+                                dropdown.appendChild(menu);
+                                menu.classList.remove('is-floating');
+                                menu.removeAttribute('style');
+                                dropdown.classList.remove('is-open');
+                                trigger.setAttribute('aria-expanded', 'false');
+                            }
+
+                            trigger.addEventListener('click', function() {
+                                if (dropdown.classList.contains('is-open')) {
+                                    closeMenu();
+                                } else {
+                                    openMenu();
+                                }
+                            });
+
+                            menu.querySelectorAll('button').forEach(function(option) {
+                                option.addEventListener('click', function() {
+                                    hidden.value = option.dataset.order;
+                                    hidden.form.submit();
+                                });
+                            });
+
+                            window.addEventListener('resize', function() {
+                                if (dropdown.classList.contains('is-open')) {
+                                    positionMenu();
+                                }
+                            });
+
+                            window.addEventListener('scroll', function() {
+                                if (dropdown.classList.contains('is-open')) {
+                                    positionMenu();
+                                }
+                            }, true);
+                        });
+
+                        document.addEventListener('click', function(event) {
+                            document.querySelectorAll('.news-filter-dropdown.is-open').forEach(function(dropdown) {
+                                var menu = document.querySelector('.news-filter-menu.is-floating');
+                                if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
+                                    dropdown.appendChild(menu);
+                                    menu.classList.remove('is-floating');
+                                    menu.removeAttribute('style');
+                                    dropdown.classList.remove('is-open');
+                                    dropdown.querySelector('.news-filter-order').setAttribute('aria-expanded', 'false');
+                                }
+                            });
+                        });
+                    });
+                    </script>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- GRIGLIA NEWS (DINAMICA CON WORDPRESS LOOP) -->
-    <section class="ps-section container" style="padding-top: 60px;">
+    <section class="ps-section container news-list-section">
         <div class="ps-grid grid-3">
             <?php
             // Setup della query di WordPress per caricare tutti gli articoli del blog nativi 
@@ -80,8 +202,8 @@ get_header();
             <div class="news-card cover-bg" style="background-image: url('<?php echo esc_url( $thumb_url ); ?>');">
                 <div class="news-date"><?php echo get_the_date('d.m'); ?></div>
                 <div class="news-content">
-                    <h3 class="news-title text-white"><?php echo wp_trim_words( get_the_title(), 7, '...' ); ?></h3>
-                    <a href="<?php echo esc_url( get_permalink() ); ?>" class="btn-sm btn-primary" style="display:inline-block;">LEGGI ARTICOLO</a>
+                    <h3 class="news-title news-title-clamp text-white"><?php echo esc_html( get_the_title() ); ?></h3>
+                    <a href="<?php echo esc_url( get_permalink() ); ?>" class="btn-sm btn-primary">LEGGI ARTICOLO</a>
                 </div>
             </div>
             
@@ -91,14 +213,17 @@ get_header();
         </div>
 
         <!-- PAGINAZIONE (Frecce centrali + Numeri pag.) -->
-        <div class="pagination-container" style="display: flex; justify-content: space-between; align-items: center; padding: 60px 0 20px 0; border-bottom: 1px solid #333;">
+        <div class="pagination-container news-pagination">
             <div class="nav-arrow text-primary">
-                <?php previous_posts_link('<i class="fa-solid fa-chevron-left"></i>'); ?>
+                <?php
+                $prev_page = get_previous_posts_link('<i class="fa-solid fa-chevron-left"></i>');
+                echo $prev_page ? $prev_page : '<i class="fa-solid fa-chevron-left"></i>';
+                ?>
             </div>
             
-            <div class="pagination-numbers" style="display: flex; gap: 8px;">
+            <div class="pagination-numbers">
                 <?php
-                echo paginate_links( array(
+                $pagination_links = paginate_links( array(
                     'total'        => $news_query->max_num_pages,
                     'current'      => max( 1, get_query_var( 'paged' ) ),
                     'prev_next'    => false, // Le frecce le abbiamo messe a lato
@@ -106,6 +231,13 @@ get_header();
                     'end_size'     => 1,
                     'mid_size'     => 1,
                 ) );
+                if ( $pagination_links ) {
+                    echo $pagination_links;
+                } else {
+                    echo '<span class="page-numbers current">1</span>';
+                    echo '<span class="page-numbers">2</span>';
+                    echo '<span class="page-numbers">3</span>';
+                }
                 ?>
             </div>
             

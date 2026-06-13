@@ -68,6 +68,10 @@
             </li>
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <a href="<?php echo esc_url( site_url('/sponsor-ac-taverne') ); ?>" class="<?php if(is_page('sponsor-ac-taverne')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">SPONSOR</a>
+            </li>
+
+            <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
                 <a href="<?php echo esc_url( site_url('/news-societa') ); ?>" class="<?php if(is_page('news-societa')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">NEWS</a>
             </li>
 
@@ -151,6 +155,7 @@
                 <li><a href="<?php echo esc_url( site_url('/sezioni') ); ?>" <?php if(is_page('sezioni')) echo 'class="current-menu-item"'; ?>>SEZIONI</a></li>
                 <li><a href="<?php echo esc_url( site_url('/scuola-calcio') ); ?>" <?php if(is_page('scuola-calcio')) echo 'class="current-menu-item"'; ?>>SCUOLA CALCIO</a></li>
                 <li><a href="<?php echo esc_url( site_url('/infrastruttura') ); ?>" <?php if(is_page('infrastruttura')) echo 'class="current-menu-item"'; ?>>INFRASTRUTTURA</a></li>
+                <li><a href="<?php echo esc_url( site_url('/sponsor-ac-taverne') ); ?>" <?php if(is_page('sponsor-ac-taverne')) echo 'class="current-menu-item"'; ?>>SPONSOR</a></li>
                 <li><a href="<?php echo esc_url( site_url('/news-societa') ); ?>" <?php if(is_page('news-societa')) echo 'class="current-menu-item"'; ?>>NEWS</a></li>
                 <li><a href="<?php echo esc_url( site_url('/iscritti') ); ?>" <?php if(is_page('iscritti')) echo 'class="current-menu-item"'; ?>>ISCRIVITI</a></li>
 
@@ -209,4 +214,3 @@
     });
 })();
 </script>
-
