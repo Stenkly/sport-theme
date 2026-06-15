@@ -19,16 +19,16 @@ get_header('societa');
             $hero_image_url = 'https://images.unsplash.com/photo-1518622358385-8ea7d0794bf6?q=80&w=2000&auto=format&fit=crop';
         }
         ?>
-        <div class="news-hero-wrapper" style="position: relative; width: 100%; height: 50vh; min-height: 400px;">
+        <div class="news-hero-wrapper" style="position: relative; width: 100%; height: 50vh;">
             <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="height: 100%; width: 100%; object-fit: cover; object-position: center;" alt="<?php echo esc_attr(get_the_title()); ?>">
-            <div class="news-hero-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
+            <div class="club-hero-fade"></div>
             
-            <div class="news-hero-content container" style="position: absolute; bottom: 0; left: 0; right: 0; text-align: left; padding-bottom: 30px;">
+            <div class="news-hero-content container" style="position: absolute; bottom: 40px; left: 0; right: 0; text-align: left;">
                 <h1 class="text-white" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">CLUB DEI 100</h1>
-                <hr class="sc-divider" style="border: 0; border-top: 2px solid rgba(255,255,255,1); margin: 20px 0;">
+                <hr class="sc-divider" style="border: 0; border-top: 2px solid white; margin: 20px 0;">
                 <?php sport_theme_render_societa_submenu(); ?>
                 <p class="text-white" style="font-size: 24px; font-weight: 700; text-transform: uppercase; margin: 20px 0 0 0; line-height: 1.3;">
-                    LOREM IPSUM DOLOR SIT AMET, CONSECTETUR<br>ADIPISCING ELIT, SED DO EIUSMOD TEMPOR<br>INCIDIDUNT UT LABORE ET DOLORE MAGNA.
+                    IL CLUB SOSTENITORE DELL’AC TAVERNE.<br>SOSTIENI LA NOSTRA SOCIETÀ PER I NOSTRI ALLIEVI.
                 </p>
             </div>
         </div>
@@ -37,25 +37,36 @@ get_header('societa');
     <!-- MAIN CONTENT -->
     <div class="container" style="padding-top: 60px; padding-bottom: 60px;">
         
-        <h2 class="text-primary" style="font-size: 34px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">CLUB DEI 100</h2>
-        
-        <div class="text-white club100-content" style="font-size: 14px; line-height: 1.6; margin-bottom: 50px;">
-            <?php 
-            if ( have_posts() ) : 
-                while ( have_posts() ) : the_post();
-                    $content = get_the_content();
-                    if(empty(trim($content))) {
-                        ?>
-                        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; color: var(--c-primary);">LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT, SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA.</h3>
-                        <p style="margin-bottom: 20px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        <?php
-                    } else {
-                        the_content(); 
-                    }
-                endwhile; 
-            endif; 
-            ?>
+        <div class="text-white club100-content" style="font-size: 16px; line-height: 1.8; margin-bottom: 50px;">
+            <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; color: var(--c-primary); border-bottom: 2px solid white; padding-bottom: 10px;">Cos’è il Club dei 100?</h3>
+            <p style="font-size: 18px; font-weight: 600; margin-bottom: 30px;">E’ semplicemente un Club sostenitore dell’AC Taverne.</p>
+
+            <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; color: var(--c-primary); border-bottom: 2px solid white; padding-bottom: 10px;">Come funziona?</h3>
+            <p>Chi aderisce all’iniziativa, sarà invitato a una splendida e ottima cena dove sarete nostri graditi ospiti. Durante la cena verranno estratti dei numeri che vanno da 1 a 100, a questo numero sarà abbinato un socio (i numeri verranno assegnati in base all’ordine d’iscrizione) ed un valore compreso da 2.-CHF a 200.- CHF, questo valore sarà il costo da pagare quale tassa d’appartenenza al club.</p>
+            <p>Se siete fortunati pagherete CHF 2.-, se lo siete un po’ meno pagherete al massimo CHF 200.-.</p>
+            <p>Se qualcuno non potrà partecipare alla cena, verrà estratto il suo nome da qualcuno dei presenti e di conseguenza dovrà pagare il rispettivo in CHF.</p>
+            <p style="margin-bottom: 30px;">Durante la cena verranno estratti anche 3 biglietti come lotteria AC Taverne con i seguenti premi:</p>
+
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 30px; font-size: 18px; font-weight: 700;">
+                <li style="margin-bottom: 8px;">1° Buono AC Taverne del valore di &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CHF 200.-</li>
+                <li style="margin-bottom: 8px;">2° Buono AC Taverne del valore di &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CHF 100.-</li>
+                <li style="margin-bottom: 15px;">3° Buono AC Taverne del valore di &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CHF 50.-</li>
+            </ul>
+
+            <p>I buoni avranno validità di 1 anno e potrete usarli solo presso la società AC Taverne e per qualsiasi cosa che riguarda l'acquisto in società, buvette, acquisto materiale per i ragazzi. (escluso tassa sociale)</p>
+            <p>Verranno offerti inoltre 2 aperitivi in stagione, durante una partita della prima squadra.</p>
+            <p style="margin-bottom: 30px;">Tutto questo lo si fa al sostegno della nostra società AC Taverne per i nostri allievi.</p>
+
+            <p style="margin-bottom: 30px;">Il vostro sostegno è la nostra miglior soddisfazione e al momento della vostra iscrizione ve lo dimostreremo inviandovi la tessera socio club dei 100 che vi permetterà di partecipare ai diversi eventi.</p>
+
+            <p>In caso foste propensi ad aderire all’iniziativa, vi chiediamo gentilmente di compilare al più presto possibile il contratto che trovate in buvette e ritornarlo per e-mail o via posta all’indirizzo indicato nel contratto. e-mail: <a href="mailto:marketing@actaverne.com" style="color: var(--c-primary); text-decoration: none; font-weight: 700;">marketing@actaverne.com</a></p>
+            <p style="margin-bottom: 40px;">Potete anche consegnarlo in buvette.</p>
+
+            <div style="text-align: right; margin-top: 40px; line-height: 1.4; font-size: 16px;">
+                Sportivi Saluti<br>
+                <strong>Antonio Londino</strong><br>
+                <span style="color: var(--c-primary); font-weight: 700;">Resp.club dei 100</span>
+            </div>
         </div>
 
         <!-- CAROUSEL IMMAGINI -->
