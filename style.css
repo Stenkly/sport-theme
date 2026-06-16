@@ -19,6 +19,21 @@ Text Domain: sport-theme
     --font-main: 'Josefin Sans', sans-serif;
 }
 
+/* Usa la stessa vista/crop dell'hero Comitato sulle altre pagine Società. */
+@media (min-width: 769px) {
+    .page-la-societa .news-hero-wrapper img.hero-image,
+    .page-club100 .news-hero-wrapper img.hero-image,
+    .page-allenatori .news-hero-wrapper img.hero-image {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 600px !important;
+        object-fit: cover !important;
+        object-position: 50% 22% !important;
+    }
+}
+
 /* Base Reset */
 *, *::before, *::after {
     box-sizing: border-box;
@@ -244,6 +259,373 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
         flex-direction: row;
         height: 60vh;
         min-height: 500px;
+    }
+}
+
+.page-comitato .club-hero-fade,
+.page-club100 .club-hero-fade,
+.page-allenatori .club-hero-fade,
+.page-sezioni .club-hero-fade,
+.page-scuola-calcio .club-hero-fade {
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0.12) 22%,
+        rgba(0, 0, 0, 0.72) 58%,
+        #000 82%,
+        #000 100%
+    );
+}
+
+.page-comitato .news-hero,
+.page-club100 .news-hero,
+.page-allenatori .news-hero,
+.page-sezioni .news-hero,
+.page-scuola-calcio .news-hero {
+    border-bottom: 0 !important;
+    background: #000 !important;
+}
+
+.page-comitato .news-hero-wrapper,
+.page-club100 .news-hero-wrapper,
+.page-allenatori .news-hero-wrapper,
+.page-scuola-calcio .news-hero-wrapper {
+    width: calc(100% + 120px) !important;
+    max-width: calc(100% + 120px) !important;
+    margin-left: -60px !important;
+    margin-right: auto !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.page-comitato .news-hero-wrapper .news-hero-content,
+.page-club100 .news-hero-wrapper .news-hero-content,
+.page-allenatori .news-hero-wrapper .news-hero-content,
+.page-scuola-calcio .news-hero-wrapper .news-hero-content {
+    top: calc(100% - 200px) !important;
+    bottom: auto !important;
+    left: 24px !important;
+    width: calc(100% - 48px) !important;
+    max-width: none !important;
+}
+
+.page-comitato .news-hero-wrapper .news-hero-content h1,
+.page-club100 .news-hero-wrapper .news-hero-content h1,
+.page-allenatori .news-hero-wrapper .news-hero-content h1,
+.page-scuola-calcio .news-hero-wrapper .news-hero-content h1 {
+    line-height: 1.1 !important;
+}
+
+.page-comitato .news-hero-wrapper .news-hero-content hr,
+.page-club100 .news-hero-wrapper .news-hero-content hr,
+.page-allenatori .news-hero-wrapper .news-hero-content hr,
+.page-scuola-calcio .news-hero-wrapper .news-hero-content hr {
+    margin: 6px 0 10px !important;
+}
+
+.page-comitato .news-hero-wrapper .page-submenu,
+.page-club100 .news-hero-wrapper .page-submenu,
+.page-allenatori .news-hero-wrapper .page-submenu {
+    gap: 20px !important;
+}
+
+.page-comitato .news-hero-wrapper .page-submenu a,
+.page-club100 .news-hero-wrapper .page-submenu a,
+.page-allenatori .news-hero-wrapper .page-submenu a {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 8px 40px !important;
+    font-size: 22px !important;
+    line-height: 1.1 !important;
+    text-align: center !important;
+    white-space: nowrap;
+}
+
+@media (min-width: 769px) {
+    .page-comitato .news-hero-wrapper,
+    .page-club100 .news-hero-wrapper,
+    .page-allenatori .news-hero-wrapper,
+    .page-scuola-calcio .news-hero-wrapper {
+        height: 732px !important;
+    }
+
+    .page-comitato .news-hero-wrapper img,
+    .page-club100 .news-hero-wrapper img,
+    .page-allenatori .news-hero-wrapper img,
+    .page-scuola-calcio .news-hero-wrapper img {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1399px) {
+    .page-comitato .news-hero-wrapper .news-hero-content,
+    .page-club100 .news-hero-wrapper .news-hero-content,
+    .page-allenatori .news-hero-wrapper .news-hero-content,
+    .page-scuola-calcio .news-hero-wrapper .news-hero-content {
+        left: 80px !important;
+        width: calc(100% - 160px) !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .page-comitato .news-hero-wrapper,
+    .page-club100 .news-hero-wrapper,
+    .page-allenatori .news-hero-wrapper,
+    .page-scuola-calcio .news-hero-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .page-comitato .news-hero-wrapper .news-hero-content,
+    .page-club100 .news-hero-wrapper .news-hero-content,
+    .page-allenatori .news-hero-wrapper .news-hero-content,
+    .page-scuola-calcio .news-hero-wrapper .news-hero-content {
+        left: 20px !important;
+        width: calc(100% - 40px) !important;
+    }
+}
+
+@media (min-width: 1400px) {
+    .page-comitato .news-hero-wrapper,
+    .page-club100 .news-hero-wrapper,
+    .page-allenatori .news-hero-wrapper,
+    .page-scuola-calcio .news-hero-wrapper {
+        width: 1520px !important;
+        max-width: 1520px !important;
+        margin-left: calc((100% - 1400px) / 2 - 60px) !important;
+        margin-right: auto !important;
+    }
+
+    .page-comitato .news-hero-wrapper .news-hero-content,
+    .page-club100 .news-hero-wrapper .news-hero-content,
+    .page-allenatori .news-hero-wrapper .news-hero-content,
+    .page-scuola-calcio .news-hero-wrapper .news-hero-content {
+        left: 80px !important;
+        width: 1360px !important;
+        max-width: 1360px !important;
+    }
+}
+
+/* Allinea la larghezza del contenuto testuale della pagina "La Società" al contenuto dell'hero. */
+.page-la-societa > .container {
+    width: calc(100% - 40px);
+    max-width: 1360px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 900px) {
+    .page-la-societa .news-hero-wrapper .news-hero-content {
+        top: calc(100% - 300px) !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .page-la-societa .news-hero-wrapper .news-hero-content h1 {
+        font-size: 42px !important;
+        line-height: 1.05 !important;
+    }
+
+    .page-la-societa .news-hero-wrapper .page-submenu {
+        gap: 8px !important;
+        margin-top: 14px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .page-la-societa .news-hero-wrapper .page-submenu a {
+        padding: 7px 12px !important;
+        font-size: 14px !important;
+        line-height: 1.1 !important;
+    }
+
+    .page-la-societa .news-hero-wrapper .news-hero-content p {
+        font-size: 18px !important;
+        line-height: 1.25 !important;
+        margin-top: 14px !important;
+    }
+}
+
+.page-la-societa .news-hero-wrapper .page-submenu,
+.page-comitato .news-hero-wrapper .page-submenu,
+.page-allenatori .news-hero-wrapper .page-submenu {
+    margin-top: 18px !important;
+    margin-bottom: 14px !important;
+}
+
+.page-la-societa .news-hero-wrapper .news-hero-content p,
+.page-comitato .news-hero-wrapper .news-hero-content p {
+    font-size: 19px !important;
+    line-height: 1.18 !important;
+    margin-top: 8px !important;
+}
+
+@media (max-width: 900px) {
+    .page-comitato .news-hero-wrapper .news-hero-content {
+        top: calc(100% - 300px) !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .page-comitato .news-hero-wrapper .news-hero-content h1 {
+        font-size: 42px !important;
+        line-height: 1.05 !important;
+    }
+
+    .page-comitato .news-hero-wrapper .page-submenu {
+        gap: 8px !important;
+        margin-top: 14px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .page-comitato .news-hero-wrapper .page-submenu a {
+        padding: 7px 12px !important;
+        font-size: 14px !important;
+        line-height: 1.1 !important;
+    }
+
+    .page-comitato .news-hero-wrapper .news-hero-content p {
+        font-size: 18px !important;
+        line-height: 1.25 !important;
+        margin-top: 14px !important;
+    }
+}
+
+/* Allinea la pagina "Club dei 100" al contenuto dell'hero e lascia spazio al sottotitolo. */
+.page-club100 > .container {
+    width: calc(100% - 40px);
+    max-width: 1360px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.page-club100 .news-hero-wrapper .news-hero-content {
+    top: calc(100% - 200px) !important;
+}
+
+.page-club100 .news-hero-wrapper .page-submenu {
+    margin-top: 18px !important;
+    margin-bottom: 14px !important;
+}
+
+.page-club100 .news-hero-wrapper .page-submenu a {
+    padding: 8px 40px !important;
+    font-size: 22px !important;
+    line-height: 1.1 !important;
+}
+
+.page-club100 .news-hero-wrapper .news-hero-content p {
+    font-size: 19px !important;
+    line-height: 1.18 !important;
+    margin-top: 8px !important;
+}
+
+.page-club100 .club100-content {
+    font-size: 19px !important;
+    line-height: 1.7 !important;
+}
+
+.page-club100 .club100-content h3 {
+    font-size: 34px !important;
+    line-height: 1.2 !important;
+    margin-bottom: 25px !important;
+    text-transform: uppercase;
+}
+
+.page-club100 .club100-content p,
+.page-club100 .club100-content li {
+    font-size: 19px !important;
+    line-height: 1.7 !important;
+}
+
+.page-club100 .club100-content p {
+    font-weight: 400 !important;
+}
+
+/* Mantiene il titolo Area Allenatori allineato alle altre pagine e fa rientrare il sottotitolo nell'hero. */
+.page-allenatori > .container {
+    width: calc(100% - 40px);
+    max-width: 1360px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.page-allenatori .news-hero-wrapper .news-hero-content {
+    top: calc(100% - 200px) !important;
+}
+
+.page-allenatori .news-hero-wrapper .news-hero-content p {
+    font-size: 19px !important;
+    line-height: 1.18 !important;
+    margin-top: 8px !important;
+}
+
+@media (max-width: 900px) {
+    .page-allenatori .news-hero-wrapper .news-hero-content {
+        top: calc(100% - 300px) !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .page-allenatori .news-hero-wrapper .news-hero-content h1 {
+        font-size: 42px !important;
+        line-height: 1.05 !important;
+    }
+
+    .page-allenatori .news-hero-wrapper .page-submenu {
+        gap: 8px !important;
+        margin-top: 14px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .page-allenatori .news-hero-wrapper .page-submenu a {
+        padding: 7px 12px !important;
+        font-size: 14px !important;
+        line-height: 1.1 !important;
+    }
+
+    .page-allenatori .news-hero-wrapper .news-hero-content p {
+        font-size: 18px !important;
+        line-height: 1.25 !important;
+        margin-top: 14px !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .page-club100 .news-hero-wrapper .news-hero-content {
+        top: calc(100% - 300px) !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .page-club100 .news-hero-wrapper .news-hero-content h1 {
+        font-size: 42px !important;
+        line-height: 1.05 !important;
+    }
+
+    .page-club100 .news-hero-wrapper .page-submenu {
+        gap: 8px !important;
+        margin-top: 14px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .page-club100 .news-hero-wrapper .page-submenu a {
+        padding: 7px 12px !important;
+        font-size: 14px !important;
+        line-height: 1.1 !important;
+    }
+
+    .page-club100 .news-hero-wrapper .news-hero-content p {
+        font-size: 18px !important;
+        line-height: 1.25 !important;
+        margin-top: 14px !important;
     }
 }
 
@@ -709,6 +1091,37 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     letter-spacing: 0;
     line-height: 1;
     text-align: center;
+}
+
+.page-home-societa .section-header .btn-sm {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-width: 218px;
+    width: 218px;
+    min-height: 40px;
+    height: 40px;
+    padding: 5px 0 0;
+    box-sizing: border-box;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0;
+    line-height: 1;
+    text-align: center;
+}
+
+.page-home-societa .section-header .btn-outline {
+    min-width: 218px;
+    min-height: 40px;
+    border-width: 2px;
+    color: var(--c-primary) !important;
+}
+
+.page-home-societa .hs-empty-news {
+    width: 100%;
+    padding: 24px 0;
+    font-size: 18px;
+    font-weight: 700;
 }
 
 .page-prima-squadra .section-header .btn-primary {
@@ -1709,6 +2122,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-id-18 .club-hero-fade,
 .page-rosa .club-hero-fade,
 .page-staff .club-hero-fade,
+.page-la-societa .club-hero-fade,
 .page-news .club-hero-fade,
 .page-stagione .club-hero-fade,
 .page-partner .club-hero-fade,
@@ -1732,6 +2146,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-id-18 .news-hero,
 .page-rosa .news-hero,
 .page-staff .news-hero,
+.page-la-societa .news-hero,
 .page-news .news-hero,
 .page-stagione .news-hero,
 .page-partner .news-hero,
@@ -1744,9 +2159,11 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-organigramma .club-hero-wrapper,
 .page-storia .club-hero-wrapper,
 .page-club .club-hero-wrapper,
+.page-sezioni .club-hero-wrapper,
 .page-id-18 .news-hero-wrapper,
 .page-rosa .news-hero-wrapper,
 .page-staff .news-hero-wrapper,
+.page-la-societa .news-hero-wrapper,
 .page-news .news-hero-wrapper,
 .page-stagione .news-hero-wrapper,
 .page-partner .news-hero-wrapper,
@@ -2754,6 +3171,19 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     background-color: var(--c-black);
 }
 
+.hs-instagram-strip {
+    background: #000;
+    margin-top: 40px;
+    padding: 22px 0 0;
+}
+
+.hs-instagram-strip .container {
+    border-top: 2px solid #ffffff;
+    border-bottom: 2px solid #ffffff;
+    padding-top: 28px;
+    padding-bottom: 28px;
+}
+
 .hs-insta-bar {
     background-color: #1a1a1a;
     padding: 20px 0;
@@ -2888,16 +3318,16 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 
 .hs-footer-main {
-    border-top: 1px solid rgba(255,255,255,0.1);
-    padding: 40px 0;
+    border-top: 0;
+    padding: 32px 0 48px;
 }
 
 .hs-footer-inner {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 40px;
-    flex-wrap: wrap;
+    gap: 24px;
     text-align: center;
 }
 
@@ -2912,16 +3342,15 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 .hs-footer-info p {
     color: var(--c-white);
-    font-size: 12px;
+    font-size: 17px;
     font-weight: 700;
-    line-height: 1.8;
+    line-height: 1.2;
     margin: 0;
 }
 
 .hs-footer-info a {
-    color: var(--c-white);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    color: var(--c-primary);
+    text-decoration: none;
     transition: color 0.3s;
 }
 
@@ -2931,31 +3360,41 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 .hs-footer-social {
     display: flex;
-    gap: 12px;
+    gap: 20px;
 }
 
 .hs-footer-social a {
-    color: var(--c-white);
-    font-size: 16px;
-    transition: color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--c-light-yellow);
+    color: var(--c-black);
+    font-size: 20px;
+    text-decoration: none;
+    transition: transform 0.25s ease, background 0.25s ease;
 }
 
 .hs-footer-social a:hover {
-    color: var(--c-primary);
+    background: var(--c-primary);
+    color: var(--c-black);
+    transform: translateY(-2px);
 }
 
 /* Fascia gialla copyright */
 .hs-footer-bar {
     background-color: var(--c-light-yellow);
     text-align: center;
-    padding: 12px 20px;
+    padding: 15px 20px;
     max-width: 1400px;
     margin: 0 auto;
 }
 
 .hs-footer-bar p {
     color: var(--c-black);
-    font-size: 12px;
+    font-size: 17px;
     font-weight: 700;
     margin: 0;
 }
@@ -3964,13 +4403,13 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    min-height: 36px;
+    min-height: 44px;
     margin-bottom: 28px;
-    padding: 5px 16px 2px;
+    padding: 5px 18px 0;
     background: transparent;
     border: 2px solid rgba(255,255,255,0.6);
     color: var(--c-white);
-    font-size: 14px;
+    font-size: 17px;
     font-weight: 800;
     line-height: 1;
     text-transform: uppercase;
@@ -3985,18 +4424,22 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .iscrizione-form-kicker {
     display: inline-flex;
     align-items: center;
-    min-height: 28px;
-    padding: 6px 14px 3px;
+    min-height: 44px;
+    padding: 5px 18px 0;
     background: var(--c-primary);
     color: var(--c-black);
-    font-size: 13px;
+    font-size: 17px;
     font-weight: 800;
     line-height: 1;
     text-transform: uppercase;
     margin-bottom: 20px;
 }
 
-.iscrizione-player-form {
+.iscrizione-player-form,
+.iscrizione-health-form,
+.iscrizione-documents-form,
+.iscrizione-guardian-form,
+.iscrizione-payment-form {
     display: grid;
     gap: 28px;
     margin-top: 34px;
@@ -4043,6 +4486,234 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     border-color: var(--c-primary);
 }
 
+.iscrizione-choice-field {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.iscrizione-choice-field legend {
+    color: var(--c-white);
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.18;
+    padding: 0;
+}
+
+.iscrizione-choice-field.is-invalid legend {
+    color: var(--c-primary);
+}
+
+.iscrizione-choice-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.iscrizione-choice-group-wide label {
+    min-width: 190px;
+}
+
+.iscrizione-choice-group label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 104px;
+    min-height: 42px;
+    padding: 5px 18px 2px;
+    border: 2px solid rgba(255,255,255,0.36);
+    background: #0f0f0f;
+    color: var(--c-white);
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.iscrizione-choice-group label:has(input:checked) {
+    border-color: var(--c-primary);
+    background: var(--c-primary);
+    color: var(--c-black);
+}
+
+.iscrizione-choice-group input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--c-primary);
+}
+
+.iscrizione-conditional {
+    display: grid;
+    gap: 18px;
+    margin-top: 4px;
+    padding: 24px 26px;
+    border: 2px solid rgba(255,255,255,0.24);
+    background: #080808;
+}
+
+.iscrizione-conditional[hidden] {
+    display: none !important;
+}
+
+.iscrizione-payment-box {
+    width: min(100%, 720px);
+    padding: 24px 26px;
+    border: 2px solid rgba(255,255,255,0.24);
+    background: #080808;
+}
+
+.iscrizione-payment-box[hidden] {
+    display: none !important;
+}
+
+.iscrizione-payment-box h3 {
+    color: var(--c-primary);
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+}
+
+.iscrizione-payment-box p {
+    color: rgba(255,255,255,0.82);
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.45;
+    margin: 0;
+}
+
+.iscrizione-conditional > label {
+    color: var(--c-white);
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.iscrizione-conditional textarea {
+    width: min(100%, 560px);
+    min-height: 128px;
+    padding: 14px 15px;
+    background: #0f0f0f;
+    border: 2px solid rgba(255,255,255,0.36);
+    color: var(--c-white);
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.4;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.iscrizione-choice-field.is-invalid .iscrizione-conditional textarea,
+.iscrizione-choice-field.is-invalid .iscrizione-conditional input {
+    border-color: var(--c-primary);
+}
+
+.iscrizione-document-upload-group {
+    display: grid;
+    gap: 24px;
+    padding: 26px;
+    border: 2px solid rgba(255,255,255,0.24);
+    background: #080808;
+}
+
+.iscrizione-document-upload-group[hidden] {
+    display: none !important;
+}
+
+.iscrizione-guardian-upload {
+    margin-bottom: 18px;
+}
+
+.iscrizione-file-field {
+    gap: 12px;
+}
+
+.iscrizione-file-box {
+    position: relative;
+    display: grid;
+    place-items: center;
+    gap: 12px;
+    width: min(100%, 720px);
+    min-height: 106px;
+    padding: 24px;
+    border: 2px dashed rgba(255,255,255,0.48);
+    background: #0f0f0f;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.iscrizione-file-box:hover {
+    border-color: var(--c-primary);
+    background: #070707;
+}
+
+.iscrizione-file-box.is-dragging {
+    border-color: var(--c-primary);
+    background: rgba(255,230,0,0.08);
+}
+
+.iscrizione-file-box input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.iscrizione-file-box .file-title {
+    position: relative;
+    z-index: 1;
+    color: var(--c-primary);
+    font-size: 18px;
+    font-weight: 900;
+    line-height: 1.2;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.iscrizione-file-box .file-action {
+    position: relative;
+    z-index: 1;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: center;
+}
+
+.iscrizione-file-box .file-instruction {
+    position: relative;
+    z-index: 1;
+    color: rgba(255,255,255,0.78);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.iscrizione-file-box .file-name {
+    position: relative;
+    z-index: 1;
+    color: var(--c-primary);
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: center;
+    word-break: break-word;
+}
+
+.iscrizione-field.is-invalid .iscrizione-file-box {
+    border-color: var(--c-primary);
+}
+
 .iscrizione-field label {
     color: var(--c-white);
     font-size: 22px;
@@ -4052,6 +4723,10 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 .iscrizione-field label span {
     display: none;
+}
+
+.iscrizione-field label.iscrizione-file-box span {
+    display: block;
 }
 
 .iscrizione-input-wrap {
@@ -4478,7 +5153,11 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 @media (min-width: 769px) {
     .page-rosa .news-hero-wrapper,
     .page-staff .news-hero-wrapper,
+    .page-la-societa .news-hero-wrapper,
+    .page-comitato .news-hero-wrapper,
+    .page-club100 .news-hero-wrapper,
     .page-allenatori .news-hero-wrapper,
+    .page-scuola-calcio .news-hero-wrapper,
     .page-stagione .news-hero-wrapper,
     .page-partner .news-hero-wrapper,
     .page-template-template-partner .news-hero-wrapper,
@@ -4495,7 +5174,11 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
     .page-rosa .news-hero-wrapper img,
     .page-staff .news-hero-wrapper img,
+    .page-la-societa .news-hero-wrapper img,
+    .page-comitato .news-hero-wrapper img,
+    .page-club100 .news-hero-wrapper img,
     .page-allenatori .news-hero-wrapper img,
+    .page-scuola-calcio .news-hero-wrapper img,
     .page-stagione .news-hero-wrapper img,
     .page-partner .news-hero-wrapper img,
     .page-template-template-partner .news-hero-wrapper img,
@@ -4547,6 +5230,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-id-18 .news-hero-wrapper .news-hero-content,
 .page-rosa .news-hero-wrapper .news-hero-content,
 .page-staff .news-hero-wrapper .news-hero-content,
+.page-la-societa .news-hero-wrapper .news-hero-content,
 .page-news .news-hero-wrapper .news-hero-content,
 .page-stagione .news-hero-wrapper .news-hero-content,
 .page-partner .news-hero-wrapper .news-hero-content,
@@ -4562,6 +5246,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-id-18 .news-hero-wrapper .news-hero-content h1,
 .page-rosa .news-hero-wrapper .news-hero-content h1,
 .page-staff .news-hero-wrapper .news-hero-content h1,
+.page-la-societa .news-hero-wrapper .news-hero-content h1,
 .page-news .news-hero-wrapper .news-hero-content h1,
 .page-stagione .news-hero-wrapper .news-hero-content h1,
 .page-partner .news-hero-wrapper .news-hero-content h1,
@@ -4588,6 +5273,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-id-18 .news-hero-wrapper .news-hero-content hr,
 .page-rosa .news-hero-wrapper .news-hero-content hr,
 .page-staff .news-hero-wrapper .news-hero-content hr,
+.page-la-societa .news-hero-wrapper .news-hero-content hr,
 .page-news .news-hero-wrapper .news-hero-content hr,
 .page-stagione .news-hero-wrapper .news-hero-content hr,
 .page-partner .news-hero-wrapper .news-hero-content hr,
@@ -4816,7 +5502,8 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-club .club-hero-wrapper .page-submenu a,
 .page-id-18 .news-hero-wrapper .page-submenu a,
 .page-rosa .news-hero-wrapper .page-submenu a,
-.page-staff .news-hero-wrapper .page-submenu a {
+.page-staff .news-hero-wrapper .page-submenu a,
+.page-la-societa .news-hero-wrapper .page-submenu a {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -4848,6 +5535,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-id-18 .news-hero-wrapper,
 .page-rosa .news-hero-wrapper,
 .page-staff .news-hero-wrapper,
+.page-la-societa .news-hero-wrapper,
 .page-news .news-hero-wrapper,
 .page-stagione .news-hero-wrapper,
 .page-partner .news-hero-wrapper,
@@ -4866,6 +5554,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-id-18 .news-hero-wrapper .news-hero-content,
 .page-rosa .news-hero-wrapper .news-hero-content,
 .page-staff .news-hero-wrapper .news-hero-content,
+.page-la-societa .news-hero-wrapper .news-hero-content,
 .page-news .news-hero-wrapper .news-hero-content,
 .page-stagione .news-hero-wrapper .news-hero-content,
 .page-partner .news-hero-wrapper .news-hero-content,
@@ -4883,6 +5572,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     .page-id-18 .news-hero-wrapper .news-hero-content,
     .page-rosa .news-hero-wrapper .news-hero-content,
     .page-staff .news-hero-wrapper .news-hero-content,
+    .page-la-societa .news-hero-wrapper .news-hero-content,
     .page-news .news-hero-wrapper .news-hero-content,
     .page-stagione .news-hero-wrapper .news-hero-content,
     .page-partner .news-hero-wrapper .news-hero-content,
@@ -4906,6 +5596,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     .page-id-18 .news-hero-wrapper,
     .page-rosa .news-hero-wrapper,
     .page-staff .news-hero-wrapper,
+    .page-la-societa .news-hero-wrapper,
     .page-news .news-hero-wrapper,
     .page-stagione .news-hero-wrapper,
     .page-partner .news-hero-wrapper,
@@ -4924,6 +5615,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     .page-id-18 .news-hero-wrapper .news-hero-content,
     .page-rosa .news-hero-wrapper .news-hero-content,
     .page-staff .news-hero-wrapper .news-hero-content,
+    .page-la-societa .news-hero-wrapper .news-hero-content,
     .page-news .news-hero-wrapper .news-hero-content,
     .page-stagione .news-hero-wrapper .news-hero-content,
     .page-partner .news-hero-wrapper .news-hero-content,
@@ -4942,6 +5634,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     .page-id-18 .news-hero-wrapper,
     .page-rosa .news-hero-wrapper,
     .page-staff .news-hero-wrapper,
+    .page-la-societa .news-hero-wrapper,
     .page-news .news-hero-wrapper,
     .page-stagione .news-hero-wrapper,
     .page-partner .news-hero-wrapper,
@@ -4960,6 +5653,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     .page-id-18 .news-hero-wrapper .news-hero-content,
     .page-rosa .news-hero-wrapper .news-hero-content,
     .page-staff .news-hero-wrapper .news-hero-content,
+    .page-la-societa .news-hero-wrapper .news-hero-content,
     .page-news .news-hero-wrapper .news-hero-content,
     .page-stagione .news-hero-wrapper .news-hero-content,
     .page-partner .news-hero-wrapper .news-hero-content,
@@ -4969,5 +5663,39 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
         left: 80px !important;
         width: 1360px !important;
         max-width: 1360px !important;
+    }
+}
+
+/* Override finale mobile per il sottotitolo della pagina La Società. */
+@media (max-width: 900px) {
+    .page-la-societa .news-hero-wrapper .news-hero-content {
+        top: calc(100% - 300px) !important;
+        left: 20px !important;
+        width: calc(100% - 40px) !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .page-la-societa .news-hero-wrapper .news-hero-content h1 {
+        font-size: 42px !important;
+        line-height: 1.05 !important;
+    }
+
+    .page-la-societa .news-hero-wrapper .page-submenu {
+        gap: 8px !important;
+        margin-top: 14px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .page-la-societa .news-hero-wrapper .page-submenu a {
+        padding: 7px 12px !important;
+        font-size: 14px !important;
+        line-height: 1.1 !important;
+    }
+
+    .page-la-societa .news-hero-wrapper .news-hero-content p {
+        font-size: 18px !important;
+        line-height: 1.25 !important;
+        margin-top: 14px !important;
     }
 }

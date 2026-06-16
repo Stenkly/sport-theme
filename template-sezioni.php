@@ -375,13 +375,13 @@ if(!function_exists('print_sezione_panel')) {
             $hero_image_url = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=2000&auto=format&fit=crop';
         }
         ?>
-        <div class="news-hero-wrapper" style="position: relative; width: 100%; height: 50vh; min-height: 400px;">
-            <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="height: 100%; width: 100%; object-fit: cover; object-position: center;" alt="Sezioni AC Taverne">
-            <div class="news-hero-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
+        <div class="club-hero-wrapper">
+            <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block;" alt="Sezioni AC Taverne">
+            <div class="club-hero-fade"></div>
             
-            <div class="news-hero-content container" style="position: absolute; bottom: 0; left: 0; right: 0; text-align: left; padding-bottom: 20px;">
-                <h1 class="text-white" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">SEZIONI</h1>
-                <hr class="sc-divider" style="border: 0; border-top: 2px solid rgba(255,255,255,1); margin: 20px 0;">
+            <div class="news-hero-content container" style="position: absolute; bottom: 40px; left: 0; right: 0; text-align: left;">
+                <h1 class="club-hero-title">SEZIONI</h1>
+                <hr style="border: 0; border-top: 2px solid white; margin: 20px 0;">
                 
                 <!-- MENU TABS LIVELLO 1 (CATEGORIE PRINCIPALI) -->
                 <div class="sezioni-tabs-l1" style="display: flex; gap: 20px; margin-top: 30px; margin-bottom: 30px; flex-wrap: wrap;">
