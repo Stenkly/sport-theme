@@ -86,6 +86,16 @@ function sport_theme_get_page_url($slug, $title = '') {
     return $page ? get_permalink($page->ID) : site_url('/' . trim($slug, '/'));
 }
 
+function sport_theme_get_societa_home_hero_url() {
+    $home_societa = get_page_by_path('ac-taverne');
+
+    if ($home_societa && has_post_thumbnail($home_societa->ID)) {
+        return get_the_post_thumbnail_url($home_societa->ID, 'full');
+    }
+
+    return get_template_directory_uri() . '/assets/images/campo-taverne-aereo.jpg';
+}
+
 function sport_theme_scripts() {
 	wp_enqueue_style( 'sport-theme-style', get_stylesheet_uri(), array(), SPORT_THEME_VERSION );
 }
@@ -1708,12 +1718,13 @@ function sport_theme_handle_club100_form() {
     }
     
     $nome     = sanitize_text_field($_POST['c100_nome'] ?? '');
+    $cognome  = sanitize_text_field($_POST['c100_cognome'] ?? '');
     $telefono = sanitize_text_field($_POST['c100_telefono'] ?? '');
     $email    = sanitize_email($_POST['c100_email'] ?? '');
     $oggetto  = sanitize_text_field($_POST['c100_oggetto'] ?? '');
     $testo    = sanitize_textarea_field($_POST['c100_testo'] ?? '');
     
-    if ( empty($nome) || empty($email) ) {
+    if ( empty($nome) || empty($cognome) || empty($email) ) {
         return;
     }
     
@@ -1721,10 +1732,11 @@ function sport_theme_handle_club100_form() {
     $subject = '[AC Taverne - Club dei 100] ' . $oggetto;
     $body    = "Richiesta iscrizione al Club dei 100:\n\n";
     $body   .= "Nome: {$nome}\n";
+    $body   .= "Cognome: {$cognome}\n";
     $body   .= "Email: {$email}\n";
     $body   .= "Telefono: {$telefono}\n\n";
     $body   .= "Messaggio:\n{$testo}";
-    $headers = array('Reply-To: ' . $nome . ' <' . $email . '>');
+    $headers = array('Reply-To: ' . $nome . ' ' . $cognome . ' <' . $email . '>');
     
     wp_mail($to, $subject, $body, $headers);
     
@@ -3081,7 +3093,7 @@ function sport_theme_render_societa_submenu() {
         'La Società'     => site_url('/la-societa'),
         'Comitato'       => site_url('/comitato'),
         'Club dei 100'   => site_url('/club-dei-100'),
-        'Area Riservata' => site_url('/area-allenatori'),
+        'Area Allenatori' => site_url('/area-allenatori'),
     ];
 
     echo '<div class="page-submenu" style="display: flex; gap: 20px; margin-top: 30px; margin-bottom: 10px; flex-wrap: wrap; justify-content: flex-start; z-index: 10; position: relative;">';
@@ -3094,7 +3106,7 @@ function sport_theme_render_societa_submenu() {
             $is_active = true;
         } elseif ( $label === 'Club dei 100' && (is_page('club-dei-100') || is_page_template('template-club-dei-100.php')) ) {
             $is_active = true;
-        } elseif ( $label === 'Area Riservata' && (is_page('area-allenatori') || is_page_template('template-allenatori.php')) ) {
+        } elseif ( $label === 'Area Allenatori' && (is_page('area-allenatori') || is_page_template('template-allenatori.php')) ) {
             $is_active = true;
         }
 

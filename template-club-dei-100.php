@@ -86,33 +86,37 @@ get_header('societa');
                     
                     <div style="display: flex; gap: 30px; margin-bottom: 25px; flex-wrap: wrap;">
                         <div style="flex: 1; min-width: 200px;">
-                            <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 13px;">Nome*</label>
-                            <input type="text" name="c100_nome" required style="width: 100%; background: transparent; border: 2px solid white; color: white; padding: 12px; font-size: 14px;" placeholder="Nome">
+                            <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 16px; font-weight: 600;">Nome*</label>
+                            <input type="text" name="c100_nome" required style="width: 100%; background: transparent; border: 2px solid white; color: white; padding: 14px; font-size: 17px;" placeholder="Nome">
                         </div>
                         <div style="flex: 1; min-width: 200px;">
-                            <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 13px;">Numero di telefono*</label>
-                            <input type="text" name="c100_telefono" required style="width: 100%; background: transparent; border: 2px solid white; color: white; padding: 12px; font-size: 14px;" placeholder="Numero di telefono">
+                            <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 16px; font-weight: 600;">Cognome*</label>
+                            <input type="text" name="c100_cognome" required style="width: 100%; background: transparent; border: 2px solid white; color: white; padding: 14px; font-size: 17px;" placeholder="Cognome">
+                        </div>
+                        <div style="flex: 1; min-width: 200px;">
+                            <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 16px; font-weight: 600;">Numero di telefono*</label>
+                            <input type="text" name="c100_telefono" required style="width: 100%; background: transparent; border: 2px solid white; color: white; padding: 14px; font-size: 17px;" placeholder="Numero di telefono">
                         </div>
                     </div>
                     
                     <div style="display: flex; gap: 30px; margin-bottom: 25px; flex-wrap: wrap;">
                         <div style="flex: 1; min-width: 200px;">
-                            <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 13px;">La tua e-mail*</label>
-                            <input type="email" name="c100_email" required style="width: 100%; background: transparent; border: 2px solid white; color: white; padding: 12px; font-size: 14px;" placeholder="E-mail">
+                            <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 16px; font-weight: 600;">La tua e-mail*</label>
+                            <input type="email" name="c100_email" required style="width: 100%; background: transparent; border: 2px solid white; color: white; padding: 14px; font-size: 17px;" placeholder="E-mail">
                         </div>
                         <div style="flex: 1; min-width: 200px;">
-                            <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 13px;">Oggetto*</label>
-                            <input type="text" name="c100_oggetto" required style="width: 100%; background: transparent; border: 2px solid white; color: white; padding: 12px; font-size: 14px;" placeholder="Oggetto">
+                            <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 16px; font-weight: 600;">Oggetto*</label>
+                            <input type="text" name="c100_oggetto" required style="width: 100%; background: transparent; border: 2px solid white; color: white; padding: 14px; font-size: 17px;" placeholder="Oggetto">
                         </div>
                     </div>
  
                     <div style="margin-bottom: 40px;">
-                        <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 13px;">Testo*</label>
-                        <input type="text" name="c100_testo" required style="width: 100%; background: transparent; border: none; border-bottom: 2px solid white; color: white; padding: 12px 0; font-size: 14px;" placeholder="Testo">
+                        <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 16px; font-weight: 600;">Testo*</label>
+                        <input type="text" name="c100_testo" required style="width: 100%; background: transparent; border: none; border-bottom: 2px solid white; color: white; padding: 14px 0; font-size: 17px;" placeholder="Testo">
                     </div>
  
                     <div style="text-align: right;">
-                        <button type="submit" style="background-color: var(--c-primary); color: #000; border: none; padding: 14px 40px; font-weight: bold; text-transform: uppercase; cursor: pointer; letter-spacing: 1px; font-size: 14px; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">INVIA RICHIESTA</button>
+                        <button type="submit" style="background-color: var(--c-primary); color: #000; border: none; padding: 16px 48px; font-weight: bold; text-transform: uppercase; cursor: pointer; letter-spacing: 1px; font-size: 16px; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">INVIA RICHIESTA</button>
                     </div>
                 </form>
             </div>
