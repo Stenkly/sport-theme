@@ -6,6 +6,27 @@
  */
 
 get_header('societa');
+
+if ( ! function_exists( 'sport_theme_ensure_calendar_weekly_view' ) ) {
+    function sport_theme_ensure_calendar_weekly_view( $iframe_html ) {
+        if ( empty( $iframe_html ) ) {
+            return '';
+        }
+        if ( preg_match( '/src=["\']([^"\']+)["\']/', $iframe_html, $matches ) ) {
+            $src = $matches[1];
+            if ( strpos( $src, 'calendar.google.com' ) !== false ) {
+                if ( strpos( $src, 'mode=' ) === false ) {
+                    $separator = ( strpos( $src, '?' ) === false ) ? '?' : '&';
+                    $new_src = $src . $separator . 'mode=WEEK';
+                    $iframe_html = str_replace( $src, $new_src, $iframe_html );
+                } else {
+                    $iframe_html = preg_replace( '/mode=[a-zA-Z]+/i', 'mode=WEEK', $iframe_html );
+                }
+            }
+        }
+        return $iframe_html;
+    }
+}
 ?>
 
 <main id="primary" class="site-main page-infrastruttura">
@@ -156,12 +177,46 @@ get_header('societa');
             </div>
             <?php endif; ?>
 
-            <div class="google-calendar-wrapper" style="width: 100%; margin-bottom: 80px; background-color: #fff; padding: 10px; border-radius: 5px;">
+            <!-- Calendario Campo Sportivo -->
+            <h3 class="text-white" style="font-size: 26px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Piano occupazione Campo</h3>
+            <div class="google-calendar-wrapper" style="width: 100%; margin-bottom: 60px; background-color: #fff; padding: 10px; border-radius: 5px;">
                 <?php
                 $calendar_html = get_post_meta( get_the_ID(), '_infra_calendar_iframe', true );
                 if ( empty( $calendar_html ) ) {
                     $calendar_id = 'q5annq4orol4ue2pipv70hlmsc@group.calendar.google.com';
-                    $calendar_html = '<iframe src="https://calendar.google.com/calendar/embed?src=' . urlencode($calendar_id) . '&ctz=Europe%2FZurich" style="border: 0; width: 100%; height: 700px;" frameborder="0" scrolling="no"></iframe>';
+                    $calendar_html = '<iframe src="https://calendar.google.com/calendar/embed?src=' . urlencode($calendar_id) . '&ctz=Europe%2FZurich&mode=WEEK" style="border: 0; width: 100%; height: 700px;" frameborder="0" scrolling="no"></iframe>';
+                } else {
+                    $calendar_html = sport_theme_ensure_calendar_weekly_view( $calendar_html );
+                }
+                echo $calendar_html;
+                ?>
+            </div>
+
+            <!-- Calendario Buvette -->
+            <h3 class="text-white" style="font-size: 26px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Piano occupazione Buvette</h3>
+            <div class="google-calendar-wrapper" style="width: 100%; margin-bottom: 60px; background-color: #fff; padding: 10px; border-radius: 5px;">
+                <?php
+                $calendar_html = get_post_meta( get_the_ID(), '_infra_calendar_buvette_iframe', true );
+                if ( empty( $calendar_html ) ) {
+                    $calendar_id = 'f7b2100de53n0cp2a4nc700i9s@group.calendar.google.com';
+                    $calendar_html = '<iframe src="https://calendar.google.com/calendar/embed?src=' . urlencode($calendar_id) . '&ctz=Europe%2FZurich&mode=WEEK" style="border: 0; width: 100%; height: 700px;" frameborder="0" scrolling="no"></iframe>';
+                } else {
+                    $calendar_html = sport_theme_ensure_calendar_weekly_view( $calendar_html );
+                }
+                echo $calendar_html;
+                ?>
+            </div>
+
+            <!-- Calendario Infrastruttura -->
+            <h3 class="text-white" style="font-size: 26px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Piano occupazione Infrastruttura</h3>
+            <div class="google-calendar-wrapper" style="width: 100%; margin-bottom: 80px; background-color: #fff; padding: 10px; border-radius: 5px;">
+                <?php
+                $calendar_html = get_post_meta( get_the_ID(), '_infra_calendar_infra_iframe', true );
+                if ( empty( $calendar_html ) ) {
+                    $calendar_id = 'i9i8o8n999k36rfllaua5aoes0@group.calendar.google.com';
+                    $calendar_html = '<iframe src="https://calendar.google.com/calendar/embed?src=' . urlencode($calendar_id) . '&ctz=Europe%2FZurich&mode=WEEK" style="border: 0; width: 100%; height: 700px;" frameborder="0" scrolling="no"></iframe>';
+                } else {
+                    $calendar_html = sport_theme_ensure_calendar_weekly_view( $calendar_html );
                 }
                 echo $calendar_html;
                 ?>
