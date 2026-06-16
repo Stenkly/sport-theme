@@ -177,13 +177,6 @@ if ( ! function_exists( 'sport_theme_ensure_calendar_weekly_view' ) ) {
             </div>
             <?php endif; ?>
 
-            <!-- Selettore Vista Calendario -->
-            <div style="display: flex; gap: 10px; margin-bottom: 40px; justify-content: flex-start; align-items: center; flex-wrap: wrap;">
-                <span class="text-white" style="font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-right: 10px;">Vista Calendario:</span>
-                <button id="btn-view-week" class="calendar-view-btn" style="background-color: var(--c-primary); color: #000; border: 2px solid var(--c-primary); padding: 8px 25px; font-weight: bold; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: 0.3s;">Settimanale</button>
-                <button id="btn-view-day" class="calendar-view-btn" style="background-color: transparent; color: white; border: 2px solid white; padding: 8px 25px; font-weight: bold; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: 0.3s;">Giornaliera</button>
-            </div>
-
             <!-- Calendario Campo Sportivo -->
             <h3 class="text-white" style="font-size: 26px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Piano occupazione Campo</h3>
             <div class="google-calendar-wrapper" style="width: 100%; margin-bottom: 60px; background-color: #fff; padding: 10px; border-radius: 5px;">
@@ -374,52 +367,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
-    // Toggle Vista Calendario (Settimanale / Giornaliera)
-    const btnWeek = document.getElementById('btn-view-week');
-    const btnDay = document.getElementById('btn-view-day');
-    const iframes = document.querySelectorAll('.google-calendar-wrapper iframe');
-
-    function switchCalendarView(mode) {
-        iframes.forEach(iframe => {
-            let src = iframe.getAttribute('src');
-            if (src) {
-                if (src.indexOf('mode=') !== -1) {
-                    src = src.replace(/mode=[A-Z]+/i, 'mode=' + mode);
-                } else {
-                    const separator = src.indexOf('?') === -1 ? '?' : '&';
-                    src = src + separator + 'mode=' + mode;
-                }
-                iframe.setAttribute('src', src);
-            }
-        });
-    }
-
-    if (btnWeek && btnDay) {
-        btnWeek.addEventListener('click', function() {
-            btnWeek.style.backgroundColor = 'var(--c-primary)';
-            btnWeek.style.color = '#000';
-            btnWeek.style.borderColor = 'var(--c-primary)';
-
-            btnDay.style.backgroundColor = 'transparent';
-            btnDay.style.color = 'white';
-            btnDay.style.borderColor = 'white';
-
-            switchCalendarView('WEEK');
-        });
-
-        btnDay.addEventListener('click', function() {
-            btnDay.style.backgroundColor = 'var(--c-primary)';
-            btnDay.style.color = '#000';
-            btnDay.style.borderColor = 'var(--c-primary)';
-
-            btnWeek.style.backgroundColor = 'transparent';
-            btnWeek.style.color = 'white';
-            btnWeek.style.borderColor = 'white';
-
-            switchCalendarView('DAY');
-        });
-    }
 });
 </script>
 
