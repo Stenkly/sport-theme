@@ -72,14 +72,14 @@ get_header('societa');
         <div class="club100-form-band" style="border-top: 2px solid #555; border-bottom: 2px solid #555; background-color: #000; display: flex; justify-content: center;">
             <!-- Form -->
             <div class="club100-form-left" style="width: 100%; max-width: 900px; padding: 60px 0; display: flex; flex-direction: column; justify-content: center;">
-                <h2 class="text-primary" style="font-size: 34px; font-weight: 700; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 1px; text-align: center;">ISCRIVITI</h2>
+                <h2 class="text-primary" style="font-size: 34px; font-weight: 700; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 1px; text-align: left;">ISCRIVITI</h2>
                 
                 <?php if ( isset($_GET['iscritto']) && $_GET['iscritto'] == '1' ) : ?>
                     <div style="background-color: var(--c-primary); color: #000; padding: 15px; margin-bottom: 20px; font-weight: bold;">
                         Grazie! La tua richiesta è stata inviata con successo.
                     </div>
                 <?php endif; ?>
-
+ 
                 <form method="POST" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="hs-contact-form">
                     <input type="hidden" name="action" value="club100_subscribe">
                     <?php wp_nonce_field('club100_form_nonce', 'club100_nonce'); ?>
@@ -105,13 +105,13 @@ get_header('societa');
                             <input type="text" name="c100_oggetto" required style="width: 100%; background: transparent; border: 2px solid white; color: white; padding: 12px; font-size: 14px;" placeholder="Oggetto">
                         </div>
                     </div>
-
+ 
                     <div style="margin-bottom: 40px;">
                         <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 13px;">Testo*</label>
                         <input type="text" name="c100_testo" required style="width: 100%; background: transparent; border: none; border-bottom: 2px solid white; color: white; padding: 12px 0; font-size: 14px;" placeholder="Testo">
                     </div>
-
-                    <div style="text-align: center;">
+ 
+                    <div style="text-align: right;">
                         <button type="submit" style="background-color: var(--c-primary); color: #000; border: none; padding: 14px 40px; font-weight: bold; text-transform: uppercase; cursor: pointer; letter-spacing: 1px; font-size: 14px; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">INVIA RICHIESTA</button>
                     </div>
                 </form>
