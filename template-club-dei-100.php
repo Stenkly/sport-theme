@@ -58,7 +58,7 @@ get_header('societa');
             <p>In caso foste propensi ad aderire all’iniziativa, vi chiediamo gentilmente di compilare al più presto possibile il contratto che trovate in buvette e ritornarlo per e-mail o via posta all’indirizzo indicato nel contratto. e-mail: <a href="mailto:marketing@actaverne.com" style="color: var(--c-primary); text-decoration: none; font-weight: 700;">marketing@actaverne.com</a></p>
             <p style="margin-bottom: 40px;">Potete anche consegnarlo in buvette.</p>
 
-            <div style="text-align: right; margin-top: 20px; line-height: 1.4; font-size: 16px;">
+            <div style="text-align: right; margin-top: 10px; line-height: 1.4; font-size: 16px;">
                 Sportivi Saluti<br>
                 <strong>Antonio Londino</strong><br>
                 <span style="color: var(--c-primary); font-weight: 700;">Responsabile Club dei 100</span>
@@ -68,10 +68,10 @@ get_header('societa');
     </div>
 
     <!-- FORM SEZIONE (Larghezza allineata al testo del container superiore) -->
-    <div class="container" style="padding-top: 0; padding-bottom: 40px; margin-top: -20px;">
+    <div class="container" style="padding-top: 0; padding-bottom: 40px; margin-top: -55px;">
         <div class="club100-form-band" style="border-top: 2px solid #555; border-bottom: 2px solid #555; background-color: #000; display: flex; justify-content: center;">
             <!-- Form -->
-            <div class="club100-form-left" style="width: 100%; max-width: 900px; padding: 25px 0 40px 0; display: flex; flex-direction: column; justify-content: center;">
+            <div class="club100-form-left" style="width: 100%; max-width: 900px; padding: 10px 0 40px 0; display: flex; flex-direction: column; justify-content: center;">
                 <h2 class="text-primary" style="font-size: 34px; font-weight: 700; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 1px; text-align: left;">ISCRIVITI</h2>
                 
                 <?php if ( isset($_GET['iscritto']) && $_GET['iscritto'] == '1' ) : ?>
