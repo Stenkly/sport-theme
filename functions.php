@@ -3353,7 +3353,7 @@ function sport_theme_render_hero_custom_styles() {
         $fallback_post = null;
         
         // 1. Pagine Club: fallback alla pagina con slug 'club'
-        if ( is_page_template( array( 'template-organigramma.php', 'template-storia.php', 'template-club-page.php', 'template-comitato-societa.php' ) ) || is_page( array( 'organigramma', 'storia', 'progetto-sportivo' ) ) ) {
+        if ( is_page_template( array( 'template-organigramma.php', 'template-storia.php', 'template-club-page.php', 'template-comitato-societa.php', 'template-sezioni.php' ) ) || is_page( array( 'organigramma', 'storia', 'progetto-sportivo', 'sezioni' ) ) ) {
             $fallback_post = get_page_by_path( 'club' );
             if ( ! $fallback_post ) {
                 $fallback_post = get_page_by_title( 'Club' );
