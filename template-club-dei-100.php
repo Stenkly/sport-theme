@@ -71,7 +71,7 @@ get_header('societa');
     <div class="container" style="padding-top: 0; padding-bottom: 40px; margin-top: -55px;">
         <div class="club100-form-band" style="border-top: 2px solid #555; border-bottom: 2px solid #555; background-color: #000; display: flex; justify-content: center;">
             <!-- Form -->
-            <div class="club100-form-left" style="width: 100%; max-width: 900px; padding: 10px 0 40px 0; display: flex; flex-direction: column; justify-content: center;">
+            <div class="club100-form-left" style="width: 100%; max-width: 900px; padding: 40px 0 40px 0; display: flex; flex-direction: column; justify-content: center;">
                 <h2 class="text-primary" style="font-size: 34px; font-weight: 700; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 1px; text-align: left;">ISCRIVITI</h2>
                 
                 <?php if ( isset($_GET['iscritto']) && $_GET['iscritto'] == '1' ) : ?>
