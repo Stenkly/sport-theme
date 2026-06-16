@@ -156,17 +156,16 @@ get_header('societa');
             </div>
             <?php endif; ?>
 
-            <!-- Calendario Campo Sportivo -->
-            <h3 class="text-white" style="font-size: 26px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Piano occupazione Campo</h3>
-            <div id="calendar-campo" style="margin-bottom: 60px; width: 100%;"></div>
-
-            <!-- Calendario Buvette -->
-            <h3 class="text-white" style="font-size: 26px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Piano occupazione Buvette</h3>
-            <div id="calendar-buvette" style="margin-bottom: 60px; width: 100%;"></div>
-
-            <!-- Calendario Infrastruttura -->
-            <h3 class="text-white" style="font-size: 26px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Piano occupazione Infrastruttura</h3>
-            <div id="calendar-infra" style="margin-bottom: 80px; width: 100%;"></div>
+            <div class="google-calendar-wrapper" style="width: 100%; margin-bottom: 80px; background-color: #fff; padding: 10px; border-radius: 5px;">
+                <?php
+                $calendar_html = get_post_meta( get_the_ID(), '_infra_calendar_iframe', true );
+                if ( empty( $calendar_html ) ) {
+                    $calendar_id = 'q5annq4orol4ue2pipv70hlmsc@group.calendar.google.com';
+                    $calendar_html = '<iframe src="https://calendar.google.com/calendar/embed?src=' . urlencode($calendar_id) . '&ctz=Europe%2FZurich" style="border: 0; width: 100%; height: 700px;" frameborder="0" scrolling="no"></iframe>';
+                }
+                echo $calendar_html;
+                ?>
+            </div>
         </div>
 
         <div id="prenotazioni-wrapper">
@@ -281,125 +280,10 @@ get_header('societa');
     </div>
 </main>
 
-<!-- Load FullCalendar and dependency scripts locally -->
-<script src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/js/fullcalendar.global.min.js"></script>
-<script src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/js/ical.min.js"></script>
-<script src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/js/icalendar.global.min.js"></script>
-
-<style>
-/* FullCalendar Premium Dark & Yellow Theme Overrides */
-.fc {
-    font-family: 'Josefin Sans', sans-serif !important;
-    background-color: #111 !important;
-    color: #fff !important;
-    border: 1px solid #333 !important;
-    border-radius: 8px;
-    padding: 15px;
-}
-.fc-theme-standard td, .fc-theme-standard th {
-    border: 1px solid #222 !important;
-}
-.fc-col-header-cell {
-    background-color: #222 !important;
-    color: #fff !important;
-    font-weight: bold;
-    text-transform: uppercase;
-    padding: 10px 0 !important;
-}
-.fc-col-header-cell a {
-    color: #fff !important;
-    text-decoration: none !important;
-}
-.fc-timegrid-slot {
-    background-color: #111 !important;
-    border-bottom: 1px solid #222 !important;
-    height: 4.5em !important;
-}
-.fc-timegrid-slot-label-cushion {
-    color: #aaa !important;
-    font-size: 13px;
-}
-.fc-event {
-    background-color: var(--c-primary) !important;
-    border: 1px solid var(--c-primary) !important;
-    color: #000 !important;
-    font-weight: bold;
-    border-radius: 4px;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    transition: transform 0.2s, opacity 0.2s;
-}
-.fc-event:hover {
-    transform: scale(1.02);
-    opacity: 0.9;
-}
-.fc-event-main {
-    padding: 4px;
-    color: #000 !important;
-}
-.fc-event-title, .fc-event-time {
-    color: #000 !important;
-    font-size: 13px !important;
-    font-weight: 700 !important;
-}
-.fc-button-primary {
-    background-color: #222 !important;
-    border-color: #333 !important;
-    color: #fff !important;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 13px !important;
-    padding: 8px 16px !important;
-    transition: all 0.3s;
-}
-.fc-button-primary:hover {
-    background-color: var(--c-primary) !important;
-    border-color: var(--c-primary) !important;
-    color: #000 !important;
-}
-.fc-button-primary:disabled {
-    background-color: #111 !important;
-    border-color: #222 !important;
-    color: #444 !important;
-}
-.fc-button-active {
-    background-color: var(--c-primary) !important;
-    border-color: var(--c-primary) !important;
-    color: #000 !important;
-}
-.fc-toolbar-title {
-    font-size: 22px !important;
-    text-transform: uppercase;
-    font-weight: bold;
-    color: var(--c-primary) !important;
-    letter-spacing: 1px;
-}
-.fc-timegrid-now-indicator-line {
-    border-color: var(--c-primary) !important;
-}
-.fc-timegrid-now-indicator-arrow {
-    border-color: var(--c-primary) !important;
-}
-.fc-list-day-cushion {
-    background-color: #222 !important;
-}
-.fc-list-event:hover td {
-    background-color: #222 !important;
-}
-.fc-list-event-title a {
-    color: #fff !important;
-}
-.fc-list-event-time {
-    color: var(--c-primary) !important;
-}
-</style>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const tabs = document.querySelectorAll('.infra-tab-btn');
     const contents = document.querySelectorAll('.infra-tab-content');
-    let calendarsInitialized = false;
-    const calendars = [];
 
     tabs.forEach(tab => {
         tab.addEventListener('click', function() {
@@ -423,89 +307,30 @@ document.addEventListener('DOMContentLoaded', function() {
             // Hide prenotazioni form if tab is Occupazione
             if (targetId === 'tab-occupazione') {
                 document.getElementById('prenotazioni-wrapper').style.display = 'none';
-                
-                // Initialize calendars on first click with a small delay for DOM layout
-                setTimeout(() => {
-                    if (!calendarsInitialized) {
-                        initCalendars();
-                        calendarsInitialized = true;
-                    } else {
-                        // Update layout size to prevent rendering glitches
-                        calendars.forEach(cal => cal.updateSize());
-                    }
-                }, 50);
             } else {
                 document.getElementById('prenotazioni-wrapper').style.display = 'block';
             }
         });
     });
-
-    const pageId = <?php echo get_the_ID(); ?>;
-    const ajaxUrl = "<?php echo esc_url(admin_url('admin-ajax.php')); ?>";
-
-    function initCalendars() {
-        console.log("[FullCalendar] Initializing calendars. ICAL library present:", typeof window.ICAL !== 'undefined');
-        const configs = [
-            { id: 'calendar-campo', field: 'campo' },
-            { id: 'calendar-buvette', field: 'buvette' },
-            { id: 'calendar-infra', field: 'infra' }
-        ];
-
-        configs.forEach(conf => {
-            const el = document.getElementById(conf.id);
-            if (!el) return;
-
-            const cal = new FullCalendar.Calendar(el, {
-                initialView: 'timeGridWeek',
-                height: 'auto',
-                locale: 'it',
-                firstDay: 1, // Start on Monday
-                timeZone: 'Europe/Zurich',
-                slotMinTime: '06:00:00',
-                slotMaxTime: '23:00:00',
-                allDaySlot: false,
-                slotDuration: '00:30:00',
-                slotLabelFormat: {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    omitZeroMinute: false,
-                    meridiem: false
-                },
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-                },
-                buttonText: {
-                    today: 'Oggi',
-                    month: 'Mese',
-                    week: 'Settimana',
-                    day: 'Giorno',
-                    list: 'Agenda'
-                },
-                events: {
-                    url: `${ajaxUrl}?action=get_calendar_ics&post_id=${pageId}&field=${conf.field}`,
-                    format: 'ics'
-                },
-                eventSourceSuccess: function(content, response) {
-                    console.log(`[FullCalendar SUCCESS] Loaded ${conf.field} source.`);
-                    return content;
-                },
-                eventSourceFailure: function(error) {
-                    console.error(`[FullCalendar FAILURE] Failed to load ${conf.field}:`, error);
-                },
-                eventDidMount: function(info) {
-                    if (info.event.extendedProps.description) {
-                        info.el.setAttribute('title', info.event.extendedProps.description);
-                    }
-                }
-            });
-
-            cal.render();
-            calendars.push(cal);
-        });
-    }
 });
 </script>
+
+<style>
+.google-calendar-wrapper {
+    width: 100%;
+    height: 750px;
+    max-height: 85vh;
+}
+.google-calendar-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+@media (max-width: 768px) {
+    .google-calendar-wrapper {
+        height: 500px;
+    }
+}
+</style>
 
 <?php get_footer('societa'); ?>
