@@ -35,8 +35,7 @@ function sport_theme_render_societa_sponsor_grid( $level ) {
     ]);
 
     if ( ! $query->have_posts() ) {
-        echo '<p class="societa-sponsor-empty">Nessuno sponsor inserito in questa sezione.</p>';
-        return;
+        return false;
     }
 
     echo '<div class="societa-sponsor-grid">';
@@ -57,12 +56,12 @@ function sport_theme_render_societa_sponsor_grid( $level ) {
     }
     echo '</div>';
     wp_reset_postdata();
+    return true;
 }
 
 while ( have_posts() ) : the_post();
-    $hero_image_url = has_post_thumbnail()
-        ? get_the_post_thumbnail_url( get_the_ID(), 'full' )
-        : get_template_directory_uri() . '/assets/images/campo-taverne.jpg';
+    $hero_image_url = sport_theme_get_societa_home_hero_url();
+    $hero_sottotitolo = get_post_meta( get_the_ID(), '_sponsor_hero_sottotitolo', true ) ?: "INSIEME ALLE AZIENDE CHE SOSTENGONO L'AC TAVERNE.";
 ?>
 
 <main id="primary" class="site-main page-sponsor-societa">
@@ -73,23 +72,32 @@ while ( have_posts() ) : the_post();
             <div class="news-hero-content container">
                 <h1 class="text-white">Sponsor</h1>
                 <hr>
+                <p class="text-white hero-subtitle"><?php echo esc_html( $hero_sottotitolo ); ?></p>
             </div>
         </div>
     </section>
 
-    <section class="container societa-sponsor-intro">
-        <p>Le aziende partner sostengono la crescita dell'AC Taverne e contribuiscono allo sviluppo sportivo, sociale e formativo del club.</p>
-    </section>
+    <?php
+    ob_start();
+    $has_main_sponsors = sport_theme_render_societa_sponsor_grid( 'main' );
+    $main_sponsor_html = ob_get_clean();
+    if ( $has_main_sponsors ) :
+    ?>
+        <section class="container societa-sponsor-section">
+            <?php echo $main_sponsor_html; ?>
+        </section>
+    <?php endif; ?>
 
-    <section class="container societa-sponsor-section">
-        <h2>Main Sponsor</h2>
-        <?php sport_theme_render_societa_sponsor_grid( 'main' ); ?>
-    </section>
-
-    <section class="container societa-sponsor-section">
-        <h2>Partner</h2>
-        <?php sport_theme_render_societa_sponsor_grid( 'partner' ); ?>
-    </section>
+    <?php
+    ob_start();
+    $has_partner_sponsors = sport_theme_render_societa_sponsor_grid( 'partner' );
+    $partner_sponsor_html = ob_get_clean();
+    if ( $has_partner_sponsors ) :
+    ?>
+        <section class="container societa-sponsor-section">
+            <?php echo $partner_sponsor_html; ?>
+        </section>
+    <?php endif; ?>
 </main>
 
 <?php

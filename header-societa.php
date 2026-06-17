@@ -42,17 +42,8 @@
                 <a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>" class="<?php if(is_front_page() || is_page('ac-taverne')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">HOME</a>
             </li>
 
-            <!-- Società con sottomenu -->
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <div class="hs-mob-toggle" style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:18px 0;">
-                    <span class="<?php if(is_page('la-societa') || is_page('comitato') || is_page('club-dei-100')) echo 'mob-active'; ?>" style="color:white; font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">SOCIETÀ</span>
-                    <i class="fa-solid fa-chevron-down" style="color:white; font-size:14px; transition: transform 0.3s;"></i>
-                </div>
-                <ul class="hs-mob-submenu" style="display:none; list-style:none; padding: 0 0 10px 20px; margin:0;">
-                    <li><a href="<?php echo esc_url( site_url('/la-societa') ); ?>" class="<?php if(is_page('la-societa')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">La Società</a></li>
-                    <li><a href="<?php echo esc_url( site_url('/comitato') ); ?>" class="<?php if(is_page('comitato')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Comitato</a></li>
-                    <li><a href="<?php echo esc_url( site_url('/club-dei-100') ); ?>" class="<?php if(is_page('club-dei-100')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Club dei 100</a></li>
-                </ul>
+                <a href="<?php echo esc_url( site_url('/la-societa') ); ?>" class="<?php if(is_page('la-societa') || is_page('comitato') || is_page('club-dei-100') || is_page('area-allenatori') || is_page('area-segreteria')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">SOCIETÀ</a>
             </li>
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
@@ -95,8 +86,6 @@
     <div style="display:flex; gap:18px; justify-content:flex-start; align-items:center;">
         <a href="https://www.instagram.com/ac_taverne?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" style="color:white; font-size:22px;" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
         <a href="https://www.facebook.com/share/1BZrVQUTfb/?mibextid=wwXIfr" target="_blank" style="color:white; font-size:22px;" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-        <a href="https://www.linkedin.com/company/actaverne/" target="_blank" style="color:white; font-size:22px;" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-        <a href="https://whatsapp.com/channel/0029VbBqO0G7YSd4VsRANF2G" target="_blank" style="color:white; font-size:22px;" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
         <a href="https://www.tiktok.com/@actaverne?_r=1&_t=ZN-96cub3rtWfm" target="_blank" style="color:white; font-size:22px;" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
     </div>
 </div>
@@ -134,8 +123,6 @@
             <div class="header-right-icons" style="position: absolute; top: 30px; right: 70px; display: flex; gap: 15px;">
                 <a href="https://www.instagram.com/ac_taverne?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                 <a href="https://www.facebook.com/share/1BZrVQUTfb/?mibextid=wwXIfr" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="https://www.linkedin.com/company/actaverne/" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                <a href="https://whatsapp.com/channel/0029VbBqO0G7YSd4VsRANF2G" target="_blank" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
                 <a href="https://www.tiktok.com/@actaverne?_r=1&_t=ZN-96cub3rtWfm" target="_blank" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
             </div>
         </div>
@@ -144,13 +131,8 @@
         <nav id="hs-nav" class="main-navigation">
             <ul>
                 <li><a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>" <?php if(is_front_page() || is_page('ac-taverne')) echo 'class="current-menu-item"'; ?>>HOME</a></li>
-                <li class="menu-item-has-children <?php if(is_page('la-societa') || is_page('comitato') || is_page('club-dei-100')) echo 'current-menu-item'; ?>">
+                <li class="<?php if(is_page('la-societa') || is_page('comitato') || is_page('club-dei-100') || is_page('area-allenatori') || is_page('area-segreteria')) echo 'current-menu-item'; ?>">
                     <a href="<?php echo esc_url( site_url('/la-societa') ); ?>">SOCIETÀ</a>
-                    <ul class="sub-menu">
-                        <li><a href="<?php echo esc_url( site_url('/la-societa') ); ?>">La Società</a></li>
-                        <li><a href="<?php echo esc_url( site_url('/comitato') ); ?>">Comitato</a></li>
-                        <li><a href="<?php echo esc_url( site_url('/club-dei-100') ); ?>">Club dei 100</a></li>
-                    </ul>
                 </li>
                 <li><a href="<?php echo esc_url( site_url('/sezioni') ); ?>" <?php if(is_page('sezioni')) echo 'class="current-menu-item"'; ?>>SEZIONI</a></li>
                 <li><a href="<?php echo esc_url( site_url('/scuola-calcio') ); ?>" <?php if(is_page('scuola-calcio')) echo 'class="current-menu-item"'; ?>>SCUOLA CALCIO</a></li>

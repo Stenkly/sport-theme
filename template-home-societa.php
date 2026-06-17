@@ -372,8 +372,8 @@ get_header('societa');
         <?php
         $sezioni = [
             ['label' => 'SCUOLA CALCIO', 'url' => '/scuola-calcio',          'img' => get_template_directory_uri() . '/assets/images/scuola-calcio.jpg'],
-            ['label' => 'ALLIEVI',       'url' => '/sezioni?cat=allievi',    'img' => 'https://images.unsplash.com/photo-1508344928928-7137b29de218?q=80&w=800&auto=format&fit=crop'],
-            ['label' => 'FEMMINILE',     'url' => '/sezioni?cat=femminile',  'img' => 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=800&auto=format&fit=crop'],
+            ['label' => 'ALLIEVI',       'url' => '/sezioni?cat=allievi',    'img' => get_template_directory_uri() . '/assets/images/allievi-home.jpg'],
+            ['label' => 'FEMMINILE',     'url' => '/sezioni?cat=femminile',  'img' => get_template_directory_uri() . '/assets/images/femminile-home.jpg'],
         ];
         foreach ($sezioni as $s):
         ?>
@@ -393,7 +393,13 @@ get_header('societa');
         </div>
 
         <?php
-        $news_q = new WP_Query(['post_type' => 'post', 'posts_per_page' => 6, 'orderby' => 'date', 'order' => 'DESC']);
+        $news_q = new WP_Query([
+            'post_type'      => 'post',
+            'category_name'  => 'settore-giovanile',
+            'posts_per_page' => 6,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+        ]);
         $news_count = 0;
         ob_start();
         if ($news_q->have_posts()):
@@ -414,19 +420,9 @@ get_header('societa');
             endwhile;
             wp_reset_postdata();
         else:
-            $news_count = 3;
-            for ($i = 0; $i < 3; $i++):
         ?>
-            <div class="news-slide">
-                <div class="news-card cover-bg" style="background-image: url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=600&auto=format&fit=crop'); height: 350px;">
-                    <div class="news-date">28.02</div>
-                    <div class="news-content">
-                        <h3 class="news-title text-white">SI È CONCLUSO OPENAIR:<br>SIAMO LIETI DI...</h3>
-                        <a href="#" class="btn-sm btn-primary" style="display:inline-block;">LEGGI ARTICOLO</a>
-                    </div>
-                </div>
-            </div>
-        <?php endfor; endif;
+            <p class="text-white hs-empty-news">Nessuna news del settore giovanile disponibile.</p>
+        <?php endif;
         $news_html = ob_get_clean();
         ?>
 
@@ -512,88 +508,10 @@ get_header('societa');
         </div>
     </section>
 
-    <!-- ═══ 5. SPONSOR ═══ -->
-    <section class="ps-section container">
-        <h2 class="section-title text-white" style="margin-bottom: 12px;">SPONSOR</h2>
-        <div style="width:100%; height:1px; background:rgba(255,255,255,0.1); margin-bottom:35px;"></div>
-        <div class="hs-sponsor-row">
-            <?php
-            $sp_q = new WP_Query([
-                'post_type' => 'sponsor',
-                'posts_per_page' => -1,
-                'meta_query' => [
-                    'relation' => 'OR',
-                    [
-                        'key' => '_destinazione_sponsor',
-                        'value' => 'societa',
-                        'compare' => '='
-                    ],
-                    [
-                        'key' => '_destinazione_sponsor',
-                        'value' => 'entrambi',
-                        'compare' => '='
-                    ]
-                ]
-            ]);
-            if ($sp_q->have_posts()):
-                while ($sp_q->have_posts()): $sp_q->the_post();
-                    $sito = get_post_meta(get_the_ID(), '_sito_url', true);
-                    $logo = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'medium') : '';
-                    if ($logo):
-            ?>
-                <a href="<?php echo $sito ? esc_url($sito) : '#'; ?>" target="_blank">
-                    <img src="<?php echo esc_url($logo); ?>" alt="<?php echo esc_attr(get_the_title()); ?>">
-                </a>
-            <?php   endif; endwhile; wp_reset_postdata();
-            else:
-                $names = ['BancaStato', 'BRIC&Ograve;', 'RAIFFEISEN', 'ail'];
-                foreach ($names as $n):
-            ?>
-                <span style="color:#fff; font-size:22px; font-weight:700; opacity:0.75;"><?php echo $n; ?></span>
-            <?php endforeach; endif; ?>
-        </div>
-    </section>
-
     <!-- ═══ 6. INSTAGRAM ═══ -->
-    <section style="background:#000; padding-bottom: 0; margin-top: 40px;">
-        <div class="hs-insta-bar">
-            <div class="container hs-insta-bar-inner">
-                <div class="hs-insta-profile">
-                    <img class="hs-insta-avatar"
-                         src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/img/logo.png"
-                         onerror="this.src='https://via.placeholder.com/52x52/222/FFF?text=AC'"
-                         alt="AC Taverne">
-                    <div>
-                        <p class="hs-insta-name">AC Taverne</p>
-                        <p class="hs-insta-handle">@ac_taverne</p>
-                    </div>
-                </div>
-                <div class="hs-insta-stats">
-                    <div><strong>688</strong><span>post</span></div>
-                    <div><strong>4.2K</strong><span>follower</span></div>
-                    <div><strong>95</strong><span>seguiti</span></div>
-                </div>
-                <a href="https://instagram.com/ac_taverne" target="_blank" class="hs-insta-follow">
-                    <i class="fa-brands fa-instagram" style="margin-right:6px;"></i> SEGUI
-                </a>
-            </div>
-        </div>
-
-        <div class="hs-insta-grid container">
-            <?php
-            $insta_imgs = [
-                'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=400&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1508344928928-7137b29de218?q=80&w=400&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=400&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1553147573-0ff7d2b45053?q=80&w=400&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1518622358385-8ea7d0794bf6?q=80&w=400&auto=format&fit=crop',
-            ];
-            foreach ($insta_imgs as $idx => $src):
-            ?>
-            <div class="hs-insta-grid-item">
-                <img src="<?php echo esc_url($src); ?>" alt="Instagram <?php echo $idx + 1; ?>" loading="lazy">
-            </div>
-            <?php endforeach; ?>
+    <section class="hs-instagram-strip">
+        <div class="container">
+            <?php echo do_shortcode('[instagram-feed feed=2]'); ?>
         </div>
     </section>
 

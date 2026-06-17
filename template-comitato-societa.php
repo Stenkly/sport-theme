@@ -12,25 +12,24 @@ get_header('societa');
 
     <section class="news-hero">
         <?php
-        if ( has_post_thumbnail() ) {
-            $hero_image_url = get_the_post_thumbnail_url( get_the_ID(), 'full' );
-        } else {
-            $hero_image_url = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=2000&auto=format&fit=crop';
-        }
+        $hero_image_url = sport_theme_get_societa_home_hero_url();
         ?>
         <div class="news-hero-wrapper" style="position: relative; width: 100%; height: 50vh;">
             <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="height: 100%; width: 100%; object-fit: cover; object-position: center;" alt="<?php echo esc_attr(get_the_title()); ?>">
-            <div class="news-hero-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
+            <div class="club-hero-fade"></div>
             
-            <div class="news-hero-content container" style="position: absolute; bottom: 0; left: 0; right: 0; text-align: left; padding-bottom: 30px;">
+            <div class="news-hero-content container" style="position: absolute; bottom: 40px; left: 0; right: 0; text-align: left;">
                 <h1 class="text-white" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">COMITATO</h1>
-                <hr class="sc-divider" style="border: 0; border-top: 2px solid rgba(255,255,255,1); margin: 20px 0;">
+                <hr class="sc-divider" style="border: 0; border-top: 2px solid white; margin: 20px 0;">
                 <?php sport_theme_render_societa_submenu(); ?>
+                <p class="text-white" style="font-size: 24px; font-weight: 700; text-transform: uppercase; margin: 20px 0 0 0; line-height: 1.3;">
+                    LE PERSONE CHE GUIDANO IL CLUB.<br>COMPETENZA, PASSIONE E PRESENZA.
+                </p>
             </div>
         </div>
     </section>
 
-    <div style="padding-top: 60px;">
+    <div style="padding-top: 10px;">
     <?php
     $dirigenti_query = new WP_Query(array(
         'post_type' => 'dirigente',
@@ -95,7 +94,9 @@ get_header('societa');
             return 0;
         });
     ?>
-    <section class="ps-section container" style="padding-top: 20px; padding-bottom: 60px;">
+    <section class="ps-section container" style="padding-top: 0; padding-bottom: 60px;">
+        <h2 class="text-primary" style="font-size: 34px; font-weight: 700; margin-bottom: 35px; text-transform: uppercase; letter-spacing: 1px;">IL NOSTRO COMITATO</h2>
+
         <!-- Sezione Presidente Onorario (in cima, centrato) -->
         <?php if (!empty($presidents)): ?>
             <div class="dirigenti-grid" style="grid-template-columns: 1fr; margin-bottom: 40px; display: grid;">
@@ -188,12 +189,6 @@ get_header('societa');
     endif;
     ?>
     </div>
-
-    <!-- PARTNER E SPONSOR -->
-    <section class="ps-section container">
-        <h2 class="section-title text-white">SPONSOR</h2>
-        <?php sport_theme_render_global_sponsors(); ?>
-    </section>
 
 </main>
 

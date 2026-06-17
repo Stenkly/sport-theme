@@ -13,26 +13,25 @@ get_header('societa');
     <!-- HERO IMMAGINE -->
     <section class="news-hero">
         <?php
-        if ( has_post_thumbnail() ) {
-            $hero_image_url = get_the_post_thumbnail_url( get_the_ID(), 'full' );
-        } else {
-            $hero_image_url = 'https://images.unsplash.com/photo-1518622358385-8ea7d0794bf6?q=80&w=2000&auto=format&fit=crop';
-        }
+        $hero_image_url = sport_theme_get_societa_home_hero_url();
         ?>
-        <div class="news-hero-wrapper" style="position: relative; width: 100%; height: 50vh; min-height: 400px;">
+        <div class="news-hero-wrapper" style="position: relative; width: 100%; height: 50vh;">
             <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="height: 100%; width: 100%; object-fit: cover; object-position: center;" alt="<?php echo esc_attr(get_the_title()); ?>">
-            <div class="news-hero-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
+            <div class="club-hero-fade"></div>
             
-            <div class="news-hero-content container" style="position: absolute; bottom: 0; left: 0; right: 0; text-align: left; padding-bottom: 30px;">
+            <div class="news-hero-content container" style="position: absolute; bottom: 40px; left: 0; right: 0; text-align: left;">
                 <h1 class="text-white" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">AC TAVERNE</h1>
-                <hr class="sc-divider" style="border: 0; border-top: 2px solid rgba(255,255,255,1); margin: 20px 0;">
+                <hr class="sc-divider" style="border: 0; border-top: 2px solid white; margin: 20px 0;">
                 <?php sport_theme_render_societa_submenu(); ?>
+                <p class="text-white" style="font-size: 24px; font-weight: 700; text-transform: uppercase; margin: 20px 0 0 0; line-height: 1.3;">
+                    LA NOSTRA IDENTITÀ, IL NOSTRO TERRITORIO.<br>DA OLTRE 70 ANNI INSIEME.
+                </p>
             </div>
         </div>
     </section>
 
     <!-- CONTENT -->
-    <div class="container" style="padding-top: 50px; padding-bottom: 60px;">
+    <div class="container" style="padding-top: 10px; padding-bottom: 60px;">
                 <?php
         // Recupero campi custom se esistono, altrimenti placeholder
         $titolo_1 = get_post_meta(get_the_ID(), '_soc_titolo_1', true) ?: 'LA SOCIETÀ';
@@ -86,47 +85,6 @@ get_header('societa');
                 <h3 class="text-white" style="font-size: 18px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; line-height: 1.4;"><?php echo esc_html($sottotitolo_4); ?></h3>
             <?php endif; ?>
             <a href="<?php echo esc_url($file_statuto); ?>" target="_blank" class="btn-statuto" style="display: inline-block; background-color: var(--c-primary); color: var(--c-black); font-weight: 700; padding: 8px 40px; text-transform: uppercase; text-decoration: none; font-size: 14px; letter-spacing: 1px; margin-top: 10px; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">SCARICA</a>
-        </div>
-
-        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.4); margin-bottom: 40px;">
-
-        <!-- SPONSOR -->
-        <h3 class="text-white" style="font-size: 26px; font-weight: 700; text-transform: uppercase; margin-bottom: 30px; letter-spacing: 1px;">SPONSOR</h3>
-        <div class="hs-sponsor-row">
-            <?php
-            $sp_q = new WP_Query([
-                'post_type' => 'sponsor',
-                'posts_per_page' => -1,
-                'meta_query' => [
-                    'relation' => 'OR',
-                    [
-                        'key' => '_destinazione_sponsor',
-                        'value' => 'societa',
-                        'compare' => '='
-                    ],
-                    [
-                        'key' => '_destinazione_sponsor',
-                        'value' => 'entrambi',
-                        'compare' => '='
-                    ]
-                ]
-            ]);
-            if ($sp_q->have_posts()):
-                while ($sp_q->have_posts()): $sp_q->the_post();
-                    $sito = get_post_meta(get_the_ID(), '_sito_url', true);
-                    $logo = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'medium') : '';
-                    if ($logo):
-            ?>
-                <a href="<?php echo $sito ? esc_url($sito) : '#'; ?>" target="_blank">
-                    <img src="<?php echo esc_url($logo); ?>" alt="<?php echo esc_attr(get_the_title()); ?>">
-                </a>
-            <?php   endif; endwhile; wp_reset_postdata();
-            else:
-                $names = ['BancaStato', 'BRIC&Ograve;', 'RAIFFEISEN', 'ail'];
-                foreach ($names as $n):
-            ?>
-                <span style="color:#fff; font-size:22px; font-weight:700; opacity:0.75;"><?php echo $n; ?></span>
-            <?php endforeach; endif; ?>
         </div>
 
     </div>

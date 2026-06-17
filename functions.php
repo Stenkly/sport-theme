@@ -110,8 +110,18 @@ function sport_theme_add_roles() {
 		// Crea il ruolo 'allenatore' copiando le capabilities del sottoscrittore
 		add_role( 'allenatore', 'Allenatore', array( 'read' => true ) );
 	}
+
+	if ( ! get_role( 'segreteria' ) ) {
+		add_role( 'segreteria', 'Segreteria', array( 'read' => true, 'access_segreteria' => true ) );
+	} else {
+		get_role( 'segreteria' )->add_cap( 'access_segreteria' );
+	}
 }
 add_action( 'init', 'sport_theme_add_roles' );
+
+function sport_theme_can_access_segreteria() {
+    return current_user_can( 'manage_options' ) || current_user_can( 'edit_pages' ) || current_user_can( 'access_segreteria' );
+}
 
 // Nascondiamo l'admin bar per gli allenatori.
 add_action('after_setup_theme', 'sport_theme_remove_admin_bar');
@@ -1882,7 +1892,11 @@ function sport_theme_salva_squadra_sezione_meta($post_id) {
                 'frameborder'     => true,
                 'allowfullscreen' => true,
                 'style'           => true,
-                'scrolling'       => true
+                'scrolling'       => true,
+                'loading'         => true,
+                'title'           => true,
+                'id'              => true,
+                'class'           => true
             )
         );
         update_post_meta($post_id, '_ss_iframe', wp_kses(wp_unslash($_POST['_ss_iframe']), $iframe_rules));
@@ -1924,6 +1938,41 @@ function sport_theme_create_allenatori_societa() {
     }
 }
 add_action( 'init', 'sport_theme_create_allenatori_societa' );
+
+/**
+ * Crea automaticamente la pagina Area Segreteria.
+ */
+function sport_theme_create_area_segreteria() {
+    $page_title = 'Area Segreteria';
+    $page_slug = 'area-segreteria';
+    $template_file = 'template-area-segreteria.php';
+
+    $page = get_page_by_path( $page_slug );
+    if ( ! $page ) $page = get_page_by_title( $page_title );
+
+    if ( ! $page ) {
+        $page_id = wp_insert_post( array(
+            'post_title'     => $page_title,
+            'post_name'      => $page_slug,
+            'post_type'      => 'page',
+            'post_status'    => 'publish',
+        ) );
+    } else {
+        $page_id = $page->ID;
+        if ( $page->post_name !== $page_slug || $page->post_status !== 'publish' ) {
+            wp_update_post( array(
+                'ID' => $page_id,
+                'post_name' => $page_slug,
+                'post_status' => 'publish',
+            ) );
+        }
+    }
+
+    if ( $page_id && ! is_wp_error( $page_id ) ) {
+        update_post_meta( $page_id, '_wp_page_template', $template_file );
+    }
+}
+add_action( 'init', 'sport_theme_create_area_segreteria' );
 
 /**
  * Metabox per Area Allenatori
@@ -3094,6 +3143,7 @@ function sport_theme_render_societa_submenu() {
         'Comitato'       => site_url('/comitato'),
         'Club dei 100'   => site_url('/club-dei-100'),
         'Area Allenatori' => site_url('/area-allenatori'),
+        'Area Segreteria' => site_url('/area-segreteria'),
     ];
 
     echo '<div class="page-submenu" style="display: flex; gap: 20px; margin-top: 30px; margin-bottom: 10px; flex-wrap: wrap; justify-content: flex-start; z-index: 10; position: relative;">';
@@ -3107,6 +3157,8 @@ function sport_theme_render_societa_submenu() {
         } elseif ( $label === 'Club dei 100' && (is_page('club-dei-100') || is_page_template('template-club-dei-100.php')) ) {
             $is_active = true;
         } elseif ( $label === 'Area Allenatori' && (is_page('area-allenatori') || is_page_template('template-allenatori.php')) ) {
+            $is_active = true;
+        } elseif ( $label === 'Area Segreteria' && (is_page('area-segreteria') || is_page_template('template-area-segreteria.php')) ) {
             $is_active = true;
         }
 

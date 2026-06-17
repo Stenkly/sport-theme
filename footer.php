@@ -13,8 +13,7 @@
                 <h4>AC TAVERNE</h4>
                 <p>Via Traversone 2<br>
                 CP 703 - 6807 Taverne<br>
-                <a href="mailto:scoutingactaverne@gmail.com">scoutingactaverne@gmail.com</a>
-                <a href="mailto:a.spoggi@actaverne.com">a.spoggi@actaverne.com</a></p>
+                <a href="mailto:info@actaverne.com">info@actaverne.com</a></p>
                 <div class="fm-social">
                     <a href="https://www.instagram.com/ac_taverne?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank"><i class="fa-brands fa-instagram"></i></a>
                     <a href="https://www.facebook.com/share/1BZrVQUTfb/?mibextid=wwXIfr" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>

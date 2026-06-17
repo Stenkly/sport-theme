@@ -10,6 +10,8 @@ get_header('societa');
 // Legge il parametro ?cat= per pre-selezionare una categoria (es: /sezioni?cat=allievi)
 $default_cat = isset($_GET['cat']) ? sanitize_title($_GET['cat']) : '';
 
+$sezioni_hero_image_url = get_template_directory_uri() . '/assets/images/campo-taverne.jpg';
+
 // Recupera le categorie Root (Livello 1)
 $root_categories = get_terms(array(
     'taxonomy'   => 'categoria_sezione',
@@ -22,10 +24,10 @@ $struttura = array();
 
 if ( ! empty($root_categories) && ! is_wp_error($root_categories) ) {
     // Ordine personalizzato per le categorie principali se esistono
-    $ordine_cat = ['Attivi', 'Allievi', 'Femminile'];
+    $ordine_cat = ['attivi', 'allievi', 'femminile'];
     usort($root_categories, function($a, $b) use ($ordine_cat) {
-        $pos_a = array_search($a->name, $ordine_cat);
-        $pos_b = array_search($b->name, $ordine_cat);
+        $pos_a = array_search(strtolower($a->name), $ordine_cat);
+        $pos_b = array_search(strtolower($b->name), $ordine_cat);
         if($pos_a === false) $pos_a = 99;
         if($pos_b === false) $pos_b = 99;
         return $pos_a <=> $pos_b;
@@ -63,7 +65,7 @@ if ( ! empty($root_categories) && ! is_wp_error($root_categories) ) {
                         'giorni'      => get_post_meta($t->ID, '_ss_giorni', true),
                         'allenatore'  => get_post_meta($t->ID, '_ss_allenatore', true),
                         'assistente'  => get_post_meta($t->ID, '_ss_assistente', true),
-                        'immagine'    => has_post_thumbnail($t->ID) ? get_the_post_thumbnail_url($t->ID, 'large') : 'https://images.unsplash.com/photo-1518622358385-8ea7d0794bf6?q=80&w=1200&auto=format&fit=crop',
+                        'immagine'    => $sezioni_hero_image_url,
                         'iframe'      => get_post_meta($t->ID, '_ss_iframe', true)
                     );
                 }
@@ -91,7 +93,7 @@ if ( ! empty($root_categories) && ! is_wp_error($root_categories) ) {
                     'giorni'      => get_post_meta($t->ID, '_ss_giorni', true),
                     'allenatore'  => get_post_meta($t->ID, '_ss_allenatore', true),
                     'assistente'  => get_post_meta($t->ID, '_ss_assistente', true),
-                    'immagine'    => has_post_thumbnail($t->ID) ? get_the_post_thumbnail_url($t->ID, 'large') : 'https://images.unsplash.com/photo-1518622358385-8ea7d0794bf6?q=80&w=1200&auto=format&fit=crop',
+                    'immagine'    => $sezioni_hero_image_url,
                     'iframe'      => get_post_meta($t->ID, '_ss_iframe', true)
                 );
             }
@@ -289,49 +291,53 @@ if(!function_exists('print_sezione_panel')) {
     function print_sezione_panel($sq) {
         ?>
         <!-- SEZIONE SPLIT: INFO E IMMAGINE -->
-        <div class="container" style="padding-top: 50px;">
-            <div style="display: flex; flex-wrap: wrap; background-color: #050505; border: 1px solid #1a1a1a;">
+        <div class="container sezione-panel-container" style="padding-top: 50px;">
+            <div class="sezione-panel-card" style="display: flex; flex-wrap: wrap; background-color: #050505; border: 1px solid #1a1a1a;">
                 
                 <!-- LATO SINISTRO (Testo) -->
-                <div style="flex: 1; min-width: 300px; padding: 60px; display: flex; flex-direction: column; justify-content: center;">
-                    <h2 class="text-white" style="font-size: 35px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">
+                <div class="sezione-panel-copy" style="flex: 1; min-width: 300px; padding: 60px; display: flex; flex-direction: column; justify-content: center;">
+                    <h2 class="text-white sezione-panel-title" style="font-size: 35px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">
                         <?php echo esc_html($sq['titolo']); ?>
                     </h2>
                     
-                    <div style="color: white; font-size: 14px; line-height: 1.8; margin-bottom: 40px;">
+                    <div class="sezione-panel-description" style="color: white; font-size: 14px; line-height: 1.8; margin-bottom: 40px;">
                         <?php echo wpautop(wp_kses_post($sq['descrizione'])); ?>
                     </div>
 
-                    <?php if($sq['giorni']): ?>
-                        <div style="margin-bottom: 25px;">
-                            <h4 style="color: var(--c-primary); font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;">GIORNI DI ALLENAMENTO</h4>
-                            <div style="color: white; font-size: 14px; line-height: 1.6;">
-                                <?php echo nl2br(wp_kses_post($sq['giorni'])); ?>
-                            </div>
-                        </div>
-                    <?php endif; ?>
+                    <?php if($sq['giorni'] || $sq['allenatore'] || $sq['assistente']): ?>
+                        <div class="sezione-panel-meta-grid">
+                            <?php if($sq['giorni']): ?>
+                                <div class="sezione-panel-meta" style="margin-bottom: 25px;">
+                                    <h4 class="sezione-panel-subtitle" style="color: var(--c-primary); font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;">GIORNI DI ALLENAMENTO</h4>
+                                    <div class="sezione-panel-text" style="color: white; font-size: 14px; line-height: 1.6;">
+                                        <?php echo nl2br(wp_kses_post($sq['giorni'])); ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
 
-                    <?php if($sq['allenatore']): ?>
-                        <div style="margin-bottom: 25px;">
-                            <h4 style="color: var(--c-primary); font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;">ALLENATORE</h4>
-                            <div style="color: white; font-size: 14px; line-height: 1.6;">
-                                <?php echo nl2br(wp_kses_post($sq['allenatore'])); ?>
-                            </div>
-                        </div>
-                    <?php endif; ?>
+                            <?php if($sq['allenatore']): ?>
+                                <div class="sezione-panel-meta" style="margin-bottom: 25px;">
+                                    <h4 class="sezione-panel-subtitle" style="color: var(--c-primary); font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;">ALLENATORE</h4>
+                                    <div class="sezione-panel-text" style="color: white; font-size: 14px; line-height: 1.6;">
+                                        <?php echo nl2br(wp_kses_post($sq['allenatore'])); ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
 
-                    <?php if($sq['assistente']): ?>
-                        <div style="margin-bottom: 25px;">
-                            <h4 style="color: var(--c-primary); font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;">ASSISTENTE</h4>
-                            <div style="color: white; font-size: 14px; line-height: 1.6;">
-                                <?php echo nl2br(wp_kses_post($sq['assistente'])); ?>
-                            </div>
+                            <?php if($sq['assistente']): ?>
+                                <div class="sezione-panel-meta" style="margin-bottom: 25px;">
+                                    <h4 class="sezione-panel-subtitle" style="color: var(--c-primary); font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;">ASSISTENTE</h4>
+                                    <div class="sezione-panel-text" style="color: white; font-size: 14px; line-height: 1.6;">
+                                        <?php echo nl2br(wp_kses_post($sq['assistente'])); ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     <?php endif; ?>
                 </div>
 
                 <!-- LATO DESTRO (Immagine) -->
-                <div style="flex: 1; min-width: 300px; position: relative;">
+                <div class="sezione-panel-media" style="flex: 1; min-width: 300px; position: relative;">
                     <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 50%); z-index: 1;"></div>
                     <img src="<?php echo esc_url($sq['immagine']); ?>" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" alt="<?php echo esc_attr($sq['titolo']); ?>">
                 </div>
@@ -349,8 +355,13 @@ if(!function_exists('print_sezione_panel')) {
             <h2 class="text-white" style="font-size: 35px; font-weight: 700; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 1px;">CLASSIFICA</h2>
             
             <?php if($sq['iframe']): ?>
-                <div class="classifica-iframe-wrapper" style="width: 100%; overflow: hidden; background: white; padding: 20px; border-radius: 5px;">
-                    <?php echo $sq['iframe']; ?>
+                <div class="classifica-iframe-wrapper">
+                    <?php
+                    $classifica_iframe = $sq['iframe'];
+                    $classifica_iframe = preg_replace('/\s(width|height|scrolling)=["\'][^"\']*["\']/i', '', $classifica_iframe);
+                    $classifica_iframe = preg_replace('/<iframe\b/i', '<iframe width="100%" height="1600" scrolling="yes"', $classifica_iframe, 1);
+                    echo $classifica_iframe;
+                    ?>
                 </div>
             <?php else: ?>
                 <div style="width: 100%; padding: 40px; border: 2px dashed #444; text-align: center; color: #888; border-radius: 5px;">
@@ -368,15 +379,8 @@ if(!function_exists('print_sezione_panel')) {
 
     <!-- HERO IMMAGINE -->
     <section class="news-hero">
-        <?php
-        if ( has_post_thumbnail() ) {
-            $hero_image_url = get_the_post_thumbnail_url( get_the_ID(), 'full' );
-        } else {
-            $hero_image_url = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=2000&auto=format&fit=crop';
-        }
-        ?>
-        <div class="club-hero-wrapper">
-            <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block;" alt="Sezioni AC Taverne">
+        <div class="club-hero-wrapper news-hero-wrapper">
+            <img src="<?php echo esc_url( $sezioni_hero_image_url ); ?>" class="hero-image" style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;" alt="Sezioni AC Taverne">
             <div class="club-hero-fade"></div>
             
             <div class="news-hero-content container" style="position: absolute; bottom: 40px; left: 0; right: 0; text-align: left;">
@@ -446,6 +450,8 @@ if(!function_exists('print_sezione_panel')) {
                                     $first_sub = true;
                                     foreach ($cat_data['items'] as $sub_name => $sub_teams) {
                                         $sub_slug = sanitize_title($sub_name);
+                                        $has_l3 = count($sub_teams) > 1;
+                                        $single_sq_id = (!$has_l3 && !empty($sub_teams)) ? 'sq-' . esc_attr($sub_teams[0]['id']) : '';
                                         $active_class = $first_sub ? 'active' : '';
                                         $bg_color = $first_sub ? 'transparent' : 'transparent'; // Nel mockup Allievi D è evidenziata... ma usiamo la logica standard
                                         // Wait, the mockup shows L2 tabs are not filled yellow unless active? No, yellow text or yellow bg?
@@ -454,7 +460,7 @@ if(!function_exists('print_sezione_panel')) {
                                         $text_color = $first_sub ? '#000' : 'white';
                                         $border_color = $first_sub ? 'var(--c-primary)' : 'white';
                                 ?>
-                                        <button class="sez-tab-btn-subcat <?php echo $active_class; ?>" data-sub="<?php echo esc_attr($cat_slug . '-' . $sub_slug); ?>" data-parent-wrapper="tabs-l2-wrapper-<?php echo esc_attr($cat_slug); ?>" style="background-color: <?php echo $bg_color; ?>; color: <?php echo $text_color; ?>; border: 2px solid <?php echo $border_color; ?>; padding: 8px 25px; font-weight: bold; text-transform: uppercase; font-size: 12px; cursor: pointer; transition: 0.3s; min-width: 150px; text-align: center;">
+                                        <button class="sez-tab-btn-subcat <?php echo $active_class; ?>" data-sub="<?php echo esc_attr($cat_slug . '-' . $sub_slug); ?>" data-parent-wrapper="tabs-l2-wrapper-<?php echo esc_attr($cat_slug); ?>" data-has-l3="<?php echo $has_l3 ? '1' : '0'; ?>" data-single-sq="<?php echo esc_attr($single_sq_id); ?>" style="background-color: <?php echo $bg_color; ?>; color: <?php echo $text_color; ?>; border: 2px solid <?php echo $border_color; ?>; padding: 8px 25px; font-weight: bold; text-transform: uppercase; font-size: 12px; cursor: pointer; transition: 0.3s; min-width: 150px; text-align: center;">
                                             <?php echo esc_html(strtoupper($sub_name)); ?>
                                         </button>
                                 <?php
@@ -466,13 +472,21 @@ if(!function_exists('print_sezione_panel')) {
 
                             <!-- RIGA LIVELLO 3 (Solo se type == subcats) -->
                             <?php if($cat_data['type'] == 'subcats'): ?>
-                                <hr class="l2-divider" style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin-bottom: 30px;">
+                                <?php
+                                $first_sub_teams = reset($cat_data['items']);
+                                $show_l3_initially = is_array($first_sub_teams) && count($first_sub_teams) > 1;
+                                ?>
+                                <hr class="l2-divider" style="display: <?php echo $show_l3_initially ? 'block' : 'none'; ?>; border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin-bottom: 30px;">
                                 <div class="sezioni-tabs-l3-container">
                                     <?php 
                                     $first_sub = true;
                                     foreach ($cat_data['items'] as $sub_name => $sub_teams):
+                                        if (count($sub_teams) <= 1) {
+                                            $first_sub = false;
+                                            continue;
+                                        }
                                         $sub_slug = sanitize_title($sub_name);
-                                        $display_l3 = $first_sub ? 'flex' : 'none';
+                                        $display_l3 = ($first_sub && $show_l3_initially) ? 'flex' : 'none';
                                     ?>
                                         <div class="sezioni-tabs-l3" id="tabs-l3-<?php echo esc_attr($cat_slug . '-' . $sub_slug); ?>" style="display: <?php echo $display_l3; ?>; gap: 20px; flex-wrap: wrap;">
                                             <?php 
@@ -515,7 +529,7 @@ if(!function_exists('print_sezione_panel')) {
     </section>
 
     <!-- CONTENT PANELS -->
-    <div style="background-color: #000; padding-top: 0; padding-bottom: 60px;">
+    <div class="sezioni-panels-wrap" style="background-color: #000; padding-top: 0; padding-bottom: 60px;">
         
         <?php 
         $first_cat = true;
@@ -560,12 +574,6 @@ if(!function_exists('print_sezione_panel')) {
         endforeach; 
         ?>
 
-        <!-- SPONSOR -->
-        <div class="container" style="padding-top: 40px;">
-            <h3 class="text-white" style="font-size: 26px; font-weight: 700; text-transform: uppercase; margin-bottom: 30px; letter-spacing: 1px;">SPONSOR</h3>
-            <?php sport_theme_render_global_sponsors(); ?>
-        </div>
-
     </div>
 </main>
 
@@ -577,6 +585,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const teamBtns = document.querySelectorAll('.sez-tab-btn-team');
     const l2Wrappers = document.querySelectorAll('.sezioni-tabs-l2-wrapper');
     const contentPanels = document.querySelectorAll('.sezioni-content-panel');
+    const panelsWrap = document.querySelector('.sezioni-panels-wrap');
+
+    function setPanelsDistance(hasVisibleL3) {
+        if (!panelsWrap) return;
+        panelsWrap.classList.toggle('has-l3-visible', hasVisibleL3);
+        panelsWrap.classList.toggle('no-l3-visible', !hasVisibleL3);
+    }
 
     function setBtnActive(btn) {
         btn.style.backgroundColor = 'var(--c-primary)';
@@ -617,18 +632,31 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.addEventListener('click', function() {
             const sub = this.getAttribute('data-sub');
             const parentWrapperId = this.getAttribute('data-parent-wrapper');
+            const singleSq = this.getAttribute('data-single-sq');
             
             const siblings = document.querySelectorAll('#' + parentWrapperId + ' .sez-tab-btn-subcat');
             siblings.forEach(b => setBtnInactive(b));
             setBtnActive(this);
 
+            const parentWrapper = document.getElementById(parentWrapperId);
+            const divider = parentWrapper ? parentWrapper.querySelector('.l2-divider') : null;
             const l3s = document.querySelectorAll('#' + parentWrapperId + ' .sezioni-tabs-l3');
             l3s.forEach(l => l.style.display = 'none');
             contentPanels.forEach(panel => panel.style.display = 'none');
 
+            if (singleSq) {
+                if (divider) divider.style.display = 'none';
+                setPanelsDistance(false);
+                const singleContent = document.getElementById('content-' + singleSq);
+                if(singleContent) singleContent.style.display = 'block';
+                return;
+            }
+
+            if (divider) divider.style.display = 'block';
             const targetL3 = document.getElementById('tabs-l3-' + sub);
             if(targetL3) {
                 targetL3.style.display = 'flex';
+                setPanelsDistance(true);
                 const firstSqBtn = targetL3.querySelector('.sez-tab-btn-team');
                 if(firstSqBtn) firstSqBtn.click();
             }
@@ -667,6 +695,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 100);
         }
     }
+
+    setPanelsDistance(!!document.querySelector('.sezioni-tabs-l3[style*="display: flex"]'));
 
 });
 </script>

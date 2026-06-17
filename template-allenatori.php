@@ -13,19 +13,15 @@ get_header('societa');
     <!-- HERO IMMAGINE -->
     <section class="news-hero">
         <?php
-        if ( has_post_thumbnail() ) {
-            $hero_image_url = get_the_post_thumbnail_url( get_the_ID(), 'full' );
-        } else {
-            $hero_image_url = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=2000&auto=format&fit=crop';
-        }
+        $hero_image_url = sport_theme_get_societa_home_hero_url();
         ?>
-        <div class="news-hero-wrapper" style="position: relative; width: 100%; height: 50vh; min-height: 400px;">
+        <div class="news-hero-wrapper" style="position: relative; width: 100%; height: 50vh;">
             <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="height: 100%; width: 100%; object-fit: cover; object-position: center;" alt="<?php echo esc_attr(get_the_title()); ?>">
-            <div class="news-hero-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
+            <div class="club-hero-fade"></div>
             
-            <div class="news-hero-content container" style="position: absolute; bottom: 0; left: 0; right: 0; text-align: left; padding-bottom: 30px;">
+            <div class="news-hero-content container" style="position: absolute; bottom: 40px; left: 0; right: 0; text-align: left;">
                 <h1 class="text-white" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">AREA ALLENATORI</h1>
-                <hr class="sc-divider" style="border: 0; border-top: 2px solid rgba(255,255,255,1); margin: 20px 0;">
+                <hr class="sc-divider" style="border: 0; border-top: 2px solid white; margin: 20px 0;">
                 <?php sport_theme_render_societa_submenu(); ?>
                 <p class="text-white" style="font-size: 24px; font-weight: 700; text-transform: uppercase; margin: 20px 0 0 0; line-height: 1.3;">
                     DOCUMENTI E MODULISTICA<br>PER GLI STAFF TECNICI
@@ -35,7 +31,7 @@ get_header('societa');
     </section>
 
     <!-- CONTENT -->
-    <div class="container" style="padding-top: 60px; padding-bottom: 60px;">
+    <div class="container" style="padding-top: 10px; padding-bottom: 60px;">
         
         <h2 class="text-primary" style="font-size: 34px; font-weight: 700; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 1px;">DOCUMENTI DA SCARICARE</h2>
         
@@ -122,12 +118,6 @@ get_header('societa');
             </div>
 
         <?php endif; ?>
-
-        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.4); margin-bottom: 40px;">
-
-        <!-- SPONSOR -->
-        <h3 class="text-white" style="font-size: 26px; font-weight: 700; text-transform: uppercase; margin-bottom: 30px; letter-spacing: 1px;">SPONSOR</h3>
-        <?php sport_theme_render_global_sponsors(); ?>
 
     </div>
 </main>

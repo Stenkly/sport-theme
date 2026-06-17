@@ -7,6 +7,8 @@
 
 get_header('societa');
 
+$hero_sottotitolo = get_post_meta( get_the_ID(), '_infra_hero_sottotitolo', true ) ?: 'I NOSTRI SPAZI, IL CUORE OPERATIVO DEL CLUB.';
+
 if ( ! function_exists( 'sport_theme_ensure_calendar_weekly_view' ) ) {
     function sport_theme_ensure_calendar_weekly_view( $iframe_html ) {
         if ( empty( $iframe_html ) ) {
@@ -42,11 +44,14 @@ if ( ! function_exists( 'sport_theme_ensure_calendar_weekly_view' ) ) {
         ?>
         <div class="news-hero-wrapper" style="position: relative; width: 100%; height: 50vh; min-height: 400px;">
             <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="height: 100%; width: 100%; object-fit: cover; object-position: center;" alt="<?php echo esc_attr(get_the_title()); ?>">
-            <div class="news-hero-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
+            <div class="club-hero-fade"></div>
             
             <div class="news-hero-content container" style="position: absolute; bottom: 0; left: 0; right: 0; text-align: left; padding-bottom: 20px;">
                 <h1 class="text-white" style="font-size: 60px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">INFRASTRUTTURA</h1>
                 <hr class="sc-divider" style="border: 0; border-top: 5px solid #ffffff; opacity: 1; margin: 20px 0;">
+                <p class="text-white hero-subtitle" style="font-size: 24px; font-weight: 700; text-transform: uppercase; margin: 20px 0 0 0; line-height: 1.3;">
+                    <?php echo esc_html($hero_sottotitolo); ?>
+                </p>
                 
                 <div class="infra-tabs" style="display: flex; gap: 20px; margin-top: 30px; margin-bottom: 10px; flex-wrap: wrap;">
                     <button class="infra-tab-btn active" data-target="tab-campo" style="background-color: var(--c-primary); color: #000; border: 2px solid var(--c-primary); padding: 8px 40px; font-weight: bold; text-transform: uppercase; font-size: 22px; cursor: pointer; transition: 0.3s;">CAMPO SPORTIVO</button>
@@ -58,7 +63,7 @@ if ( ! function_exists( 'sport_theme_ensure_calendar_weekly_view' ) ) {
     </section>
 
     <!-- CONTENT TABS -->
-    <div class="container" style="padding-top: 0px; padding-bottom: 60px;">
+    <div class="container infrastruttura-content" style="padding-top: 0px; padding-bottom: 60px;">
         
         <?php
         $testo_campo = get_post_meta( get_the_ID(), '_infra_testo_campo', true ) ?: "L'AC TAVERNE METTE A DISPOSIZIONE LE SUE STRUTTURE SPORTIVE PER IL NOLEGGIO, OFFRENDO CAMPI DA CALCIO E ALTRE INFRASTRUTTURE PER EVENTI SPORTIVI, ALLENAMENTI, TORNEI, INCONTRI AZIENDALI E ATTIVITÀ RICREATIVE. SCOPRITE LE NOSTRE ECCELLENTI STRUTTURE E LE MODALITÀ DI NOLEGGIO.";
@@ -325,13 +330,6 @@ if ( ! function_exists( 'sport_theme_ensure_calendar_weekly_view' ) ) {
                 </div>
             </div>
         </div>
-
-        <hr class="sc-divider" style="border: 0; border-top: 5px solid #ffffff; opacity: 1; margin-top: 60px; margin-bottom: 40px;">
-
-        <!-- SPONSOR -->
-        <h3 class="text-white" style="font-size: 26px; font-weight: 700; text-transform: uppercase; margin-bottom: 30px; letter-spacing: 1px;">SPONSOR</h3>
-        <?php sport_theme_render_global_sponsors(); ?>
-
     </div>
 </main>
 

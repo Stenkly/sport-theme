@@ -176,10 +176,287 @@ while ( have_posts() ) : the_post();
                 <span aria-hidden="true">←</span> Torna ai dati del giocatore
             </button>
             <div class="iscrizione-form-kicker">Step 02</div>
-            <h2>Dati del Genitore</h2>
-            <div class="iscrizione-placeholder">
-                <p>Questa sarà la prossima parte dell'iscrizione. Per ora abbiamo collegato il bottone continua e la validazione dei dati del giocatore.</p>
-            </div>
+            <h2>Salute e Autorizzazioni</h2>
+
+            <form class="iscrizione-health-form" action="#" method="post" data-health-form>
+                <div class="iscrizione-errors" data-health-errors hidden>
+                    <h3>Controlla questi campi</h3>
+                    <ul></ul>
+                </div>
+
+                <fieldset class="iscrizione-choice-field">
+                    <legend>Il ragazzo è allergico o prende medicinali?</legend>
+                    <div class="iscrizione-choice-group">
+                        <label><input type="radio" name="salute_allergie_medicinali" value="no" data-toggle-target="health-details" required> No</label>
+                        <label><input type="radio" name="salute_allergie_medicinali" value="si" data-toggle-target="health-details" required> Sì</label>
+                    </div>
+                    <div class="iscrizione-conditional" data-conditional="health-details" hidden>
+                        <label for="salute-dettagli">Indica allergie, medicinali o informazioni importanti</label>
+                        <textarea id="salute-dettagli" name="salute_dettagli" rows="4"></textarea>
+                    </div>
+                </fieldset>
+
+                <fieldset class="iscrizione-choice-field">
+                    <legend>Il ragazzo pratica un altro sport?</legend>
+                    <div class="iscrizione-choice-group">
+                        <label><input type="radio" name="altro_sport" value="no" data-toggle-target="sport-details" required> No</label>
+                        <label><input type="radio" name="altro_sport" value="si" data-toggle-target="sport-details" required> Sì</label>
+                    </div>
+                    <div class="iscrizione-conditional" data-conditional="sport-details" hidden>
+                        <div class="iscrizione-field">
+                            <label for="sport-societa">Per quale società?</label>
+                            <div class="iscrizione-input-wrap">
+                                <input id="sport-societa" type="text" name="sport_societa">
+                            </div>
+                        </div>
+                        <div class="iscrizione-field">
+                            <label for="sport-giorni">Giorni di allenamento</label>
+                            <div class="iscrizione-input-wrap">
+                                <input id="sport-giorni" type="text" name="sport_giorni" placeholder="Esempio: lunedì e mercoledì">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="iscrizione-choice-field">
+                    <legend>I genitori autorizzano il ragazzo a fare il tragitto casa-campo e campo-casa da solo?</legend>
+                    <div class="iscrizione-choice-group">
+                        <label><input type="radio" name="tragitto_autonomo" value="no" required> No</label>
+                        <label><input type="radio" name="tragitto_autonomo" value="si" required> Sì</label>
+                    </div>
+                </fieldset>
+
+                <fieldset class="iscrizione-choice-field">
+                    <legend>I genitori dichiarano che il figlio è abile a fare sport?</legend>
+                    <div class="iscrizione-choice-group">
+                        <label><input type="radio" name="abile_sport" value="no" required> No</label>
+                        <label><input type="radio" name="abile_sport" value="si" required> Sì</label>
+                    </div>
+                </fieldset>
+
+                <div class="iscrizione-form-actions">
+                    <button type="button" class="iscrizione-next-btn" data-health-next>Continua <span aria-hidden="true">→</span></button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section class="iscrizione-form-section container" data-iscrizione-step-three hidden>
+        <div class="iscrizione-form-panel">
+            <button type="button" class="iscrizione-back-btn" data-step-three-back>
+                <span aria-hidden="true">←</span> Torna a salute e autorizzazioni
+            </button>
+            <div class="iscrizione-form-kicker">Step 03</div>
+            <h2>Foto e Documenti</h2>
+
+            <form class="iscrizione-documents-form" action="#" method="post" enctype="multipart/form-data" data-documents-form>
+                <div class="iscrizione-errors" data-documents-errors hidden>
+                    <h3>Controlla questi campi</h3>
+                    <ul></ul>
+                </div>
+
+                <div class="iscrizione-field iscrizione-file-field">
+                    <label for="foto-giocatore">Foto del giocatore</label>
+                    <p class="iscrizione-help">Carica una foto in primo piano dalle spalle in su, con viso ben visibile e sfondo neutro.</p>
+                    <label class="iscrizione-file-box" for="foto-giocatore">
+                        <input id="foto-giocatore" type="file" name="foto_giocatore" accept="image/*" required>
+                        <span class="file-title">Carica file</span>
+                        <span class="file-action">Fai clic per scegliere un file o trascinalo qui</span>
+                        <span class="file-instruction">Limite dimensioni: 10 MB</span>
+                        <span class="file-name" data-file-name>Nessun file selezionato</span>
+                    </label>
+                </div>
+
+                <fieldset class="iscrizione-choice-field">
+                    <legend>Quale documento vuoi caricare?</legend>
+                    <div class="iscrizione-choice-group iscrizione-choice-group-wide">
+                        <label><input type="radio" name="tipo_documento" value="carta_identita" required data-document-choice> Carta d'identità</label>
+                        <label><input type="radio" name="tipo_documento" value="permesso_soggiorno" required data-document-choice> Permesso di soggiorno</label>
+                        <label><input type="radio" name="tipo_documento" value="passaporto" required data-document-choice> Passaporto</label>
+                    </div>
+                </fieldset>
+
+                <div class="iscrizione-document-upload-group" data-document-upload="carta_identita" hidden>
+                    <div class="iscrizione-field iscrizione-file-field">
+                        <label for="carta-identita-fronte">Carta d'identità - fronte</label>
+                        <p class="iscrizione-help">Foto o PDF del lato frontale, leggibile e senza riflessi.</p>
+                        <label class="iscrizione-file-box" for="carta-identita-fronte">
+                            <input id="carta-identita-fronte" type="file" name="carta_identita_fronte" accept="image/*,.pdf">
+                            <span class="file-title">Carica file</span>
+                            <span class="file-action">Fai clic per scegliere un file o trascinalo qui</span>
+                            <span class="file-instruction">Limite dimensioni: 10 MB</span>
+                            <span class="file-name" data-file-name>Nessun file selezionato</span>
+                        </label>
+                    </div>
+                    <div class="iscrizione-field iscrizione-file-field">
+                        <label for="carta-identita-retro">Carta d'identità - retro</label>
+                        <p class="iscrizione-help">Foto o PDF del lato posteriore, completo e ben leggibile.</p>
+                        <label class="iscrizione-file-box" for="carta-identita-retro">
+                            <input id="carta-identita-retro" type="file" name="carta_identita_retro" accept="image/*,.pdf">
+                            <span class="file-title">Carica file</span>
+                            <span class="file-action">Fai clic per scegliere un file o trascinalo qui</span>
+                            <span class="file-instruction">Limite dimensioni: 10 MB</span>
+                            <span class="file-name" data-file-name>Nessun file selezionato</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="iscrizione-document-upload-group" data-document-upload="permesso_soggiorno" hidden>
+                    <div class="iscrizione-field iscrizione-file-field">
+                        <label for="permesso-fronte">Permesso di soggiorno - fronte</label>
+                        <p class="iscrizione-help">Foto o PDF del lato frontale del permesso.</p>
+                        <label class="iscrizione-file-box" for="permesso-fronte">
+                            <input id="permesso-fronte" type="file" name="permesso_soggiorno_fronte" accept="image/*,.pdf">
+                            <span class="file-title">Carica file</span>
+                            <span class="file-action">Fai clic per scegliere un file o trascinalo qui</span>
+                            <span class="file-instruction">Limite dimensioni: 10 MB</span>
+                            <span class="file-name" data-file-name>Nessun file selezionato</span>
+                        </label>
+                    </div>
+                    <div class="iscrizione-field iscrizione-file-field">
+                        <label for="permesso-retro">Permesso di soggiorno - retro</label>
+                        <p class="iscrizione-help">Foto o PDF del lato posteriore del permesso.</p>
+                        <label class="iscrizione-file-box" for="permesso-retro">
+                            <input id="permesso-retro" type="file" name="permesso_soggiorno_retro" accept="image/*,.pdf">
+                            <span class="file-title">Carica file</span>
+                            <span class="file-action">Fai clic per scegliere un file o trascinalo qui</span>
+                            <span class="file-instruction">Limite dimensioni: 10 MB</span>
+                            <span class="file-name" data-file-name>Nessun file selezionato</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="iscrizione-document-upload-group" data-document-upload="passaporto" hidden>
+                    <div class="iscrizione-field iscrizione-file-field">
+                        <label for="passaporto-fronte">Passaporto - pagina con i dati</label>
+                        <p class="iscrizione-help">Carica la pagina con foto e dati personali, ben leggibile.</p>
+                        <label class="iscrizione-file-box" for="passaporto-fronte">
+                            <input id="passaporto-fronte" type="file" name="passaporto_fronte" accept="image/*,.pdf">
+                            <span class="file-title">Carica file</span>
+                            <span class="file-action">Fai clic per scegliere un file o trascinalo qui</span>
+                            <span class="file-instruction">Limite dimensioni: 10 MB</span>
+                            <span class="file-name" data-file-name>Nessun file selezionato</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="iscrizione-form-actions">
+                    <button type="button" class="iscrizione-next-btn" data-documents-next>Continua <span aria-hidden="true">→</span></button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section class="iscrizione-form-section container" data-iscrizione-step-four hidden>
+        <div class="iscrizione-form-panel">
+            <button type="button" class="iscrizione-back-btn" data-step-four-back>
+                <span aria-hidden="true">←</span> Torna a foto e documenti
+            </button>
+            <div class="iscrizione-form-kicker">Step 04</div>
+            <h2>Responsabilità genitoriale</h2>
+
+            <form class="iscrizione-guardian-form" action="#" method="post" enctype="multipart/form-data" data-guardian-form>
+                <div class="iscrizione-errors" data-guardian-errors hidden>
+                    <h3>Controlla questi campi</h3>
+                    <ul></ul>
+                </div>
+
+                <fieldset class="iscrizione-choice-field">
+                    <legend>Chi esercita la responsabilità genitoriale sul giocatore?</legend>
+                    <div class="iscrizione-choice-group iscrizione-choice-group-wide">
+                        <label><input type="radio" name="responsabilita_genitoriale" value="padre" required data-guardian-choice> Padre</label>
+                        <label><input type="radio" name="responsabilita_genitoriale" value="madre" required data-guardian-choice> Madre</label>
+                        <label><input type="radio" name="responsabilita_genitoriale" value="tutore_legale" required data-guardian-choice> Tutore legale</label>
+                    </div>
+                </fieldset>
+
+                <div class="iscrizione-field">
+                    <label for="responsabile-nome">Nome</label>
+                    <div class="iscrizione-input-wrap">
+                        <input id="responsabile-nome" type="text" name="responsabile_nome" autocomplete="given-name" pattern="[A-Za-zÀ-ÖØ-öø-ÿ' -]+" data-only-text required>
+                    </div>
+                </div>
+
+                <div class="iscrizione-field">
+                    <label for="responsabile-cognome">Cognome</label>
+                    <div class="iscrizione-input-wrap">
+                        <input id="responsabile-cognome" type="text" name="responsabile_cognome" autocomplete="family-name" pattern="[A-Za-zÀ-ÖØ-öø-ÿ' -]+" data-only-text required>
+                    </div>
+                </div>
+
+                <div class="iscrizione-field">
+                    <label for="responsabile-telefono">Numero di telefono</label>
+                    <div class="iscrizione-input-wrap has-icon">
+                        <input id="responsabile-telefono" type="tel" name="responsabile_telefono" autocomplete="tel" required>
+                        <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                    </div>
+                </div>
+
+                <div class="iscrizione-field">
+                    <label for="responsabile-email">Email</label>
+                    <div class="iscrizione-input-wrap has-icon">
+                        <input id="responsabile-email" type="email" name="responsabile_email" autocomplete="email" required>
+                        <i class="fa-solid fa-at" aria-hidden="true"></i>
+                    </div>
+                </div>
+
+                <div class="iscrizione-document-upload-group iscrizione-guardian-upload" data-guardian-certificate hidden>
+                    <div class="iscrizione-field iscrizione-file-field">
+                        <label for="certificato-tutela">Certificato di tutela</label>
+                        <p class="iscrizione-help">Carica il documento che conferma la tutela legale.</p>
+                        <label class="iscrizione-file-box" for="certificato-tutela">
+                            <input id="certificato-tutela" type="file" name="certificato_tutela" accept="image/*,.pdf">
+                            <span class="file-title">Carica file</span>
+                            <span class="file-action">Fai clic per scegliere un file o trascinalo qui</span>
+                            <span class="file-instruction">Limite dimensioni: 10 MB</span>
+                            <span class="file-name" data-file-name>Nessun file selezionato</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="iscrizione-form-actions">
+                    <button type="button" class="iscrizione-next-btn" data-guardian-next>Continua <span aria-hidden="true">→</span></button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section class="iscrizione-form-section container" data-iscrizione-step-five hidden>
+        <div class="iscrizione-form-panel">
+            <button type="button" class="iscrizione-back-btn" data-step-five-back>
+                <span aria-hidden="true">←</span> Torna a responsabilità genitoriale
+            </button>
+            <div class="iscrizione-form-kicker">Step 05</div>
+            <h2>Pagamento</h2>
+
+            <form class="iscrizione-payment-form" action="#" method="post" data-payment-form>
+                <div class="iscrizione-errors" data-payment-errors hidden>
+                    <h3>Controlla questi campi</h3>
+                    <ul></ul>
+                </div>
+
+                <fieldset class="iscrizione-choice-field">
+                    <legend>Come vuoi pagare l'iscrizione?</legend>
+                    <div class="iscrizione-choice-group iscrizione-choice-group-wide">
+                        <label><input type="radio" name="metodo_pagamento" value="stripe" required data-payment-choice> Carta / Stripe</label>
+                        <label><input type="radio" name="metodo_pagamento" value="fattura" required data-payment-choice> Fattura</label>
+                    </div>
+                </fieldset>
+
+                <div class="iscrizione-payment-box" data-payment-info="stripe" hidden>
+                    <h3>Pagamento online</h3>
+                    <p>Alla fine dell'iscrizione verrai indirizzato al pagamento sicuro con carta tramite Stripe.</p>
+                </div>
+
+                <div class="iscrizione-payment-box" data-payment-info="fattura" hidden>
+                    <h3>Pagamento tramite fattura</h3>
+                    <p>La società invierà la fattura all'indirizzo email indicato nello step precedente.</p>
+                </div>
+
+                <div class="iscrizione-form-actions">
+                    <button type="button" class="iscrizione-next-btn" data-payment-next>Continua <span aria-hidden="true">→</span></button>
+                </div>
+            </form>
         </div>
     </section>
 
@@ -265,12 +542,59 @@ while ( have_posts() ) : the_post();
     var stepTwo = document.querySelector('[data-iscrizione-step-two]');
     var stepTwoBack = document.querySelector('[data-step-two-back]');
     var playerErrors = document.querySelector('[data-player-errors]');
+    var healthForm = document.querySelector('[data-health-form]');
+    var healthNext = document.querySelector('[data-health-next]');
+    var healthErrors = document.querySelector('[data-health-errors]');
+    var stepThree = document.querySelector('[data-iscrizione-step-three]');
+    var stepThreeBack = document.querySelector('[data-step-three-back]');
+    var documentsForm = document.querySelector('[data-documents-form]');
+    var documentsNext = document.querySelector('[data-documents-next]');
+    var documentsErrors = document.querySelector('[data-documents-errors]');
+    var stepFour = document.querySelector('[data-iscrizione-step-four]');
+    var stepFourBack = document.querySelector('[data-step-four-back]');
+    var guardianForm = document.querySelector('[data-guardian-form]');
+    var guardianNext = document.querySelector('[data-guardian-next]');
+    var guardianErrors = document.querySelector('[data-guardian-errors]');
+    var stepFive = document.querySelector('[data-iscrizione-step-five]');
+    var stepFiveBack = document.querySelector('[data-step-five-back]');
+    var paymentForm = document.querySelector('[data-payment-form]');
+    var paymentNext = document.querySelector('[data-payment-next]');
+    var paymentErrors = document.querySelector('[data-payment-errors]');
     var extraChildren = document.querySelector('[data-extra-children]');
     var addChildBtn = document.querySelector('[data-add-child]');
     var addChildrenBlock = document.querySelector('[data-add-children-block]');
     var nextChildIndex = 1;
+    var stepStorageKey = 'ac_taverne_iscrizione_step';
 
     if (!modal || !openBtn || !checkbox || !cta || !intro || !formSection) return;
+
+    function rememberStep(step) {
+        try {
+            window.sessionStorage.setItem(stepStorageKey, step);
+        } catch (error) {}
+    }
+
+    function showStep(step, shouldScroll) {
+        var currentStep = step || 'intro';
+
+        intro.hidden = currentStep !== 'intro';
+        formSection.hidden = currentStep !== 'player';
+        if (stepTwo) stepTwo.hidden = currentStep !== 'health';
+        if (stepThree) stepThree.hidden = currentStep !== 'documents';
+        if (stepFour) stepFour.hidden = currentStep !== 'guardian';
+        if (stepFive) stepFive.hidden = currentStep !== 'payment';
+
+        if (currentStep !== 'intro') {
+            checkbox.checked = true;
+            updateCta();
+        }
+
+        rememberStep(currentStep);
+
+        if (shouldScroll) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
 
     function updateCta() {
         var accepted = checkbox.checked;
@@ -310,17 +634,12 @@ while ( have_posts() ) : the_post();
         }
 
         event.preventDefault();
-        intro.hidden = true;
-        formSection.hidden = false;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        showStep('player', true);
     });
 
     if (backBtn) {
         backBtn.addEventListener('click', function(){
-            formSection.hidden = true;
-            if (stepTwo) stepTwo.hidden = true;
-            intro.hidden = false;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showStep('intro', true);
         });
     }
 
@@ -361,17 +680,332 @@ while ( have_posts() ) : the_post();
                 return;
             }
 
-            formSection.hidden = true;
-            stepTwo.hidden = false;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showStep('health', true);
         });
     }
 
     if (stepTwoBack && stepTwo) {
         stepTwoBack.addEventListener('click', function(){
-            stepTwo.hidden = true;
-            formSection.hidden = false;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showStep('player', true);
+        });
+    }
+
+    function updateConditionalFields(scope) {
+        scope.querySelectorAll('[data-toggle-target]').forEach(function(input){
+            var target = scope.querySelector('[data-conditional="' + input.dataset.toggleTarget + '"]');
+            if (!target) return;
+
+            var checked = scope.querySelector('input[name="' + input.name + '"]:checked');
+            var show = checked && checked.value === 'si';
+            target.hidden = !show;
+            target.querySelectorAll('input, textarea').forEach(function(field){
+                field.required = show;
+                if (!show) field.value = '';
+            });
+        });
+    }
+
+    if (healthForm) {
+        healthForm.querySelectorAll('[data-toggle-target]').forEach(function(input){
+            input.addEventListener('change', function(){
+                updateConditionalFields(healthForm);
+            });
+        });
+        updateConditionalFields(healthForm);
+    }
+
+    if (healthNext && healthForm) {
+        healthNext.addEventListener('click', function(){
+            var invalidFields = Array.from(healthForm.querySelectorAll('input, textarea')).filter(function(field){
+                return !field.checkValidity();
+            });
+
+            healthForm.querySelectorAll('.is-invalid').forEach(function(field){
+                field.classList.remove('is-invalid');
+            });
+
+            if (healthErrors) {
+                healthErrors.hidden = true;
+                healthErrors.querySelector('ul').innerHTML = '';
+            }
+
+            if (invalidFields.length) {
+                if (healthErrors) {
+                    var list = healthErrors.querySelector('ul');
+                    var seenHealthErrors = new Set();
+                    invalidFields.forEach(function(field){
+                        var group = field.closest('.iscrizione-choice-field') || field.closest('.iscrizione-field');
+                        var legend = group ? group.querySelector('legend') : null;
+                        var label = group ? group.querySelector('label[for="' + field.id + '"]') : null;
+                        var errorKey = field.type === 'radio' ? field.name : field.name + ':' + field.id;
+                        if (seenHealthErrors.has(errorKey)) return;
+                        seenHealthErrors.add(errorKey);
+                        var item = document.createElement('li');
+                        item.textContent = legend ? legend.textContent.trim() : (label ? label.textContent.trim() : field.name);
+                        list.appendChild(item);
+                        if (group) group.classList.add('is-invalid');
+                    });
+                    healthErrors.hidden = false;
+                    healthErrors.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+
+                invalidFields[0].reportValidity();
+                return;
+            }
+
+            if (stepThree) {
+                showStep('documents', true);
+            }
+        });
+    }
+
+    if (stepThreeBack && stepThree && stepTwo) {
+        stepThreeBack.addEventListener('click', function(){
+            showStep('health', true);
+        });
+    }
+
+    function updateDocumentUploads() {
+        if (!documentsForm) return;
+        var selected = documentsForm.querySelector('input[name="tipo_documento"]:checked');
+        documentsForm.querySelectorAll('[data-document-upload]').forEach(function(group){
+            var isActive = selected && group.dataset.documentUpload === selected.value;
+            group.hidden = !isActive;
+            group.querySelectorAll('input[type="file"]').forEach(function(input){
+                input.required = !!isActive;
+                if (!isActive) {
+                    input.value = '';
+                    var fileName = input.closest('.iscrizione-file-box')?.querySelector('[data-file-name]');
+                    if (fileName) fileName.textContent = 'Nessun file selezionato';
+                }
+            });
+        });
+    }
+
+    function updateFileName(input) {
+        var fileName = input.closest('.iscrizione-file-box')?.querySelector('[data-file-name]');
+        if (fileName) {
+            fileName.textContent = input.files && input.files.length ? input.files[0].name : 'Nessun file selezionato';
+        }
+    }
+
+    function bindFileUploadBoxes(scope) {
+        scope.querySelectorAll('input[type="file"]').forEach(function(input){
+            input.addEventListener('change', function(){
+                updateFileName(input);
+            });
+        });
+        scope.querySelectorAll('.iscrizione-file-box').forEach(function(box){
+            var input = box.querySelector('input[type="file"]');
+            if (!input) return;
+            ['dragenter', 'dragover'].forEach(function(eventName){
+                box.addEventListener(eventName, function(event){
+                    event.preventDefault();
+                    box.classList.add('is-dragging');
+                });
+            });
+            ['dragleave', 'drop'].forEach(function(eventName){
+                box.addEventListener(eventName, function(event){
+                    event.preventDefault();
+                    box.classList.remove('is-dragging');
+                });
+            });
+            box.addEventListener('drop', function(event){
+                if (!event.dataTransfer || !event.dataTransfer.files.length) return;
+                input.files = event.dataTransfer.files;
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+        });
+    }
+
+    if (documentsForm) {
+        documentsForm.querySelectorAll('[data-document-choice]').forEach(function(input){
+            input.addEventListener('change', updateDocumentUploads);
+        });
+        bindFileUploadBoxes(documentsForm);
+        updateDocumentUploads();
+    }
+
+    if (documentsNext && documentsForm) {
+        documentsNext.addEventListener('click', function(){
+            updateDocumentUploads();
+            var invalidFields = Array.from(documentsForm.querySelectorAll('input')).filter(function(field){
+                return !field.checkValidity();
+            });
+
+            documentsForm.querySelectorAll('.is-invalid').forEach(function(field){
+                field.classList.remove('is-invalid');
+            });
+
+            if (documentsErrors) {
+                documentsErrors.hidden = true;
+                documentsErrors.querySelector('ul').innerHTML = '';
+            }
+
+            if (invalidFields.length) {
+                if (documentsErrors) {
+                    var list = documentsErrors.querySelector('ul');
+                    var seenDocumentErrors = new Set();
+                    invalidFields.forEach(function(field){
+                        var group = field.closest('.iscrizione-choice-field') || field.closest('.iscrizione-field');
+                        var legend = group ? group.querySelector('legend') : null;
+                        var label = group ? group.querySelector('label[for="' + field.id + '"]') : null;
+                        var errorKey = field.type === 'radio' ? field.name : field.name + ':' + field.id;
+                        if (seenDocumentErrors.has(errorKey)) return;
+                        seenDocumentErrors.add(errorKey);
+                        var item = document.createElement('li');
+                        item.textContent = legend ? legend.textContent.trim() : (label ? label.textContent.trim() : field.name);
+                        list.appendChild(item);
+                        if (group) group.classList.add('is-invalid');
+                    });
+                    documentsErrors.hidden = false;
+                    documentsErrors.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+
+                invalidFields[0].reportValidity();
+                return;
+            }
+
+            showStep('guardian', true);
+        });
+    }
+
+    if (stepFourBack && stepFour) {
+        stepFourBack.addEventListener('click', function(){
+            showStep('documents', true);
+        });
+    }
+
+    function updateGuardianCertificate() {
+        if (!guardianForm) return;
+        var selected = guardianForm.querySelector('input[name="responsabilita_genitoriale"]:checked');
+        var certificate = guardianForm.querySelector('[data-guardian-certificate]');
+        if (!certificate) return;
+
+        var show = selected && selected.value === 'tutore_legale';
+        certificate.hidden = !show;
+        certificate.querySelectorAll('input[type="file"]').forEach(function(input){
+            input.required = !!show;
+            if (!show) {
+                input.value = '';
+                updateFileName(input);
+            }
+        });
+    }
+
+    if (guardianForm) {
+        guardianForm.querySelectorAll('[data-guardian-choice]').forEach(function(input){
+            input.addEventListener('change', updateGuardianCertificate);
+        });
+        bindFileUploadBoxes(guardianForm);
+        updateGuardianCertificate();
+    }
+
+    if (guardianNext && guardianForm) {
+        guardianNext.addEventListener('click', function(){
+            updateGuardianCertificate();
+            var invalidFields = Array.from(guardianForm.querySelectorAll('input')).filter(function(field){
+                return !field.checkValidity();
+            });
+
+            guardianForm.querySelectorAll('.is-invalid').forEach(function(field){
+                field.classList.remove('is-invalid');
+            });
+
+            if (guardianErrors) {
+                guardianErrors.hidden = true;
+                guardianErrors.querySelector('ul').innerHTML = '';
+            }
+
+            if (invalidFields.length) {
+                if (guardianErrors) {
+                    var list = guardianErrors.querySelector('ul');
+                    var seenGuardianErrors = new Set();
+                    invalidFields.forEach(function(field){
+                        var group = field.closest('.iscrizione-choice-field') || field.closest('.iscrizione-field');
+                        var legend = group ? group.querySelector('legend') : null;
+                        var label = group ? group.querySelector('label[for="' + field.id + '"]') : null;
+                        var errorKey = field.type === 'radio' ? field.name : field.name + ':' + field.id;
+                        if (seenGuardianErrors.has(errorKey)) return;
+                        seenGuardianErrors.add(errorKey);
+                        var item = document.createElement('li');
+                        item.textContent = legend ? legend.textContent.trim() : (label ? label.textContent.trim() : field.name);
+                        list.appendChild(item);
+                        if (group) group.classList.add('is-invalid');
+                    });
+                    guardianErrors.hidden = false;
+                    guardianErrors.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+
+                invalidFields[0].reportValidity();
+                return;
+            }
+
+            showStep('payment', true);
+        });
+    }
+
+    if (stepFiveBack && stepFive) {
+        stepFiveBack.addEventListener('click', function(){
+            showStep('guardian', true);
+        });
+    }
+
+    function updatePaymentInfo() {
+        if (!paymentForm) return;
+        var selected = paymentForm.querySelector('input[name="metodo_pagamento"]:checked');
+        paymentForm.querySelectorAll('[data-payment-info]').forEach(function(box){
+            box.hidden = !(selected && box.dataset.paymentInfo === selected.value);
+        });
+    }
+
+    if (paymentForm) {
+        paymentForm.querySelectorAll('[data-payment-choice]').forEach(function(input){
+            input.addEventListener('change', updatePaymentInfo);
+        });
+        updatePaymentInfo();
+    }
+
+    if (paymentNext && paymentForm) {
+        paymentNext.addEventListener('click', function(){
+            updatePaymentInfo();
+            var invalidFields = Array.from(paymentForm.querySelectorAll('input')).filter(function(field){
+                return !field.checkValidity();
+            });
+
+            paymentForm.querySelectorAll('.is-invalid').forEach(function(field){
+                field.classList.remove('is-invalid');
+            });
+
+            if (paymentErrors) {
+                paymentErrors.hidden = true;
+                paymentErrors.querySelector('ul').innerHTML = '';
+            }
+
+            if (invalidFields.length) {
+                if (paymentErrors) {
+                    var list = paymentErrors.querySelector('ul');
+                    var seenPaymentErrors = new Set();
+                    invalidFields.forEach(function(field){
+                        var group = field.closest('.iscrizione-choice-field') || field.closest('.iscrizione-field');
+                        var legend = group ? group.querySelector('legend') : null;
+                        var errorKey = field.type === 'radio' ? field.name : field.name + ':' + field.id;
+                        if (seenPaymentErrors.has(errorKey)) return;
+                        seenPaymentErrors.add(errorKey);
+                        var item = document.createElement('li');
+                        item.textContent = legend ? legend.textContent.trim() : field.name;
+                        list.appendChild(item);
+                        if (group) group.classList.add('is-invalid');
+                    });
+                    paymentErrors.hidden = false;
+                    paymentErrors.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+
+                invalidFields[0].reportValidity();
+                return;
+            }
+
+            alert('Step 05 completato. Il collegamento a Stripe o alla fattura verrà aggiunto con il backend.');
         });
     }
 
@@ -663,6 +1297,13 @@ while ( have_posts() ) : the_post();
     });
 
     updateCta();
+
+    try {
+        var savedStep = window.sessionStorage.getItem(stepStorageKey);
+        if (['player', 'health', 'documents', 'guardian', 'payment'].indexOf(savedStep) !== -1) {
+            showStep(savedStep, false);
+        }
+    } catch (error) {}
 })();
 </script>
 

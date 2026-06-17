@@ -5,17 +5,11 @@
  * @package Sport_Theme
  */
 
-// Scegli l'header corretto in base alla categoria dell'evento
-if ( has_category('settore-giovanile') ) {
-    get_header('societa');
-} else {
-    get_header();
-}
+get_header('societa');
 
 $data_raw = get_post_meta(get_the_ID(), '_data_evento', true);
 $ora      = get_post_meta(get_the_ID(), '_ora_evento', true);
 $luogo    = get_post_meta(get_the_ID(), '_luogo_evento', true);
-$tipo     = get_post_meta(get_the_ID(), '_tipo_evento', true);
 
 $data_format = $data_raw ? date('d/m/Y', strtotime($data_raw)) : '';
 $is_past = $data_raw && (date('Y-m-d') > $data_raw);
@@ -52,16 +46,13 @@ $is_past = $data_raw && (date('Y-m-d') > $data_raw);
                     <?php if($luogo): ?>
                         <div><i class="fas fa-map-marker-alt" style="color: var(--c-primary); margin-right: 8px;"></i> <?php echo esc_html($luogo); ?></div>
                     <?php endif; ?>
-                    <?php if($tipo): ?>
-                        <div><i class="fas fa-tag" style="color: var(--c-primary); margin-right: 8px;"></i> <?php echo esc_html($tipo); ?></div>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </section>
 
     <div class="container" style="padding-top: 50px; padding-bottom: 60px;">
-        <div class="evento-content" style="color: white; font-size: 16px; line-height: 1.8; background-color: #111; padding: 40px; border: 1px solid #333; border-top: 3px solid var(--c-primary);">
+        <div class="evento-content" style="color: white; font-size: 21px; line-height: 1.72; background-color: #111; padding: 40px; border: 1px solid #333; border-top: 3px solid var(--c-primary);">
             <?php
             while ( have_posts() ) :
                 the_post();
@@ -78,6 +69,25 @@ $is_past = $data_raw && (date('Y-m-d') > $data_raw);
                 
             endwhile;
             ?>
+        </div>
+
+        <div class="social-share-box">
+            <h4 class="share-title text-white">Condividi</h4>
+            <div class="share-buttons">
+                <?php
+                $share_url = urlencode(get_permalink());
+                $share_title = urlencode(get_the_title());
+                ?>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $share_url; ?>" target="_blank" class="share-btn facebook-btn">
+                    <i class="fa-brands fa-facebook-f"></i> Facebook
+                </a>
+                <a href="https://api.whatsapp.com/send?text=<?php echo $share_title . ' ' . $share_url; ?>" target="_blank" class="share-btn whatsapp-btn">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="https://www.instagram.com/ac_taverne/" target="_blank" class="share-btn instagram-btn">
+                    <i class="fa-brands fa-instagram"></i> Instagram
+                </a>
+            </div>
         </div>
         
         <div style="margin-top: 40px;">
@@ -107,18 +117,24 @@ $is_past = $data_raw && (date('Y-m-d') > $data_raw);
     margin-bottom: 15px;
 }
 .evento-content p {
+    font-size: 21px;
+    line-height: 1.72;
+    font-weight: 500;
     margin-bottom: 20px;
 }
 .evento-content ul, .evento-content ol {
+    font-size: 21px;
+    line-height: 1.72;
     margin-bottom: 20px;
     padding-left: 20px;
+}
+.evento-content li {
+    font-size: 21px;
+    line-height: 1.72;
+    margin-bottom: 8px;
 }
 </style>
 
 <?php
-if ( has_category('settore-giovanile') ) {
-    get_footer('societa');
-} else {
-    get_footer();
-}
+get_footer('societa');
 ?>

@@ -6,6 +6,8 @@
  */
 
 get_header('societa');
+
+$hero_sottotitolo = get_post_meta( get_the_ID(), '_contatti_hero_sottotitolo', true ) ?: 'SIAMO A DISPOSIZIONE PER INFORMAZIONI, RICHIESTE E CONTATTI.';
 ?>
 
 <main id="primary" class="site-main page-contatti">
@@ -13,19 +15,16 @@ get_header('societa');
     <!-- HERO IMMAGINE -->
     <section class="news-hero">
         <?php
-        if ( has_post_thumbnail() ) {
-            $hero_image_url = get_the_post_thumbnail_url( get_the_ID(), 'full' );
-        } else {
-            $hero_image_url = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=2000&auto=format&fit=crop';
-        }
+        $hero_image_url = sport_theme_get_societa_home_hero_url();
         ?>
-        <div class="news-hero-wrapper" style="position: relative; width: 100%; height: 50vh; min-height: 400px;">
+        <div class="news-hero-wrapper" style="position: relative; width: 100%; height: 732px; min-height: 400px;">
             <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="height: 100%; width: 100%; object-fit: cover; object-position: center;" alt="<?php echo esc_attr(get_the_title()); ?>">
             <div class="club-hero-fade"></div>
             
             <div class="news-hero-content container" style="position: absolute; bottom: 0; left: 0; right: 0; text-align: left; padding-bottom: 30px;">
                 <h1 class="text-white" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">CONTATTI</h1>
                 <hr class="sc-divider" style="border: 0; border-top: 2px solid rgba(255,255,255,1); margin: 20px 0;">
+                <p class="text-white hero-subtitle"><?php echo esc_html( $hero_sottotitolo ); ?></p>
             </div>
         </div>
     </section>
@@ -168,12 +167,6 @@ get_header('societa');
                 </form>
             </div>
         </div>
-
-        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.4); margin-top: 60px; margin-bottom: 40px;">
-
-        <!-- SPONSOR -->
-        <h3 class="text-white" style="font-size: 26px; font-weight: 700; text-transform: uppercase; margin-bottom: 30px; letter-spacing: 1px;">SPONSOR</h3>
-        <?php sport_theme_render_global_sponsors(); ?>
 
     </div>
 </main>
