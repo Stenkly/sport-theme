@@ -26,7 +26,7 @@
                 <h4>HOMEPAGE</h4>
                 <a href="<?php echo site_url('/news'); ?>">News</a>
                 <a href="<?php echo site_url('/stagione'); ?>">Stagione</a>
-                <a href="<?php echo esc_url( sport_theme_get_page_url('partner', 'Partner') ); ?>">Partner</a>
+                <a href="<?php echo esc_url( sport_theme_get_page_url('network', 'Network') ); ?>">Network</a>
             </div>
             <div class="fm-col">
                 <h4>TEAM</h4>
