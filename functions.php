@@ -384,6 +384,123 @@ function sport_theme_admin_scripts($hook) {
 }
 add_action('admin_enqueue_scripts', 'sport_theme_admin_scripts');
 
+function sport_theme_get_iscrizioni_classificazione_default_url() {
+    return get_template_directory_uri() . '/assets/images/iscrizioni/classificazione-2026-27.png';
+}
+
+function sport_theme_get_iscrizioni_classificazione_url( $post_id = 0 ) {
+    $post_id = $post_id ? (int) $post_id : get_the_ID();
+    $url = $post_id ? get_post_meta( $post_id, '_iscrizioni_classificazione_file', true ) : '';
+
+    return $url ? esc_url_raw( $url ) : sport_theme_get_iscrizioni_classificazione_default_url();
+}
+
+function sport_theme_iscritti_metabox( $post_type, $post ) {
+    if ( $post_type !== 'page' || ! $post instanceof WP_Post ) {
+        return;
+    }
+
+    if ( get_page_template_slug( $post->ID ) !== 'template-iscritti.php' ) {
+        return;
+    }
+
+    add_meta_box(
+        'iscritti_classificazione_meta',
+        'Iscrizioni - Classificazione categorie',
+        'sport_theme_iscritti_classificazione_meta_html',
+        'page',
+        'normal',
+        'high'
+    );
+}
+add_action( 'add_meta_boxes', 'sport_theme_iscritti_metabox', 10, 2 );
+
+function sport_theme_iscritti_classificazione_meta_html( $post ) {
+    $file_url = get_post_meta( $post->ID, '_iscrizioni_classificazione_file', true );
+    $season   = get_post_meta( $post->ID, '_iscrizioni_classificazione_stagione', true );
+
+    wp_nonce_field( 'sport_theme_save_iscritti_classificazione', 'sport_theme_iscritti_classificazione_nonce' );
+    ?>
+    <p>Carica qui il documento annuale con la classificazione per anno di nascita. Può essere un'immagine o un PDF.</p>
+    <p>
+        <label for="iscrizioni_classificazione_stagione"><strong>Stagione</strong></label><br>
+        <input type="text" id="iscrizioni_classificazione_stagione" name="_iscrizioni_classificazione_stagione" value="<?php echo esc_attr( $season ); ?>" placeholder="2026/2027" style="width:100%;max-width:240px;">
+    </p>
+    <p>
+        <label for="iscrizioni_classificazione_file"><strong>Documento classificazione</strong></label><br>
+        <input type="text" id="iscrizioni_classificazione_file" name="_iscrizioni_classificazione_file" value="<?php echo esc_url( $file_url ); ?>" placeholder="Seleziona immagine o PDF..." style="width:100%;max-width:620px;">
+        <button type="button" class="button button-secondary" id="iscrizioni_classificazione_upload">Seleziona / carica</button>
+        <button type="button" class="button" id="iscrizioni_classificazione_clear">Rimuovi</button>
+    </p>
+    <div id="iscrizioni_classificazione_preview" style="margin-top:12px;">
+        <?php if ( $file_url ) : ?>
+            <?php if ( preg_match( '/\.(jpe?g|png|webp|gif)(\?.*)?$/i', $file_url ) ) : ?>
+                <img src="<?php echo esc_url( $file_url ); ?>" alt="" style="max-width:420px;height:auto;border:1px solid #ccd0d4;">
+            <?php else : ?>
+                <a href="<?php echo esc_url( $file_url ); ?>" target="_blank" rel="noopener">Apri documento caricato</a>
+            <?php endif; ?>
+        <?php else : ?>
+            <em>Se non carichi un file, verrà mostrata l'immagine predefinita inclusa nel tema.</em>
+        <?php endif; ?>
+    </div>
+    <script>
+    jQuery(function($){
+        var frame;
+        $('#iscrizioni_classificazione_upload').on('click', function(e){
+            e.preventDefault();
+            if (frame) {
+                frame.open();
+                return;
+            }
+            frame = wp.media({
+                title: 'Seleziona classificazione categorie',
+                button: { text: 'Usa questo documento' },
+                multiple: false
+            });
+            frame.on('select', function(){
+                var attachment = frame.state().get('selection').first().toJSON();
+                $('#iscrizioni_classificazione_file').val(attachment.url);
+                if (attachment.type === 'image') {
+                    $('#iscrizioni_classificazione_preview').html('<img src="' + attachment.url + '" alt="" style="max-width:420px;height:auto;border:1px solid #ccd0d4;">');
+                } else {
+                    $('#iscrizioni_classificazione_preview').html('<a href="' + attachment.url + '" target="_blank" rel="noopener">Apri documento caricato</a>');
+                }
+            });
+            frame.open();
+        });
+        $('#iscrizioni_classificazione_clear').on('click', function(e){
+            e.preventDefault();
+            $('#iscrizioni_classificazione_file').val('');
+            $('#iscrizioni_classificazione_preview').html("<em>Se non carichi un file, verrà mostrata l'immagine predefinita inclusa nel tema.</em>");
+        });
+    });
+    </script>
+    <?php
+}
+
+function sport_theme_save_iscritti_classificazione_meta( $post_id ) {
+    if ( ! isset( $_POST['sport_theme_iscritti_classificazione_nonce'] ) || ! wp_verify_nonce( $_POST['sport_theme_iscritti_classificazione_nonce'], 'sport_theme_save_iscritti_classificazione' ) ) {
+        return;
+    }
+
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+        return;
+    }
+
+    if ( ! current_user_can( 'edit_post', $post_id ) ) {
+        return;
+    }
+
+    if ( isset( $_POST['_iscrizioni_classificazione_file'] ) ) {
+        update_post_meta( $post_id, '_iscrizioni_classificazione_file', esc_url_raw( wp_unslash( $_POST['_iscrizioni_classificazione_file'] ) ) );
+    }
+
+    if ( isset( $_POST['_iscrizioni_classificazione_stagione'] ) ) {
+        update_post_meta( $post_id, '_iscrizioni_classificazione_stagione', sanitize_text_field( wp_unslash( $_POST['_iscrizioni_classificazione_stagione'] ) ) );
+    }
+}
+add_action( 'save_post_page', 'sport_theme_save_iscritti_classificazione_meta' );
+
 function sport_theme_giocatore_metabox() {
     add_meta_box('giocatore_meta', 'Dettagli Calciatore', 'sport_theme_giocatore_meta_html', 'giocatore', 'normal', 'high');
 }
@@ -2870,9 +2987,9 @@ function sport_theme_import_organigramma_finale() {
 
     $people = [
         ['name' => 'Alessandro Biscotti', 'role' => 'DIRETTORE GENERALE', 'area' => 'DIREZIONE'],
-        ['name' => 'Alessandro Biscotti', 'role' => 'DIRETTORE SPORTIVO', 'area' => 'AREA MANAGEMENT SPORTIVO'],
-        ['name' => 'Kubilay Türkyılmaz', 'role' => 'BRAND AMBASSADOR', 'area' => 'AREA MANAGEMENT SPORTIVO'],
-        ['name' => 'Luca Defranceschi', 'role' => 'SCOUTING', 'area' => 'AREA MANAGEMENT SPORTIVO'],
+        ['name' => 'Alessandro Biscotti', 'role' => 'DIRETTORE SPORTIVO', 'area' => 'MANAGEMENT SPORTIVO'],
+        ['name' => 'Kubilay Türkyılmaz', 'role' => 'BRAND AMBASSADOR', 'area' => 'MANAGEMENT SPORTIVO'],
+        ['name' => 'Luca Defranceschi', 'role' => 'SCOUTING', 'area' => 'MANAGEMENT SPORTIVO'],
         
         ['name' => 'Riccardo Bonavetti', 'role' => 'SEGRETARIO GENERALE', 'area' => 'AREA CORPORATE'],
         ['name' => 'Alessandro Spoggi', 'role' => 'RESPONSABILE MARKETING', 'area' => 'AREA CORPORATE'],
@@ -4647,7 +4764,7 @@ function sport_theme_handle_update_iscrizione_detail() {
         sport_theme_send_iscrizione_status_email( $id, $stato );
     }
 
-    wp_safe_redirect( add_query_arg( array( 'edit_iscrizione' => $id, 'updated' => '1' ), home_url( '/area-segreteria/' ) ) );
+    wp_safe_redirect( add_query_arg( array( 'updated' => '1' ), home_url( '/area-segreteria/' ) ) );
     exit;
 }
 add_action( 'admin_post_act_update_iscrizione_detail', 'sport_theme_handle_update_iscrizione_detail' );
@@ -4809,19 +4926,17 @@ function sport_theme_handle_export_iscrizioni_csv() {
         );
 
         foreach ( $documents as $document ) {
-            $download_url = wp_nonce_url(
-                add_query_arg(
-                    array(
-                        'action'      => 'act_download_iscrizione_document',
-                        'document_id' => (int) $document->id,
-                    ),
-                    admin_url( 'admin-post.php' )
+            $download_url = add_query_arg(
+                array(
+                    'action'      => 'act_download_iscrizione_document',
+                    'document_id' => (int) $document->id,
+                    '_wpnonce'    => wp_create_nonce( 'act_download_document_' . (int) $document->id ),
                 ),
-                'act_download_document_' . (int) $document->id
+                admin_url( 'admin-post.php' )
             );
 
             $label = $document->original_name ? $document->original_name : str_replace( '_', ' ', $document->ruolo_file );
-            $entry = $label . ': ' . $download_url;
+            $entry = $label . ': ' . esc_url_raw( $download_url );
 
             if ( $document->child_index ) {
                 $documents_by_child[ (int) $document->iscrizione_id ][ (int) $document->child_index ][ $document->ruolo_file ][] = $entry;

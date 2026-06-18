@@ -121,6 +121,9 @@ get_header();
         foreach($prima_squadra as $post) {
             $area = get_post_meta($post->ID, '_area_organigramma', true);
             if(empty($area)) $area = 'DIREZIONE'; // Fallback se non c'è area
+            if($area === 'AREA MANAGEMENT SPORTIVO') {
+                $area = 'MANAGEMENT SPORTIVO';
+            }
             if(!isset($prima_squadra_groups[$area])) $prima_squadra_groups[$area] = [];
             $prima_squadra_groups[$area][] = $post;
         }
