@@ -2066,7 +2066,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    padding: 20px 22px;
+    padding: 24px 26px;
     border-bottom: 2px solid rgba(255,255,255,0.14);
 }
 
@@ -2074,7 +2074,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .segreteria-empty-state h3,
 .segreteria-empty-row h3 {
     color: #fff;
-    font-size: 22px;
+    font-size: 28px;
     font-weight: 900;
     line-height: 1.1;
     text-transform: uppercase;
@@ -2085,7 +2085,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .segreteria-empty-state p,
 .segreteria-empty-row p {
     color: rgba(255,255,255,0.66);
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
     line-height: 1.35;
     margin: 0;
@@ -2093,7 +2093,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 .segreteria-table-head > span {
     color: var(--c-primary);
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 900;
     line-height: 1;
     text-transform: uppercase;
@@ -2109,15 +2109,15 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     min-width: 980px;
     border-collapse: collapse;
     color: #fff;
-    font-size: 15px;
+    font-size: 16px;
 }
 
 .segreteria-table th {
-    padding: 15px 18px;
+    padding: 17px 20px;
     background: #050505;
     border-bottom: 2px solid rgba(255,255,255,0.16);
     color: var(--c-primary);
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 900;
     line-height: 1;
     text-align: left;
@@ -2125,7 +2125,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 
 .segreteria-table td {
-    padding: 17px 18px;
+    padding: 22px 20px;
     border-bottom: 1px solid rgba(255,255,255,0.1);
     vertical-align: middle;
 }
@@ -2136,7 +2136,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 .segreteria-record-title {
     color: #fff;
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 900;
     line-height: 1.25;
 }
@@ -2144,10 +2144,10 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .segreteria-record-meta {
     display: block;
     color: rgba(255,255,255,0.58);
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
-    line-height: 1.35;
-    margin-top: 4px;
+    line-height: 1.4;
+    margin-top: 6px;
 }
 
 .segreteria-type-badge,
@@ -2156,11 +2156,11 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 28px;
-    padding: 5px 10px 3px;
+    min-height: 34px;
+    padding: 7px 12px 5px;
     border: 2px solid rgba(255,255,255,0.18);
     color: #fff;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 900;
     line-height: 1;
     text-transform: uppercase;
@@ -2236,27 +2236,48 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 .segreteria-document-row {
     display: grid;
-    grid-template-columns: minmax(120px, auto) minmax(150px, 1fr);
-    gap: 8px;
+    grid-template-columns: minmax(190px, 0.45fr) minmax(280px, 1fr);
+    gap: 14px;
     align-items: center;
     width: 100%;
 }
 
 .segreteria-file-replace {
-    display: grid;
-    gap: 6px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     color: rgba(255,255,255,0.62);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 900;
     line-height: 1;
     text-transform: uppercase;
 }
 
+.segreteria-file-replace span {
+    flex: 0 0 auto;
+    color: rgba(255,255,255,0.78);
+}
+
 .segreteria-file-replace input {
-    width: 100%;
+    flex: 1 1 auto;
+    min-width: 180px;
     color: rgba(255,255,255,0.76);
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1.2;
+}
+
+.segreteria-edit-documents .segreteria-documents-list,
+.segreteria-edit-card > .segreteria-documents-list {
+    display: grid;
+    gap: 12px;
+    max-width: none;
+}
+
+.segreteria-edit-documents .segreteria-documents-list a,
+.segreteria-edit-card > .segreteria-documents-list a {
+    min-height: 34px;
+    padding: 7px 12px 5px;
+    font-size: 12px;
 }
 
 .segreteria-status-form {
@@ -2381,12 +2402,12 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 30px;
+    min-height: 36px;
     margin-bottom: 0;
-    padding: 5px 10px 3px;
+    padding: 7px 14px 5px;
     border: 2px solid rgba(255,255,255,0.28);
     color: #fff;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 900;
     line-height: 1;
     text-transform: uppercase;
@@ -2403,12 +2424,12 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 
 .segreteria-delete-form button {
-    min-height: 30px;
-    padding: 5px 10px 3px;
+    min-height: 36px;
+    padding: 7px 14px 5px;
     background: transparent;
     border: 2px solid #ff5c5c;
     color: #ff8a8a;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 900;
     line-height: 1;
     text-transform: uppercase;
@@ -2677,6 +2698,11 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
     .segreteria-document-row {
         grid-template-columns: 1fr;
+    }
+
+    .segreteria-file-replace {
+        align-items: flex-start;
+        flex-direction: column;
     }
 
     .segreteria-quick-actions {
@@ -3211,8 +3237,8 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-stagione .custom-classifica-wrapper table th:nth-child(2),
 .page-stagione .custom-classifica-wrapper table td:nth-child(2) {
     width: 290px;
-    text-align: left !important;
-    padding-left: 28px !important;
+    text-align: center !important;
+    padding-left: 0 !important;
     border-right: 2px solid #111 !important;
 }
 
@@ -3232,6 +3258,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-stagione .custom-classifica-wrapper .standings-team-cell {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 14px;
     min-width: 0;
 }
@@ -6439,6 +6466,56 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .iscrizione-rule-link:hover {
     background: var(--c-primary);
     color: var(--c-black);
+}
+
+.iscrizione-classificazione-item {
+    border-top-color: rgba(255,230,0,0.38);
+}
+
+.iscrizione-classificazione-link {
+    margin-right: 12px;
+}
+
+.iscrizione-classificazione-preview {
+    display: block;
+    max-width: 540px;
+    margin-top: 18px;
+    padding: 0;
+    border: 2px solid rgba(255,255,255,0.22);
+    background: #fff;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.iscrizione-classificazione-preview img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.iscrizione-classificazione-dialog {
+    width: min(980px, 100%);
+    max-height: min(880px, calc(100vh - 48px));
+}
+
+.iscrizione-classificazione-modal-body {
+    background: #fff;
+    border: 2px solid rgba(255,255,255,0.22);
+}
+
+.iscrizione-classificazione-modal-body img,
+.iscrizione-classificazione-modal-body iframe {
+    display: block;
+    width: 100%;
+    border: 0;
+}
+
+.iscrizione-classificazione-modal-body img {
+    height: auto;
+}
+
+.iscrizione-classificazione-modal-body iframe {
+    height: min(720px, 72vh);
 }
 
 .iscrizione-acceptance {
