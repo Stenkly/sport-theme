@@ -141,13 +141,13 @@ get_header();
                     <div class="player-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 90%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8) 25%, transparent 100%); pointer-events: none;"></div>
                     
                     <!-- Nome e numero stampigliati -->
-                    <div class="player-info" style="position: absolute; bottom: 10px; left: 12px; right: 12px; z-index: 2; display: flex; justify-content: space-between; align-items: flex-end; padding: 0; gap: 10px;">
+                    <div class="player-info" style="position: absolute; bottom: 10px; left: 12px; right: 12px; z-index: 2; display: flex; justify-content: space-between; align-items: center; padding: 0; gap: 10px;">
                         <span class="player-name text-white" style="display: block; font-size: 34px; font-weight: 700; line-height: 1.2; margin-top: 0px;">
                             <?php echo esc_html($nome_riga1); ?><br>
                             <span style="color: #F9EA86; display:block; margin-top:-3px;"><?php echo esc_html($nome_riga2); ?></span>
                         </span>
                         <?php if(!empty($numero)): ?>
-                        <span class="player-number" style="display: block; font-size: 50px; font-weight: 700; line-height: 1; color: #F2E302; margin-bottom: 2px; white-space: nowrap; flex-shrink: 0;"><?php echo esc_html($numero); ?></span>
+                        <span class="player-number" style="display: block; font-size: 60px; font-weight: 700; line-height: 1; color: #F2E302; margin-bottom: 0; white-space: nowrap; flex-shrink: 0;"><?php echo esc_html($numero); ?></span>
                         <?php endif; ?>
                     </div>
                 </div>
