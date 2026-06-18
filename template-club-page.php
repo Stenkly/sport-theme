@@ -10,7 +10,7 @@ get_header();
 // Setup active states for the submenu
 $current_page_title = strtolower(get_the_title());
 $is_storia = ($current_page_title === 'storia');
-$is_progetto = ($current_page_title === 'progetto sportivo');
+$is_progetto = ($current_page_title === 'progetto sportivo' || $current_page_title === 'presente e futuro');
 
 // Style helpers
 $btn_active = "padding: 8px 40px; font-weight: 700; text-transform: uppercase; font-size: 14px; text-decoration: none; border: 2px solid var(--c-primary); background-color: var(--c-primary); color: var(--c-black);";
@@ -50,7 +50,7 @@ $btn_inactive = "padding: 8px 40px; font-weight: 700; text-transform: uppercase;
                 <div class="page-submenu" style="display: flex; gap: 20px; flex-wrap: wrap;">
                     <a href="<?php echo esc_url( site_url('/organigramma') ); ?>" class="btn-outline-hover" style="<?php echo $btn_inactive; ?>">ORGANIGRAMMA</a>
                     <a href="<?php echo esc_url( site_url('/storia') ); ?>" class="<?php echo $is_storia ? '' : 'btn-outline-hover'; ?>" style="<?php echo $is_storia ? $btn_active : $btn_inactive; ?>">STORIA</a>
-                    <a href="<?php echo esc_url( site_url('/progetto-sportivo') ); ?>" class="<?php echo $is_progetto ? '' : 'btn-outline-hover'; ?>" style="<?php echo $is_progetto ? $btn_active : $btn_inactive; ?>">PROGETTO SPORTIVO</a>
+                    <a href="<?php echo esc_url( site_url('/presente-e-futuro') ); ?>" class="<?php echo $is_progetto ? '' : 'btn-outline-hover'; ?>" style="<?php echo $is_progetto ? $btn_active : $btn_inactive; ?>">PRESENTE E FUTURO</a>
                 </div>
             </div>
         </div>
@@ -109,7 +109,7 @@ $btn_inactive = "padding: 8px 40px; font-weight: 700; text-transform: uppercase;
                     echo '</ul>';
                     echo '<p>Di particolare rilievo anche il percorso nelle competizioni regionali: il Taverne ha conquistato sei Coppe Ticino, stabilendo un record prestigioso, e ha ottenuto un primo e un secondo posto nella Coppa Campioni del calcio regionale ticinese.</p>';
                     echo '<p>Dalla stagione attuale, la prima squadra si presenta con un nuovo assetto societario, segnando l’inizio di una nuova fase nel percorso di sviluppo del club, nel segno della continuità e dell’attenzione alla propria storia.</p>';
-                } else if ($current_slug === 'progetto-sportivo' || strpos($titolo_check, 'progetto') !== false) {
+                } else if ($current_slug === 'progetto-sportivo' || $current_slug === 'presente-e-futuro' || strpos($titolo_check, 'progetto') !== false || strpos($titolo_check, 'presente') !== false) {
                     echo '<h2>VISIONE, OBIETTIVI E VALORI SPORTIVI</h2>';
                     echo '<h3>La Prima Squadra del Taverne si fonda su una filosofia chiara: unire un calcio dinamico, giovane e di qualità.</h3>';
                     echo '<p>L’obiettivo è esprimere un gioco moderno e propositivo, capace di valorizzare il talento e favorire la crescita dei giocatori, sempre nel rispetto dei valori fondamentali dello sport.</p>';

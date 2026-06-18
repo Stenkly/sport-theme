@@ -1119,7 +1119,7 @@ function sport_theme_auto_assign_templates() {
         'Sponsor'       => 'template-partner.php',
         'Organigramma'  => 'template-organigramma.php',
         'Storia'        => 'template-club-page.php',
-        'Progetto sportivo' => 'template-club-page.php',
+        'Presente e Futuro' => 'template-club-page.php',
         'Contatti'      => 'template-contatti.php',
         'Home Società'  => 'template-home-societa.php',
         // Pagine segnaposto sezione AC Taverne (usano page.php fino a sviluppo)
@@ -1350,11 +1350,11 @@ function sport_theme_auto_provision_v5() {
                 ) );
             }
 
-            // Inserisci Progetto sportivo come figlio
-            $prog = get_page_by_title( 'Progetto sportivo' );
+            // Inserisci Presente e Futuro come figlio
+            $prog = get_page_by_title( 'Presente e Futuro' );
             if($prog) {
                 wp_update_nav_menu_item( $menu_id, 0, array(
-                    'menu-item-title'   => 'Progetto sportivo',
+                    'menu-item-title'   => 'Presente e Futuro',
                     'menu-item-object-id' => $prog->ID,
                     'menu-item-object'  => 'page',
                     'menu-item-status'  => 'publish',
@@ -1395,7 +1395,7 @@ function sport_theme_auto_provision_v6() {
         }
 
         if ( $club_item_id ) {
-            // Eliminiamo tutti i figli di Club (Organigramma, Storia del Club, Progetto sportivo)
+            // Eliminiamo tutti i figli di Club (Organigramma, Storia del Club, Presente e Futuro)
             foreach ( $menu_items as $item ) {
                 if ( $item->menu_item_parent == $club_item_id ) {
                     wp_delete_post( $item->ID, true );
@@ -1443,7 +1443,7 @@ function sport_theme_populate_dummy_content() {
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
 ';
 
-    $pages_to_update = ['Storia', 'Progetto sportivo'];
+    $pages_to_update = ['Storia', 'Presente e Futuro'];
     foreach ($pages_to_update as $title) {
         $p = get_page_by_title($title);
         // Aggiorniamo solo se è vuoto per non schiacciare quello che magari hai già scritto!
@@ -1460,15 +1460,16 @@ function sport_theme_populate_dummy_content() {
 }
 add_action('init', 'sport_theme_populate_dummy_content');
 
-// FIX DB CONTENT PER PROGETTO SPORTIVO
+// FIX DB CONTENT PER PRESENTE E FUTURO
 function sport_theme_fix_progetto_content() {
     if ( get_option( 'sport_theme_fix_progetto_v2' ) ) {
         return;
     }
     
-    $p = get_page_by_path('progetto-sportivo');
+    $p = get_page_by_path('presente-e-futuro');
+    if (!$p) $p = get_page_by_path('progetto-sportivo');
+    if (!$p) $p = get_page_by_title('Presente e Futuro');
     if (!$p) $p = get_page_by_title('Progetto sportivo'); // Fallback
-    if (!$p) $p = get_page_by_title('Progetto Sportivo');
     
     if ($p) {
         $lorem_p = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>";

@@ -37,7 +37,7 @@
                 <h4>CLUB</h4>
                 <a href="<?php echo site_url('/organigramma'); ?>">Organigramma</a>
                 <a href="<?php echo site_url('/storia'); ?>">Storia</a>
-                <a href="<?php echo site_url('/progetto-sportivo'); ?>">Progetto sportivo</a>
+                <a href="<?php echo site_url('/presente-e-futuro'); ?>">Presente e Futuro</a>
             </div>
             <div class="fm-col fm-col-links">
                 <a href="<?php echo site_url('/contatti'); ?>"><b>Contatti</b></a>

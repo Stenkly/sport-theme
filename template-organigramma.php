@@ -82,7 +82,7 @@ get_header();
                 <div class="org-submenu">
                     <a href="<?php echo esc_url( site_url('/organigramma') ); ?>" class="active-btn">ORGANIGRAMMA</a>
                     <a href="<?php echo esc_url( site_url('/storia') ); ?>" class="outline-btn">STORIA</a>
-                    <a href="<?php echo esc_url( site_url('/progetto-sportivo') ); ?>" class="outline-btn">PROGETTO SPORTIVO</a>
+                    <a href="<?php echo esc_url( site_url('/presente-e-futuro') ); ?>" class="outline-btn">PRESENTE E FUTURO</a>
                 </div>
             </div>
         </div>

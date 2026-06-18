@@ -67,13 +67,13 @@
             <!-- Club con sottomenu -->
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
                 <div class="mob-toggle" style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:18px 0;">
-                    <span class="<?php if (is_page_template('template-organigramma.php') || is_page_template('template-storia.php') || is_page_template('template-club-page.php') || is_page('organigramma') || is_page('storia') || is_page('progetto-sportivo')) echo 'mob-active'; ?>" style="color:white; font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Club</span>
+                    <span class="<?php if (is_page_template('template-organigramma.php') || is_page_template('template-storia.php') || is_page_template('template-club-page.php') || is_page('organigramma') || is_page('storia') || is_page('presente-e-futuro')) echo 'mob-active'; ?>" style="color:white; font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Club</span>
                     <i class="fa-solid fa-chevron-down" style="color:white; font-size:14px; transition: transform 0.3s;"></i>
                 </div>
                 <ul class="mob-submenu" style="display:none; list-style:none; padding: 0 0 10px 20px; margin:0;">
                     <li><a href="<?php echo esc_url( site_url('/organigramma') ); ?>" class="<?php if (is_page_template('template-organigramma.php') || is_page('organigramma')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Organigramma</a></li>
-                    <li><a href="<?php echo esc_url( site_url('/storia') ); ?>" class="<?php if (is_page_template('template-storia.php') || is_page('storia') || (is_page_template('template-club-page.php') && !is_page('progetto-sportivo'))) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Storia del Club</a></li>
-                    <li><a href="<?php echo esc_url( site_url('/progetto-sportivo') ); ?>" class="<?php if (is_page('progetto-sportivo') || (is_page_template('template-club-page.php') && is_page('progetto-sportivo'))) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Progetto Sportivo</a></li>
+                    <li><a href="<?php echo esc_url( site_url('/storia') ); ?>" class="<?php if (is_page_template('template-storia.php') || is_page('storia') || (is_page_template('template-club-page.php') && !is_page('presente-e-futuro'))) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Storia del Club</a></li>
+                    <li><a href="<?php echo esc_url( site_url('/presente-e-futuro') ); ?>" class="<?php if (is_page('presente-e-futuro') || (is_page_template('template-club-page.php') && is_page('presente-e-futuro'))) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Presente e Futuro</a></li>
                 </ul>
             </li>
 
@@ -189,7 +189,7 @@
 							</ul>
 						</li>
 						<li class="<?php if (is_page_template('template-stagione.php') || is_page('stagione')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( site_url('/stagione') ); ?>">Stagione</a></li>
-						<li class="<?php if (is_page_template('template-organigramma.php') || is_page_template('template-storia.php') || is_page_template('template-club-page.php') || is_page('organigramma') || is_page('storia') || is_page('progetto-sportivo')) echo 'current-menu-item'; ?>">
+						<li class="<?php if (is_page_template('template-organigramma.php') || is_page_template('template-storia.php') || is_page_template('template-club-page.php') || is_page('organigramma') || is_page('storia') || is_page('presente-e-futuro')) echo 'current-menu-item'; ?>">
 							<a href="<?php echo esc_url( site_url('/organigramma') ); ?>">Club</a>
 						</li>
 						<li class="<?php if (is_page_template('template-partner.php') || is_page('partner') || is_page('sponsor')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( sport_theme_get_page_url('partner', 'Partner') ); ?>">Partner</a></li>
