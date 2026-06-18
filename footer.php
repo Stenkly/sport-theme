@@ -30,7 +30,7 @@
             </div>
             <div class="fm-col">
                 <h4>TEAM</h4>
-                <a href="<?php echo site_url('/rosa'); ?>">Rosa</a>
+                <a href="<?php echo site_url('/giocatori'); ?>">Giocatori</a>
                 <a href="<?php echo site_url('/staff'); ?>">Staff</a>
             </div>
             <div class="fm-col">

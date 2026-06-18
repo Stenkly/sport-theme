@@ -1825,6 +1825,746 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     white-space: nowrap;
 }
 
+.page-area-segreteria .area-segreteria-content {
+    padding-top: 32px !important;
+}
+
+.segreteria-dashboard {
+    display: grid;
+    gap: 26px;
+}
+
+.segreteria-dashboard-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 2px solid rgba(255,255,255,0.18);
+}
+
+.segreteria-kicker {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 6px 12px 3px;
+    background: var(--c-primary);
+    color: #000;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.segreteria-dashboard-head h2 {
+    color: #fff;
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    margin: 0 0 10px;
+}
+
+.segreteria-dashboard-head p {
+    color: rgba(255,255,255,0.72);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.35;
+    margin: 0;
+}
+
+.segreteria-head-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 38px;
+    padding: 7px 14px 4px;
+    border: 2px solid rgba(255,255,255,0.18);
+    color: rgba(255,255,255,0.72);
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.segreteria-export-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 6px 12px 3px;
+    background: var(--c-primary);
+    border: 2px solid var(--c-primary);
+    color: #000;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.segreteria-export-link:hover {
+    background: transparent;
+    color: var(--c-primary);
+}
+
+.segreteria-sync-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--c-primary);
+    box-shadow: 0 0 0 4px rgba(255,230,0,0.14);
+}
+
+.segreteria-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.segreteria-stat-card,
+.segreteria-insight,
+.segreteria-filters,
+.segreteria-table-card,
+.segreteria-empty-state {
+    background: #080808;
+    border: 2px solid rgba(255,255,255,0.18);
+}
+
+.segreteria-stat-card {
+    min-height: 138px;
+    padding: 22px;
+}
+
+.segreteria-stat-card.stat-primary {
+    border-color: var(--c-primary);
+}
+
+.segreteria-stat-card span,
+.segreteria-insight span {
+    display: block;
+    color: rgba(255,255,255,0.64);
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.segreteria-stat-card strong {
+    display: block;
+    color: var(--c-primary);
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 0.95;
+    margin-bottom: 12px;
+}
+
+.segreteria-stat-card small {
+    display: block;
+    color: rgba(255,255,255,0.72);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.segreteria-insights {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.segreteria-insight {
+    padding: 17px 18px 14px;
+}
+
+.segreteria-insight strong {
+    color: #fff;
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.segreteria-filters {
+    display: grid;
+    grid-template-columns: minmax(240px, 1.35fr) repeat(5, minmax(145px, 0.7fr)) auto;
+    gap: 14px;
+    align-items: end;
+    padding: 18px;
+}
+
+.segreteria-filter-field {
+    display: grid;
+    gap: 8px;
+}
+
+.segreteria-filter-field label {
+    color: rgba(255,255,255,0.72);
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.segreteria-filter-field input,
+.segreteria-filter-field select {
+    width: 100%;
+    height: 42px;
+    padding: 9px 12px 7px;
+    background: #0f0f0f;
+    border: 2px solid rgba(255,255,255,0.24);
+    color: #fff;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    outline: none;
+}
+
+.segreteria-filter-field input:focus,
+.segreteria-filter-field select:focus {
+    border-color: var(--c-primary);
+}
+
+.segreteria-filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.segreteria-filter-actions button,
+.segreteria-filter-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 7px 16px 4px;
+    border: 2px solid var(--c-primary);
+    color: #000;
+    background: var(--c-primary);
+    font-size: 13px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.segreteria-filter-actions a {
+    color: var(--c-primary);
+    background: transparent;
+}
+
+.segreteria-table-card {
+    overflow: hidden;
+}
+
+.segreteria-table-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px 22px;
+    border-bottom: 2px solid rgba(255,255,255,0.14);
+}
+
+.segreteria-table-head h3,
+.segreteria-empty-state h3,
+.segreteria-empty-row h3 {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin: 0 0 6px;
+}
+
+.segreteria-table-head p,
+.segreteria-empty-state p,
+.segreteria-empty-row p {
+    color: rgba(255,255,255,0.66);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 0;
+}
+
+.segreteria-table-head > span {
+    color: var(--c-primary);
+    font-size: 13px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.segreteria-table-wrap {
+    overflow-x: auto;
+}
+
+.segreteria-table {
+    width: 100%;
+    min-width: 980px;
+    border-collapse: collapse;
+    color: #fff;
+    font-size: 15px;
+}
+
+.segreteria-table th {
+    padding: 15px 18px;
+    background: #050505;
+    border-bottom: 2px solid rgba(255,255,255,0.16);
+    color: var(--c-primary);
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.segreteria-table td {
+    padding: 17px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    vertical-align: middle;
+}
+
+.segreteria-table tbody tr:hover {
+    background: rgba(255,255,255,0.035);
+}
+
+.segreteria-record-title {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 900;
+    line-height: 1.25;
+}
+
+.segreteria-record-meta {
+    display: block;
+    color: rgba(255,255,255,0.58);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.35;
+    margin-top: 4px;
+}
+
+.segreteria-type-badge,
+.segreteria-status,
+.segreteria-payment {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 28px;
+    padding: 5px 10px 3px;
+    border: 2px solid rgba(255,255,255,0.18);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.segreteria-type-badge {
+    border-color: rgba(255,230,0,0.42);
+    color: var(--c-primary);
+}
+
+.segreteria-status.status-nuova {
+    border-color: var(--c-primary);
+    color: var(--c-primary);
+}
+
+.segreteria-status.status-in_verifica {
+    border-color: #8ca7ff;
+    color: #aebfff;
+}
+
+.segreteria-status.status-documenti_mancanti {
+    border-color: #ff9a5c;
+    color: #ffb98a;
+}
+
+.segreteria-status.status-approvata,
+.segreteria-status.status-confermata {
+    border-color: #5ee07a;
+    color: #8cf0a0;
+}
+
+.segreteria-status.status-archiviata {
+    color: rgba(255,255,255,0.58);
+}
+
+.segreteria-payment.payment-stripe {
+    border-color: #8ca7ff;
+    color: #aebfff;
+}
+
+.segreteria-payment.payment-fattura {
+    border-color: #ffffff;
+    color: #ffffff;
+}
+
+.segreteria-documents-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    max-width: 340px;
+}
+
+.segreteria-documents-list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+    padding: 5px 8px 3px;
+    border: 2px solid rgba(255,255,255,0.2);
+    color: var(--c-primary);
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.segreteria-documents-list a:hover {
+    border-color: var(--c-primary);
+    background: var(--c-primary);
+    color: #000;
+}
+
+.segreteria-document-row {
+    display: grid;
+    grid-template-columns: minmax(120px, auto) minmax(150px, 1fr);
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+}
+
+.segreteria-file-replace {
+    display: grid;
+    gap: 6px;
+    color: rgba(255,255,255,0.62);
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.segreteria-file-replace input {
+    width: 100%;
+    color: rgba(255,255,255,0.76);
+    font-size: 12px;
+    line-height: 1.2;
+}
+
+.segreteria-status-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.segreteria-status-form select {
+    min-width: 148px;
+    height: 34px;
+    padding: 7px 8px 5px;
+    background: #0f0f0f;
+    border: 2px solid rgba(255,255,255,0.22);
+    color: #fff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.segreteria-status-form button {
+    min-height: 34px;
+    padding: 6px 10px 3px;
+    background: transparent;
+    border: 2px solid var(--c-primary);
+    color: var(--c-primary);
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.segreteria-status-form button:hover {
+    background: var(--c-primary);
+    color: #000;
+}
+
+.segreteria-quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0;
+    max-width: 260px;
+}
+
+.segreteria-quick-actions form {
+    margin: 0;
+}
+
+.segreteria-quick-actions button {
+    min-height: 28px;
+    padding: 5px 8px 3px;
+    background: #111;
+    border: 2px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.84);
+    font-size: 10px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.segreteria-quick-actions button:hover {
+    border-color: var(--c-primary);
+    color: var(--c-primary);
+}
+
+.segreteria-detail-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+    gap: 20px;
+    align-items: center;
+    padding: 22px;
+    background: #080808;
+    border: 2px solid rgba(255,255,255,0.18);
+    border-left-color: var(--c-primary);
+}
+
+.segreteria-detail-actions h3 {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin: 6px 0 8px;
+}
+
+.segreteria-detail-actions p {
+    max-width: 680px;
+    color: rgba(255,255,255,0.66);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 0;
+}
+
+.segreteria-quick-actions-detail {
+    justify-content: flex-end;
+    margin: 0;
+    max-width: none;
+}
+
+.segreteria-quick-actions-detail button {
+    min-height: 38px;
+    padding: 8px 12px 5px;
+    border-color: rgba(255,255,255,0.28);
+    font-size: 11px;
+}
+
+.segreteria-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.segreteria-edit-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    margin-bottom: 0;
+    padding: 5px 10px 3px;
+    border: 2px solid rgba(255,255,255,0.28);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.segreteria-edit-link:hover {
+    border-color: var(--c-primary);
+    color: var(--c-primary);
+}
+
+.segreteria-delete-form {
+    margin: 0;
+}
+
+.segreteria-delete-form button {
+    min-height: 30px;
+    padding: 5px 10px 3px;
+    background: transparent;
+    border: 2px solid #ff5c5c;
+    color: #ff8a8a;
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.segreteria-delete-form button:hover {
+    background: #ff5c5c;
+    color: #000;
+}
+
+.segreteria-empty-state,
+.segreteria-empty-row {
+    padding: 26px;
+}
+
+.segreteria-edit {
+    display: grid;
+    gap: 24px;
+}
+
+.segreteria-edit-notice {
+    padding: 16px 18px 13px;
+    border: 2px solid var(--c-primary);
+    background: #080808;
+    color: var(--c-primary);
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 1.25;
+    text-transform: uppercase;
+}
+
+.segreteria-edit-form {
+    display: grid;
+    gap: 22px;
+}
+
+.segreteria-edit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.segreteria-edit-card {
+    padding: 22px;
+    background: #080808;
+    border: 2px solid rgba(255,255,255,0.18);
+}
+
+.segreteria-edit-card h3 {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin: 0 0 18px;
+}
+
+.segreteria-edit-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.segreteria-edit-fields label {
+    display: grid;
+    gap: 8px;
+    color: rgba(255,255,255,0.72);
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.segreteria-edit-fields label.wide {
+    grid-column: 1 / -1;
+}
+
+.segreteria-edit-fields input,
+.segreteria-edit-fields select,
+.segreteria-edit-fields textarea {
+    width: 100%;
+    min-height: 42px;
+    padding: 9px 12px 7px;
+    background: #0f0f0f;
+    border: 2px solid rgba(255,255,255,0.24);
+    color: #fff;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.25;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.segreteria-edit-fields textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.segreteria-edit-fields input:focus,
+.segreteria-edit-fields select:focus,
+.segreteria-edit-fields textarea:focus {
+    border-color: var(--c-primary);
+}
+
+.segreteria-edit-child {
+    border-top-color: var(--c-primary);
+}
+
+.segreteria-edit-documents {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255,255,255,0.14);
+}
+
+.segreteria-edit-documents > strong {
+    display: block;
+    color: rgba(255,255,255,0.72);
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.segreteria-edit-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 0 0;
+}
+
+.segreteria-edit-actions button,
+.segreteria-edit-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 7px 18px 4px;
+    border: 2px solid var(--c-primary);
+    background: var(--c-primary);
+    color: #000;
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.segreteria-edit-actions a {
+    background: transparent;
+    color: var(--c-primary);
+}
+
 @media (min-width: 769px) {
     .page-area-segreteria .news-hero-wrapper {
         height: 732px !important;
@@ -1900,8 +2640,47 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
         line-height: 1.1 !important;
     }
 
-    .page-area-segreteria .segreteria-stats {
+    .page-area-segreteria .segreteria-stats,
+    .page-area-segreteria .segreteria-insights,
+    .page-area-segreteria .segreteria-filters {
         grid-template-columns: 1fr !important;
+    }
+
+    .segreteria-dashboard-head,
+    .segreteria-table-head,
+    .segreteria-filter-actions {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .segreteria-dashboard-head h2 {
+        font-size: 34px;
+    }
+
+    .segreteria-edit-grid,
+    .segreteria-edit-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .segreteria-detail-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .segreteria-quick-actions-detail {
+        justify-content: flex-start;
+    }
+
+    .segreteria-edit-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .segreteria-document-row {
+        grid-template-columns: 1fr;
+    }
+
+    .segreteria-quick-actions {
+        max-width: none;
     }
 }
 
@@ -3426,7 +4205,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     gap: 20px;
 }
 @media (min-width: 769px) {
-    .page-rosa .team-section,
+    .page-giocatori .team-section,
     .page-staff .team-section {
         padding-left: 20px !important;
         padding-right: 20px !important;
@@ -3573,7 +4352,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-storia .club-hero-fade,
 .page-club .club-hero-fade,
 .page-id-18 .club-hero-fade,
-.page-rosa .club-hero-fade,
+.page-giocatori .club-hero-fade,
 .page-staff .club-hero-fade,
 .page-la-societa .club-hero-fade,
 .page-news .club-hero-fade,
@@ -3597,7 +4376,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-storia .news-hero,
 .page-club .news-hero,
 .page-id-18 .news-hero,
-.page-rosa .news-hero,
+.page-giocatori .news-hero,
 .page-staff .news-hero,
 .page-la-societa .news-hero,
 .page-news .news-hero,
@@ -3614,7 +4393,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-club .club-hero-wrapper,
 .page-sezioni .club-hero-wrapper,
 .page-id-18 .news-hero-wrapper,
-.page-rosa .news-hero-wrapper,
+.page-giocatori .news-hero-wrapper,
 .page-staff .news-hero-wrapper,
 .page-la-societa .news-hero-wrapper,
 .page-news .news-hero-wrapper,
@@ -5424,7 +6203,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 /* Allineamento larghezza e sporgenza immagine hero per Rosa, Staff, Prima Squadra e Pagine Società */
 @media (min-width: 769px) {
-    .page-rosa .news-hero-wrapper,
+    .page-giocatori .news-hero-wrapper,
     .page-staff .news-hero-wrapper,
     .page-la-societa .news-hero-wrapper,
     .page-comitato .news-hero-wrapper,
@@ -5457,7 +6236,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
         left: 0 !important;
     }
     
-    .page-rosa .news-hero-wrapper,
+    .page-giocatori .news-hero-wrapper,
     .page-staff .news-hero-wrapper,
     .page-la-societa .news-hero-wrapper,
     .page-comitato .news-hero-wrapper,
@@ -5472,7 +6251,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
         height: 55vh !important;
     }
     
-    .page-rosa .news-hero-content,
+    .page-giocatori .news-hero-content,
     .page-staff .news-hero-content,
     .page-la-societa .news-hero-content,
     .page-comitato .news-hero-content,
@@ -5506,7 +6285,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     }
 }
 @media (min-width: 1400px) {
-    .page-rosa .news-hero-wrapper,
+    .page-giocatori .news-hero-wrapper,
     .page-staff .news-hero-wrapper,
     .page-la-societa .news-hero-wrapper,
     .page-comitato .news-hero-wrapper,
@@ -5681,6 +6460,12 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     flex: 0 0 auto;
 }
 
+.iscrizione-cta-group {
+    display: grid;
+    gap: 12px;
+    justify-items: start;
+}
+
 .iscrizione-cta {
     display: inline-flex;
     align-items: center;
@@ -5699,6 +6484,11 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     transition: background 0.2s ease, color 0.2s ease;
 }
 
+.iscrizione-cta-secondary {
+    background: transparent;
+    color: var(--c-primary);
+}
+
 .iscrizione-cta.is-disabled {
     opacity: 0.46;
     cursor: not-allowed;
@@ -5707,6 +6497,11 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .iscrizione-cta:hover {
     background: transparent;
     color: var(--c-primary);
+}
+
+.iscrizione-cta.iscrizione-cta-secondary:hover {
+    background: var(--c-primary);
+    color: var(--c-black);
 }
 
 .iscrizione-modal {
@@ -6044,6 +6839,31 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     margin: 0;
 }
 
+.iscrizione-submit-status {
+    width: min(100%, 720px);
+    padding: 18px 20px 15px;
+    border: 2px solid rgba(255,255,255,0.26);
+    background: #080808;
+    color: var(--c-white);
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+.iscrizione-submit-status.is-success {
+    border-color: var(--c-primary);
+    color: var(--c-primary);
+}
+
+.iscrizione-submit-status.is-error {
+    border-color: #ff4d4d;
+    color: #ff7777;
+}
+
+.iscrizione-submit-status.is-loading {
+    color: rgba(255,255,255,0.82);
+}
+
 .iscrizione-conditional > label {
     color: var(--c-white);
     font-size: 20px;
@@ -6339,9 +7159,19 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     gap: 42px;
 }
 
+.iscrizione-step-children {
+    display: grid;
+    gap: 44px;
+}
+
 .iscrizione-child-section {
     padding-top: 34px;
     border-top: 2px solid rgba(255,255,255,0.38);
+}
+
+.iscrizione-step-child-card:first-child {
+    padding-top: 0;
+    border-top: 0;
 }
 
 .iscrizione-child-header {
@@ -6608,7 +7438,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     }
 }
 
-.page-rosa .news-hero-overlay,
+.page-giocatori .news-hero-overlay,
 .page-staff .news-hero-overlay,
 .page-allenatori .news-hero-overlay,
 .page-stagione .news-hero-overlay {
@@ -6617,7 +7447,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 
 /* Impostazioni hero Prima Squadra (Home, Rosa, Staff, Allenatori, Stagione) */
 @media (min-width: 769px) {
-    .page-rosa .news-hero-wrapper,
+    .page-giocatori .news-hero-wrapper,
     .page-staff .news-hero-wrapper,
     .page-la-societa .news-hero-wrapper,
     .page-comitato .news-hero-wrapper,
@@ -6641,7 +7471,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
         height: 732px !important;
     }
 
-    .page-rosa .news-hero-wrapper img,
+    .page-giocatori .news-hero-wrapper img,
     .page-staff .news-hero-wrapper img,
     .page-la-societa .news-hero-wrapper img,
     .page-comitato .news-hero-wrapper img,
@@ -6700,7 +7530,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-storia .club-hero-wrapper .news-hero-content,
 .page-club .club-hero-wrapper .news-hero-content,
 .page-id-18 .news-hero-wrapper .news-hero-content,
-.page-rosa .news-hero-wrapper .news-hero-content,
+.page-giocatori .news-hero-wrapper .news-hero-content,
 .page-staff .news-hero-wrapper .news-hero-content,
 .page-la-societa .news-hero-wrapper .news-hero-content,
 .page-news .news-hero-wrapper .news-hero-content,
@@ -6716,7 +7546,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 }
 
 .page-id-18 .news-hero-wrapper .news-hero-content h1,
-.page-rosa .news-hero-wrapper .news-hero-content h1,
+.page-giocatori .news-hero-wrapper .news-hero-content h1,
 .page-staff .news-hero-wrapper .news-hero-content h1,
 .page-la-societa .news-hero-wrapper .news-hero-content h1,
 .page-news .news-hero-wrapper .news-hero-content h1,
@@ -6743,7 +7573,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-storia .club-hero-wrapper .news-hero-content hr,
 .page-club .club-hero-wrapper .news-hero-content hr,
 .page-id-18 .news-hero-wrapper .news-hero-content hr,
-.page-rosa .news-hero-wrapper .news-hero-content hr,
+.page-giocatori .news-hero-wrapper .news-hero-content hr,
 .page-staff .news-hero-wrapper .news-hero-content hr,
 .page-la-societa .news-hero-wrapper .news-hero-content hr,
 .page-news .news-hero-wrapper .news-hero-content hr,
@@ -6973,7 +7803,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-storia .club-hero-wrapper .page-submenu a,
 .page-club .club-hero-wrapper .page-submenu a,
 .page-id-18 .news-hero-wrapper .page-submenu a,
-.page-rosa .news-hero-wrapper .page-submenu a,
+.page-giocatori .news-hero-wrapper .page-submenu a,
 .page-staff .news-hero-wrapper .page-submenu a,
 .page-la-societa .news-hero-wrapper .page-submenu a {
     display: inline-flex !important;
@@ -7005,7 +7835,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-storia .club-hero-wrapper,
 .page-club .club-hero-wrapper,
 .page-id-18 .news-hero-wrapper,
-.page-rosa .news-hero-wrapper,
+.page-giocatori .news-hero-wrapper,
 .page-staff .news-hero-wrapper,
 .page-la-societa .news-hero-wrapper,
 .page-news .news-hero-wrapper,
@@ -7024,7 +7854,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
 .page-storia .club-hero-wrapper .news-hero-content,
 .page-club .club-hero-wrapper .news-hero-content,
 .page-id-18 .news-hero-wrapper .news-hero-content,
-.page-rosa .news-hero-wrapper .news-hero-content,
+.page-giocatori .news-hero-wrapper .news-hero-content,
 .page-staff .news-hero-wrapper .news-hero-content,
 .page-la-societa .news-hero-wrapper .news-hero-content,
 .page-news .news-hero-wrapper .news-hero-content,
@@ -7042,7 +7872,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     .page-storia .club-hero-wrapper .news-hero-content,
     .page-club .club-hero-wrapper .news-hero-content,
     .page-id-18 .news-hero-wrapper .news-hero-content,
-    .page-rosa .news-hero-wrapper .news-hero-content,
+    .page-giocatori .news-hero-wrapper .news-hero-content,
     .page-staff .news-hero-wrapper .news-hero-content,
     .page-la-societa .news-hero-wrapper .news-hero-content,
     .page-news .news-hero-wrapper .news-hero-content,
@@ -7066,7 +7896,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     .page-storia .club-hero-wrapper,
     .page-club .club-hero-wrapper,
     .page-id-18 .news-hero-wrapper,
-    .page-rosa .news-hero-wrapper,
+    .page-giocatori .news-hero-wrapper,
     .page-staff .news-hero-wrapper,
     .page-la-societa .news-hero-wrapper,
     .page-news .news-hero-wrapper,
@@ -7085,7 +7915,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     .page-storia .club-hero-wrapper .news-hero-content,
     .page-club .club-hero-wrapper .news-hero-content,
     .page-id-18 .news-hero-wrapper .news-hero-content,
-    .page-rosa .news-hero-wrapper .news-hero-content,
+    .page-giocatori .news-hero-wrapper .news-hero-content,
     .page-staff .news-hero-wrapper .news-hero-content,
     .page-la-societa .news-hero-wrapper .news-hero-content,
     .page-news .news-hero-wrapper .news-hero-content,
@@ -7104,7 +7934,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     .page-storia .club-hero-wrapper,
     .page-club .club-hero-wrapper,
     .page-id-18 .news-hero-wrapper,
-    .page-rosa .news-hero-wrapper,
+    .page-giocatori .news-hero-wrapper,
     .page-staff .news-hero-wrapper,
     .page-la-societa .news-hero-wrapper,
     .page-news .news-hero-wrapper,
@@ -7123,7 +7953,7 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
     .page-storia .club-hero-wrapper .news-hero-content,
     .page-club .club-hero-wrapper .news-hero-content,
     .page-id-18 .news-hero-wrapper .news-hero-content,
-    .page-rosa .news-hero-wrapper .news-hero-content,
+    .page-giocatori .news-hero-wrapper .news-hero-content,
     .page-staff .news-hero-wrapper .news-hero-content,
     .page-la-societa .news-hero-wrapper .news-hero-content,
     .page-news .news-hero-wrapper .news-hero-content,

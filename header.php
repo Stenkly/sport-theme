@@ -51,11 +51,11 @@
             <!-- Team con sottomenu -->
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
                 <div class="mob-toggle" style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:18px 0;">
-                    <span class="<?php if (is_page_template('template-rosa.php') || is_page_template('template-staff.php') || is_page('rosa') || is_page('staff') || is_singular('giocatore')) echo 'mob-active'; ?>" style="color:white; font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Team</span>
+                    <span class="<?php if (is_page_template('template-rosa.php') || is_page_template('template-staff.php') || is_page('giocatori') || is_page('staff') || is_singular('giocatore')) echo 'mob-active'; ?>" style="color:white; font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Team</span>
                     <i class="fa-solid fa-chevron-down" style="color:white; font-size:14px; transition: transform 0.3s;"></i>
                 </div>
                 <ul class="mob-submenu" style="display:none; list-style:none; padding: 0 0 10px 20px; margin:0;">
-                    <li><a href="<?php echo esc_url( site_url('/rosa') ); ?>" class="<?php if (is_page_template('template-rosa.php') || is_page('rosa')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Rosa</a></li>
+                    <li><a href="<?php echo esc_url( site_url('/giocatori') ); ?>" class="<?php if (is_page_template('template-rosa.php') || is_page('giocatori')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Giocatori</a></li>
                     <li><a href="<?php echo esc_url( site_url('/staff') ); ?>" class="<?php if (is_page_template('template-staff.php') || is_page('staff')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Staff</a></li>
                 </ul>
             </li>
@@ -181,10 +181,10 @@
 					?>
 					<ul>
 						<li class="<?php if (is_page_template('template-news.php') || is_page('news') || is_page('news-prima-squadra')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( site_url('/news') ); ?>">News</a></li>
-						<li class="menu-item-has-children <?php if (is_page_template('template-rosa.php') || is_page_template('template-staff.php') || is_page('rosa') || is_page('staff') || is_singular('giocatore')) echo 'current-menu-item'; ?>">
+						<li class="menu-item-has-children <?php if (is_page_template('template-rosa.php') || is_page_template('template-staff.php') || is_page('giocatori') || is_page('staff') || is_singular('giocatore')) echo 'current-menu-item'; ?>">
 							<a href="#">Team</a>
 							<ul class="sub-menu">
-								<li><a href="<?php echo esc_url( site_url('/rosa') ); ?>">Rosa</a></li>
+								<li><a href="<?php echo esc_url( site_url('/giocatori') ); ?>">Giocatori</a></li>
 								<li><a href="<?php echo esc_url( site_url('/staff') ); ?>">Staff</a></li>
 							</ul>
 						</li>

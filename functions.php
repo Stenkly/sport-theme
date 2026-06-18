@@ -221,7 +221,7 @@ function sport_theme_auto_provision_v2() {
         return;
     }
 
-    $pages_to_add = array( 'Rosa', 'Staff' );
+    $pages_to_add = array( 'Giocatori', 'Staff' );
     $page_ids = array();
 
     // 1. Assicuriamoci che le pagine esistano
@@ -411,7 +411,7 @@ function sport_theme_giocatore_meta_html($post) {
         <label><b>Cognome/i (es. Casanova):</b></label><br>
         <input type="text" name="_cognome_calciatore" value="<?php echo esc_attr($cognome); ?>" placeholder="Lascia vuoto per rilevare dal titolo"><br>
 
-        <label><b>Foto Esultanza / Azione (mostrata nella card della Rosa):</b></label><br>
+        <label><b>Foto Esultanza / Azione (mostrata nella card dei Giocatori):</b></label><br>
         <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
             <input type="text" id="foto_esultanza_url" name="_foto_esultanza" value="<?php echo esc_url($foto_esultanza); ?>" style="width:100%; max-width:300px; margin-bottom:0;" placeholder="Seleziona o carica un'immagine...">
             <button type="button" id="upload_esultanza_btn" class="button button-secondary">Scegli Immagine</button>
@@ -994,7 +994,7 @@ function sport_theme_auto_assign_templates() {
 
     $map = array(
         'Prima Squadra' => 'template-prima-squadra.php',
-        'Rosa'          => 'template-rosa.php',
+        'Giocatori'     => 'template-rosa.php',
         'Staff'         => 'template-staff.php',
         'News'          => 'template-news.php',
         'Stagione'      => 'template-stagione.php',
@@ -1135,7 +1135,7 @@ function sport_theme_auto_provision_v3() {
             }
             
             // 3. Fai puntare l'elemento "Team" alla pagina "Rosa"
-            $rosa_page = get_page_by_title( 'Rosa' );
+            $rosa_page = get_page_by_title( 'Giocatori' );
             if ( $rosa_page ) {
                 wp_update_nav_menu_item( $menu_id, $team_item_id, array(
                     'menu-item-title'   => 'Team',
@@ -3412,7 +3412,7 @@ function sport_theme_render_hero_custom_styles() {
             }
         }
         // 2. Pagine Team/Prima Squadra: fallback alla pagina con slug 'team'
-        elseif ( is_page_template( array( 'template-staff.php', 'template-rosa.php', 'template-prima-squadra.php' ) ) || is_page( array( 'staff', 'rosa', 'prima-squadra' ) ) ) {
+        elseif ( is_page_template( array( 'template-staff.php', 'template-rosa.php', 'template-prima-squadra.php' ) ) || is_page( array( 'staff', 'giocatori', 'prima-squadra' ) ) ) {
             $fallback_post = get_page_by_path( 'team' );
             if ( ! $fallback_post ) {
                 $fallback_post = get_page_by_title( 'Team' );
@@ -3518,3 +3518,1426 @@ function sport_theme_render_single_post_share_meta() {
     <?php
 }
 add_action( 'wp_head', 'sport_theme_render_single_post_share_meta', 5 );
+
+/**
+ * ----------------------------------------------------
+ * Iscrizioni AC Taverne: database, upload e salvataggio
+ * ----------------------------------------------------
+ */
+function sport_theme_iscrizioni_table_names() {
+    global $wpdb;
+
+    return array(
+        'registrations' => $wpdb->prefix . 'act_iscrizioni',
+        'children'      => $wpdb->prefix . 'act_iscrizione_bambini',
+        'documents'     => $wpdb->prefix . 'act_iscrizione_documenti',
+        'logs'          => $wpdb->prefix . 'act_iscrizione_log',
+    );
+}
+
+function sport_theme_create_iscrizioni_tables() {
+    global $wpdb;
+
+    $installed_version = get_option( 'sport_theme_iscrizioni_db_version' );
+    $target_version    = '1.1.0';
+
+    if ( $installed_version === $target_version ) {
+        return;
+    }
+
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
+    $tables          = sport_theme_iscrizioni_table_names();
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "
+CREATE TABLE {$tables['registrations']} (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  uuid VARCHAR(64) NOT NULL,
+  tipo_iscrizione VARCHAR(30) NOT NULL DEFAULT 'allievi',
+  stagione_sportiva VARCHAR(20) NOT NULL DEFAULT '',
+  stato VARCHAR(30) NOT NULL DEFAULT 'nuova',
+  metodo_pagamento VARCHAR(30) NOT NULL DEFAULT '',
+  stato_pagamento VARCHAR(30) NOT NULL DEFAULT 'non_pagato',
+  responsabilita_genitoriale VARCHAR(30) NOT NULL DEFAULT '',
+  responsabile_nome VARCHAR(120) NOT NULL DEFAULT '',
+  responsabile_cognome VARCHAR(120) NOT NULL DEFAULT '',
+  responsabile_telefono VARCHAR(80) NOT NULL DEFAULT '',
+  responsabile_email VARCHAR(190) NOT NULL DEFAULT '',
+  certificato_tutela_document_id BIGINT UNSIGNED NULL,
+  regolamento_accettato TINYINT(1) NOT NULL DEFAULT 1,
+  numero_bambini SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  note_interne TEXT NULL,
+  dati_json LONGTEXT NULL,
+  ip_hash VARCHAR(128) NOT NULL DEFAULT '',
+  user_agent TEXT NULL,
+  created_at DATETIME NOT NULL,
+  updated_at DATETIME NOT NULL,
+  PRIMARY KEY  (id),
+  UNIQUE KEY uuid (uuid),
+  KEY tipo_iscrizione (tipo_iscrizione),
+  KEY stagione_sportiva (stagione_sportiva),
+  KEY stato (stato),
+  KEY responsabile_email (responsabile_email),
+  KEY created_at (created_at)
+) $charset_collate;
+
+CREATE TABLE {$tables['children']} (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  iscrizione_id BIGINT UNSIGNED NOT NULL,
+  child_index SMALLINT UNSIGNED NOT NULL DEFAULT 1,
+  nome VARCHAR(120) NOT NULL DEFAULT '',
+  cognome VARCHAR(120) NOT NULL DEFAULT '',
+  data_nascita DATE NULL,
+  nazionalita VARCHAR(120) NOT NULL DEFAULT '',
+  avs VARCHAR(32) NOT NULL DEFAULT '',
+  indirizzo VARCHAR(255) NOT NULL DEFAULT '',
+  cap_citta VARCHAR(120) NOT NULL DEFAULT '',
+  email VARCHAR(190) NOT NULL DEFAULT '',
+  cellulare VARCHAR(80) NOT NULL DEFAULT '',
+  categoria VARCHAR(80) NOT NULL DEFAULT '',
+  salute_allergie_medicinali VARCHAR(10) NOT NULL DEFAULT '',
+  salute_dettagli TEXT NULL,
+  altro_sport VARCHAR(10) NOT NULL DEFAULT '',
+  sport_societa VARCHAR(190) NOT NULL DEFAULT '',
+  sport_giorni VARCHAR(190) NOT NULL DEFAULT '',
+  tragitto_autonomo VARCHAR(10) NOT NULL DEFAULT '',
+  abile_sport VARCHAR(10) NOT NULL DEFAULT '',
+  tipo_documento VARCHAR(40) NOT NULL DEFAULT '',
+  foto_document_id BIGINT UNSIGNED NULL,
+  created_at DATETIME NOT NULL,
+  updated_at DATETIME NOT NULL,
+  PRIMARY KEY  (id),
+  KEY iscrizione_id (iscrizione_id),
+  KEY child_index (child_index),
+  KEY categoria (categoria),
+  KEY cognome (cognome),
+  KEY data_nascita (data_nascita)
+) $charset_collate;
+
+CREATE TABLE {$tables['documents']} (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  iscrizione_id BIGINT UNSIGNED NOT NULL,
+  bambino_id BIGINT UNSIGNED NULL,
+  child_index SMALLINT UNSIGNED NULL,
+  tipo_documento VARCHAR(60) NOT NULL DEFAULT '',
+  campo_file VARCHAR(120) NOT NULL DEFAULT '',
+  ruolo_file VARCHAR(80) NOT NULL DEFAULT '',
+  storage VARCHAR(30) NOT NULL DEFAULT 'private',
+  attachment_id BIGINT UNSIGNED NULL,
+  private_path TEXT NULL,
+  private_url TEXT NULL,
+  original_name VARCHAR(255) NOT NULL DEFAULT '',
+  mime_type VARCHAR(120) NOT NULL DEFAULT '',
+  file_size BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL,
+  PRIMARY KEY  (id),
+  KEY iscrizione_id (iscrizione_id),
+  KEY bambino_id (bambino_id),
+  KEY campo_file (campo_file),
+  KEY storage (storage)
+) $charset_collate;
+
+CREATE TABLE {$tables['logs']} (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  iscrizione_id BIGINT UNSIGNED NOT NULL,
+  azione VARCHAR(80) NOT NULL DEFAULT '',
+  messaggio TEXT NULL,
+  created_by BIGINT UNSIGNED NULL,
+  created_at DATETIME NOT NULL,
+  PRIMARY KEY  (id),
+  KEY iscrizione_id (iscrizione_id),
+  KEY azione (azione),
+  KEY created_at (created_at)
+) $charset_collate;
+";
+
+    dbDelta( $sql );
+    $wpdb->query(
+        $wpdb->prepare(
+            "UPDATE {$tables['registrations']} SET stagione_sportiva = %s WHERE stagione_sportiva = '' OR stagione_sportiva IS NULL",
+            sport_theme_current_sport_season()
+        )
+    );
+    update_option( 'sport_theme_iscrizioni_db_version', $target_version );
+}
+add_action( 'after_switch_theme', 'sport_theme_create_iscrizioni_tables' );
+add_action( 'init', 'sport_theme_create_iscrizioni_tables' );
+
+function sport_theme_sanitize_iscrizione_key( $value, $allowed, $default = '' ) {
+    $value = sanitize_key( wp_unslash( $value ) );
+    return in_array( $value, $allowed, true ) ? $value : $default;
+}
+
+function sport_theme_clean_text_field( $key, $source = null ) {
+    $source = is_array( $source ) ? $source : $_POST;
+    return isset( $source[ $key ] ) ? sanitize_text_field( wp_unslash( $source[ $key ] ) ) : '';
+}
+
+function sport_theme_clean_email_field( $key ) {
+    return isset( $_POST[ $key ] ) ? sanitize_email( wp_unslash( $_POST[ $key ] ) ) : '';
+}
+
+function sport_theme_clean_textarea_field( $key ) {
+    return isset( $_POST[ $key ] ) ? sanitize_textarea_field( wp_unslash( $_POST[ $key ] ) ) : '';
+}
+
+function sport_theme_clean_date_field( $key ) {
+    $value = sport_theme_clean_text_field( $key );
+    return preg_match( '/^\d{4}-\d{2}-\d{2}$/', $value ) ? $value : null;
+}
+
+function sport_theme_get_uploaded_file( $field_name ) {
+    if ( empty( $_FILES[ $field_name ] ) || ! is_array( $_FILES[ $field_name ] ) ) {
+        return null;
+    }
+
+    $file = $_FILES[ $field_name ];
+    if ( ! isset( $file['error'] ) || (int) $file['error'] === UPLOAD_ERR_NO_FILE ) {
+        return null;
+    }
+
+    return $file;
+}
+
+function sport_theme_private_iscrizioni_dir( $uuid ) {
+    $uploads = wp_upload_dir();
+    $base    = trailingslashit( $uploads['basedir'] ) . 'ac-taverne-private/iscrizioni/' . sanitize_file_name( $uuid );
+
+    if ( ! wp_mkdir_p( $base ) ) {
+        return new WP_Error( 'private_dir_failed', 'Non è stato possibile creare la cartella privata dei documenti.' );
+    }
+
+    $root = trailingslashit( $uploads['basedir'] ) . 'ac-taverne-private';
+    if ( wp_mkdir_p( $root ) ) {
+        if ( ! file_exists( trailingslashit( $root ) . '.htaccess' ) ) {
+            file_put_contents( trailingslashit( $root ) . '.htaccess', "Require all denied\nDeny from all\n" );
+        }
+        if ( ! file_exists( trailingslashit( $root ) . 'index.html' ) ) {
+            file_put_contents( trailingslashit( $root ) . 'index.html', '' );
+        }
+    }
+
+    if ( ! file_exists( trailingslashit( $base ) . 'index.html' ) ) {
+        file_put_contents( trailingslashit( $base ) . 'index.html', '' );
+    }
+
+    return $base;
+}
+
+function sport_theme_store_private_iscrizione_file( $field_name, $uuid, $prefix ) {
+    $file = sport_theme_get_uploaded_file( $field_name );
+    if ( ! $file ) {
+        return null;
+    }
+
+    if ( (int) $file['error'] !== UPLOAD_ERR_OK ) {
+        return new WP_Error( 'upload_error', 'Errore durante il caricamento di ' . $field_name . '.' );
+    }
+
+    $allowed = array( 'image/jpeg', 'image/png', 'image/webp', 'application/pdf' );
+    $check   = wp_check_filetype_and_ext( $file['tmp_name'], $file['name'] );
+    $mime    = ! empty( $check['type'] ) ? $check['type'] : $file['type'];
+
+    if ( ! in_array( $mime, $allowed, true ) ) {
+        return new WP_Error( 'invalid_file_type', 'Formato file non consentito per ' . $field_name . '.' );
+    }
+
+    $dir = sport_theme_private_iscrizioni_dir( $uuid );
+    if ( is_wp_error( $dir ) ) {
+        return $dir;
+    }
+
+    $extension = pathinfo( sanitize_file_name( $file['name'] ), PATHINFO_EXTENSION );
+    $filename  = sanitize_file_name( $prefix . '-' . wp_unique_id() . ( $extension ? '.' . $extension : '' ) );
+    $target    = trailingslashit( $dir ) . $filename;
+
+    if ( ! move_uploaded_file( $file['tmp_name'], $target ) ) {
+        return new WP_Error( 'move_failed', 'Non è stato possibile salvare il file ' . $field_name . '.' );
+    }
+
+    return array(
+        'path'          => $target,
+        'original_name' => sanitize_file_name( $file['name'] ),
+        'mime_type'     => $mime,
+        'file_size'     => (int) $file['size'],
+    );
+}
+
+function sport_theme_store_media_iscrizione_file( $field_name, $parent_id = 0 ) {
+    $file = sport_theme_get_uploaded_file( $field_name );
+    if ( ! $file ) {
+        return null;
+    }
+
+    if ( (int) $file['error'] !== UPLOAD_ERR_OK ) {
+        return new WP_Error( 'upload_error', 'Errore durante il caricamento della foto.' );
+    }
+
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+    require_once ABSPATH . 'wp-admin/includes/media.php';
+    require_once ABSPATH . 'wp-admin/includes/image.php';
+
+    $attachment_id = media_handle_upload( $field_name, $parent_id );
+    if ( is_wp_error( $attachment_id ) ) {
+        return $attachment_id;
+    }
+
+    return array(
+        'attachment_id'  => (int) $attachment_id,
+        'original_name'  => sanitize_file_name( $file['name'] ),
+        'mime_type'      => get_post_mime_type( $attachment_id ),
+        'file_size'      => isset( $file['size'] ) ? (int) $file['size'] : 0,
+        'attachment_url' => wp_get_attachment_url( $attachment_id ),
+    );
+}
+
+function sport_theme_insert_iscrizione_document( $iscrizione_id, $bambino_id, $child_index, $tipo_documento, $field_name, $role, $file_data, $storage ) {
+    global $wpdb;
+
+    if ( ! $file_data ) {
+        return null;
+    }
+
+    $tables = sport_theme_iscrizioni_table_names();
+    $now    = current_time( 'mysql' );
+
+    $wpdb->insert(
+        $tables['documents'],
+        array(
+            'iscrizione_id' => (int) $iscrizione_id,
+            'bambino_id'    => $bambino_id ? (int) $bambino_id : null,
+            'child_index'   => $child_index ? (int) $child_index : null,
+            'tipo_documento'=> sanitize_key( $tipo_documento ),
+            'campo_file'    => sanitize_key( $field_name ),
+            'ruolo_file'    => sanitize_key( $role ),
+            'storage'       => sanitize_key( $storage ),
+            'attachment_id' => isset( $file_data['attachment_id'] ) ? (int) $file_data['attachment_id'] : null,
+            'private_path'  => isset( $file_data['path'] ) ? $file_data['path'] : null,
+            'private_url'   => isset( $file_data['attachment_url'] ) ? esc_url_raw( $file_data['attachment_url'] ) : null,
+            'original_name' => isset( $file_data['original_name'] ) ? $file_data['original_name'] : '',
+            'mime_type'     => isset( $file_data['mime_type'] ) ? $file_data['mime_type'] : '',
+            'file_size'     => isset( $file_data['file_size'] ) ? (int) $file_data['file_size'] : 0,
+            'created_at'    => $now,
+        ),
+        array( '%d', '%d', '%d', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s', '%s', '%d', '%s' )
+    );
+
+    return (int) $wpdb->insert_id;
+}
+
+function sport_theme_collect_iscrizione_children( $tipo_iscrizione ) {
+    $children = array();
+
+    $children[1] = array(
+        'index'                       => 1,
+        'nome'                        => sport_theme_clean_text_field( 'giocatore_nome' ),
+        'cognome'                     => sport_theme_clean_text_field( 'giocatore_cognome' ),
+        'data_nascita'                => sport_theme_clean_date_field( 'giocatore_data_nascita' ),
+        'nazionalita'                 => sport_theme_clean_text_field( 'giocatore_nazionalita' ),
+        'avs'                         => sport_theme_clean_text_field( 'giocatore_avs' ),
+        'indirizzo'                   => sport_theme_clean_text_field( 'giocatore_indirizzo' ),
+        'cap_citta'                   => sport_theme_clean_text_field( 'giocatore_cap_citta' ),
+        'email'                       => sport_theme_clean_email_field( 'giocatore_email' ),
+        'cellulare'                   => sport_theme_clean_text_field( 'giocatore_cellulare' ),
+        'salute_allergie_medicinali'  => sport_theme_sanitize_iscrizione_key( $_POST['figlio_1_salute_allergie_medicinali'] ?? '', array( 'si', 'no' ) ),
+        'salute_dettagli'             => sport_theme_clean_textarea_field( 'figlio_1_salute_dettagli' ),
+        'altro_sport'                 => sport_theme_sanitize_iscrizione_key( $_POST['figlio_1_altro_sport'] ?? '', array( 'si', 'no' ) ),
+        'sport_societa'               => sport_theme_clean_text_field( 'figlio_1_sport_societa' ),
+        'sport_giorni'                => sport_theme_clean_text_field( 'figlio_1_sport_giorni' ),
+        'tragitto_autonomo'           => sport_theme_sanitize_iscrizione_key( $_POST['figlio_1_tragitto_autonomo'] ?? '', array( 'si', 'no' ) ),
+        'abile_sport'                 => sport_theme_sanitize_iscrizione_key( $_POST['figlio_1_abile_sport'] ?? '', array( 'si', 'no' ) ),
+        'tipo_documento'              => sport_theme_sanitize_iscrizione_key( $_POST['figlio_1_tipo_documento'] ?? '', array( 'carta_identita', 'permesso_soggiorno', 'passaporto' ) ),
+    );
+
+    if ( $tipo_iscrizione === 'allievi' ) {
+        for ( $i = 2; $i <= 4; $i++ ) {
+            if ( empty( $_POST[ "figlio_{$i}_nome" ] ) && empty( $_POST[ "figlio_{$i}_cognome" ] ) ) {
+                continue;
+            }
+
+            $children[ $i ] = array(
+                'index'                       => $i,
+                'nome'                        => sport_theme_clean_text_field( "figlio_{$i}_nome" ),
+                'cognome'                     => sport_theme_clean_text_field( "figlio_{$i}_cognome" ),
+                'data_nascita'                => sport_theme_clean_date_field( "figlio_{$i}_data_nascita" ),
+                'nazionalita'                 => sport_theme_clean_text_field( "figlio_{$i}_nazionalita" ),
+                'avs'                         => sport_theme_clean_text_field( "figlio_{$i}_avs" ),
+                'indirizzo'                   => sport_theme_clean_text_field( "figlio_{$i}_indirizzo" ),
+                'cap_citta'                   => sport_theme_clean_text_field( "figlio_{$i}_cap_citta" ),
+                'email'                       => sport_theme_clean_email_field( "figlio_{$i}_email" ),
+                'cellulare'                   => sport_theme_clean_text_field( "figlio_{$i}_cellulare" ),
+                'salute_allergie_medicinali'  => sport_theme_sanitize_iscrizione_key( $_POST[ "figlio_{$i}_salute_allergie_medicinali" ] ?? '', array( 'si', 'no' ) ),
+                'salute_dettagli'             => sport_theme_clean_textarea_field( "figlio_{$i}_salute_dettagli" ),
+                'altro_sport'                 => sport_theme_sanitize_iscrizione_key( $_POST[ "figlio_{$i}_altro_sport" ] ?? '', array( 'si', 'no' ) ),
+                'sport_societa'               => sport_theme_clean_text_field( "figlio_{$i}_sport_societa" ),
+                'sport_giorni'                => sport_theme_clean_text_field( "figlio_{$i}_sport_giorni" ),
+                'tragitto_autonomo'           => sport_theme_sanitize_iscrizione_key( $_POST[ "figlio_{$i}_tragitto_autonomo" ] ?? '', array( 'si', 'no' ) ),
+                'abile_sport'                 => sport_theme_sanitize_iscrizione_key( $_POST[ "figlio_{$i}_abile_sport" ] ?? '', array( 'si', 'no' ) ),
+                'tipo_documento'              => sport_theme_sanitize_iscrizione_key( $_POST[ "figlio_{$i}_tipo_documento" ] ?? '', array( 'carta_identita', 'permesso_soggiorno', 'passaporto' ) ),
+            );
+        }
+    }
+
+    return array_values( $children );
+}
+
+function sport_theme_validate_iscrizione_payload( $children ) {
+    $errors = array();
+
+    foreach ( $children as $child ) {
+        $label = trim( $child['nome'] . ' ' . $child['cognome'] );
+        $label = $label ? $label : 'Bambino ' . $child['index'];
+
+        foreach ( array( 'nome', 'cognome', 'data_nascita', 'nazionalita', 'avs', 'indirizzo', 'cap_citta', 'salute_allergie_medicinali', 'altro_sport', 'tragitto_autonomo', 'abile_sport', 'tipo_documento' ) as $required ) {
+            if ( empty( $child[ $required ] ) ) {
+                $errors[] = $label . ': campo obbligatorio mancante (' . $required . ').';
+            }
+        }
+
+        if ( $child['salute_allergie_medicinali'] === 'si' && empty( $child['salute_dettagli'] ) ) {
+            $errors[] = $label . ': indicare i dettagli salute.';
+        }
+
+        if ( $child['altro_sport'] === 'si' && ( empty( $child['sport_societa'] ) || empty( $child['sport_giorni'] ) ) ) {
+            $errors[] = $label . ': indicare società e giorni dell’altro sport.';
+        }
+
+        if ( ! sport_theme_get_uploaded_file( "figlio_{$child['index']}_foto_giocatore" ) ) {
+            $errors[] = $label . ': caricare la foto del giocatore.';
+        }
+
+        foreach ( sport_theme_document_fields_for_type( $child['index'], $child['tipo_documento'] ) as $field_name => $role ) {
+            if ( ! sport_theme_get_uploaded_file( $field_name ) ) {
+                $errors[] = $label . ': caricare il documento richiesto (' . str_replace( '_', ' ', $role ) . ').';
+            }
+        }
+    }
+
+    foreach ( array( 'responsabilita_genitoriale', 'responsabile_nome', 'responsabile_cognome', 'responsabile_telefono', 'responsabile_email', 'metodo_pagamento' ) as $required ) {
+        if ( empty( $_POST[ $required ] ) ) {
+            $errors[] = 'Responsabile: campo obbligatorio mancante (' . $required . ').';
+        }
+    }
+
+    if ( ! is_email( sport_theme_clean_email_field( 'responsabile_email' ) ) ) {
+        $errors[] = 'Inserisci un indirizzo email responsabile valido.';
+    }
+
+    $responsabilita = sport_theme_sanitize_iscrizione_key( $_POST['responsabilita_genitoriale'] ?? '', array( 'padre', 'madre', 'tutore_legale' ) );
+    if ( $responsabilita === 'tutore_legale' && ! sport_theme_get_uploaded_file( 'certificato_tutela' ) ) {
+        $errors[] = 'Caricare il certificato di tutela.';
+    }
+
+    return $errors;
+}
+
+function sport_theme_document_fields_for_type( $child_index, $tipo_documento ) {
+    if ( $tipo_documento === 'carta_identita' ) {
+        return array(
+            "figlio_{$child_index}_carta_identita_fronte" => 'carta_identita_fronte',
+            "figlio_{$child_index}_carta_identita_retro"  => 'carta_identita_retro',
+        );
+    }
+
+    if ( $tipo_documento === 'permesso_soggiorno' ) {
+        return array(
+            "figlio_{$child_index}_permesso_soggiorno_fronte" => 'permesso_soggiorno_fronte',
+            "figlio_{$child_index}_permesso_soggiorno_retro"  => 'permesso_soggiorno_retro',
+        );
+    }
+
+    if ( $tipo_documento === 'passaporto' ) {
+        return array(
+            "figlio_{$child_index}_passaporto_fronte" => 'passaporto_fronte',
+        );
+    }
+
+    return array();
+}
+
+function sport_theme_handle_iscrizione_submit() {
+    check_ajax_referer( 'act_iscrizione_submit', 'nonce' );
+
+    global $wpdb;
+
+    sport_theme_create_iscrizioni_tables();
+
+    $tables          = sport_theme_iscrizioni_table_names();
+    $tipo_iscrizione = sport_theme_sanitize_iscrizione_key( $_POST['tipo_iscrizione'] ?? 'allievi', array( 'allievi', 'scuola_calcio' ), 'allievi' );
+    $children        = sport_theme_collect_iscrizione_children( $tipo_iscrizione );
+    $errors          = sport_theme_validate_iscrizione_payload( $children );
+
+    if ( $errors ) {
+        wp_send_json_error( array( 'message' => 'Controlla i dati inseriti.', 'errors' => $errors ), 422 );
+    }
+
+    $uuid = wp_generate_uuid4();
+    $now  = current_time( 'mysql' );
+
+    $registration_data = array(
+        'uuid'                         => $uuid,
+        'tipo_iscrizione'              => $tipo_iscrizione,
+        'stagione_sportiva'            => sport_theme_current_sport_season(),
+        'stato'                        => 'nuova',
+        'metodo_pagamento'             => sport_theme_sanitize_iscrizione_key( $_POST['metodo_pagamento'] ?? '', array( 'stripe', 'fattura' ) ),
+        'stato_pagamento'              => 'non_pagato',
+        'responsabilita_genitoriale'   => sport_theme_sanitize_iscrizione_key( $_POST['responsabilita_genitoriale'] ?? '', array( 'padre', 'madre', 'tutore_legale' ) ),
+        'responsabile_nome'            => sport_theme_clean_text_field( 'responsabile_nome' ),
+        'responsabile_cognome'         => sport_theme_clean_text_field( 'responsabile_cognome' ),
+        'responsabile_telefono'        => sport_theme_clean_text_field( 'responsabile_telefono' ),
+        'responsabile_email'           => sport_theme_clean_email_field( 'responsabile_email' ),
+        'regolamento_accettato'        => 1,
+        'numero_bambini'               => count( $children ),
+        'note_interne'                 => '',
+        'dati_json'                    => wp_json_encode( array( 'children' => $children ), JSON_UNESCAPED_UNICODE ),
+        'ip_hash'                      => isset( $_SERVER['REMOTE_ADDR'] ) ? hash( 'sha256', sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) . wp_salt() ) : '',
+        'user_agent'                   => isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '',
+        'created_at'                   => $now,
+        'updated_at'                   => $now,
+    );
+
+    $inserted = $wpdb->insert(
+        $tables['registrations'],
+        $registration_data,
+        array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s' )
+    );
+
+    if ( ! $inserted ) {
+        wp_send_json_error( array( 'message' => 'Non è stato possibile salvare l’iscrizione.' ), 500 );
+    }
+
+    $iscrizione_id = (int) $wpdb->insert_id;
+
+    foreach ( $children as $child ) {
+        $wpdb->insert(
+            $tables['children'],
+            array(
+                'iscrizione_id'                 => $iscrizione_id,
+                'child_index'                   => (int) $child['index'],
+                'nome'                          => $child['nome'],
+                'cognome'                       => $child['cognome'],
+                'data_nascita'                  => $child['data_nascita'],
+                'nazionalita'                   => $child['nazionalita'],
+                'avs'                           => $child['avs'],
+                'indirizzo'                     => $child['indirizzo'],
+                'cap_citta'                     => $child['cap_citta'],
+                'email'                         => $child['email'],
+                'cellulare'                     => $child['cellulare'],
+                'categoria'                     => '',
+                'salute_allergie_medicinali'    => $child['salute_allergie_medicinali'],
+                'salute_dettagli'               => $child['salute_dettagli'],
+                'altro_sport'                   => $child['altro_sport'],
+                'sport_societa'                 => $child['sport_societa'],
+                'sport_giorni'                  => $child['sport_giorni'],
+                'tragitto_autonomo'             => $child['tragitto_autonomo'],
+                'abile_sport'                   => $child['abile_sport'],
+                'tipo_documento'                => $child['tipo_documento'],
+                'created_at'                    => $now,
+                'updated_at'                    => $now,
+            ),
+            array( '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )
+        );
+
+        $bambino_id = (int) $wpdb->insert_id;
+
+        $photo_field = "figlio_{$child['index']}_foto_giocatore";
+        $photo       = sport_theme_store_media_iscrizione_file( $photo_field );
+        if ( is_wp_error( $photo ) ) {
+            wp_send_json_error( array( 'message' => $photo->get_error_message() ), 500 );
+        }
+
+        $photo_document_id = sport_theme_insert_iscrizione_document( $iscrizione_id, $bambino_id, $child['index'], 'foto', $photo_field, 'foto_giocatore', $photo, 'media' );
+        if ( $photo_document_id && ! empty( $photo['attachment_id'] ) ) {
+            $wpdb->update( $tables['children'], array( 'foto_document_id' => $photo_document_id ), array( 'id' => $bambino_id ), array( '%d' ), array( '%d' ) );
+        }
+
+        foreach ( sport_theme_document_fields_for_type( $child['index'], $child['tipo_documento'] ) as $field_name => $role ) {
+            $private_file = sport_theme_store_private_iscrizione_file( $field_name, $uuid, "bambino-{$child['index']}-{$role}" );
+            if ( is_wp_error( $private_file ) ) {
+                wp_send_json_error( array( 'message' => $private_file->get_error_message() ), 500 );
+            }
+
+            sport_theme_insert_iscrizione_document( $iscrizione_id, $bambino_id, $child['index'], $child['tipo_documento'], $field_name, $role, $private_file, 'private' );
+        }
+    }
+
+    if ( sport_theme_sanitize_iscrizione_key( $_POST['responsabilita_genitoriale'] ?? '', array( 'padre', 'madre', 'tutore_legale' ) ) === 'tutore_legale' ) {
+        $certificate = sport_theme_store_private_iscrizione_file( 'certificato_tutela', $uuid, 'certificato-tutela' );
+        if ( is_wp_error( $certificate ) ) {
+            wp_send_json_error( array( 'message' => $certificate->get_error_message() ), 500 );
+        }
+
+        $certificate_document_id = sport_theme_insert_iscrizione_document( $iscrizione_id, null, null, 'certificato_tutela', 'certificato_tutela', 'certificato_tutela', $certificate, 'private' );
+        if ( $certificate_document_id ) {
+            $wpdb->update( $tables['registrations'], array( 'certificato_tutela_document_id' => $certificate_document_id ), array( 'id' => $iscrizione_id ), array( '%d' ), array( '%d' ) );
+        }
+    }
+
+    $wpdb->insert(
+        $tables['logs'],
+        array(
+            'iscrizione_id' => $iscrizione_id,
+            'azione'        => 'creata',
+            'messaggio'     => 'Iscrizione inviata dal sito.',
+            'created_by'    => get_current_user_id() ?: null,
+            'created_at'    => $now,
+        ),
+        array( '%d', '%s', '%s', '%d', '%s' )
+    );
+
+    sport_theme_send_iscrizione_received_email( $iscrizione_id );
+
+    wp_send_json_success(
+        array(
+            'message'        => 'Iscrizione ricevuta correttamente.',
+            'iscrizione_id'  => $iscrizione_id,
+            'uuid'           => $uuid,
+            'tipo'           => $tipo_iscrizione,
+            'numero_bambini' => count( $children ),
+        )
+    );
+}
+add_action( 'wp_ajax_act_submit_iscrizione', 'sport_theme_handle_iscrizione_submit' );
+add_action( 'wp_ajax_nopriv_act_submit_iscrizione', 'sport_theme_handle_iscrizione_submit' );
+
+function sport_theme_iscrizioni_require_segreteria_access() {
+    if ( ! is_user_logged_in() || ! sport_theme_can_access_segreteria() ) {
+        wp_die( 'Accesso non autorizzato.', 403 );
+    }
+}
+
+function sport_theme_iscrizioni_allowed_statuses() {
+    return array( 'nuova', 'in_verifica', 'documenti_mancanti', 'approvata', 'confermata', 'archiviata' );
+}
+
+function sport_theme_iscrizioni_status_labels() {
+    return array(
+        'nuova'              => 'Nuova',
+        'in_verifica'        => 'In verifica',
+        'documenti_mancanti' => 'Documenti mancanti',
+        'approvata'          => 'Approvata',
+        'confermata'         => 'Confermata',
+        'archiviata'         => 'Archiviata',
+    );
+}
+
+function sport_theme_iscrizioni_category_options() {
+    return array(
+        ''              => 'Da assegnare',
+        'scuola_calcio' => 'Scuola Calcio',
+        'allievi_a'     => 'Allievi A',
+        'allievi_b'     => 'Allievi B',
+        'allievi_c'     => 'Allievi C',
+        'allievi_d'     => 'Allievi D',
+        'allievi_e'     => 'Allievi E',
+        'allievi_f'     => 'Allievi F',
+        'allievi_g'     => 'Allievi G',
+    );
+}
+
+function sport_theme_current_sport_season() {
+    $year  = (int) current_time( 'Y' );
+    $month = (int) current_time( 'n' );
+
+    if ( $month >= 5 ) {
+        return $year . '/' . ( $year + 1 );
+    }
+
+    return ( $year - 1 ) . '/' . $year;
+}
+
+function sport_theme_iscrizione_label_value( $value, $labels ) {
+    return $labels[ $value ] ?? str_replace( '_', ' ', (string) $value );
+}
+
+function sport_theme_send_iscrizione_received_email( $iscrizione_id ) {
+    global $wpdb;
+
+    $tables = sport_theme_iscrizioni_table_names();
+    $registration = $wpdb->get_row(
+        $wpdb->prepare( "SELECT * FROM {$tables['registrations']} WHERE id = %d", $iscrizione_id )
+    );
+
+    if ( ! $registration || ! is_email( $registration->responsabile_email ) ) {
+        return false;
+    }
+
+    $subject = 'AC Taverne - Iscrizione ricevuta';
+    $message = "Gentile {$registration->responsabile_nome} {$registration->responsabile_cognome},\n\n";
+    $message .= "abbiamo ricevuto correttamente la vostra iscrizione.\n";
+    $message .= "Codice pratica: {$registration->uuid}\n";
+    $message .= "Stagione sportiva: " . ( $registration->stagione_sportiva ?: sport_theme_current_sport_season() ) . "\n\n";
+    $message .= "La segreteria controllerà i dati e vi contatterà se saranno necessari ulteriori documenti.\n\n";
+    $message .= "AC Taverne";
+
+    return wp_mail( $registration->responsabile_email, $subject, $message );
+}
+
+function sport_theme_send_iscrizione_status_email( $iscrizione_id, $new_status ) {
+    global $wpdb;
+
+    $tables = sport_theme_iscrizioni_table_names();
+    $registration = $wpdb->get_row(
+        $wpdb->prepare( "SELECT * FROM {$tables['registrations']} WHERE id = %d", $iscrizione_id )
+    );
+
+    if ( ! $registration || ! is_email( $registration->responsabile_email ) ) {
+        return false;
+    }
+
+    $labels = sport_theme_iscrizioni_status_labels();
+    $status_label = sport_theme_iscrizione_label_value( $new_status, $labels );
+    $subject = 'AC Taverne - Aggiornamento iscrizione';
+    $message = "Gentile {$registration->responsabile_nome} {$registration->responsabile_cognome},\n\n";
+    $message .= "la vostra iscrizione è stata aggiornata.\n";
+    $message .= "Codice pratica: {$registration->uuid}\n";
+    $message .= "Nuovo stato: {$status_label}\n\n";
+
+    if ( $new_status === 'documenti_mancanti' ) {
+        $message .= "Alcuni documenti risultano mancanti o da verificare. La segreteria vi contatterà con le indicazioni necessarie.\n\n";
+    } elseif ( $new_status === 'approvata' ) {
+        $message .= "La pratica è stata approvata dalla segreteria.\n\n";
+    } elseif ( $new_status === 'confermata' ) {
+        $message .= "L'iscrizione è confermata.\n\n";
+    } elseif ( $new_status === 'in_verifica' ) {
+        $message .= "La pratica è ora in fase di verifica.\n\n";
+    }
+
+    $message .= "AC Taverne";
+
+    return wp_mail( $registration->responsabile_email, $subject, $message );
+}
+
+function sport_theme_handle_update_iscrizione_status() {
+    sport_theme_iscrizioni_require_segreteria_access();
+    check_admin_referer( 'act_update_iscrizione_status' );
+
+    global $wpdb;
+
+    $tables = sport_theme_iscrizioni_table_names();
+    $id     = isset( $_POST['iscrizione_id'] ) ? absint( $_POST['iscrizione_id'] ) : 0;
+    $stato  = sport_theme_sanitize_iscrizione_key( $_POST['stato'] ?? '', sport_theme_iscrizioni_allowed_statuses() );
+
+    if ( ! $id || ! $stato ) {
+        wp_safe_redirect( wp_get_referer() ?: home_url( '/area-segreteria/' ) );
+        exit;
+    }
+
+    $previous_status = $wpdb->get_var(
+        $wpdb->prepare( "SELECT stato FROM {$tables['registrations']} WHERE id = %d", $id )
+    );
+
+    $wpdb->update(
+        $tables['registrations'],
+        array(
+            'stato'      => $stato,
+            'updated_at' => current_time( 'mysql' ),
+        ),
+        array( 'id' => $id ),
+        array( '%s', '%s' ),
+        array( '%d' )
+    );
+
+    if ( $previous_status && $previous_status !== $stato ) {
+        sport_theme_send_iscrizione_status_email( $id, $stato );
+    }
+
+    $wpdb->insert(
+        $tables['logs'],
+        array(
+            'iscrizione_id' => $id,
+            'azione'        => 'stato_modificato',
+            'messaggio'     => 'Stato aggiornato a: ' . $stato,
+            'created_by'    => get_current_user_id(),
+            'created_at'    => current_time( 'mysql' ),
+        ),
+        array( '%d', '%s', '%s', '%d', '%s' )
+    );
+
+    wp_safe_redirect( wp_get_referer() ?: home_url( '/area-segreteria/' ) );
+    exit;
+}
+add_action( 'admin_post_act_update_iscrizione_status', 'sport_theme_handle_update_iscrizione_status' );
+
+function sport_theme_handle_quick_iscrizione_action() {
+    sport_theme_iscrizioni_require_segreteria_access();
+    check_admin_referer( 'act_quick_iscrizione_action' );
+
+    global $wpdb;
+
+    $tables = sport_theme_iscrizioni_table_names();
+    $id     = isset( $_POST['iscrizione_id'] ) ? absint( $_POST['iscrizione_id'] ) : 0;
+    $quick  = isset( $_POST['quick_action'] ) ? sanitize_key( wp_unslash( $_POST['quick_action'] ) ) : '';
+
+    if ( ! $id || ! $quick ) {
+        wp_safe_redirect( wp_get_referer() ?: home_url( '/area-segreteria/' ) );
+        exit;
+    }
+
+    $registration = $wpdb->get_row(
+        $wpdb->prepare( "SELECT stato, stato_pagamento FROM {$tables['registrations']} WHERE id = %d", $id )
+    );
+
+    if ( ! $registration ) {
+        wp_safe_redirect( wp_get_referer() ?: home_url( '/area-segreteria/' ) );
+        exit;
+    }
+
+    $updates = array( 'updated_at' => current_time( 'mysql' ) );
+    $formats = array( '%s' );
+    $message = '';
+
+    if ( $quick === 'in_verifica' ) {
+        $updates['stato'] = 'in_verifica';
+        $formats[] = '%s';
+        $message = 'Azione rapida: pratica messa in verifica.';
+    } elseif ( $quick === 'documenti_mancanti' ) {
+        $updates['stato'] = 'documenti_mancanti';
+        $formats[] = '%s';
+        $message = 'Azione rapida: documenti mancanti.';
+    } elseif ( $quick === 'confermata' ) {
+        $updates['stato'] = 'confermata';
+        $formats[] = '%s';
+        $message = 'Azione rapida: iscrizione confermata.';
+    } elseif ( $quick === 'pagato' ) {
+        $updates['stato_pagamento'] = 'pagato';
+        $formats[] = '%s';
+        $message = 'Azione rapida: pagamento segnato come ricevuto.';
+    }
+
+    if ( count( $updates ) <= 1 ) {
+        wp_safe_redirect( wp_get_referer() ?: home_url( '/area-segreteria/' ) );
+        exit;
+    }
+
+    $wpdb->update( $tables['registrations'], $updates, array( 'id' => $id ), $formats, array( '%d' ) );
+
+    if ( isset( $updates['stato'] ) && $registration->stato !== $updates['stato'] ) {
+        sport_theme_send_iscrizione_status_email( $id, $updates['stato'] );
+    }
+
+    $wpdb->insert(
+        $tables['logs'],
+        array(
+            'iscrizione_id' => $id,
+            'azione'        => 'azione_rapida',
+            'messaggio'     => $message,
+            'created_by'    => get_current_user_id(),
+            'created_at'    => current_time( 'mysql' ),
+        ),
+        array( '%d', '%s', '%s', '%d', '%s' )
+    );
+
+    wp_safe_redirect( wp_get_referer() ?: home_url( '/area-segreteria/' ) );
+    exit;
+}
+add_action( 'admin_post_act_quick_iscrizione_action', 'sport_theme_handle_quick_iscrizione_action' );
+
+function sport_theme_handle_delete_iscrizione() {
+    sport_theme_iscrizioni_require_segreteria_access();
+    check_admin_referer( 'act_delete_iscrizione' );
+
+    global $wpdb;
+
+    $tables = sport_theme_iscrizioni_table_names();
+    $id     = isset( $_POST['iscrizione_id'] ) ? absint( $_POST['iscrizione_id'] ) : 0;
+
+    if ( ! $id ) {
+        wp_safe_redirect( wp_get_referer() ?: home_url( '/area-segreteria/' ) );
+        exit;
+    }
+
+    $documents = $wpdb->get_results(
+        $wpdb->prepare( "SELECT * FROM {$tables['documents']} WHERE iscrizione_id = %d", $id )
+    );
+
+    foreach ( $documents as $document ) {
+        if ( $document->storage === 'media' && $document->attachment_id ) {
+            wp_delete_attachment( (int) $document->attachment_id, true );
+            continue;
+        }
+
+        if ( $document->private_path ) {
+            $path = realpath( $document->private_path );
+            $uploads = wp_upload_dir();
+            $private_root = realpath( trailingslashit( $uploads['basedir'] ) . 'ac-taverne-private' );
+            if ( $path && $private_root && strpos( $path, $private_root ) === 0 && file_exists( $path ) ) {
+                wp_delete_file( $path );
+            }
+        }
+    }
+
+    $wpdb->delete( $tables['documents'], array( 'iscrizione_id' => $id ), array( '%d' ) );
+    $wpdb->delete( $tables['children'], array( 'iscrizione_id' => $id ), array( '%d' ) );
+    $wpdb->delete( $tables['logs'], array( 'iscrizione_id' => $id ), array( '%d' ) );
+    $wpdb->delete( $tables['registrations'], array( 'id' => $id ), array( '%d' ) );
+
+    wp_safe_redirect( wp_get_referer() ?: home_url( '/area-segreteria/' ) );
+    exit;
+}
+add_action( 'admin_post_act_delete_iscrizione', 'sport_theme_handle_delete_iscrizione' );
+
+function sport_theme_delete_private_iscrizione_file( $path ) {
+    if ( ! $path ) {
+        return;
+    }
+
+    $real_path = realpath( $path );
+    $uploads = wp_upload_dir();
+    $private_root = realpath( trailingslashit( $uploads['basedir'] ) . 'ac-taverne-private' );
+
+    if ( $real_path && $private_root && strpos( $real_path, $private_root ) === 0 && file_exists( $real_path ) ) {
+        wp_delete_file( $real_path );
+    }
+}
+
+function sport_theme_replace_iscrizione_document_from_upload( $document_id, $field_name, $registration ) {
+    global $wpdb;
+
+    $file = sport_theme_get_uploaded_file( $field_name );
+    if ( ! $file ) {
+        return null;
+    }
+
+    $tables = sport_theme_iscrizioni_table_names();
+    $document = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT * FROM {$tables['documents']} WHERE id = %d AND iscrizione_id = %d",
+            $document_id,
+            (int) $registration->id
+        )
+    );
+
+    if ( ! $document ) {
+        return new WP_Error( 'document_not_found', 'Documento non trovato.' );
+    }
+
+    if ( $document->storage === 'media' ) {
+        $new_file = sport_theme_store_media_iscrizione_file( $field_name );
+        if ( is_wp_error( $new_file ) ) {
+            return $new_file;
+        }
+
+        if ( $document->attachment_id ) {
+            wp_delete_attachment( (int) $document->attachment_id, true );
+        }
+
+        $wpdb->update(
+            $tables['documents'],
+            array(
+                'attachment_id' => (int) $new_file['attachment_id'],
+                'private_path'  => null,
+                'private_url'   => esc_url_raw( $new_file['attachment_url'] ?? '' ),
+                'original_name' => $new_file['original_name'] ?? '',
+                'mime_type'     => $new_file['mime_type'] ?? '',
+                'file_size'     => (int) ( $new_file['file_size'] ?? 0 ),
+                'created_at'    => current_time( 'mysql' ),
+            ),
+            array( 'id' => (int) $document->id ),
+            array( '%d', '%s', '%s', '%s', '%s', '%d', '%s' ),
+            array( '%d' )
+        );
+
+        return true;
+    }
+
+    $prefix = trim(
+        'bambino-' . ( $document->child_index ? (int) $document->child_index : 'pratica' ) . '-' . sanitize_key( $document->ruolo_file ),
+        '-'
+    );
+    $new_file = sport_theme_store_private_iscrizione_file( $field_name, $registration->uuid, $prefix );
+    if ( is_wp_error( $new_file ) ) {
+        return $new_file;
+    }
+
+    sport_theme_delete_private_iscrizione_file( $document->private_path );
+
+    $wpdb->update(
+        $tables['documents'],
+        array(
+            'attachment_id' => null,
+            'private_path'  => $new_file['path'] ?? null,
+            'private_url'   => null,
+            'original_name' => $new_file['original_name'] ?? '',
+            'mime_type'     => $new_file['mime_type'] ?? '',
+            'file_size'     => (int) ( $new_file['file_size'] ?? 0 ),
+            'created_at'    => current_time( 'mysql' ),
+        ),
+        array( 'id' => (int) $document->id ),
+        array( '%d', '%s', '%s', '%s', '%s', '%d', '%s' ),
+        array( '%d' )
+    );
+
+    return true;
+}
+
+function sport_theme_handle_update_iscrizione_detail() {
+    sport_theme_iscrizioni_require_segreteria_access();
+    check_admin_referer( 'act_update_iscrizione_detail' );
+
+    global $wpdb;
+
+    $tables = sport_theme_iscrizioni_table_names();
+    $id     = isset( $_POST['iscrizione_id'] ) ? absint( $_POST['iscrizione_id'] ) : 0;
+
+    if ( ! $id ) {
+        wp_safe_redirect( home_url( '/area-segreteria/' ) );
+        exit;
+    }
+
+    $registration = $wpdb->get_row(
+        $wpdb->prepare( "SELECT * FROM {$tables['registrations']} WHERE id = %d", $id )
+    );
+
+    if ( ! $registration ) {
+        wp_safe_redirect( home_url( '/area-segreteria/' ) );
+        exit;
+    }
+
+    $tipo_iscrizione = sport_theme_sanitize_iscrizione_key( $_POST['tipo_iscrizione'] ?? $registration->tipo_iscrizione, array( 'allievi', 'scuola_calcio' ), 'allievi' );
+    $stato = sport_theme_sanitize_iscrizione_key( $_POST['stato'] ?? $registration->stato, sport_theme_iscrizioni_allowed_statuses(), 'nuova' );
+    $metodo_pagamento = sport_theme_sanitize_iscrizione_key( $_POST['metodo_pagamento'] ?? $registration->metodo_pagamento, array( 'stripe', 'fattura' ), 'fattura' );
+    $stato_pagamento = sport_theme_sanitize_iscrizione_key( $_POST['stato_pagamento'] ?? $registration->stato_pagamento, array( 'non_pagato', 'in_attesa', 'pagato', 'annullato' ), 'non_pagato' );
+    $responsabilita = sport_theme_sanitize_iscrizione_key( $_POST['responsabilita_genitoriale'] ?? $registration->responsabilita_genitoriale, array( 'padre', 'madre', 'tutore_legale' ), 'padre' );
+    $stagione_sportiva = sanitize_text_field( wp_unslash( $_POST['stagione_sportiva'] ?? $registration->stagione_sportiva ) );
+    if ( ! preg_match( '/^\d{4}\/\d{4}$/', $stagione_sportiva ) ) {
+        $stagione_sportiva = sport_theme_current_sport_season();
+    }
+
+    $wpdb->update(
+        $tables['registrations'],
+        array(
+            'tipo_iscrizione'            => $tipo_iscrizione,
+            'stagione_sportiva'          => $stagione_sportiva,
+            'stato'                      => $stato,
+            'metodo_pagamento'           => $metodo_pagamento,
+            'stato_pagamento'            => $stato_pagamento,
+            'responsabilita_genitoriale' => $responsabilita,
+            'responsabile_nome'          => sport_theme_clean_text_field( 'responsabile_nome' ),
+            'responsabile_cognome'       => sport_theme_clean_text_field( 'responsabile_cognome' ),
+            'responsabile_telefono'      => sport_theme_clean_text_field( 'responsabile_telefono' ),
+            'responsabile_email'         => sport_theme_clean_email_field( 'responsabile_email' ),
+            'note_interne'               => sport_theme_clean_textarea_field( 'note_interne' ),
+            'updated_at'                 => current_time( 'mysql' ),
+        ),
+        array( 'id' => $id ),
+        array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ),
+        array( '%d' )
+    );
+
+    $posted_children = isset( $_POST['children'] ) && is_array( $_POST['children'] ) ? wp_unslash( $_POST['children'] ) : array();
+    foreach ( $posted_children as $child_id => $child_data ) {
+        $child_id = absint( $child_id );
+        if ( ! $child_id || ! is_array( $child_data ) ) {
+            continue;
+        }
+
+        $existing_child = $wpdb->get_var(
+            $wpdb->prepare( "SELECT id FROM {$tables['children']} WHERE id = %d AND iscrizione_id = %d", $child_id, $id )
+        );
+
+        if ( ! $existing_child ) {
+            continue;
+        }
+
+        $date = isset( $child_data['data_nascita'] ) && preg_match( '/^\d{4}-\d{2}-\d{2}$/', $child_data['data_nascita'] ) ? $child_data['data_nascita'] : null;
+        $categoria = sport_theme_sanitize_iscrizione_key(
+            $child_data['categoria'] ?? '',
+            array_keys( sport_theme_iscrizioni_category_options() ),
+            ''
+        );
+
+        $wpdb->update(
+            $tables['children'],
+            array(
+                'nome'                       => sanitize_text_field( $child_data['nome'] ?? '' ),
+                'cognome'                    => sanitize_text_field( $child_data['cognome'] ?? '' ),
+                'data_nascita'               => $date,
+                'nazionalita'                => sanitize_text_field( $child_data['nazionalita'] ?? '' ),
+                'avs'                        => sanitize_text_field( $child_data['avs'] ?? '' ),
+                'indirizzo'                  => sanitize_text_field( $child_data['indirizzo'] ?? '' ),
+                'cap_citta'                  => sanitize_text_field( $child_data['cap_citta'] ?? '' ),
+                'email'                      => sanitize_email( $child_data['email'] ?? '' ),
+                'cellulare'                  => sanitize_text_field( $child_data['cellulare'] ?? '' ),
+                'categoria'                  => $categoria,
+                'salute_allergie_medicinali' => sport_theme_sanitize_iscrizione_key( $child_data['salute_allergie_medicinali'] ?? '', array( 'si', 'no' ), 'no' ),
+                'salute_dettagli'            => sanitize_textarea_field( $child_data['salute_dettagli'] ?? '' ),
+                'altro_sport'                => sport_theme_sanitize_iscrizione_key( $child_data['altro_sport'] ?? '', array( 'si', 'no' ), 'no' ),
+                'sport_societa'              => sanitize_text_field( $child_data['sport_societa'] ?? '' ),
+                'sport_giorni'               => sanitize_text_field( $child_data['sport_giorni'] ?? '' ),
+                'tragitto_autonomo'          => sport_theme_sanitize_iscrizione_key( $child_data['tragitto_autonomo'] ?? '', array( 'si', 'no' ), 'no' ),
+                'abile_sport'                => sport_theme_sanitize_iscrizione_key( $child_data['abile_sport'] ?? '', array( 'si', 'no' ), 'si' ),
+                'tipo_documento'             => sport_theme_sanitize_iscrizione_key( $child_data['tipo_documento'] ?? '', array( 'carta_identita', 'permesso_soggiorno', 'passaporto' ), 'carta_identita' ),
+                'updated_at'                 => current_time( 'mysql' ),
+            ),
+            array( 'id' => $child_id ),
+            array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ),
+            array( '%d' )
+        );
+    }
+
+    $documents_replaced = 0;
+    if ( ! empty( $_FILES ) ) {
+        foreach ( array_keys( $_FILES ) as $file_field ) {
+            if ( strpos( $file_field, 'replace_document_' ) !== 0 ) {
+                continue;
+            }
+
+            $document_id = absint( substr( $file_field, strlen( 'replace_document_' ) ) );
+            if ( ! $document_id ) {
+                continue;
+            }
+
+            $replace_result = sport_theme_replace_iscrizione_document_from_upload( $document_id, $file_field, $registration );
+            if ( is_wp_error( $replace_result ) ) {
+                wp_die( esc_html( $replace_result->get_error_message() ), 500 );
+            }
+
+            if ( $replace_result ) {
+                $documents_replaced++;
+            }
+        }
+    }
+
+    $updated_children = $wpdb->get_results(
+        $wpdb->prepare( "SELECT * FROM {$tables['children']} WHERE iscrizione_id = %d ORDER BY child_index ASC", $id ),
+        ARRAY_A
+    );
+
+    $wpdb->update(
+        $tables['registrations'],
+        array(
+            'numero_bambini' => count( $updated_children ),
+            'dati_json'      => wp_json_encode( array( 'children' => $updated_children ), JSON_UNESCAPED_UNICODE ),
+            'updated_at'     => current_time( 'mysql' ),
+        ),
+        array( 'id' => $id ),
+        array( '%d', '%s', '%s' ),
+        array( '%d' )
+    );
+
+    $wpdb->insert(
+        $tables['logs'],
+        array(
+            'iscrizione_id' => $id,
+            'azione'        => 'dati_modificati',
+            'messaggio'     => 'Dati iscrizione aggiornati dalla segreteria.',
+            'created_by'    => get_current_user_id(),
+            'created_at'    => current_time( 'mysql' ),
+        ),
+        array( '%d', '%s', '%s', '%d', '%s' )
+    );
+
+    if ( $documents_replaced > 0 ) {
+        $wpdb->insert(
+            $tables['logs'],
+            array(
+                'iscrizione_id' => $id,
+                'azione'        => 'documenti_sostituiti',
+                'messaggio'     => $documents_replaced . ' documento/i sostituito/i dalla segreteria.',
+                'created_by'    => get_current_user_id(),
+                'created_at'    => current_time( 'mysql' ),
+            ),
+            array( '%d', '%s', '%s', '%d', '%s' )
+        );
+    }
+
+    if ( $registration->stato !== $stato ) {
+        sport_theme_send_iscrizione_status_email( $id, $stato );
+    }
+
+    wp_safe_redirect( add_query_arg( array( 'edit_iscrizione' => $id, 'updated' => '1' ), home_url( '/area-segreteria/' ) ) );
+    exit;
+}
+add_action( 'admin_post_act_update_iscrizione_detail', 'sport_theme_handle_update_iscrizione_detail' );
+
+function sport_theme_handle_download_iscrizione_document() {
+    sport_theme_iscrizioni_require_segreteria_access();
+
+    $document_id = isset( $_GET['document_id'] ) ? absint( $_GET['document_id'] ) : 0;
+    if ( ! $document_id || ! wp_verify_nonce( $_GET['_wpnonce'] ?? '', 'act_download_document_' . $document_id ) ) {
+        wp_die( 'Link documento non valido.', 403 );
+    }
+
+    global $wpdb;
+    $tables = sport_theme_iscrizioni_table_names();
+    $document = $wpdb->get_row(
+        $wpdb->prepare( "SELECT * FROM {$tables['documents']} WHERE id = %d", $document_id )
+    );
+
+    if ( ! $document ) {
+        wp_die( 'Documento non trovato.', 404 );
+    }
+
+    if ( $document->storage === 'media' && $document->attachment_id ) {
+        $media_path = get_attached_file( (int) $document->attachment_id );
+        $path = $media_path ? realpath( $media_path ) : '';
+    } else {
+        $path = $document->private_path ? realpath( $document->private_path ) : '';
+    }
+
+    if ( ! $path || ! file_exists( $path ) || ! is_readable( $path ) ) {
+        wp_die( 'File non disponibile.', 404 );
+    }
+
+    $uploads = wp_upload_dir();
+    if ( $document->storage === 'media' ) {
+        $uploads_root = realpath( $uploads['basedir'] );
+        if ( ! $uploads_root || strpos( $path, $uploads_root ) !== 0 ) {
+            wp_die( 'Percorso file non consentito.', 403 );
+        }
+    } else {
+        $private_root = realpath( trailingslashit( $uploads['basedir'] ) . 'ac-taverne-private' );
+        if ( ! $private_root || strpos( $path, $private_root ) !== 0 ) {
+            wp_die( 'Percorso file non consentito.', 403 );
+        }
+    }
+
+    $filename = $document->original_name ? $document->original_name : basename( $path );
+    $mime = $document->mime_type ? $document->mime_type : 'application/octet-stream';
+
+    nocache_headers();
+    header( 'Content-Type: ' . $mime );
+    header( 'Content-Length: ' . filesize( $path ) );
+    header( 'Content-Disposition: attachment; filename="' . sanitize_file_name( $filename ) . '"' );
+    readfile( $path );
+    exit;
+}
+add_action( 'admin_post_act_download_iscrizione_document', 'sport_theme_handle_download_iscrizione_document' );
+
+function sport_theme_get_iscrizioni_dashboard_filters() {
+    $filter_tipo      = isset( $_GET['tipo'] ) ? sanitize_key( wp_unslash( $_GET['tipo'] ) ) : '';
+    $filter_stato     = isset( $_GET['stato'] ) ? sanitize_key( wp_unslash( $_GET['stato'] ) ) : '';
+    $filter_pagamento = isset( $_GET['pagamento'] ) ? sanitize_key( wp_unslash( $_GET['pagamento'] ) ) : '';
+    $filter_categoria = isset( $_GET['categoria'] ) ? sanitize_key( wp_unslash( $_GET['categoria'] ) ) : '';
+    $filter_stagione  = isset( $_GET['stagione'] ) ? sanitize_text_field( wp_unslash( $_GET['stagione'] ) ) : '';
+    $search_query     = isset( $_GET['q'] ) ? sanitize_text_field( wp_unslash( $_GET['q'] ) ) : '';
+
+    if ( ! in_array( $filter_tipo, array( 'allievi', 'scuola_calcio' ), true ) ) {
+        $filter_tipo = '';
+    }
+    if ( ! in_array( $filter_stato, sport_theme_iscrizioni_allowed_statuses(), true ) ) {
+        $filter_stato = '';
+    }
+    if ( ! in_array( $filter_pagamento, array( 'stripe', 'fattura' ), true ) ) {
+        $filter_pagamento = '';
+    }
+    if ( ! array_key_exists( $filter_categoria, sport_theme_iscrizioni_category_options() ) ) {
+        $filter_categoria = '';
+    }
+    if ( $filter_stagione !== '' && ! preg_match( '/^\d{4}\/\d{4}$/', $filter_stagione ) ) {
+        $filter_stagione = '';
+    }
+
+    return compact( 'filter_tipo', 'filter_stato', 'filter_pagamento', 'filter_categoria', 'filter_stagione', 'search_query' );
+}
+
+function sport_theme_build_iscrizioni_where_sql( $filters, $wpdb ) {
+    $where = array( '1=1' );
+
+    if ( ! empty( $filters['filter_tipo'] ) ) {
+        $where[] = $wpdb->prepare( 'i.tipo_iscrizione = %s', $filters['filter_tipo'] );
+    }
+    if ( ! empty( $filters['filter_stato'] ) ) {
+        $where[] = $wpdb->prepare( 'i.stato = %s', $filters['filter_stato'] );
+    }
+    if ( ! empty( $filters['filter_pagamento'] ) ) {
+        $where[] = $wpdb->prepare( 'i.metodo_pagamento = %s', $filters['filter_pagamento'] );
+    }
+    if ( ! empty( $filters['filter_categoria'] ) ) {
+        $where[] = $wpdb->prepare( 'b.categoria = %s', $filters['filter_categoria'] );
+    }
+    if ( ! empty( $filters['filter_stagione'] ) ) {
+        $where[] = $wpdb->prepare( 'i.stagione_sportiva = %s', $filters['filter_stagione'] );
+    }
+    if ( ! empty( $filters['search_query'] ) ) {
+        $like = '%' . $wpdb->esc_like( $filters['search_query'] ) . '%';
+        $where[] = $wpdb->prepare(
+            '(i.uuid LIKE %s OR i.responsabile_nome LIKE %s OR i.responsabile_cognome LIKE %s OR i.responsabile_email LIKE %s OR b.nome LIKE %s OR b.cognome LIKE %s)',
+            $like,
+            $like,
+            $like,
+            $like,
+            $like,
+            $like
+        );
+    }
+
+    return 'WHERE ' . implode( ' AND ', $where );
+}
+
+function sport_theme_handle_export_iscrizioni_csv() {
+    sport_theme_iscrizioni_require_segreteria_access();
+
+    if ( ! wp_verify_nonce( $_GET['_wpnonce'] ?? '', 'act_export_iscrizioni_csv' ) ) {
+        wp_die( 'Export non autorizzato.', 403 );
+    }
+
+    global $wpdb;
+
+    $tables = sport_theme_iscrizioni_table_names();
+    $filters = sport_theme_get_iscrizioni_dashboard_filters();
+    $where_sql = sport_theme_build_iscrizioni_where_sql( $filters, $wpdb );
+
+    $rows = $wpdb->get_results(
+        "SELECT i.id, i.uuid, i.tipo_iscrizione, i.stagione_sportiva, i.stato, i.metodo_pagamento, i.stato_pagamento, i.responsabilita_genitoriale,
+                i.responsabile_nome, i.responsabile_cognome, i.responsabile_telefono, i.responsabile_email, i.numero_bambini, i.note_interne, i.created_at,
+                b.child_index, b.nome, b.cognome, b.data_nascita, b.nazionalita, b.avs, b.indirizzo, b.cap_citta, b.email, b.cellulare, b.categoria,
+                b.salute_allergie_medicinali, b.salute_dettagli, b.altro_sport, b.sport_societa, b.sport_giorni, b.tragitto_autonomo, b.abile_sport, b.tipo_documento
+         FROM {$tables['registrations']} i
+         LEFT JOIN {$tables['children']} b ON b.iscrizione_id = i.id
+         {$where_sql}
+         ORDER BY i.created_at DESC, b.child_index ASC"
+    );
+
+    $documents_by_child = array();
+    $documents_by_registration = array();
+
+    if ( ! empty( $rows ) ) {
+        $registration_ids = array_values( array_unique( array_map( 'absint', wp_list_pluck( $rows, 'id' ) ) ) );
+        $placeholders = implode( ',', array_fill( 0, count( $registration_ids ), '%d' ) );
+
+        $documents = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT id, iscrizione_id, child_index, ruolo_file, original_name
+                 FROM {$tables['documents']}
+                 WHERE iscrizione_id IN ({$placeholders})
+                 ORDER BY child_index ASC, id ASC",
+                $registration_ids
+            )
+        );
+
+        foreach ( $documents as $document ) {
+            $download_url = wp_nonce_url(
+                add_query_arg(
+                    array(
+                        'action'      => 'act_download_iscrizione_document',
+                        'document_id' => (int) $document->id,
+                    ),
+                    admin_url( 'admin-post.php' )
+                ),
+                'act_download_document_' . (int) $document->id
+            );
+
+            $label = $document->original_name ? $document->original_name : str_replace( '_', ' ', $document->ruolo_file );
+            $entry = $label . ': ' . $download_url;
+
+            if ( $document->child_index ) {
+                $documents_by_child[ (int) $document->iscrizione_id ][ (int) $document->child_index ][ $document->ruolo_file ][] = $entry;
+            } else {
+                $documents_by_registration[ (int) $document->iscrizione_id ][ $document->ruolo_file ][] = $entry;
+            }
+        }
+    }
+
+    nocache_headers();
+    header( 'Content-Type: text/csv; charset=UTF-8' );
+    header( 'Content-Disposition: attachment; filename="iscrizioni-ac-taverne-' . date( 'Y-m-d' ) . '.csv"' );
+
+    $out = fopen( 'php://output', 'w' );
+    fwrite( $out, "\xEF\xBB\xBF" );
+
+    fputcsv( $out, array(
+        'ID iscrizione',
+        'Codice',
+        'Tipo iscrizione',
+        'Stagione sportiva',
+        'Stato iscrizione',
+        'Metodo pagamento',
+        'Stato pagamento',
+        'Data invio',
+        'Responsabilita genitoriale',
+        'Nome responsabile',
+        'Cognome responsabile',
+        'Telefono responsabile',
+        'Email responsabile',
+        'Numero bambini',
+        'Indice bambino',
+        'Nome bambino',
+        'Cognome bambino',
+        'Data nascita',
+        'Nazionalita',
+        'AVS',
+        'Indirizzo',
+        'CAP e citta',
+        'Email bambino',
+        'Cellulare bambino',
+        'Categoria assegnata',
+        'Allergie o medicinali',
+        'Dettagli salute',
+        'Altro sport',
+        'Societa altro sport',
+        'Giorni altro sport',
+        'Tragitto autonomo',
+        'Abile sport',
+        'Tipo documento',
+        'Link foto giocatore',
+        'Link documenti identita',
+        'Link certificato tutela',
+        'Note interne',
+    ), ';' );
+
+    $category_options = sport_theme_iscrizioni_category_options();
+
+    foreach ( $rows as $row ) {
+        $child_documents = $documents_by_child[ (int) $row->id ][ (int) $row->child_index ] ?? array();
+        $registration_documents = $documents_by_registration[ (int) $row->id ] ?? array();
+        $photo_links = $child_documents['foto_giocatore'] ?? array();
+        $identity_links = array();
+
+        foreach ( $child_documents as $role => $links ) {
+            if ( $role === 'foto_giocatore' ) {
+                continue;
+            }
+
+            $identity_links = array_merge( $identity_links, $links );
+        }
+
+        $guardian_links = $registration_documents['certificato_tutela'] ?? array();
+
+        fputcsv( $out, array(
+            $row->id,
+            $row->uuid,
+            $row->tipo_iscrizione,
+            $row->stagione_sportiva ?: sport_theme_current_sport_season(),
+            $row->stato,
+            $row->metodo_pagamento,
+            $row->stato_pagamento,
+            $row->created_at,
+            $row->responsabilita_genitoriale,
+            $row->responsabile_nome,
+            $row->responsabile_cognome,
+            $row->responsabile_telefono,
+            $row->responsabile_email,
+            $row->numero_bambini,
+            $row->child_index,
+            $row->nome,
+            $row->cognome,
+            $row->data_nascita,
+            $row->nazionalita,
+            $row->avs,
+            $row->indirizzo,
+            $row->cap_citta,
+            $row->email,
+            $row->cellulare,
+            sport_theme_iscrizione_label_value( $row->categoria, $category_options ),
+            $row->salute_allergie_medicinali,
+            $row->salute_dettagli,
+            $row->altro_sport,
+            $row->sport_societa,
+            $row->sport_giorni,
+            $row->tragitto_autonomo,
+            $row->abile_sport,
+            $row->tipo_documento,
+            implode( ' | ', $photo_links ),
+            implode( ' | ', $identity_links ),
+            implode( ' | ', $guardian_links ),
+            $row->note_interne,
+        ), ';' );
+    }
+
+    fclose( $out );
+    exit;
+}
+add_action( 'admin_post_act_export_iscrizioni_csv', 'sport_theme_handle_export_iscrizioni_csv' );

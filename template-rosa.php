@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Pagina Rosa
+ * Template Name: Pagina Giocatori
  *
  * @package Sport_Theme
  */
@@ -8,7 +8,7 @@
 get_header();
 ?>
 
-<main id="primary" class="site-main page-rosa">
+<main id="primary" class="site-main page-giocatori">
 
     <!-- HERO IMMAGINE SQUADRA -->
     <section class="news-hero">
@@ -35,7 +35,7 @@ get_header();
                 
                 <div class="page-submenu" style="display: flex; gap: 20px;">
                     <h4 style="margin: 0; display: inline-block;">
-                        <a href="<?php echo esc_url( site_url('/rosa') ); ?>" style="padding: 8px 40px; font-weight: 700; text-transform: uppercase; font-size: 22px; text-decoration: none; border: 2px solid var(--c-primary); background-color: var(--c-primary); color: var(--c-black); display: inline-block;">ROSA</a>
+                        <a href="<?php echo esc_url( site_url('/giocatori') ); ?>" style="padding: 8px 40px; font-weight: 700; text-transform: uppercase; font-size: 22px; text-decoration: none; border: 2px solid var(--c-primary); background-color: var(--c-primary); color: var(--c-black); display: inline-block;">GIOCATORI</a>
                     </h4>
                     <h4 style="margin: 0; display: inline-block;">
                         <a href="<?php echo esc_url( site_url('/staff') ); ?>" class="btn-outline-hover" style="padding: 8px 40px; font-weight: 700; text-transform: uppercase; font-size: 22px; text-decoration: none; border: 2px solid white; background-color: transparent; color: white; transition: all 0.3s; display: inline-block;">STAFF</a>

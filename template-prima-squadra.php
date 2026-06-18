@@ -348,7 +348,7 @@ get_header();
     <section class="ps-section container team-section">
         <div class="section-header">
             <h2 class="section-title text-white">TEAM</h2>
-            <?php $rosa_page = get_page_by_title('Rosa'); ?>
+            <?php $rosa_page = get_page_by_title('Giocatori'); ?>
             <a href="<?php echo $rosa_page ? esc_url(get_permalink($rosa_page->ID)) : '#'; ?>" class="btn-sm btn-outline">SCOPRI</a>
         </div>
 

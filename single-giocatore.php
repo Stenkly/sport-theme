@@ -37,7 +37,7 @@ while ( have_posts() ) : the_post();
 <main id="primary" class="site-main" style="background-color: #000; padding-bottom: 50px;">
     
     <div class="container" style="padding-top: 40px; text-align: right;">
-        <a href="<?php echo esc_url(site_url('/rosa')); ?>" style="color: var(--c-primary); text-decoration: none; font-size: 20px; font-weight: 700;"><i class="fa-solid fa-arrow-left"></i> TORNA ALLA ROSA</a>
+        <a href="<?php echo esc_url(site_url('/giocatori')); ?>" style="color: var(--c-primary); text-decoration: none; font-size: 20px; font-weight: 700;"><i class="fa-solid fa-arrow-left"></i> TORNA AI GIOCATORI</a>
     </div>
 
     <!-- Hero Player -->
@@ -88,7 +88,7 @@ while ( have_posts() ) : the_post();
             </div>
             
             <div style="margin-top: 50px;">
-                <a href="<?php echo esc_url(site_url('/rosa')); ?>" class="btn-sm btn-primary" style="display: inline-block;">TORNA ALLA ROSA</a>
+                <a href="<?php echo esc_url(site_url('/giocatori')); ?>" class="btn-sm btn-primary" style="display: inline-block;">TORNA AI GIOCATORI</a>
             </div>
 
         </div>
