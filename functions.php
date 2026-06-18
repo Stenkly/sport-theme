@@ -165,7 +165,7 @@ function sport_theme_auto_provision() {
         return;
     }
 
-    $pages = array( 'News', 'Team', 'Stagione', 'Club', 'Network', 'Contatti', 'AC Taverne' );
+    $pages = array( 'News', 'Team', 'Stagione', 'Club', 'Partner', 'Contatti', 'AC Taverne' );
     $page_ids = array();
 
     // 1. Crea le pagine vuote
@@ -1115,8 +1115,8 @@ function sport_theme_auto_assign_templates() {
         'Staff'         => 'template-staff.php',
         'News'          => 'template-news.php',
         'Stagione'      => 'template-stagione.php',
-        'Network'       => 'template-network.php',
-        'Sponsor'       => 'template-network.php',
+        'Partner'       => 'template-partner.php',
+        'Sponsor'       => 'template-partner.php',
         'Organigramma'  => 'template-organigramma.php',
         'Storia'        => 'template-club-page.php',
         'Presente e Futuro' => 'template-club-page.php',
@@ -5057,52 +5057,3 @@ function sport_theme_handle_export_iscrizioni_csv() {
     exit;
 }
 add_action( 'admin_post_act_export_iscrizioni_csv', 'sport_theme_handle_export_iscrizioni_csv' );
-
-/**
- * AJAX Handler for Network Modal Form Submission
- */
-function sport_theme_handle_network_submit() {
-    // Verify nonce
-    if ( ! isset($_POST['network_form_nonce']) || ! wp_verify_nonce($_POST['network_form_nonce'], 'act_network_form_nonce_action') ) {
-        wp_send_json_error( array( 'message' => 'Verifica di sicurezza fallita. Ricarica la pagina e riprova.' ) );
-    }
-
-    // Sanitize and validate fields
-    $azienda   = sanitize_text_field( $_POST['azienda'] ?? '' );
-    $nome      = sanitize_text_field( $_POST['nome'] ?? '' );
-    $cognome   = sanitize_text_field( $_POST['cognome'] ?? '' );
-    $email     = sanitize_email( $_POST['email'] ?? '' );
-    $telefono  = sanitize_text_field( $_POST['telefono'] ?? '' );
-    $messaggio = sanitize_textarea_field( $_POST['messaggio'] ?? '' );
-
-    if ( empty($azienda) || empty($nome) || empty($cognome) || empty($email) || empty($messaggio) ) {
-        wp_send_json_error( array( 'message' => 'Per favore compila tutti i campi obbligatori (*).' ) );
-    }
-
-    if ( ! is_email( $email ) ) {
-        wp_send_json_error( array( 'message' => 'L’indirizzo email inserito non è valido.' ) );
-    }
-
-    // Send email to admin
-    $to = get_option('admin_email');
-    $subject = '[AC Taverne - Richiesta Network] Nuova richiesta di adesione da ' . $azienda;
-    $body = "Dettagli Richiesta di Partnership:\n\n";
-    $body .= "Nome Azienda: " . $azienda . "\n";
-    $body .= "Referente: " . $nome . " " . $cognome . "\n";
-    $body .= "Email: " . $email . "\n";
-    $body .= "Telefono: " . ($telefono ?: 'Non fornito') . "\n\n";
-    $body .= "Messaggio:\n" . $messaggio . "\n";
-    
-    $headers = array('Reply-To: ' . $nome . ' ' . $cognome . ' <' . $email . '>');
-
-    $mail_sent = wp_mail($to, $subject, $body, $headers);
-
-    if ( $mail_sent ) {
-        wp_send_json_success( array( 'message' => 'Grazie per il tuo interesse! La tua richiesta è stata inviata correttamente. Ti contatteremo al più presto.' ) );
-    } else {
-        wp_send_json_error( array( 'message' => 'Non è stato possibile inviare l’email. Contattaci direttamente all’indirizzo ' . $to ) );
-    }
-}
-add_action( 'wp_ajax_act_submit_network_form', 'sport_theme_handle_network_submit' );
-add_action( 'wp_ajax_nopriv_act_submit_network_form', 'sport_theme_handle_network_submit' );
-

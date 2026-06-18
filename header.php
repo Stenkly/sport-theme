@@ -78,7 +78,7 @@
             </li>
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <a href="<?php echo esc_url( sport_theme_get_page_url('network', 'Network') ); ?>" class="<?php if (is_page_template('template-network.php') || is_page('network') || is_page('sponsor')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">Network</a>
+                <a href="<?php echo esc_url( sport_theme_get_page_url('partner', 'Partner') ); ?>" class="<?php if (is_page_template('template-partner.php') || is_page('partner') || is_page('sponsor')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">Partner</a>
             </li>
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
@@ -192,7 +192,7 @@
 						<li class="<?php if (is_page_template('template-organigramma.php') || is_page_template('template-storia.php') || is_page_template('template-club-page.php') || is_page('organigramma') || is_page('storia') || is_page('presente-e-futuro')) echo 'current-menu-item'; ?>">
 							<a href="<?php echo esc_url( site_url('/organigramma') ); ?>">Club</a>
 						</li>
-						<li class="<?php if (is_page_template('template-network.php') || is_page('network') || is_page('sponsor')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( sport_theme_get_page_url('network', 'Network') ); ?>">Network</a></li>
+						<li class="<?php if (is_page_template('template-partner.php') || is_page('partner') || is_page('sponsor')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( sport_theme_get_page_url('partner', 'Partner') ); ?>">Partner</a></li>
 						<li class="<?php if (is_page_template('template-contatti.php') || is_page('contatti')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( site_url('/contatti') ); ?>">Contatti</a></li>
 						<li><a href="https://actaverneshop.com/" target="_blank">Shop</a></li>
 						<li class="menu-item-ac-taverne menu-item-has-children <?php if (is_page('ac-taverne') || is_page('societa') || is_page('scuola-calcio') || is_page('infrastruttura') || is_page('iscritti') || is_page_template('template-home-societa.php') || is_page_template('template-scuola-calcio.php') || is_page_template('template-infrastruttura.php') || is_page_template('template-la-societa.php') || is_page_template('template-comitato-societa.php') || is_page_template('template-club-dei-100.php') || is_page_template('template-sezioni.php') || is_page_template('template-news-societa.php') || is_page_template('template-contatti-societa.php') || is_page_template('template-iscritti.php')) echo 'current-menu-item'; ?>">
