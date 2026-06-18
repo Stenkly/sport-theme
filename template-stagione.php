@@ -115,7 +115,7 @@ if ( ! function_exists( 'sport_theme_sentence_case_label' ) ) {
                 </div>
                 <div class="match-action">
                     <div class="vertical-divider"></div>
-                    <a href="https://matchcenter.football.ch/?v=1757&lng=1" class="btn-sm btn-outline" target="_blank">CALENDARIO</a>
+                    <a href="https://matchcenter.el-pl.ch/default.aspx?v=617&oid=3&lng=1&t=32750&a=trr" class="btn-sm btn-outline" target="_blank">CALENDARIO</a>
                 </div>
             </div>
             <?php endforeach; wp_reset_postdata(); ?>
@@ -166,7 +166,7 @@ if ( ! function_exists( 'sport_theme_sentence_case_label' ) ) {
                 </div>
                 <div class="match-action">
                     <div class="vertical-divider"></div>
-                    <a href="https://matchcenter.football.ch/?v=1757&lng=1" class="btn-sm btn-outline" target="_blank">CALENDARIO</a>
+                    <a href="https://matchcenter.el-pl.ch/default.aspx?v=617&oid=3&lng=1&t=32750&a=trr" class="btn-sm btn-outline" target="_blank">CALENDARIO</a>
                 </div>
             </div>
             <?php endforeach; wp_reset_postdata(); ?>
@@ -262,11 +262,6 @@ if ( ! function_exists( 'sport_theme_sentence_case_label' ) ) {
 
                     if (existingLogo) {
                         wrapper.appendChild(existingLogo);
-                    } else if (teamName.includes('AC Taverne')) {
-                        var logo = document.createElement('img');
-                        logo.src = '<?php echo esc_js( $taverne_logo ); ?>';
-                        logo.alt = 'AC Taverne';
-                        wrapper.appendChild(logo);
                     }
 
                     var name = document.createElement('span');
