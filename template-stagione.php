@@ -224,8 +224,8 @@ if ( ! function_exists( 'sport_theme_sentence_case_label' ) ) {
                 font-size: 17px;
             }
             .custom-classifica-wrapper table td:nth-child(2) {
-                text-align: left;
-                padding-left: 20px;
+                text-align: center;
+                padding-left: 0;
                 font-weight: 700;
                 font-size: 17px;
             }
