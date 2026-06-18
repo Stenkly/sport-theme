@@ -62,8 +62,8 @@ if ( ! function_exists( 'sport_theme_sentence_case_label' ) ) {
     }
     wp_reset_postdata();
 
-    // FILTRO CALENDARIO: Limitiamo alle prossime 3 partite in programma
-    $calendario_posts = array_slice($calendario_posts, 0, 3);
+    // FILTRO CALENDARIO: Limitiamo alle prossime 2 partite in programma
+    $calendario_posts = array_slice($calendario_posts, 0, 2);
     
     // FILTRO RISULTATI: Invertiamo l'ordine cronologico (dalla più recente ripercorrendo verso il passato) e prendiamo le ultime 3
     $risultati_posts = array_reverse($risultati_posts);
@@ -73,9 +73,8 @@ if ( ! function_exists( 'sport_theme_sentence_case_label' ) ) {
     $taverne_logo = has_custom_logo() ? wp_get_attachment_image_url(get_theme_mod('custom_logo'), 'full') : 'https://via.placeholder.com/40';
     ?>
 
-    <!-- CALENDARIO PARTITE -->
     <section class="ps-section container" style="padding-top: 60px;">
-        <h2 class="section-title text-white" style="margin-bottom: 30px;">CALENDARIO PARTITE</h2>
+        <h2 class="section-title text-white" style="margin-bottom: 30px;">PROSSIME GARE</h2>
         
         <div class="match-list" style="display: flex; flex-direction: column; gap: 15px;">
             <?php 
@@ -116,8 +115,7 @@ if ( ! function_exists( 'sport_theme_sentence_case_label' ) ) {
                 </div>
                 <div class="match-action">
                     <div class="vertical-divider"></div>
-                    <?php $match_link = get_post_meta($post->ID, '_match_link', true); ?>
-                    <a href="<?php echo esc_url($match_link ? $match_link : get_permalink()); ?>" class="btn-sm btn-outline" <?php if($match_link) echo 'target="_blank"'; ?>>DETTAGLI</a>
+                    <a href="https://matchcenter.football.ch/?v=1757&lng=1" class="btn-sm btn-outline" target="_blank">CALENDARIO</a>
                 </div>
             </div>
             <?php endforeach; wp_reset_postdata(); ?>
@@ -126,7 +124,7 @@ if ( ! function_exists( 'sport_theme_sentence_case_label' ) ) {
 
     <!-- RISULTATI -->
     <section class="ps-section container">
-        <h2 class="section-title text-white" style="margin-bottom: 30px;">RISULTATI</h2>
+        <h2 class="section-title text-white" style="margin-bottom: 30px;">ULTIMI RISULTATI</h2>
         
         <div class="match-list" style="display: flex; flex-direction: column; gap: 15px;">
             <?php 
@@ -168,8 +166,7 @@ if ( ! function_exists( 'sport_theme_sentence_case_label' ) ) {
                 </div>
                 <div class="match-action">
                     <div class="vertical-divider"></div>
-                    <?php $match_link = get_post_meta($post->ID, '_match_link', true); ?>
-                    <a href="<?php echo esc_url($match_link ? $match_link : get_permalink()); ?>" class="btn-sm btn-outline" <?php if($match_link) echo 'target="_blank"'; ?>>DETTAGLI</a>
+                    <a href="https://matchcenter.football.ch/?v=1757&lng=1" class="btn-sm btn-outline" target="_blank">CALENDARIO</a>
                 </div>
             </div>
             <?php endforeach; wp_reset_postdata(); ?>
@@ -214,8 +211,8 @@ if ( ! function_exists( 'sport_theme_sentence_case_label' ) ) {
                 font-weight: 700;
             }
             .custom-classifica-wrapper table th:nth-child(2) {
-                text-align: left;
-                padding-left: 20px;
+                text-align: center;
+                padding-left: 0;
             }
             .custom-classifica-wrapper table td {
                 padding: 15px 10px;
