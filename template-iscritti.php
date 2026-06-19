@@ -359,12 +359,12 @@ $classificazione_is_image = $classificazione_url && preg_match( '/\.(jpe?g|png|w
 
                 <div class="iscrizione-payment-box" data-payment-info="stripe" hidden>
                     <h3>Pagamento online</h3>
-                    <p>Alla fine dell'iscrizione verrai indirizzato al pagamento sicuro con carta tramite Stripe.</p>
+                    <p>Dopo l'invio dell'iscrizione riceverai il link per completare il pagamento sicuro con carta tramite Stripe.</p>
                 </div>
 
                 <div class="iscrizione-payment-box" data-payment-info="fattura" hidden>
                     <h3>Pagamento tramite fattura</h3>
-                    <p>La società invierà la fattura all'indirizzo email indicato nello step precedente.</p>
+                    <p>La segreteria verificherà la pratica e invierà la QR-fattura all'indirizzo email indicato nei dati del responsabile.</p>
                 </div>
 
                 <div class="iscrizione-submit-status" data-submit-status hidden></div>

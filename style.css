@@ -2505,8 +2505,22 @@ main.page-contatti.site-main > section.container {
 }
 
 .segreteria-invoice-form-head button {
-    min-height: 36px;
-    padding: 8px 14px 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 6px 12px 3px;
+    background: var(--c-primary);
+    border: 2px solid var(--c-primary);
+    color: #000;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.segreteria-invoice-form-head button:hover {
+    background: transparent;
+    border-color: var(--c-primary);
+    color: var(--c-primary);
 }
 
 .segreteria-stripe-form {
