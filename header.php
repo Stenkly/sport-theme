@@ -15,6 +15,37 @@
 
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
+<?php
+$sport_theme_logo_url = function_exists('sport_theme_get_context_logo_url') ? sport_theme_get_context_logo_url() : home_url('/');
+$sport_theme_logo_src = function_exists('sport_theme_get_site_logo_url') ? sport_theme_get_site_logo_url() : get_template_directory_uri() . '/assets/images/logo.png';
+$sport_theme_prima_menu_context = is_page(array(
+    'prima-squadra',
+    'news',
+    'news-prima-squadra',
+    'giocatori',
+    'staff',
+    'stagione',
+    'organigramma',
+    'storia',
+    'presente-e-futuro',
+    'partner',
+    'sponsor',
+    'contatti',
+)) || is_page_template(array(
+    'template-prima-squadra.php',
+    'template-news.php',
+    'template-rosa.php',
+    'template-staff.php',
+    'template-stagione.php',
+    'template-organigramma.php',
+    'template-storia.php',
+    'template-club-page.php',
+    'template-partner.php',
+    'template-contatti.php',
+)) || is_singular(array('giocatore', 'partita'))
+   || ( is_singular('post') && ! has_category('settore-giovanile') )
+   || ( is_singular('evento') && ! has_category('settore-giovanile') );
+?>
 
 <!-- ===================== MOBILE MENU OVERLAY ===================== -->
 <div id="mobile-menu-overlay" style="
@@ -30,11 +61,9 @@
     <!-- Top bar: X + Logo -->
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;">
         <button id="mobile-menu-close" style="background:none; border:none; color:white; font-size:26px; cursor:pointer; padding:0;">✕</button>
-        <?php if ( has_custom_logo() ): the_custom_logo(); else: ?>
-        <a href="<?php echo esc_url( home_url('/') ); ?>">
-            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo.png' ); ?>" alt="AC Taverne" style="max-height:70px;">
+        <a href="<?php echo esc_url($sport_theme_logo_url); ?>" class="mobile-menu-logo-link custom-logo-link" rel="home" aria-label="AC Taverne">
+            <img src="<?php echo esc_url($sport_theme_logo_src); ?>" alt="AC Taverne" class="mobile-menu-logo site-logo">
         </a>
-        <?php endif; ?>
         <div style="width:40px;"></div><!-- Spacer for centering -->
     </div>
 
@@ -46,6 +75,10 @@
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
                 <a href="<?php echo esc_url( site_url('/news') ); ?>" class="<?php if (is_page_template('template-news.php') || is_page('news') || is_page('news-prima-squadra')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">News</a>
+            </li>
+
+            <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <a href="https://actaverneshop.com/" target="_blank" style="display:block; color:var(--c-primary); font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">Shop</a>
             </li>
 
             <!-- Team con sottomenu -->
@@ -78,30 +111,32 @@
             </li>
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <a href="<?php echo esc_url( sport_theme_get_page_url('partner', 'Partner') ); ?>" class="<?php if (is_page_template('template-partner.php') || is_page('partner') || is_page('sponsor')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">Partner</a>
+                <a href="<?php echo esc_url( sport_theme_get_page_url('partner', 'NETWORK') ); ?>" class="<?php if (is_page_template('template-partner.php') || is_page('partner') || is_page('sponsor')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">NETWORK</a>
             </li>
 
             <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
                 <a href="<?php echo esc_url( site_url('/contatti') ); ?>" class="<?php if (is_page_template('template-contatti.php') || is_page('contatti')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">Contatti</a>
             </li>
 
-            <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <a href="https://actaverneshop.com/" target="_blank" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">Shop</a>
-            </li>
-
-            <!-- AC Taverne con sottomenu -->
-            <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <div class="mob-toggle" style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:18px 0;">
-                    <span class="<?php if (is_page('ac-taverne') || is_page('societa') || is_page('scuola-calcio') || is_page('infrastruttura') || is_page('iscritti') || is_page_template('template-home-societa.php') || is_page_template('template-scuola-calcio.php') || is_page_template('template-infrastruttura.php') || is_page_template('template-la-societa.php') || is_page_template('template-comitato-societa.php') || is_page_template('template-club-dei-100.php') || is_page_template('template-sezioni.php') || is_page_template('template-news-societa.php') || is_page_template('template-contatti-societa.php') || is_page_template('template-iscritti.php')) echo 'mob-active'; ?>" style="color:var(--c-primary); font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">AC Taverne</span>
-                    <i class="fa-solid fa-chevron-down" style="color:white; font-size:14px; transition: transform 0.3s;"></i>
-                </div>
-                <ul class="mob-submenu" style="display:none; list-style:none; padding: 0 0 10px 20px; margin:0;">
-                    <li><a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>" class="<?php if (is_page('ac-taverne') || is_page('societa') || is_page_template('template-home-societa.php') || is_page_template('template-la-societa.php')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Società</a></li>
-                    <li><a href="<?php echo esc_url( site_url('/scuola-calcio') ); ?>" class="<?php if (is_page_template('template-scuola-calcio.php') || is_page('scuola-calcio')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Scuola Calcio</a></li>
-                    <li><a href="<?php echo esc_url( site_url('/infrastruttura') ); ?>" class="<?php if (is_page_template('template-infrastruttura.php') || is_page('infrastruttura')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Infrastruttura</a></li>
-                    <li><a href="<?php echo esc_url( site_url('/iscritti') ); ?>" class="<?php if (is_page_template('template-iscritti.php') || is_page('iscritti')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Iscriviti</a></li>
-                </ul>
-            </li>
+            <?php if ( $sport_theme_prima_menu_context ) : ?>
+                <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>" style="display:block; color:white; font-size:20px; font-weight:700; text-transform:uppercase; padding:18px 0; text-decoration:none; letter-spacing:1px;">AC Taverne</a>
+                </li>
+            <?php else : ?>
+                <!-- AC Taverne con sottomenu -->
+                <li style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <div class="mob-toggle" style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:18px 0;">
+                        <span class="<?php if (is_page('ac-taverne') || is_page('societa') || is_page('scuola-calcio') || is_page('infrastruttura') || is_page('iscritti') || is_page_template('template-home-societa.php') || is_page_template('template-scuola-calcio.php') || is_page_template('template-infrastruttura.php') || is_page_template('template-la-societa.php') || is_page_template('template-comitato-societa.php') || is_page_template('template-club-dei-100.php') || is_page_template('template-sezioni.php') || is_page_template('template-news-societa.php') || is_page_template('template-contatti-societa.php') || is_page_template('template-iscritti.php')) echo 'mob-active'; ?>" style="color:white; font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">AC Taverne</span>
+                        <i class="fa-solid fa-chevron-down" style="color:white; font-size:14px; transition: transform 0.3s;"></i>
+                    </div>
+                    <ul class="mob-submenu" style="display:none; list-style:none; padding: 0 0 10px 20px; margin:0;">
+                        <li><a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>" class="<?php if (is_page('ac-taverne') || is_page('societa') || is_page_template('template-home-societa.php') || is_page_template('template-la-societa.php')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Società</a></li>
+                        <li><a href="<?php echo esc_url( site_url('/scuola-calcio') ); ?>" class="<?php if (is_page_template('template-scuola-calcio.php') || is_page('scuola-calcio')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Scuola Calcio</a></li>
+                        <li><a href="<?php echo esc_url( site_url('/infrastruttura') ); ?>" class="<?php if (is_page_template('template-infrastruttura.php') || is_page('infrastruttura')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Infrastruttura</a></li>
+                        <li><a href="<?php echo esc_url( site_url('/iscritti') ); ?>" class="<?php if (is_page_template('template-iscritti.php') || is_page('iscritti')) echo 'mob-active'; ?>" style="display:block; color:white; font-size:16px; font-weight:700; text-transform:uppercase; padding:10px 0; text-decoration:none; letter-spacing:1px;">Iscriviti</a></li>
+                    </ul>
+                </li>
+            <?php endif; ?>
 
         </ul>
     </nav>
@@ -125,7 +160,7 @@
         <div class="site-header-inner container" style="position: relative; text-align: center; padding: 20px 0 0px;">
             
             <!-- Hamburger button (solo mobile) -->
-            <button id="mobile-menu-open" style="
+            <button id="mobile-menu-open" data-mobile-menu-open style="
                 display: none;
                 position: absolute;
                 top: 50%;
@@ -143,16 +178,9 @@
             </button>
 
             <div class="site-branding" style="display: inline-block;">
-                <?php
-                if ( has_custom_logo() ) :
-                    the_custom_logo();
-                else :
-                    ?>
-                    <a href="<?php echo esc_url( home_url( '/' ) ); ?>">
-                        <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo.png' ); ?>" alt="AC Taverne Logo" class="site-logo" style="max-height: 120px;">
-
-                    </a>
-                <?php endif; ?>
+                <a href="<?php echo esc_url($sport_theme_logo_url); ?>" class="custom-logo-link" rel="home" aria-label="AC Taverne">
+                    <img src="<?php echo esc_url($sport_theme_logo_src); ?>" alt="AC Taverne Logo" class="site-logo" style="max-height: 120px;">
+                </a>
             </div>
 
             <!-- Icone in alto a destra (Tutti i social) -->
@@ -169,7 +197,35 @@
 			<!-- Navigazione mostrata solo nelle pagine interne -->
 			<nav id="site-navigation" class="main-navigation">
 				<?php
-				if ( has_nav_menu( 'menu-1' ) ) {
+                $sport_theme_prima_menu_context = is_page(array(
+                    'prima-squadra',
+                    'news',
+                    'news-prima-squadra',
+                    'giocatori',
+                    'staff',
+                    'stagione',
+                    'organigramma',
+                    'storia',
+                    'presente-e-futuro',
+                    'partner',
+                    'sponsor',
+                    'contatti',
+                )) || is_page_template(array(
+                    'template-prima-squadra.php',
+                    'template-news.php',
+                    'template-rosa.php',
+                    'template-staff.php',
+                    'template-stagione.php',
+                    'template-organigramma.php',
+                    'template-storia.php',
+                    'template-club-page.php',
+                    'template-partner.php',
+                    'template-contatti.php',
+                )) || is_singular(array('giocatore', 'partita'))
+                   || ( is_singular('post') && ! has_category('settore-giovanile') )
+                   || ( is_singular('evento') && ! has_category('settore-giovanile') );
+
+				if ( ! $sport_theme_prima_menu_context && has_nav_menu( 'menu-1' ) ) {
 					wp_nav_menu(
 						array(
 							'theme_location' => 'menu-1',
@@ -181,29 +237,15 @@
 					?>
 					<ul>
 						<li class="<?php if (is_page_template('template-news.php') || is_page('news') || is_page('news-prima-squadra')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( site_url('/news') ); ?>">News</a></li>
-						<li class="menu-item-has-children <?php if (is_page_template('template-rosa.php') || is_page_template('template-staff.php') || is_page('giocatori') || is_page('staff') || is_singular('giocatore')) echo 'current-menu-item'; ?>">
-							<a href="#">Team</a>
-							<ul class="sub-menu">
-								<li><a href="<?php echo esc_url( site_url('/giocatori') ); ?>">Giocatori</a></li>
-								<li><a href="<?php echo esc_url( site_url('/staff') ); ?>">Staff</a></li>
-							</ul>
-						</li>
+						<li class="menu-item-shop"><a href="https://actaverneshop.com/" target="_blank">Shop</a></li>
+						<li class="<?php if (is_page_template('template-rosa.php') || is_page_template('template-staff.php') || is_page('giocatori') || is_page('staff') || is_singular('giocatore')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( site_url('/giocatori') ); ?>">Team</a></li>
 						<li class="<?php if (is_page_template('template-stagione.php') || is_page('stagione')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( site_url('/stagione') ); ?>">Stagione</a></li>
 						<li class="<?php if (is_page_template('template-organigramma.php') || is_page_template('template-storia.php') || is_page_template('template-club-page.php') || is_page('organigramma') || is_page('storia') || is_page('presente-e-futuro')) echo 'current-menu-item'; ?>">
 							<a href="<?php echo esc_url( site_url('/organigramma') ); ?>">Club</a>
 						</li>
-						<li class="<?php if (is_page_template('template-partner.php') || is_page('partner') || is_page('sponsor')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( sport_theme_get_page_url('partner', 'Partner') ); ?>">Partner</a></li>
+						<li class="<?php if (is_page_template('template-partner.php') || is_page('partner') || is_page('sponsor')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( sport_theme_get_page_url('partner', 'NETWORK') ); ?>">NETWORK</a></li>
 						<li class="<?php if (is_page_template('template-contatti.php') || is_page('contatti')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( site_url('/contatti') ); ?>">Contatti</a></li>
-						<li><a href="https://actaverneshop.com/" target="_blank">Shop</a></li>
-						<li class="menu-item-ac-taverne menu-item-has-children <?php if (is_page('ac-taverne') || is_page('societa') || is_page('scuola-calcio') || is_page('infrastruttura') || is_page('iscritti') || is_page_template('template-home-societa.php') || is_page_template('template-scuola-calcio.php') || is_page_template('template-infrastruttura.php') || is_page_template('template-la-societa.php') || is_page_template('template-comitato-societa.php') || is_page_template('template-club-dei-100.php') || is_page_template('template-sezioni.php') || is_page_template('template-news-societa.php') || is_page_template('template-contatti-societa.php') || is_page_template('template-iscritti.php')) echo 'current-menu-item'; ?>">
-							<a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>">AC Taverne</a>
-							<ul class="sub-menu">
-								<li><a href="<?php echo esc_url( site_url('/societa') ); ?>">Società</a></li>
-								<li><a href="<?php echo esc_url( site_url('/scuola-calcio') ); ?>">Scuola Calcio</a></li>
-								<li><a href="<?php echo esc_url( site_url('/infrastruttura') ); ?>">Infrastruttura</a></li>
-								<li><a href="<?php echo esc_url( site_url('/iscritti') ); ?>">Iscriviti</a></li>
-							</ul>
-						</li>
+						<li class="menu-item-ac-taverne <?php if (is_page('ac-taverne') || is_page('societa') || is_page('scuola-calcio') || is_page('infrastruttura') || is_page('iscritti') || is_page_template('template-home-societa.php') || is_page_template('template-scuola-calcio.php') || is_page_template('template-infrastruttura.php') || is_page_template('template-la-societa.php') || is_page_template('template-comitato-societa.php') || is_page_template('template-club-dei-100.php') || is_page_template('template-sezioni.php') || is_page_template('template-news-societa.php') || is_page_template('template-contatti-societa.php') || is_page_template('template-iscritti.php')) echo 'current-menu-item'; ?>"><a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>">AC Taverne</a></li>
 					</ul>
 					<?php
 				}
@@ -226,16 +268,19 @@
 
 <script>
 (function(){
-    var openBtn  = document.getElementById('mobile-menu-open');
     var closeBtn = document.getElementById('mobile-menu-close');
     var overlay  = document.getElementById('mobile-menu-overlay');
 
-    if (!openBtn || !closeBtn || !overlay) return;
+    if (!closeBtn || !overlay) return;
 
-    openBtn.addEventListener('click', function(){
-        overlay.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('[data-mobile-menu-open]')) {
+            e.preventDefault();
+            overlay.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
     });
+
     closeBtn.addEventListener('click', function(){
         overlay.style.display = 'none';
         document.body.style.overflow = '';
@@ -256,11 +301,14 @@
         });
     });
 
-    // Assicura che la voce di menu "AC TAVERNE" sia sempre colorata in giallo
+    // Allinea i colori del menu interno alla home Prima Squadra.
     var menuLinks = document.querySelectorAll('.main-navigation a, #mobile-menu-overlay a');
     menuLinks.forEach(function(link) {
-        if (link.textContent.trim().toUpperCase() === 'AC TAVERNE') {
+        var label = link.textContent.trim().toUpperCase();
+        if (label === 'SHOP' || link.href.indexOf('actaverneshop.com') !== -1 || link.href.indexOf('/shop') !== -1) {
             link.style.setProperty('color', 'var(--c-primary)', 'important');
+        } else if (label === 'AC TAVERNE') {
+            link.style.setProperty('color', '#fff', 'important');
         }
     });
 })();

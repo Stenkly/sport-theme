@@ -23,6 +23,33 @@ if ( ! function_exists( 'sport_theme_sentence_case_label' ) ) {
         return ucfirst( $lower );
     }
 }
+
+if ( ! function_exists( 'get_it_day_of_week' ) ) {
+    function get_it_day_of_week( $date_str ) {
+        $date_str = str_replace( array( '-', '/' ), '.', $date_str );
+        $parts = explode( '.', $date_str );
+
+        if ( count( $parts ) === 3 ) {
+            if ( strlen( $parts[0] ) === 4 ) {
+                $year  = intval( $parts[0] );
+                $month = intval( $parts[1] );
+                $day   = intval( $parts[2] );
+            } else {
+                $day   = intval( $parts[0] );
+                $month = intval( $parts[1] );
+                $year  = intval( $parts[2] );
+            }
+
+            $timestamp = mktime( 0, 0, 0, $month, $day, $year );
+            if ( $timestamp !== false ) {
+                $days = array( 'Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato' );
+                return $days[ (int) date( 'w', $timestamp ) ];
+            }
+        }
+
+        return '';
+    }
+}
 ?>
 
 <main id="primary" class="site-main page-stagione">
@@ -73,7 +100,7 @@ if ( ! function_exists( 'sport_theme_sentence_case_label' ) ) {
     $taverne_logo = has_custom_logo() ? wp_get_attachment_image_url(get_theme_mod('custom_logo'), 'full') : 'https://via.placeholder.com/40';
     ?>
 
-    <section class="ps-section container" style="padding-top: 60px;">
+    <section class="ps-section container">
         <h2 class="section-title text-white" style="margin-bottom: 30px;">PROSSIME GARE</h2>
         
         <div class="match-list" style="display: flex; flex-direction: column; gap: 15px;">
@@ -93,11 +120,12 @@ if ( ! function_exists( 'sport_theme_sentence_case_label' ) ) {
                 $t1_logo = $in_casa == '1' ? $taverne_logo : $logo_avversario;
                 $t2_name = $in_casa == '1' ? $avversario : 'AC Taverne';
                 $t2_logo = $in_casa == '1' ? $logo_avversario : $taverne_logo;
+                $giorno = get_it_day_of_week($data_p);
             ?>
             <div class="match-card match-row">
                 <div class="match-info">
                     <div class="match-date text-white">
-                        <span class="match-date-day"><?php echo esc_html($data_p); ?></span>
+                        <span class="match-date-day"><?php echo esc_html($giorno ? $giorno . ', ' . $data_p : $data_p); ?></span>
                         <span class="match-date-time"><?php echo esc_html($ora_p); ?></span>
                         <span class="match-stadium-name text-light-yellow"><?php echo esc_html( sport_theme_sentence_case_label( $stadio ) ); ?></span>
                     </div>
@@ -144,11 +172,12 @@ if ( ! function_exists( 'sport_theme_sentence_case_label' ) ) {
                 $t1_logo = $in_casa == '1' ? $taverne_logo : $logo_avversario;
                 $t2_name = $in_casa == '1' ? $avversario : 'AC Taverne';
                 $t2_logo = $in_casa == '1' ? $logo_avversario : $taverne_logo;
+                $giorno = get_it_day_of_week($data_p);
             ?>
             <div class="match-card match-row">
                 <div class="match-info">
                     <div class="match-date text-white">
-                        <span class="match-date-day"><?php echo esc_html($data_p); ?></span>
+                        <span class="match-date-day"><?php echo esc_html($giorno ? $giorno . ', ' . $data_p : $data_p); ?></span>
                         <span class="match-date-time"><?php echo esc_html($ora_p); ?></span>
                         <span class="match-stadium-name text-light-yellow"><?php echo esc_html( sport_theme_sentence_case_label( $stadio ) ); ?></span>
                     </div>

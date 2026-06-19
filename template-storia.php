@@ -109,48 +109,151 @@ get_header();
             ?>
     </div>
 
-    <!-- DYNAMIC FOTOGALLERY (dal Custom Post Type Foto Gallery) -->
+    <!-- FOTOGALLERY -->
     <?php
-    $gallery_args = array(
-        'post_type'      => 'fotogallery',
-        'posts_per_page' => -1,
-        'tax_query'      => array(
-            array(
+    $storia_gallery_ids = get_post_meta( $page_id, '_storia_gallery_ids', true );
+    $storia_gallery_ids = array_filter( array_map( 'absint', explode( ',', (string) $storia_gallery_ids ) ) );
+    $storia_gallery_items = array();
+
+    foreach ( $storia_gallery_ids as $attachment_id ) {
+        $large_url = wp_get_attachment_image_url( $attachment_id, 'large' );
+        $full_url  = wp_get_attachment_image_url( $attachment_id, 'full' );
+        if ( $large_url ) {
+            $storia_gallery_items[] = array(
+                'large' => $large_url,
+                'full'  => $full_url ? $full_url : $large_url,
+                'alt'   => get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ),
+            );
+        }
+    }
+
+    if ( empty( $storia_gallery_items ) ) {
+        $gallery_query = new WP_Query(array(
+            'post_type'      => 'fotogallery',
+            'posts_per_page' => -1,
+            'tax_query'      => array(array(
                 'taxonomy' => 'categoria_galleria',
                 'field'    => 'slug',
                 'terms'    => 'storia',
-            ),
-        ),
-    );
-    $gallery_query = new WP_Query($gallery_args);
+            )),
+        ));
+
+        if ( $gallery_query->have_posts() ) {
+            while ( $gallery_query->have_posts() ) {
+                $gallery_query->the_post();
+                if ( has_post_thumbnail() ) {
+                    $large_url = get_the_post_thumbnail_url( get_the_ID(), 'large' );
+                    $full_url  = get_the_post_thumbnail_url( get_the_ID(), 'full' );
+                    $storia_gallery_items[] = array(
+                        'large' => $large_url,
+                        'full'  => $full_url ? $full_url : $large_url,
+                        'alt'   => get_the_title(),
+                    );
+                }
+            }
+            wp_reset_postdata();
+        }
+    }
     ?>
-    <section class="container club-content ps-section" style="padding-bottom: 60px;">
-        <h2 class="section-title text-white" style="margin-bottom: 30px;">FOTOGALLERY</h2>
-        
-        <div class="custom-cpt-gallery wp-block-gallery">
-            <?php 
-            if ($gallery_query->have_posts()) :
-                while ($gallery_query->have_posts()) : $gallery_query->the_post(); 
-                    if (has_post_thumbnail()) :
-                        $img_url = get_the_post_thumbnail_url(get_the_ID(), 'large');
-                ?>
-                    <figure class="wp-block-image">
-                        <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr(get_the_title()); ?>">
-                    </figure>
-                <?php 
-                    endif;
-                endwhile; wp_reset_postdata(); 
-            else :
-                // Mockup Segnaposto per STORIA
-            ?>
-                <figure class="wp-block-image"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/storia/storia-1.jpg'); ?>" alt="Storia 1"></figure>
-                <figure class="wp-block-image"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/storia/storia-2.jpg'); ?>" alt="Storia 2"></figure>
-                <figure class="wp-block-image"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/storia/storia-3.jpg'); ?>" alt="Storia 3"></figure>
-                <figure class="wp-block-image"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/storia/storia-4.jpg'); ?>" alt="Storia 4"></figure>
-                <figure class="wp-block-image"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/storia/storia-5.jpg'); ?>" alt="Storia 5"></figure>
-            <?php endif; ?>
-        </div>
-    </section>
+    <?php if ( ! empty( $storia_gallery_items ) ) : ?>
+        <section class="container ps-section storia-gallery-section">
+            <h2 class="section-title text-white" style="margin-bottom:30px;">FOTOGALLERY</h2>
+
+            <div id="storia-gallery-carousel" class="storia-gallery-carousel" style="display:flex; gap:20px; align-items:center; overflow:hidden; scroll-behavior:smooth;">
+                <?php foreach ( $storia_gallery_items as $index => $gallery_item ) : ?>
+                    <a data-fancybox="storia-gallery" href="<?php echo esc_url( $gallery_item['full'] ); ?>" class="gallery-slide<?php echo $index === 0 ? ' active' : ''; ?>">
+                        <div class="gallery-item cover-bg" style="background-image: url('<?php echo esc_url( $gallery_item['large'] ); ?>')" role="img" aria-label="<?php echo esc_attr( $gallery_item['alt'] ? $gallery_item['alt'] : 'Foto storia AC Taverne' ); ?>"></div>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="carousel-nav gallery-nav storia-gallery-nav" style="margin-top:15px;">
+                <span class="nav-arrow text-primary" id="storia-gallery-prev" style="cursor:pointer;"><i class="fa-solid fa-chevron-left"></i></span>
+                <span class="nav-dots" id="storia-gallery-dots">
+                    <?php foreach ( $storia_gallery_items as $index => $gallery_item ) : ?>
+                        <i class="<?php echo $index === 0 ? 'fa-solid' : 'fa-regular'; ?> fa-circle<?php echo $index === 0 ? ' active' : ''; ?>" data-page="<?php echo esc_attr( $index ); ?>"></i>
+                    <?php endforeach; ?>
+                </span>
+                <span class="nav-arrow text-primary" id="storia-gallery-next" style="cursor:pointer;"><i class="fa-solid fa-chevron-right"></i></span>
+            </div>
+
+            <script>
+            (function(){
+                var car = document.getElementById('storia-gallery-carousel');
+                if (!car) return;
+
+                var prev = document.getElementById('storia-gallery-prev');
+                var next = document.getElementById('storia-gallery-next');
+                var dots = document.querySelectorAll('#storia-gallery-dots .fa-circle');
+                var slides = car.querySelectorAll('.gallery-slide');
+                var cur = 0;
+                var isAnimating = false;
+
+                function getGap() {
+                    var styles = window.getComputedStyle(car);
+                    return parseFloat(styles.columnGap || styles.gap || 20) || 20;
+                }
+
+                function getScrollPosition(index) {
+                    var pos = 0;
+                    var gap = getGap();
+                    for (var i = 0; i < index; i++) {
+                        pos += slides[i].offsetWidth + gap;
+                    }
+                    return pos;
+                }
+
+                function updateActiveState(index) {
+                    cur = index;
+                    dots.forEach(function(d,i){
+                        if (i === cur) {
+                            d.classList.remove('fa-regular');
+                            d.classList.add('fa-solid', 'active');
+                        } else {
+                            d.classList.remove('fa-solid', 'active');
+                            d.classList.add('fa-regular');
+                        }
+                    });
+                    slides.forEach(function(s,i){ s.classList.toggle('active', i === cur); });
+                }
+
+                function go(n) {
+                    var max = slides.length - 1;
+                    cur = Math.max(0, Math.min(n, max));
+                    var maxScroll = car.scrollWidth - car.clientWidth;
+                    var targetScroll = Math.min(getScrollPosition(cur), maxScroll);
+
+                    isAnimating = true;
+                    car.scrollTo({ left: targetScroll, behavior: 'smooth' });
+                    updateActiveState(cur);
+
+                    setTimeout(function(){ isAnimating = false; }, 400);
+                }
+
+                if (prev) prev.addEventListener('click', function(){ go(cur - 1); });
+                if (next) next.addEventListener('click', function(){ go(cur + 1); });
+                dots.forEach(function(d,i){ d.addEventListener('click', function(){ go(i); }); });
+
+                car.addEventListener('scroll', function() {
+                    if (isAnimating) return;
+                    var scrollLeft = car.scrollLeft;
+                    var closestIndex = 0;
+                    var minDiff = Infinity;
+                    for (var i = 0; i < slides.length; i++) {
+                        var diff = Math.abs(getScrollPosition(i) - scrollLeft);
+                        if (diff < minDiff) {
+                            minDiff = diff;
+                            closestIndex = i;
+                        }
+                    }
+                    if (closestIndex !== cur && closestIndex >= 0 && closestIndex < slides.length) {
+                        updateActiveState(closestIndex);
+                    }
+                });
+            })();
+            </script>
+        </section>
+    <?php endif; ?>
 
     <!-- PARTNER E SPONSOR -->
     <section class="ps-section container">

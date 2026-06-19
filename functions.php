@@ -11,6 +11,11 @@ if ( ! defined( 'SPORT_THEME_VERSION' ) ) {
 	define( 'SPORT_THEME_VERSION', filemtime( get_stylesheet_directory() . '/style.css' ) );
 }
 
+$sport_theme_autoload = get_stylesheet_directory() . '/vendor/autoload.php';
+if ( file_exists( $sport_theme_autoload ) ) {
+    require_once $sport_theme_autoload;
+}
+
 /**
  * Setup del tema
  */
@@ -86,6 +91,174 @@ function sport_theme_get_page_url($slug, $title = '') {
     return $page ? get_permalink($page->ID) : site_url('/' . trim($slug, '/'));
 }
 
+function sport_theme_get_site_logo_url() {
+    return get_template_directory_uri() . '/assets/images/logo.png';
+}
+
+function sport_theme_get_context_logo_url() {
+    $is_societa_page = is_page(array(
+        'ac-taverne',
+        'societa',
+        'la-societa',
+        'comitato',
+        'club-dei-100',
+        'area-allenatori',
+        'area-segreteria',
+        'scuola-calcio',
+        'infrastruttura',
+        'news-societa',
+        'iscritti',
+        'contatti-societa',
+        'sezioni',
+        'sponsor-ac-taverne',
+    )) || is_page_template(array(
+        'template-home-societa.php',
+        'template-la-societa.php',
+        'template-comitato-societa.php',
+        'template-club-dei-100.php',
+        'template-allenatori.php',
+        'template-area-segreteria.php',
+        'template-scuola-calcio.php',
+        'template-infrastruttura.php',
+        'template-news-societa.php',
+        'template-iscritti.php',
+        'template-contatti-societa.php',
+        'template-sezioni.php',
+        'template-sponsor-societa.php',
+    )) || ( is_singular('evento') && has_category('settore-giovanile') )
+       || ( is_singular('post') && has_category('settore-giovanile') );
+
+    if ( $is_societa_page ) {
+        return sport_theme_get_page_url('ac-taverne', 'AC Taverne');
+    }
+
+    $is_prima_squadra_page = is_page(array(
+        'prima-squadra',
+        'news',
+        'news-prima-squadra',
+        'giocatori',
+        'staff',
+        'stagione',
+        'organigramma',
+        'storia',
+        'presente-e-futuro',
+        'partner',
+        'sponsor',
+        'contatti',
+    )) || is_page_template(array(
+        'template-prima-squadra.php',
+        'template-news.php',
+        'template-rosa.php',
+        'template-staff.php',
+        'template-stagione.php',
+        'template-organigramma.php',
+        'template-storia.php',
+        'template-club-page.php',
+        'template-partner.php',
+        'template-contatti.php',
+    )) || is_singular(array('giocatore', 'partita'))
+       || ( is_singular('post') && ! has_category('settore-giovanile') )
+       || ( is_singular('evento') && ! has_category('settore-giovanile') );
+
+    if ( $is_prima_squadra_page ) {
+        return sport_theme_get_page_url('prima-squadra', 'Prima Squadra');
+    }
+
+    return home_url('/');
+}
+
+function sport_theme_primary_menu_home_order( $items, $args ) {
+    if ( empty( $args->theme_location ) || $args->theme_location !== 'menu-1' || empty( $items ) ) {
+        return $items;
+    }
+
+    $order = array(
+        'news'       => 10,
+        'shop'       => 20,
+        'team'       => 30,
+        'stagione'   => 40,
+        'club'       => 50,
+        'network'    => 60,
+        'partner'    => 60,
+        'contatti'   => 70,
+        'ac-taverne' => 80,
+    );
+
+    $children = array();
+    $top      = array();
+
+    foreach ( $items as $item ) {
+        if ( (int) $item->menu_item_parent > 0 ) {
+            $children[ (int) $item->menu_item_parent ][] = $item;
+        } else {
+            $top[] = $item;
+        }
+    }
+
+    $menu_key = function( $item ) {
+        $title = strtolower( trim( wp_strip_all_tags( $item->title ) ) );
+        $url   = strtolower( (string) $item->url );
+
+        if ( strpos( $url, 'actaverneshop.com' ) !== false || preg_match( '#/shop/?$#', $url ) ) {
+            return 'shop';
+        }
+        if ( strpos( $url, '/ac-taverne' ) !== false || $title === 'ac taverne' ) {
+            return 'ac-taverne';
+        }
+        if ( strpos( $url, '/stagione' ) !== false || $title === 'stagione' ) {
+            return 'stagione';
+        }
+        if ( strpos( $url, '/contatti' ) !== false || $title === 'contatti' ) {
+            return 'contatti';
+        }
+        if ( strpos( $url, '/partner' ) !== false || $title === 'network' || $title === 'partner' ) {
+            return 'network';
+        }
+        if ( strpos( $url, '/organigramma' ) !== false || $title === 'club' ) {
+            return 'club';
+        }
+        if ( strpos( $url, '/giocatori' ) !== false || $title === 'team' ) {
+            return 'team';
+        }
+        if ( strpos( $url, '/news' ) !== false || $title === 'news' ) {
+            return 'news';
+        }
+
+        return $title;
+    };
+
+    usort( $top, function( $a, $b ) use ( $order, $menu_key ) {
+        $key_a = $menu_key( $a );
+        $key_b = $menu_key( $b );
+        $pos_a = $order[ $key_a ] ?? 999;
+        $pos_b = $order[ $key_b ] ?? 999;
+
+        if ( $pos_a === $pos_b ) {
+            return (int) $a->menu_order <=> (int) $b->menu_order;
+        }
+
+        return $pos_a <=> $pos_b;
+    } );
+
+    $ordered = array();
+    foreach ( $top as $item ) {
+        $ordered[] = $item;
+
+        if ( ! empty( $children[ (int) $item->ID ] ) ) {
+            usort( $children[ (int) $item->ID ], function( $a, $b ) {
+                return (int) $a->menu_order <=> (int) $b->menu_order;
+            } );
+
+            foreach ( $children[ (int) $item->ID ] as $child ) {
+                $ordered[] = $child;
+            }
+        }
+    }
+
+    return $ordered;
+}
+add_filter( 'wp_nav_menu_objects', 'sport_theme_primary_menu_home_order', 20, 2 );
+
 function sport_theme_get_societa_home_hero_url() {
     $home_societa = get_page_by_path('ac-taverne');
 
@@ -121,6 +294,118 @@ add_action( 'init', 'sport_theme_add_roles' );
 
 function sport_theme_can_access_segreteria() {
     return current_user_can( 'manage_options' ) || current_user_can( 'edit_pages' ) || current_user_can( 'access_segreteria' );
+}
+
+function sport_theme_iscrizioni_default_email_settings() {
+    return array(
+        'new_registration_recipients' => "info@actaverne.com\nf.ruberto@honegger.ch\nmenegao@hotmail.com",
+        'payment_card_recipients'     => "marketing@actaverne.com\ninfo@actaverne.com",
+        'invoice_notice_recipients'   => "marketing@actaverne.com",
+    );
+}
+
+function sport_theme_iscrizioni_email_settings() {
+    $defaults = sport_theme_iscrizioni_default_email_settings();
+    $settings = get_option( 'sport_theme_iscrizioni_email_settings', array() );
+
+    return wp_parse_args( is_array( $settings ) ? $settings : array(), $defaults );
+}
+
+function sport_theme_parse_email_list( $value ) {
+    $items  = preg_split( '/[\s,;]+/', (string) $value );
+    $emails = array();
+
+    foreach ( $items as $item ) {
+        $email = sanitize_email( trim( $item ) );
+        if ( $email && is_email( $email ) ) {
+            $emails[] = $email;
+        }
+    }
+
+    return array_values( array_unique( $emails ) );
+}
+
+function sport_theme_sanitize_iscrizioni_email_settings( $settings ) {
+    $defaults = sport_theme_iscrizioni_default_email_settings();
+    $clean    = array();
+
+    foreach ( $defaults as $key => $default_value ) {
+        $emails        = sport_theme_parse_email_list( $settings[ $key ] ?? $default_value );
+        $clean[ $key ] = implode( "\n", $emails );
+    }
+
+    return $clean;
+}
+
+function sport_theme_register_iscrizioni_settings() {
+    register_setting(
+        'sport_theme_iscrizioni_email_settings',
+        'sport_theme_iscrizioni_email_settings',
+        array(
+            'type'              => 'array',
+            'sanitize_callback' => 'sport_theme_sanitize_iscrizioni_email_settings',
+            'default'           => sport_theme_iscrizioni_default_email_settings(),
+        )
+    );
+}
+add_action( 'admin_init', 'sport_theme_register_iscrizioni_settings' );
+
+function sport_theme_add_iscrizioni_settings_page() {
+    add_options_page(
+        'Iscrizioni AC Taverne',
+        'Iscrizioni AC Taverne',
+        'manage_options',
+        'act-iscrizioni-settings',
+        'sport_theme_render_iscrizioni_settings_page'
+    );
+}
+add_action( 'admin_menu', 'sport_theme_add_iscrizioni_settings_page' );
+
+function sport_theme_render_iscrizioni_settings_field( $key, $label, $description ) {
+    $settings = sport_theme_iscrizioni_email_settings();
+    ?>
+    <tr>
+        <th scope="row"><label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label></th>
+        <td>
+            <textarea id="<?php echo esc_attr( $key ); ?>" name="sport_theme_iscrizioni_email_settings[<?php echo esc_attr( $key ); ?>]" rows="4" class="large-text code"><?php echo esc_textarea( $settings[ $key ] ?? '' ); ?></textarea>
+            <p class="description"><?php echo esc_html( $description ); ?></p>
+        </td>
+    </tr>
+    <?php
+}
+
+function sport_theme_render_iscrizioni_settings_page() {
+    if ( ! current_user_can( 'manage_options' ) ) {
+        return;
+    }
+    ?>
+    <div class="wrap">
+        <h1>Iscrizioni AC Taverne</h1>
+        <form method="post" action="options.php">
+            <?php settings_fields( 'sport_theme_iscrizioni_email_settings' ); ?>
+            <table class="form-table" role="presentation">
+                <?php
+                sport_theme_render_iscrizioni_settings_field(
+                    'new_registration_recipients',
+                    'Nuove iscrizioni',
+                    'Una email per riga. Ricevono la conferma d’iscrizione PDF quando arriva una nuova pratica.'
+                );
+                sport_theme_render_iscrizioni_settings_field(
+                    'payment_card_recipients',
+                    'Pagamenti carta',
+                    'Una email per riga. Ricevono l’avviso quando Stripe conferma un pagamento carta.'
+                );
+                sport_theme_render_iscrizioni_settings_field(
+                    'invoice_notice_recipients',
+                    'Avvisi fattura',
+                    'Una email per riga. Ricevono l’avviso quando una pratica viene gestita con fattura/cedola.'
+                );
+                ?>
+            </table>
+            <?php submit_button( 'Salva impostazioni' ); ?>
+        </form>
+    </div>
+    <?php
 }
 
 // Nascondiamo l'admin bar per gli allenatori.
@@ -500,6 +785,343 @@ function sport_theme_save_iscritti_classificazione_meta( $post_id ) {
     }
 }
 add_action( 'save_post_page', 'sport_theme_save_iscritti_classificazione_meta' );
+
+function sport_theme_storia_gallery_metabox( $post_type, $post ) {
+    if ( $post_type !== 'page' || ! $post instanceof WP_Post ) {
+        return;
+    }
+
+    $is_storia_page = get_page_template_slug( $post->ID ) === 'template-storia.php' || $post->post_name === 'storia';
+    if ( ! $is_storia_page ) {
+        return;
+    }
+
+    add_meta_box(
+        'storia_gallery_meta',
+        'Fotogallery Storia',
+        'sport_theme_storia_gallery_meta_html',
+        'page',
+        'normal',
+        'high'
+    );
+}
+add_action( 'add_meta_boxes', 'sport_theme_storia_gallery_metabox', 10, 2 );
+
+function sport_theme_storia_gallery_meta_html( $post ) {
+    $gallery_ids = get_post_meta( $post->ID, '_storia_gallery_ids', true );
+    $gallery_ids = is_array( $gallery_ids ) ? $gallery_ids : array_filter( array_map( 'absint', explode( ',', (string) $gallery_ids ) ) );
+
+    wp_nonce_field( 'sport_theme_save_storia_gallery', 'sport_theme_storia_gallery_nonce' );
+    ?>
+    <p>Seleziona le immagini della fotogallery della pagina Storia. Puoi aggiungerle dalla Media Library e riordinarle con i pulsanti.</p>
+    <input type="hidden" id="storia_gallery_ids" name="_storia_gallery_ids" value="<?php echo esc_attr( implode( ',', $gallery_ids ) ); ?>">
+    <p>
+        <button type="button" class="button button-secondary" id="storia_gallery_select">Seleziona / aggiungi immagini</button>
+        <button type="button" class="button" id="storia_gallery_clear">Rimuovi tutte</button>
+    </p>
+    <div id="storia_gallery_preview" class="storia-gallery-admin-preview">
+        <?php foreach ( $gallery_ids as $attachment_id ) : ?>
+            <?php $thumb_url = wp_get_attachment_image_url( $attachment_id, 'thumbnail' ); ?>
+            <?php if ( $thumb_url ) : ?>
+                <div class="storia-gallery-admin-item" data-id="<?php echo esc_attr( $attachment_id ); ?>">
+                    <img src="<?php echo esc_url( $thumb_url ); ?>" alt="">
+                    <div class="storia-gallery-admin-actions">
+                        <button type="button" class="button-link storia-gallery-move-up">Su</button>
+                        <button type="button" class="button-link storia-gallery-move-down">Giu</button>
+                        <button type="button" class="button-link-delete storia-gallery-remove">Rimuovi</button>
+                    </div>
+                </div>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </div>
+    <style>
+        .storia-gallery-admin-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            max-width: 900px;
+            margin-top: 12px;
+        }
+        .storia-gallery-admin-item {
+            padding: 8px;
+            background: #fff;
+            border: 1px solid #ccd0d4;
+        }
+        .storia-gallery-admin-item img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            margin-bottom: 8px;
+        }
+        .storia-gallery-admin-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 12px;
+        }
+    </style>
+    <script>
+    jQuery(function($){
+        var frame;
+        var $ids = $('#storia_gallery_ids');
+        var $preview = $('#storia_gallery_preview');
+
+        function currentIds() {
+            return $ids.val() ? $ids.val().split(',').filter(Boolean) : [];
+        }
+
+        function syncIds() {
+            var ids = [];
+            $preview.find('.storia-gallery-admin-item').each(function(){
+                ids.push($(this).data('id'));
+            });
+            $ids.val(ids.join(','));
+        }
+
+        function renderItem(attachment) {
+            var imageUrl = attachment.sizes && attachment.sizes.thumbnail ? attachment.sizes.thumbnail.url : attachment.url;
+            return '<div class="storia-gallery-admin-item" data-id="' + attachment.id + '">' +
+                '<img src="' + imageUrl + '" alt="">' +
+                '<div class="storia-gallery-admin-actions">' +
+                '<button type="button" class="button-link storia-gallery-move-up">Su</button>' +
+                '<button type="button" class="button-link storia-gallery-move-down">Giu</button>' +
+                '<button type="button" class="button-link-delete storia-gallery-remove">Rimuovi</button>' +
+                '</div>' +
+                '</div>';
+        }
+
+        $('#storia_gallery_select').on('click', function(e){
+            e.preventDefault();
+            frame = wp.media({
+                title: 'Seleziona immagini per la Storia',
+                button: { text: 'Usa queste immagini' },
+                library: { type: 'image' },
+                multiple: true
+            });
+            frame.on('open', function(){
+                var selection = frame.state().get('selection');
+                currentIds().forEach(function(id){
+                    var attachment = wp.media.attachment(id);
+                    attachment.fetch();
+                    selection.add(attachment ? [attachment] : []);
+                });
+            });
+            frame.on('select', function(){
+                var html = '';
+                frame.state().get('selection').each(function(attachment){
+                    html += renderItem(attachment.toJSON());
+                });
+                $preview.html(html);
+                syncIds();
+            });
+            frame.open();
+        });
+
+        $('#storia_gallery_clear').on('click', function(e){
+            e.preventDefault();
+            $preview.empty();
+            syncIds();
+        });
+
+        $preview.on('click', '.storia-gallery-remove', function(e){
+            e.preventDefault();
+            $(this).closest('.storia-gallery-admin-item').remove();
+            syncIds();
+        });
+
+        $preview.on('click', '.storia-gallery-move-up', function(e){
+            e.preventDefault();
+            var $item = $(this).closest('.storia-gallery-admin-item');
+            $item.prev('.storia-gallery-admin-item').before($item);
+            syncIds();
+        });
+
+        $preview.on('click', '.storia-gallery-move-down', function(e){
+            e.preventDefault();
+            var $item = $(this).closest('.storia-gallery-admin-item');
+            $item.next('.storia-gallery-admin-item').after($item);
+            syncIds();
+        });
+    });
+    </script>
+    <?php
+}
+
+function sport_theme_save_storia_gallery_meta( $post_id ) {
+    if ( ! isset( $_POST['sport_theme_storia_gallery_nonce'] ) || ! wp_verify_nonce( $_POST['sport_theme_storia_gallery_nonce'], 'sport_theme_save_storia_gallery' ) ) {
+        return;
+    }
+
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+        return;
+    }
+
+    if ( ! current_user_can( 'edit_post', $post_id ) ) {
+        return;
+    }
+
+    $ids = isset( $_POST['_storia_gallery_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['_storia_gallery_ids'] ) ) : '';
+    $ids = array_filter( array_map( 'absint', explode( ',', $ids ) ) );
+
+    update_post_meta( $post_id, '_storia_gallery_ids', implode( ',', $ids ) );
+}
+add_action( 'save_post_page', 'sport_theme_save_storia_gallery_meta' );
+
+function sport_theme_club100_gallery_metabox( $post_type, $post ) {
+    if ( $post_type !== 'page' || ! $post instanceof WP_Post ) {
+        return;
+    }
+
+    $is_club100_page = get_page_template_slug( $post->ID ) === 'template-club-dei-100.php' || $post->post_name === 'club-dei-100';
+    if ( ! $is_club100_page ) {
+        return;
+    }
+
+    add_meta_box(
+        'club100_gallery_meta',
+        'Fotogallery Club dei 100',
+        'sport_theme_club100_gallery_meta_html',
+        'page',
+        'normal',
+        'high'
+    );
+}
+add_action( 'add_meta_boxes', 'sport_theme_club100_gallery_metabox', 10, 2 );
+
+function sport_theme_club100_gallery_meta_html( $post ) {
+    $gallery_ids = get_post_meta( $post->ID, '_club100_gallery_ids', true );
+    $gallery_ids = is_array( $gallery_ids ) ? $gallery_ids : array_filter( array_map( 'absint', explode( ',', (string) $gallery_ids ) ) );
+
+    wp_nonce_field( 'sport_theme_save_club100_gallery', 'sport_theme_club100_gallery_nonce' );
+    ?>
+    <p>Seleziona le immagini della fotogallery della pagina Club dei 100. Puoi aggiungerle dalla Media Library e riordinarle con i pulsanti.</p>
+    <input type="hidden" id="club100_gallery_ids" name="_club100_gallery_ids" value="<?php echo esc_attr( implode( ',', $gallery_ids ) ); ?>">
+    <p>
+        <button type="button" class="button button-secondary" id="club100_gallery_select">Seleziona / aggiungi immagini</button>
+        <button type="button" class="button" id="club100_gallery_clear">Rimuovi tutte</button>
+    </p>
+    <div id="club100_gallery_preview" class="storia-gallery-admin-preview">
+        <?php foreach ( $gallery_ids as $attachment_id ) : ?>
+            <?php $thumb_url = wp_get_attachment_image_url( $attachment_id, 'thumbnail' ); ?>
+            <?php if ( $thumb_url ) : ?>
+                <div class="storia-gallery-admin-item" data-id="<?php echo esc_attr( $attachment_id ); ?>">
+                    <img src="<?php echo esc_url( $thumb_url ); ?>" alt="">
+                    <div class="storia-gallery-admin-actions">
+                        <button type="button" class="button-link club100-gallery-move-up">Su</button>
+                        <button type="button" class="button-link club100-gallery-move-down">Giu</button>
+                        <button type="button" class="button-link-delete club100-gallery-remove">Rimuovi</button>
+                    </div>
+                </div>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </div>
+    <script>
+    jQuery(function($){
+        var frame;
+        var $ids = $('#club100_gallery_ids');
+        var $preview = $('#club100_gallery_preview');
+
+        function currentIds() {
+            return $ids.val() ? $ids.val().split(',').filter(Boolean) : [];
+        }
+
+        function syncIds() {
+            var ids = [];
+            $preview.find('.storia-gallery-admin-item').each(function(){
+                ids.push($(this).data('id'));
+            });
+            $ids.val(ids.join(','));
+        }
+
+        function renderItem(attachment) {
+            var imageUrl = attachment.sizes && attachment.sizes.thumbnail ? attachment.sizes.thumbnail.url : attachment.url;
+            return '<div class="storia-gallery-admin-item" data-id="' + attachment.id + '">' +
+                '<img src="' + imageUrl + '" alt="">' +
+                '<div class="storia-gallery-admin-actions">' +
+                '<button type="button" class="button-link club100-gallery-move-up">Su</button>' +
+                '<button type="button" class="button-link club100-gallery-move-down">Giu</button>' +
+                '<button type="button" class="button-link-delete club100-gallery-remove">Rimuovi</button>' +
+                '</div>' +
+                '</div>';
+        }
+
+        $('#club100_gallery_select').on('click', function(e){
+            e.preventDefault();
+            frame = wp.media({
+                title: 'Seleziona immagini per il Club dei 100',
+                button: { text: 'Usa queste immagini' },
+                library: { type: 'image' },
+                multiple: true
+            });
+            frame.on('open', function(){
+                var selection = frame.state().get('selection');
+                currentIds().forEach(function(id){
+                    var attachment = wp.media.attachment(id);
+                    attachment.fetch();
+                    selection.add(attachment ? [attachment] : []);
+                });
+            });
+            frame.on('select', function(){
+                var html = '';
+                frame.state().get('selection').each(function(attachment){
+                    html += renderItem(attachment.toJSON());
+                });
+                $preview.html(html);
+                syncIds();
+            });
+            frame.open();
+        });
+
+        $('#club100_gallery_clear').on('click', function(e){
+            e.preventDefault();
+            $preview.empty();
+            syncIds();
+        });
+
+        $preview.on('click', '.club100-gallery-remove', function(e){
+            e.preventDefault();
+            $(this).closest('.storia-gallery-admin-item').remove();
+            syncIds();
+        });
+
+        $preview.on('click', '.club100-gallery-move-up', function(e){
+            e.preventDefault();
+            var $item = $(this).closest('.storia-gallery-admin-item');
+            $item.prev('.storia-gallery-admin-item').before($item);
+            syncIds();
+        });
+
+        $preview.on('click', '.club100-gallery-move-down', function(e){
+            e.preventDefault();
+            var $item = $(this).closest('.storia-gallery-admin-item');
+            $item.next('.storia-gallery-admin-item').after($item);
+            syncIds();
+        });
+    });
+    </script>
+    <?php
+}
+
+function sport_theme_save_club100_gallery_meta( $post_id ) {
+    if ( ! isset( $_POST['sport_theme_club100_gallery_nonce'] ) || ! wp_verify_nonce( $_POST['sport_theme_club100_gallery_nonce'], 'sport_theme_save_club100_gallery' ) ) {
+        return;
+    }
+
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+        return;
+    }
+
+    if ( ! current_user_can( 'edit_post', $post_id ) ) {
+        return;
+    }
+
+    $ids = isset( $_POST['_club100_gallery_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['_club100_gallery_ids'] ) ) : '';
+    $ids = array_filter( array_map( 'absint', explode( ',', $ids ) ) );
+
+    update_post_meta( $post_id, '_club100_gallery_ids', implode( ',', $ids ) );
+}
+add_action( 'save_post_page', 'sport_theme_save_club100_gallery_meta' );
 
 function sport_theme_giocatore_metabox() {
     add_meta_box('giocatore_meta', 'Dettagli Calciatore', 'sport_theme_giocatore_meta_html', 'giocatore', 'normal', 'high');
@@ -1511,7 +2133,7 @@ function sport_theme_handle_contatti_form() {
         return;
     }
     
-    $to      = get_option('admin_email');
+    $to      = 'primasquadra@actaverne.com';
     $subject = '[AC Taverne - Contatti] ' . $oggetto;
     $body    = "Nome: {$nome}\n";
     $body   .= "Email: {$email}\n";
@@ -1526,6 +2148,50 @@ function sport_theme_handle_contatti_form() {
     exit;
 }
 add_action('template_redirect', 'sport_theme_handle_contatti_form');
+
+/**
+ * Gestione Form Network - richiesta sponsor/partner
+ */
+function sport_theme_handle_network_form() {
+    if ( ! isset($_POST['network_nonce']) || ! wp_verify_nonce($_POST['network_nonce'], 'network_form_nonce') ) {
+        wp_safe_redirect( add_query_arg('network_inviato', '0', home_url('/partner/')) );
+        exit;
+    }
+
+    if ( ! empty($_POST['network_website']) ) {
+        wp_safe_redirect( add_query_arg('network_inviato', '1', home_url('/partner/')) );
+        exit;
+    }
+
+    $azienda   = sanitize_text_field($_POST['network_azienda'] ?? '');
+    $nome      = sanitize_text_field($_POST['network_nome'] ?? '');
+    $email     = sanitize_email($_POST['network_email'] ?? '');
+    $telefono  = sanitize_text_field($_POST['network_telefono'] ?? '');
+    $interesse = sanitize_text_field($_POST['network_interesse'] ?? '');
+    $messaggio = sanitize_textarea_field($_POST['network_messaggio'] ?? '');
+
+    if ( empty($azienda) || empty($nome) || ! is_email($email) || empty($messaggio) ) {
+        wp_safe_redirect( add_query_arg('network_inviato', '0', wp_get_referer() ?: home_url('/partner/')) );
+        exit;
+    }
+
+    $to      = 'primasquadra@actaverne.com';
+    $subject = '[AC Taverne - Network] Richiesta da ' . $azienda;
+    $body    = "Azienda: {$azienda}\n";
+    $body   .= "Referente: {$nome}\n";
+    $body   .= "Email: {$email}\n";
+    $body   .= "Telefono: {$telefono}\n";
+    $body   .= "Interesse: {$interesse}\n\n";
+    $body   .= "Messaggio:\n{$messaggio}";
+    $headers = array('Reply-To: ' . $nome . ' <' . $email . '>');
+
+    $sent = wp_mail($to, $subject, $body, $headers);
+
+    wp_safe_redirect( add_query_arg('network_inviato', $sent ? '1' : '0', wp_get_referer() ?: home_url('/partner/')) );
+    exit;
+}
+add_action('admin_post_nopriv_network_submit', 'sport_theme_handle_network_form');
+add_action('admin_post_network_submit', 'sport_theme_handle_network_form');
 
 /**
  * Auto-assign Contatti template (esegui una volta)
@@ -3523,7 +4189,7 @@ function sport_theme_render_hero_custom_styles() {
         $fallback_post = null;
         
         // 1. Pagine Club: fallback alla pagina con slug 'club'
-        if ( is_page_template( array( 'template-organigramma.php', 'template-storia.php', 'template-club-page.php', 'template-comitato-societa.php', 'template-sezioni.php' ) ) || is_page( array( 'organigramma', 'storia', 'progetto-sportivo', 'sezioni' ) ) ) {
+        if ( is_page_template( array( 'template-organigramma.php', 'template-storia.php', 'template-club-page.php', 'template-comitato-societa.php', 'template-sezioni.php' ) ) || is_page( array( 'organigramma', 'storia', 'presente-e-futuro', 'sezioni' ) ) ) {
             $fallback_post = get_page_by_path( 'club' );
             if ( ! $fallback_post ) {
                 $fallback_post = get_page_by_title( 'Club' );
@@ -3657,7 +4323,7 @@ function sport_theme_create_iscrizioni_tables() {
     global $wpdb;
 
     $installed_version = get_option( 'sport_theme_iscrizioni_db_version' );
-    $target_version    = '1.1.0';
+    $target_version    = '1.7.0';
 
     if ( $installed_version === $target_version ) {
         return;
@@ -3677,6 +4343,18 @@ CREATE TABLE {$tables['registrations']} (
   stato VARCHAR(30) NOT NULL DEFAULT 'nuova',
   metodo_pagamento VARCHAR(30) NOT NULL DEFAULT '',
   stato_pagamento VARCHAR(30) NOT NULL DEFAULT 'non_pagato',
+  importo_totale_chf DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  riduzione_fratelli TINYINT(1) NOT NULL DEFAULT 0,
+  sconto_meta_stagione TINYINT(1) NOT NULL DEFAULT 0,
+  stripe_customer_id VARCHAR(255) NOT NULL DEFAULT '',
+  stripe_checkout_session_id VARCHAR(255) NOT NULL DEFAULT '',
+  stripe_payment_intent_id VARCHAR(255) NOT NULL DEFAULT '',
+  stripe_invoice_id VARCHAR(255) NOT NULL DEFAULT '',
+  stripe_invoice_url TEXT NULL,
+  stripe_invoice_pdf TEXT NULL,
+  stripe_payment_url TEXT NULL,
+  stripe_payment_sent_at DATETIME NULL,
+  stripe_paid_at DATETIME NULL,
   responsabilita_genitoriale VARCHAR(30) NOT NULL DEFAULT '',
   responsabile_nome VARCHAR(120) NOT NULL DEFAULT '',
   responsabile_cognome VARCHAR(120) NOT NULL DEFAULT '',
@@ -3696,6 +4374,7 @@ CREATE TABLE {$tables['registrations']} (
   KEY tipo_iscrizione (tipo_iscrizione),
   KEY stagione_sportiva (stagione_sportiva),
   KEY stato (stato),
+  KEY stripe_checkout_session_id (stripe_checkout_session_id),
   KEY responsabile_email (responsabile_email),
   KEY created_at (created_at)
 ) $charset_collate;
@@ -3714,6 +4393,7 @@ CREATE TABLE {$tables['children']} (
   email VARCHAR(190) NOT NULL DEFAULT '',
   cellulare VARCHAR(80) NOT NULL DEFAULT '',
   categoria VARCHAR(80) NOT NULL DEFAULT '',
+  quota_chf DECIMAL(10,2) NULL,
   salute_allergie_medicinali VARCHAR(10) NOT NULL DEFAULT '',
   salute_dettagli TEXT NULL,
   altro_sport VARCHAR(10) NOT NULL DEFAULT '',
@@ -3776,6 +4456,25 @@ CREATE TABLE {$tables['logs']} (
             "UPDATE {$tables['registrations']} SET stagione_sportiva = %s WHERE stagione_sportiva = '' OR stagione_sportiva IS NULL",
             sport_theme_current_sport_season()
         )
+    );
+    $wpdb->query(
+        "UPDATE {$tables['registrations']}
+         SET importo_totale_chf = CASE
+             WHEN tipo_iscrizione = 'scuola_calcio' THEN 150
+             WHEN numero_bambini <= 1 THEN 300
+             ELSE 300 + ((numero_bambini - 1) * 250)
+         END
+         WHERE importo_totale_chf = 0 OR importo_totale_chf IS NULL"
+    );
+    $wpdb->query(
+        "UPDATE {$tables['children']} b
+         INNER JOIN {$tables['registrations']} i ON i.id = b.iscrizione_id
+         SET b.quota_chf = CASE
+             WHEN i.tipo_iscrizione = 'scuola_calcio' THEN 150
+             WHEN b.child_index <= 1 THEN 300
+             ELSE 250
+         END
+         WHERE b.quota_chf IS NULL"
     );
     update_option( 'sport_theme_iscrizioni_db_version', $target_version );
 }
@@ -4100,6 +4799,8 @@ function sport_theme_handle_iscrizione_submit() {
         'stato'                        => 'nuova',
         'metodo_pagamento'             => sport_theme_sanitize_iscrizione_key( $_POST['metodo_pagamento'] ?? '', array( 'stripe', 'fattura' ) ),
         'stato_pagamento'              => 'non_pagato',
+        'importo_totale_chf'           => sport_theme_calculate_iscrizione_amount( $tipo_iscrizione, count( $children ), false ),
+        'riduzione_fratelli'           => 0,
         'responsabilita_genitoriale'   => sport_theme_sanitize_iscrizione_key( $_POST['responsabilita_genitoriale'] ?? '', array( 'padre', 'madre', 'tutore_legale' ) ),
         'responsabile_nome'            => sport_theme_clean_text_field( 'responsabile_nome' ),
         'responsabile_cognome'         => sport_theme_clean_text_field( 'responsabile_cognome' ),
@@ -4118,7 +4819,7 @@ function sport_theme_handle_iscrizione_submit() {
     $inserted = $wpdb->insert(
         $tables['registrations'],
         $registration_data,
-        array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s' )
+        array( '%s', '%s', '%s', '%s', '%s', '%s', '%f', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s' )
     );
 
     if ( ! $inserted ) {
@@ -4128,6 +4829,7 @@ function sport_theme_handle_iscrizione_submit() {
     $iscrizione_id = (int) $wpdb->insert_id;
 
     foreach ( $children as $child ) {
+        $child_quota = sport_theme_calculate_iscrizione_child_amount( $tipo_iscrizione, $child['index'] );
         $wpdb->insert(
             $tables['children'],
             array(
@@ -4143,6 +4845,7 @@ function sport_theme_handle_iscrizione_submit() {
                 'email'                         => $child['email'],
                 'cellulare'                     => $child['cellulare'],
                 'categoria'                     => '',
+                'quota_chf'                     => $child_quota,
                 'salute_allergie_medicinali'    => $child['salute_allergie_medicinali'],
                 'salute_dettagli'               => $child['salute_dettagli'],
                 'altro_sport'                   => $child['altro_sport'],
@@ -4154,7 +4857,7 @@ function sport_theme_handle_iscrizione_submit() {
                 'created_at'                    => $now,
                 'updated_at'                    => $now,
             ),
-            array( '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )
+            array( '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%f', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )
         );
 
         $bambino_id = (int) $wpdb->insert_id;
@@ -4265,6 +4968,334 @@ function sport_theme_current_sport_season() {
     return ( $year - 1 ) . '/' . $year;
 }
 
+function sport_theme_calculate_iscrizione_amount( $tipo_iscrizione, $children_count, $riduzione_fratelli = false ) {
+    $children_count = max( 1, (int) $children_count );
+
+    if ( $tipo_iscrizione === 'scuola_calcio' ) {
+        return 150.00;
+    }
+
+    $amount = 300.00 + ( max( 0, $children_count - 1 ) * 250.00 );
+
+    if ( $riduzione_fratelli ) {
+        $amount -= 50.00;
+    }
+
+    return max( 0, $amount );
+}
+
+function sport_theme_calculate_iscrizione_child_amount( $tipo_iscrizione, $child_index ) {
+    if ( $tipo_iscrizione === 'scuola_calcio' ) {
+        return 150.00;
+    }
+
+    return (int) $child_index <= 1 ? 300.00 : 250.00;
+}
+
+function sport_theme_get_iscrizione_child_amount( $child, $tipo_iscrizione = 'allievi' ) {
+    $quota = is_array( $child ) ? ( $child['quota_chf'] ?? null ) : ( $child->quota_chf ?? null );
+    if ( $quota !== null && $quota !== '' ) {
+        return max( 0, (float) $quota );
+    }
+
+    $child_index = is_array( $child ) ? ( $child['child_index'] ?? 1 ) : ( $child->child_index ?? 1 );
+    return sport_theme_calculate_iscrizione_child_amount( $tipo_iscrizione, $child_index );
+}
+
+function sport_theme_sum_iscrizione_children_amounts( $children, $tipo_iscrizione = 'allievi', $riduzione_fratelli = false ) {
+    $total = 0.00;
+
+    foreach ( (array) $children as $child ) {
+        $total += sport_theme_get_iscrizione_child_amount( $child, $tipo_iscrizione );
+    }
+
+    if ( $riduzione_fratelli && $tipo_iscrizione === 'allievi' ) {
+        $total -= 50.00;
+    }
+
+    return max( 0, $total );
+}
+
+function sport_theme_has_riduzione_fratelli( $registration ) {
+    return ! empty( $registration->riduzione_fratelli );
+}
+
+function sport_theme_iscrizione_discount_lines( $registration ) {
+    $lines = array();
+
+    if ( ! empty( $registration->sconto_meta_stagione ) ) {
+        $lines[] = 'Sconto meta stagione 50% applicato';
+    }
+
+    if ( sport_theme_has_riduzione_fratelli( $registration ) ) {
+        $lines[] = 'Riduzione fratello/sorella: - CHF 50.00';
+    }
+
+    return $lines;
+}
+
+function sport_theme_iscrizione_payment_description() {
+    return 'Tassa sociale per attività sportiva';
+}
+
+function sport_theme_pdf_escape_text( $text ) {
+    $text = wp_strip_all_tags( (string) $text );
+    $text = html_entity_decode( $text, ENT_QUOTES, 'UTF-8' );
+
+    if ( function_exists( 'iconv' ) ) {
+        $converted = @iconv( 'UTF-8', 'Windows-1252//TRANSLIT', $text );
+        if ( $converted !== false ) {
+            $text = $converted;
+        }
+    }
+
+    return str_replace( array( '\\', '(', ')' ), array( '\\\\', '\\(', '\\)' ), $text );
+}
+
+function sport_theme_create_simple_a4_pdf( $title, $lines, $filename ) {
+    $upload_dir = wp_upload_dir();
+    if ( ! empty( $upload_dir['error'] ) ) {
+        return new WP_Error( 'pdf_upload_dir', $upload_dir['error'] );
+    }
+
+    $dir = trailingslashit( $upload_dir['basedir'] ) . 'act-iscrizioni-pdf';
+    if ( ! wp_mkdir_p( $dir ) ) {
+        return new WP_Error( 'pdf_dir', 'Impossibile creare la cartella PDF iscrizioni.' );
+    }
+
+    $filename = sanitize_file_name( $filename );
+    $path     = trailingslashit( $dir ) . $filename;
+
+    $pages       = array_chunk( array_values( $lines ), 42 );
+    $page_count  = max( 1, count( $pages ) );
+    $objects     = array();
+    $content_ids = array();
+    $page_ids    = array();
+
+    $objects[] = '<< /Type /Catalog /Pages 2 0 R >>';
+    $objects[] = null;
+    $objects[] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
+
+    for ( $page_index = 0; $page_index < $page_count; $page_index++ ) {
+        $content_id     = count( $objects ) + 1;
+        $page_id        = $content_id + 1;
+        $content_ids[]  = $content_id;
+        $page_ids[]     = $page_id;
+        $page_lines     = $pages[ $page_index ] ?? array();
+        $stream_lines   = array( 'BT', '/F1 20 Tf', '50 790 Td', '(' . sport_theme_pdf_escape_text( $title ) . ') Tj', '/F1 10 Tf', '0 -18 Td', '(AC Taverne) Tj' );
+
+        foreach ( $page_lines as $line ) {
+            $line = (string) $line;
+            if ( $line === '' ) {
+                $stream_lines[] = '0 -14 Td';
+                continue;
+            }
+
+            if ( strlen( $line ) > 95 ) {
+                $chunks = explode( "\n", wordwrap( $line, 95, "\n", true ) );
+            } else {
+                $chunks = array( $line );
+            }
+
+            foreach ( $chunks as $chunk ) {
+                $stream_lines[] = '0 -14 Td';
+                $stream_lines[] = '(' . sport_theme_pdf_escape_text( $chunk ) . ') Tj';
+            }
+        }
+
+        $stream_lines[] = '0 -24 Td';
+        $stream_lines[] = '(' . sport_theme_pdf_escape_text( 'Pagina ' . ( $page_index + 1 ) . ' di ' . $page_count ) . ') Tj';
+        $stream_lines[] = 'ET';
+        $stream         = implode( "\n", $stream_lines );
+
+        $objects[] = "<< /Length " . strlen( $stream ) . " >>\nstream\n{$stream}\nendstream";
+        $objects[] = "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents {$content_id} 0 R >>";
+    }
+
+    $kids       = implode( ' ', array_map( static function ( $id ) { return $id . ' 0 R'; }, $page_ids ) );
+    $objects[1] = "<< /Type /Pages /Kids [{$kids}] /Count {$page_count} >>";
+
+    $pdf     = "%PDF-1.4\n";
+    $offsets = array( 0 );
+
+    foreach ( $objects as $index => $object ) {
+        $offsets[] = strlen( $pdf );
+        $object_id = $index + 1;
+        $pdf      .= "{$object_id} 0 obj\n{$object}\nendobj\n";
+    }
+
+    $xref = strlen( $pdf );
+    $pdf .= "xref\n0 " . ( count( $objects ) + 1 ) . "\n";
+    $pdf .= "0000000000 65535 f \n";
+
+    for ( $i = 1; $i <= count( $objects ); $i++ ) {
+        $pdf .= sprintf( "%010d 00000 n \n", $offsets[ $i ] );
+    }
+
+    $pdf .= "trailer\n<< /Size " . ( count( $objects ) + 1 ) . " /Root 1 0 R >>\n";
+    $pdf .= "startxref\n{$xref}\n%%EOF";
+
+    if ( file_put_contents( $path, $pdf ) === false ) {
+        return new WP_Error( 'pdf_write', 'Impossibile scrivere il PDF.' );
+    }
+
+    return $path;
+}
+
+function sport_theme_create_iscrizione_confirmation_pdf( $registration, $children ) {
+    $responsabile = trim( (string) $registration->responsabile_nome . ' ' . (string) $registration->responsabile_cognome );
+    $type_label   = $registration->tipo_iscrizione === 'scuola_calcio' ? 'Scuola Calcio' : 'Allievi';
+    $upload_dir = wp_upload_dir();
+    if ( ! empty( $upload_dir['error'] ) ) {
+        return new WP_Error( 'pdf_upload_dir', $upload_dir['error'] );
+    }
+
+    $dir = trailingslashit( $upload_dir['basedir'] ) . 'act-iscrizioni-pdf';
+    if ( ! wp_mkdir_p( $dir ) ) {
+        return new WP_Error( 'pdf_dir', 'Impossibile creare la cartella PDF iscrizioni.' );
+    }
+
+    $filename = sanitize_file_name( 'conferma-iscrizione-' . (int) $registration->id . '.pdf' );
+    $path     = trailingslashit( $dir ) . $filename;
+
+    $document_labels = array(
+        'carta_identita'     => 'Carta d’identita',
+        'permesso_soggiorno' => 'Permesso di soggiorno',
+        'passaporto'         => 'Passaporto',
+    );
+    $status_labels = sport_theme_iscrizioni_status_labels();
+    $children_chunks = array_chunk( array_values( $children ), 3 );
+    $children_chunks = $children_chunks ?: array( array() );
+    $page_count = count( $children_chunks );
+    $objects = array(
+        '<< /Type /Catalog /Pages 2 0 R >>',
+        null,
+        '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
+        '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>',
+    );
+    $page_ids = array();
+
+    $text = static function ( $value, $x, $y, $size = 10, $font = 'F1' ) {
+        return sprintf( "BT /%s %F Tf 1 0 0 1 %F %F Tm (%s) Tj ET\n", $font, $size, $x, $y, sport_theme_pdf_escape_text( $value ) );
+    };
+    $line = static function ( $x1, $y1, $x2, $y2 ) {
+        return sprintf( "%F %F m %F %F l S\n", $x1, $y1, $x2, $y2 );
+    };
+    $rect = static function ( $x, $y, $w, $h, $fill = false ) {
+        return sprintf( "%F %F %F %F re %s\n", $x, $y, $w, $h, $fill ? 'f' : 'S' );
+    };
+    $wrapped_text = static function ( $value, $x, $y, $max_chars, $size = 9, $font = 'F1', $leading = 12 ) use ( $text ) {
+        $out = '';
+        $lines = explode( "\n", wordwrap( trim( (string) $value ), $max_chars, "\n", true ) );
+        foreach ( $lines as $index => $line_value ) {
+            $out .= $text( $line_value, $x, $y - ( $index * $leading ), $size, $font );
+        }
+        return $out;
+    };
+
+    foreach ( $children_chunks as $page_index => $page_children ) {
+        $stream = "0 0 0 rg 0 0 0 RG 1 w\n";
+        $stream .= "0.95 0.95 0.95 rg\n" . $rect( 0, 772, 595, 70, true );
+        $stream .= "0 0 0 rg\n";
+        $stream .= $text( 'CONFERMA D’ISCRIZIONE', 42, 802, 22, 'F2' );
+        $stream .= $text( 'AC Taverne', 42, 784, 10, 'F2' );
+        $stream .= $text( 'Pratica #' . (int) $registration->id, 435, 804, 11, 'F2' );
+        $stream .= $text( 'Data: ' . mysql2date( 'd.m.Y', current_time( 'mysql' ) ), 435, 789, 9 );
+        $stream .= $text( 'Stagione: ' . ( $registration->stagione_sportiva ?: sport_theme_current_sport_season() ), 435, 776, 9 );
+
+        $stream .= $text( 'Riepilogo pratica', 42, 742, 12, 'F2' );
+        $stream .= $line( 42, 734, 553, 734 );
+        $stream .= $text( 'Codice pratica', 42, 712, 8, 'F2' );
+        $stream .= $wrapped_text( $registration->uuid, 42, 699, 42, 9 );
+        $stream .= $text( 'Tipo iscrizione', 214, 712, 8, 'F2' );
+        $stream .= $text( $type_label, 214, 699, 9 );
+        $stream .= $text( 'Stato', 342, 712, 8, 'F2' );
+        $stream .= $text( sport_theme_iscrizione_label_value( $registration->stato, $status_labels ), 342, 699, 9 );
+        $stream .= $text( 'Importo previsto', 447, 712, 8, 'F2' );
+        $stream .= $text( 'CHF ' . number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ), 447, 699, 10, 'F2' );
+
+        $stream .= $text( 'Responsabile legale', 42, 662, 12, 'F2' );
+        $stream .= $line( 42, 654, 553, 654 );
+        $stream .= $text( $responsabile ?: '-', 42, 632, 12, 'F2' );
+        $stream .= $text( 'Email: ' . ( $registration->responsabile_email ?: '-' ), 42, 616, 9 );
+        $stream .= $text( 'Telefono: ' . ( $registration->responsabile_telefono ?: '-' ), 300, 616, 9 );
+        $stream .= $text( 'Responsabilita genitoriale: ' . sport_theme_iscrizione_label_value(
+            $registration->responsabilita_genitoriale,
+            array(
+                'padre'         => 'Padre',
+                'madre'         => 'Madre',
+                'tutore_legale' => 'Tutore legale',
+            )
+        ), 42, 601, 9 );
+
+        $stream .= $text( 'Bambino/i iscritti', 42, 566, 12, 'F2' );
+        $stream .= $line( 42, 558, 553, 558 );
+
+        $box_y = 522;
+        foreach ( $page_children as $child ) {
+            $child_name = trim( (string) $child->nome . ' ' . (string) $child->cognome );
+            $birth_date = $child->data_nascita ? mysql2date( 'd.m.Y', $child->data_nascita ) : '-';
+            $address = trim( (string) $child->indirizzo . ' ' . (string) $child->cap_citta );
+
+            $stream .= "0.98 0.98 0.98 rg\n" . $rect( 42, $box_y - 78, 511, 94, true ) . "0 0 0 rg\n";
+            $stream .= $rect( 42, $box_y - 78, 511, 94, false );
+            $stream .= $text( $child_name ?: 'Bambino', 58, $box_y - 4, 11, 'F2' );
+            $stream .= $text( 'Nascita: ' . $birth_date, 58, $box_y - 22, 9 );
+            $stream .= $text( 'Nazionalita: ' . ( $child->nazionalita ?: '-' ), 216, $box_y - 22, 9 );
+            $stream .= $text( 'Categoria: ' . ( $child->categoria ? sport_theme_iscrizione_label_value( $child->categoria, sport_theme_iscrizioni_category_options() ) : 'Da assegnare' ), 378, $box_y - 22, 9 );
+            $stream .= $wrapped_text( 'Indirizzo: ' . ( $address ?: '-' ), 58, $box_y - 40, 78, 9 );
+            $stream .= $text( 'Documento: ' . sport_theme_iscrizione_label_value( $child->tipo_documento, $document_labels ), 58, $box_y - 66, 9 );
+            $stream .= $text( 'Cellulare: ' . ( $child->cellulare ?: '-' ), 300, $box_y - 66, 9 );
+            $box_y -= 110;
+        }
+
+        if ( $page_index === $page_count - 1 ) {
+            $stream .= $text( 'Pagamento', 42, 178, 12, 'F2' );
+            $stream .= $line( 42, 170, 553, 170 );
+            $stream .= $text( sport_theme_iscrizione_payment_description(), 42, 149, 11, 'F2' );
+            $stream .= $text( 'Importo previsto: CHF ' . number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ), 42, 132, 10 );
+            $discount_y = 116;
+            foreach ( sport_theme_iscrizione_discount_lines( $registration ) as $discount_line ) {
+                $stream .= $text( $discount_line, 42, $discount_y, 9 );
+                $discount_y -= 12;
+            }
+            $stream .= $wrapped_text( 'La presente conferma attesta la ricezione della richiesta d’iscrizione. La pratica sara verificata dalla segreteria AC Taverne.', 42, 102, 96, 9 );
+        }
+
+        $stream .= $text( 'Pagina ' . ( $page_index + 1 ) . ' di ' . $page_count, 500, 34, 8 );
+
+        $content_id = count( $objects ) + 1;
+        $page_id = $content_id + 1;
+        $objects[] = "<< /Length " . strlen( $stream ) . " >>\nstream\n{$stream}\nendstream";
+        $objects[] = "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents {$content_id} 0 R >>";
+        $page_ids[] = $page_id;
+    }
+
+    $kids       = implode( ' ', array_map( static function ( $id ) { return $id . ' 0 R'; }, $page_ids ) );
+    $objects[1] = "<< /Type /Pages /Kids [{$kids}] /Count {$page_count} >>";
+
+    $pdf     = "%PDF-1.4\n";
+    $offsets = array( 0 );
+    foreach ( $objects as $index => $object ) {
+        $offsets[] = strlen( $pdf );
+        $object_id = $index + 1;
+        $pdf      .= "{$object_id} 0 obj\n{$object}\nendobj\n";
+    }
+
+    $xref = strlen( $pdf );
+    $pdf .= "xref\n0 " . ( count( $objects ) + 1 ) . "\n0000000000 65535 f \n";
+    for ( $i = 1; $i <= count( $objects ); $i++ ) {
+        $pdf .= sprintf( "%010d 00000 n \n", $offsets[ $i ] );
+    }
+    $pdf .= "trailer\n<< /Size " . ( count( $objects ) + 1 ) . " /Root 1 0 R >>\nstartxref\n{$xref}\n%%EOF";
+
+    if ( file_put_contents( $path, $pdf ) === false ) {
+        return new WP_Error( 'pdf_write', 'Impossibile scrivere il PDF.' );
+    }
+
+    return $path;
+}
+
 function sport_theme_iscrizione_label_value( $value, $labels ) {
     return $labels[ $value ] ?? str_replace( '_', ' ', (string) $value );
 }
@@ -4277,19 +5308,60 @@ function sport_theme_send_iscrizione_received_email( $iscrizione_id ) {
         $wpdb->prepare( "SELECT * FROM {$tables['registrations']} WHERE id = %d", $iscrizione_id )
     );
 
-    if ( ! $registration || ! is_email( $registration->responsabile_email ) ) {
+    if ( ! $registration ) {
         return false;
     }
 
+    $children = $wpdb->get_results(
+        $wpdb->prepare( "SELECT * FROM {$tables['children']} WHERE iscrizione_id = %d ORDER BY child_index ASC", $iscrizione_id )
+    );
+
+    $settings             = sport_theme_iscrizioni_email_settings();
+    $internal_recipients  = sport_theme_parse_email_list( $settings['new_registration_recipients'] ?? '' );
+    $confirmation_pdf     = sport_theme_create_iscrizione_confirmation_pdf( $registration, $children );
+    $attachments          = is_wp_error( $confirmation_pdf ) ? array() : array( $confirmation_pdf );
+    $headers              = array( 'Content-Type: text/plain; charset=UTF-8' );
+    $responsabile         = trim( (string) $registration->responsabile_nome . ' ' . (string) $registration->responsabile_cognome );
+    $child_names          = array();
+
+    foreach ( $children as $child ) {
+        $child_names[] = trim( (string) $child->nome . ' ' . (string) $child->cognome );
+    }
+
     $subject = 'AC Taverne - Iscrizione ricevuta';
-    $message = "Gentile {$registration->responsabile_nome} {$registration->responsabile_cognome},\n\n";
+    $message = "Gentile {$responsabile},\n\n";
     $message .= "abbiamo ricevuto correttamente la vostra iscrizione.\n";
     $message .= "Codice pratica: {$registration->uuid}\n";
     $message .= "Stagione sportiva: " . ( $registration->stagione_sportiva ?: sport_theme_current_sport_season() ) . "\n\n";
     $message .= "La segreteria controllerà i dati e vi contatterà se saranno necessari ulteriori documenti.\n\n";
     $message .= "AC Taverne";
 
-    return wp_mail( $registration->responsabile_email, $subject, $message );
+    $sent_parent = true;
+    if ( is_email( $registration->responsabile_email ) ) {
+        $sent_parent = wp_mail( $registration->responsabile_email, $subject, $message, $headers, $attachments );
+    }
+
+    if ( $internal_recipients ) {
+        $internal_subject = 'AC Taverne - Nuova iscrizione ricevuta';
+        $internal_message = "È stata inviata una nuova iscrizione dal sito.\n\n";
+        $internal_message .= "Pratica: #{$registration->id}\n";
+        $internal_message .= "Codice pratica: {$registration->uuid}\n";
+        $internal_message .= "Responsabile: {$responsabile}\n";
+        $internal_message .= "Email: {$registration->responsabile_email}\n";
+        $internal_message .= "Telefono: {$registration->responsabile_telefono}\n";
+        $internal_message .= "Bambino/i: " . implode( ', ', array_filter( $child_names ) ) . "\n";
+        $internal_message .= "Metodo pagamento scelto: " . ( $registration->metodo_pagamento ?: 'Da definire' ) . "\n";
+        $internal_message .= "Importo previsto: CHF " . number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ) . "\n";
+        foreach ( sport_theme_iscrizione_discount_lines( $registration ) as $discount_line ) {
+            $internal_message .= $discount_line . "\n";
+        }
+        $internal_message .= "\n";
+        $internal_message .= "La conferma d’iscrizione PDF è allegata alla presente email.";
+
+        wp_mail( $internal_recipients, $internal_subject, $internal_message, $headers, $attachments );
+    }
+
+    return $sent_parent;
 }
 
 function sport_theme_send_iscrizione_status_email( $iscrizione_id, $new_status ) {
@@ -4304,10 +5376,27 @@ function sport_theme_send_iscrizione_status_email( $iscrizione_id, $new_status )
         return false;
     }
 
-    $labels = sport_theme_iscrizioni_status_labels();
+    $labels       = sport_theme_iscrizioni_status_labels();
     $status_label = sport_theme_iscrizione_label_value( $new_status, $labels );
-    $subject = 'AC Taverne - Aggiornamento iscrizione';
+    $responsabile = trim( (string) $registration->responsabile_nome . ' ' . (string) $registration->responsabile_cognome );
+    $subject      = $new_status === 'confermata' ? 'AC Taverne - Iscrizione confermata' : 'AC Taverne - Aggiornamento iscrizione';
     $message = "Gentile {$registration->responsabile_nome} {$registration->responsabile_cognome},\n\n";
+
+    if ( $new_status === 'confermata' ) {
+        $message = "Gentile {$responsabile},\n\n";
+        $message .= "Complimenti, la tua/e iscrizione/i è/sono stata/e confermata/e.\n";
+        $message .= "Ti preghiamo di passare al prossimo step per effettuare il pagamento della tassa sociale.\n\n";
+        $message .= "Codice pratica: {$registration->uuid}\n";
+        $message .= "Importo: CHF " . number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ) . "\n";
+        foreach ( sport_theme_iscrizione_discount_lines( $registration ) as $discount_line ) {
+            $message .= $discount_line . "\n";
+        }
+        $message .= "Metodo pagamento selezionato: " . ( $registration->metodo_pagamento === 'stripe' ? 'Carta' : 'Fattura' ) . "\n\n";
+        $message .= "AC Taverne";
+
+        return wp_mail( $registration->responsabile_email, $subject, $message, array( 'Content-Type: text/plain; charset=UTF-8' ) );
+    }
+
     $message .= "la vostra iscrizione è stata aggiornata.\n";
     $message .= "Codice pratica: {$registration->uuid}\n";
     $message .= "Nuovo stato: {$status_label}\n\n";
@@ -4324,7 +5413,7 @@ function sport_theme_send_iscrizione_status_email( $iscrizione_id, $new_status )
 
     $message .= "AC Taverne";
 
-    return wp_mail( $registration->responsabile_email, $subject, $message );
+    return wp_mail( $registration->responsabile_email, $subject, $message, array( 'Content-Type: text/plain; charset=UTF-8' ) );
 }
 
 function sport_theme_handle_update_iscrizione_status() {
@@ -4394,7 +5483,7 @@ function sport_theme_handle_quick_iscrizione_action() {
     }
 
     $registration = $wpdb->get_row(
-        $wpdb->prepare( "SELECT stato, stato_pagamento FROM {$tables['registrations']} WHERE id = %d", $id )
+        $wpdb->prepare( "SELECT stato, stato_pagamento, tipo_iscrizione, riduzione_fratelli, sconto_meta_stagione FROM {$tables['registrations']} WHERE id = %d", $id )
     );
 
     if ( ! $registration ) {
@@ -4422,6 +5511,74 @@ function sport_theme_handle_quick_iscrizione_action() {
         $updates['stato_pagamento'] = 'pagato';
         $formats[] = '%s';
         $message = 'Azione rapida: pagamento segnato come ricevuto.';
+    } elseif ( $quick === 'meta_stagione_50' ) {
+        if ( ! empty( $registration->sconto_meta_stagione ) ) {
+            wp_safe_redirect( wp_get_referer() ?: home_url( '/area-segreteria/' ) );
+            exit;
+        }
+
+        $children = $wpdb->get_results(
+            $wpdb->prepare( "SELECT * FROM {$tables['children']} WHERE iscrizione_id = %d ORDER BY child_index ASC", $id )
+        );
+        $discounted_total = 0.00;
+
+        foreach ( $children as $child ) {
+            $current_quota = sport_theme_get_iscrizione_child_amount( $child, $registration->tipo_iscrizione );
+            $discounted_quota = round( $current_quota * 0.5, 2 );
+            $discounted_total += $discounted_quota;
+
+            $wpdb->update(
+                $tables['children'],
+                array(
+                    'quota_chf'   => $discounted_quota,
+                    'updated_at'  => current_time( 'mysql' ),
+                ),
+                array( 'id' => (int) $child->id ),
+                array( '%f', '%s' ),
+                array( '%d' )
+            );
+        }
+
+        if ( ! empty( $registration->riduzione_fratelli ) && $registration->tipo_iscrizione === 'allievi' ) {
+            $discounted_total -= 50.00;
+        }
+
+        $updates['importo_totale_chf'] = max( 0, $discounted_total );
+        $updates['sconto_meta_stagione'] = 1;
+        $formats[] = '%f';
+        $formats[] = '%d';
+        $message = 'Azione rapida: applicato sconto metà stagione del 50%.';
+    } elseif ( $quick === 'rimuovi_meta_stagione_50' ) {
+        $children = $wpdb->get_results(
+            $wpdb->prepare( "SELECT * FROM {$tables['children']} WHERE iscrizione_id = %d ORDER BY child_index ASC", $id )
+        );
+        $restored_total = 0.00;
+
+        foreach ( $children as $child ) {
+            $standard_quota = sport_theme_calculate_iscrizione_child_amount( $registration->tipo_iscrizione, (int) $child->child_index );
+            $restored_total += $standard_quota;
+
+            $wpdb->update(
+                $tables['children'],
+                array(
+                    'quota_chf'  => $standard_quota,
+                    'updated_at' => current_time( 'mysql' ),
+                ),
+                array( 'id' => (int) $child->id ),
+                array( '%f', '%s' ),
+                array( '%d' )
+            );
+        }
+
+        if ( ! empty( $registration->riduzione_fratelli ) && $registration->tipo_iscrizione === 'allievi' ) {
+            $restored_total -= 50.00;
+        }
+
+        $updates['importo_totale_chf'] = max( 0, $restored_total );
+        $updates['sconto_meta_stagione'] = 0;
+        $formats[] = '%f';
+        $formats[] = '%d';
+        $message = 'Azione rapida: rimosso sconto metà stagione e ripristinate le quote standard.';
     }
 
     if ( count( $updates ) <= 1 ) {
@@ -4451,6 +5608,1175 @@ function sport_theme_handle_quick_iscrizione_action() {
     exit;
 }
 add_action( 'admin_post_act_quick_iscrizione_action', 'sport_theme_handle_quick_iscrizione_action' );
+
+function sport_theme_iscrizione_billing_settings() {
+    $settings = array(
+        'creditor_name' => 'Associazione Calcio Taverne',
+        'street'        => 'Via Traversee',
+        'house_number'  => '2',
+        'postal_code'   => '6807',
+        'city'          => 'Taverne',
+        'country'       => 'CH',
+        'iban'          => defined( 'ACT_TAVERNE_QR_IBAN' ) ? ACT_TAVERNE_QR_IBAN : 'CH95 0076 4160 1705 6200 2',
+    );
+
+    return apply_filters( 'sport_theme_iscrizione_billing_settings', $settings );
+}
+
+function sport_theme_normalize_iban( $iban ) {
+    return strtoupper( preg_replace( '/[^A-Z0-9]/i', '', (string) $iban ) );
+}
+
+function sport_theme_is_valid_iban( $iban ) {
+    $iban = sport_theme_normalize_iban( $iban );
+
+    if ( ! preg_match( '/^[A-Z]{2}[0-9]{2}[A-Z0-9]+$/', $iban ) ) {
+        return false;
+    }
+
+    if ( in_array( substr( $iban, 0, 2 ), array( 'CH', 'LI' ), true ) && strlen( $iban ) !== 21 ) {
+        return false;
+    }
+
+    $rearranged = substr( $iban, 4 ) . substr( $iban, 0, 4 );
+    $numeric = '';
+
+    for ( $i = 0, $len = strlen( $rearranged ); $i < $len; $i++ ) {
+        $char = $rearranged[ $i ];
+        $numeric .= ctype_alpha( $char ) ? (string) ( ord( $char ) - 55 ) : $char;
+    }
+
+    $remainder = 0;
+    for ( $i = 0, $len = strlen( $numeric ); $i < $len; $i++ ) {
+        $remainder = ( $remainder * 10 + (int) $numeric[ $i ] ) % 97;
+    }
+
+    return $remainder === 1;
+}
+
+function sport_theme_is_qr_iban( $iban ) {
+    $iban = sport_theme_normalize_iban( $iban );
+    $qr_iid = (int) substr( $iban, 4, 5 );
+
+    return $qr_iid >= 30000 && $qr_iid <= 31999;
+}
+
+function sport_theme_split_street_number( $address ) {
+    $address = trim( preg_replace( '/\s+/', ' ', (string) $address ) );
+
+    if ( preg_match( '/^(.+?)\s+([0-9]+[A-Za-z]?)$/', $address, $matches ) ) {
+        return array( trim( $matches[1] ), trim( $matches[2] ) );
+    }
+
+    return array( $address, null );
+}
+
+function sport_theme_split_postal_city( $value ) {
+    $value = trim( preg_replace( '/\s+/', ' ', (string) $value ) );
+
+    if ( preg_match( '/^([0-9]{4})\s+(.+)$/', $value, $matches ) ) {
+        return array( $matches[1], trim( $matches[2] ) );
+    }
+
+    return array( '', '' );
+}
+
+function sport_theme_iscrizione_invoice_reference_seed( $registration ) {
+    $season = preg_replace( '/\D+/', '', (string) ( $registration->stagione_sportiva ?? '' ) );
+    return 'ACT' . ( $season ?: gmdate( 'Y' ) ) . (int) $registration->id;
+}
+
+function sport_theme_iscrizione_invoice_token( $registration ) {
+    $payload = implode(
+        '|',
+        array(
+            (int) $registration->id,
+            (string) $registration->uuid,
+            (string) $registration->created_at,
+        )
+    );
+
+    return hash_hmac( 'sha256', $payload, wp_salt( 'auth' ) );
+}
+
+function sport_theme_iscrizione_invoice_url( $registration, $public = false ) {
+    $args = array(
+        'action'        => 'act_iscrizione_invoice',
+        'iscrizione_id' => (int) $registration->id,
+    );
+
+    if ( $public ) {
+        $args['invoice_token'] = sport_theme_iscrizione_invoice_token( $registration );
+
+        return add_query_arg( $args, admin_url( 'admin-post.php' ) );
+    }
+
+    return wp_nonce_url(
+        add_query_arg( $args, admin_url( 'admin-post.php' ) ),
+        'act_iscrizione_invoice_' . (int) $registration->id
+    );
+}
+
+function sport_theme_load_iscrizione_for_invoice( $id ) {
+    global $wpdb;
+
+    $tables = sport_theme_iscrizioni_table_names();
+    $registration = $wpdb->get_row(
+        $wpdb->prepare( "SELECT * FROM {$tables['registrations']} WHERE id = %d", $id )
+    );
+
+    if ( ! $registration ) {
+        return null;
+    }
+
+    $children = $wpdb->get_results(
+        $wpdb->prepare( "SELECT * FROM {$tables['children']} WHERE iscrizione_id = %d ORDER BY child_index ASC", $id )
+    );
+
+    return array( $registration, $children );
+}
+
+function sport_theme_create_iscrizione_qr_bill( $registration, $children ) {
+    if ( ! class_exists( '\Sprain\SwissQrBill\QrBill' ) ) {
+        throw new Exception( 'Libreria QR-fattura non disponibile.' );
+    }
+
+    $settings = sport_theme_iscrizione_billing_settings();
+    $iban     = sport_theme_normalize_iban( $settings['iban'] ?? '' );
+
+    if ( ! sport_theme_is_valid_iban( $iban ) ) {
+        throw new Exception( 'IBAN non valido o incompleto. Un IBAN svizzero deve avere 21 caratteri, per esempio CH00 0000 0000 0000 0000 0.' );
+    }
+
+    $qr_bill = \Sprain\SwissQrBill\QrBill::create();
+    $qr_bill->setCreditor(
+        \Sprain\SwissQrBill\DataGroup\Element\StructuredAddress::createWithStreet(
+            $settings['creditor_name'],
+            $settings['street'],
+            $settings['house_number'],
+            $settings['postal_code'],
+            $settings['city'],
+            $settings['country']
+        )
+    );
+    $qr_bill->setCreditorInformation(
+        \Sprain\SwissQrBill\DataGroup\Element\CreditorInformation::create( $iban )
+    );
+
+    $debtor_name = trim( (string) $registration->responsabile_nome . ' ' . (string) $registration->responsabile_cognome );
+    $first_child = $children[0] ?? null;
+    if ( $debtor_name && $first_child ) {
+        list( $street, $house_number ) = sport_theme_split_street_number( $first_child->indirizzo ?? '' );
+        list( $postal_code, $city ) = sport_theme_split_postal_city( $first_child->cap_citta ?? '' );
+
+        if ( $postal_code && $city ) {
+            $qr_bill->setUltimateDebtor(
+                \Sprain\SwissQrBill\DataGroup\Element\StructuredAddress::createWithStreet(
+                    $debtor_name,
+                    $street,
+                    $house_number,
+                    $postal_code,
+                    $city,
+                    'CH'
+                )
+            );
+        }
+    }
+
+    $amount = max( 0, (float) $registration->importo_totale_chf );
+    $qr_bill->setPaymentAmountInformation(
+        \Sprain\SwissQrBill\DataGroup\Element\PaymentAmountInformation::create( 'CHF', $amount )
+    );
+
+    if ( sport_theme_is_qr_iban( $iban ) ) {
+        $reference = \Sprain\SwissQrBill\Reference\QrPaymentReferenceGenerator::generate( null, (string) (int) $registration->id );
+        $reference_type = \Sprain\SwissQrBill\DataGroup\Element\PaymentReference::TYPE_QR;
+    } else {
+        $reference = \Sprain\SwissQrBill\Reference\RfCreditorReferenceGenerator::generate( sport_theme_iscrizione_invoice_reference_seed( $registration ) );
+        $reference_type = \Sprain\SwissQrBill\DataGroup\Element\PaymentReference::TYPE_SCOR;
+    }
+
+    $qr_bill->setPaymentReference(
+        \Sprain\SwissQrBill\DataGroup\Element\PaymentReference::create( $reference_type, $reference )
+    );
+
+    $child_names = array();
+    foreach ( $children as $child ) {
+        $child_names[] = trim( (string) $child->nome . ' ' . (string) $child->cognome );
+    }
+    $discount_lines = sport_theme_iscrizione_discount_lines( $registration );
+
+    $type_label = $registration->tipo_iscrizione === 'scuola_calcio' ? 'Scuola Calcio' : 'Allievi';
+    $message = trim( sprintf(
+        'AC Taverne %s %s - %s',
+        $type_label,
+        $registration->stagione_sportiva,
+        implode( ', ', array_filter( $child_names ) )
+    ) );
+
+    $qr_bill->setAdditionalInformation(
+        \Sprain\SwissQrBill\DataGroup\Element\AdditionalInformation::create( mb_substr( $message, 0, 140 ) )
+    );
+
+    return array( $qr_bill, $reference, $reference_type, $message, $child_names );
+}
+
+function sport_theme_handle_iscrizione_invoice() {
+    $id = isset( $_GET['iscrizione_id'] ) ? absint( $_GET['iscrizione_id'] ) : 0;
+    if ( ! $id ) {
+        wp_die( 'Link fattura non valido.', 403 );
+    }
+
+    $invoice_data = sport_theme_load_iscrizione_for_invoice( $id );
+
+    if ( ! $invoice_data ) {
+        wp_die( 'Iscrizione non trovata.', 404 );
+    }
+
+    list( $registration, $children ) = $invoice_data;
+
+    $valid_public_token = isset( $_GET['invoice_token'] ) && hash_equals(
+        sport_theme_iscrizione_invoice_token( $registration ),
+        sanitize_text_field( wp_unslash( $_GET['invoice_token'] ) )
+    );
+    $valid_secretariat_nonce = is_user_logged_in()
+        && sport_theme_can_access_segreteria()
+        && isset( $_GET['_wpnonce'] )
+        && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'act_iscrizione_invoice_' . $id );
+
+    if ( ! $valid_public_token && ! $valid_secretariat_nonce ) {
+        wp_die( 'Link fattura non valido.', 403 );
+    }
+
+    try {
+        list( $qr_bill, $reference, $reference_type, $message ) = sport_theme_create_iscrizione_qr_bill( $registration, $children );
+        $display_options = new \Sprain\SwissQrBill\PaymentPart\Output\DisplayOptions();
+        $display_options
+            ->setPrintable( false )
+            ->setDisplayTextDownArrows( false )
+            ->setDisplayScissors( false )
+            ->setPositionScissorsAtBottom( false );
+
+        $payment_part = ( new \Sprain\SwissQrBill\PaymentPart\Output\HtmlOutput\HtmlOutput( $qr_bill, 'it' ) )
+            ->setDisplayOptions( $display_options )
+            ->getPaymentPart();
+    } catch ( Exception $e ) {
+        wp_die(
+            '<h1>Fattura QR non generata</h1><p>' . esc_html( $e->getMessage() ) . '</p><p>IBAN inserito: ' . esc_html( sport_theme_iscrizione_billing_settings()['iban'] ?? '' ) . '</p>',
+            'Fattura QR',
+            array( 'response' => 400 )
+        );
+    }
+
+    $responsabile = trim( (string) $registration->responsabile_nome . ' ' . (string) $registration->responsabile_cognome );
+    $type_label = $registration->tipo_iscrizione === 'scuola_calcio' ? 'Scuola Calcio' : 'Allievi';
+    $billing_settings = sport_theme_iscrizione_billing_settings();
+    $invoice_logo_id = get_theme_mod( 'custom_logo' );
+    $invoice_logo_url = $invoice_logo_id ? wp_get_attachment_image_url( $invoice_logo_id, 'full' ) : get_template_directory_uri() . '/assets/images/logo.png';
+    $child_names = array();
+    foreach ( $children as $child ) {
+        $child_names[] = trim( (string) $child->nome . ' ' . (string) $child->cognome );
+    }
+    $discount_lines = sport_theme_iscrizione_discount_lines( $registration );
+
+    nocache_headers();
+    header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );
+    ?>
+<!doctype html>
+<html <?php language_attributes(); ?>>
+<head>
+    <meta charset="<?php bloginfo( 'charset' ); ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?php echo esc_html( 'Fattura iscrizione #' . $registration->id . ' - AC Taverne' ); ?></title>
+    <style>
+        @page { size: A4; margin: 0; }
+        body { margin: 0; background: #f3f4f6; color: #111; font-family: Arial, Helvetica, sans-serif; }
+        .invoice-wrap { width: min(100%, 210mm); margin: 0 auto; padding: 22px 14px 42px; box-sizing: border-box; }
+        .invoice-sheet { width: 210mm; min-height: 297mm; max-width: 100%; margin: 0 auto; background: #fff; box-shadow: 0 16px 40px rgba(0,0,0,.12); box-sizing: border-box; display: flex; flex-direction: column; }
+        .invoice-header { display: flex; justify-content: space-between; gap: 32px; padding: 34px 38px 26px; border-bottom: 2px solid #111; }
+        .invoice-header h1 { margin: 0 0 10px; font-size: 34px; line-height: 1; text-transform: uppercase; letter-spacing: 0; }
+        .invoice-brand { display: flex; align-items: flex-start; gap: 14px; margin-top: 6px; }
+        .invoice-logo { display: block; width: 72px; height: auto; flex: 0 0 auto; }
+        .invoice-header p, .invoice-meta p { margin: 0; font-size: 14px; line-height: 1.45; }
+        .invoice-meta { text-align: right; padding-top: 47px; }
+        .invoice-body { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; padding: 28px 38px 34px; }
+        .invoice-box h2 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase; letter-spacing: 0; }
+        .invoice-box p { margin: 0; font-size: 15px; line-height: 1.55; }
+        .invoice-box strong { display: block; margin-bottom: 6px; font-size: 16px; }
+        .invoice-muted { color: #555; }
+        .invoice-discount { display: block; margin-top: 6px; font-weight: 700; color: #111; }
+        .invoice-total { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; padding-top: 22px; border-top: 1px solid #ddd; }
+        .invoice-total span { font-size: 14px; text-transform: uppercase; font-weight: 700; }
+        .invoice-total strong { font-size: 30px; }
+        .invoice-actions { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 16px; }
+        .invoice-actions button { border: 0; background: #e30613; color: #fff; padding: 12px 18px; font-weight: 800; text-transform: uppercase; cursor: pointer; }
+        .invoice-qr { overflow-x: auto; margin-top: auto; padding: 0 0 20px; }
+        .invoice-qr #qr-bill { margin: 0 auto; }
+        @media print {
+            body { background: #fff; }
+            .invoice-wrap { width: 210mm; padding: 0; }
+            .invoice-sheet { box-shadow: none; }
+            .invoice-header { display: flex; }
+            .invoice-meta { text-align: right; margin-top: 0; padding-top: 47px; }
+            .invoice-body { display: grid; grid-template-columns: 1fr 1fr; }
+            .invoice-actions { display: none; }
+        }
+        @media screen and (max-width: 760px) {
+            .invoice-header, .invoice-body { display: block; padding-left: 22px; padding-right: 22px; }
+            .invoice-meta { text-align: left; margin-top: 22px; }
+            .invoice-box { margin-bottom: 22px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-wrap">
+        <div class="invoice-actions">
+            <button type="button" onclick="window.print()">Stampa / Salva PDF</button>
+        </div>
+        <article class="invoice-sheet">
+            <header class="invoice-header">
+                <div>
+                    <h1>Fattura</h1>
+                    <div class="invoice-brand">
+                        <?php if ( $invoice_logo_url ) : ?>
+                            <img class="invoice-logo" src="<?php echo esc_url( $invoice_logo_url ); ?>" alt="AC Taverne">
+                        <?php endif; ?>
+                        <p><strong><?php echo esc_html( $billing_settings['creditor_name'] ?? 'AC Taverne' ); ?></strong><br><?php echo esc_html( trim( ( $billing_settings['street'] ?? '' ) . ' ' . ( $billing_settings['house_number'] ?? '' ) ) ); ?><br><?php echo esc_html( trim( ( $billing_settings['postal_code'] ?? '' ) . ' ' . ( $billing_settings['city'] ?? '' ) ) ); ?></p>
+                    </div>
+                </div>
+                <div class="invoice-meta">
+                    <p><strong>Pratica #<?php echo esc_html( $registration->id ); ?></strong></p>
+                    <p>Data: <?php echo esc_html( mysql2date( 'd.m.Y', current_time( 'mysql' ) ) ); ?></p>
+                    <p>Stagione: <?php echo esc_html( $registration->stagione_sportiva ); ?></p>
+                    <p>Riferimento: <?php echo esc_html( $reference ); ?></p>
+                </div>
+            </header>
+            <section class="invoice-body">
+                <div class="invoice-box">
+                    <h2>Fatturato a</h2>
+                    <p>
+                        <strong><?php echo esc_html( $responsabile ?: '-' ); ?></strong>
+                        <?php echo esc_html( $registration->responsabile_email ?: '' ); ?>
+                    </p>
+                </div>
+                <div class="invoice-box">
+                    <h2>Descrizione</h2>
+                    <p>
+                        <strong><?php echo esc_html( sport_theme_iscrizione_payment_description() ); ?></strong>
+                        <?php echo esc_html( $type_label ); ?> · <?php echo esc_html( $registration->stagione_sportiva ); ?><br>
+                        <span class="invoice-muted"><?php echo esc_html( implode( ', ', array_filter( $child_names ) ) ); ?></span>
+                        <?php foreach ( $discount_lines as $discount_line ) : ?>
+                            <span class="invoice-discount"><?php echo esc_html( $discount_line ); ?></span>
+                        <?php endforeach; ?>
+                    </p>
+                </div>
+                <div class="invoice-total">
+                    <span>Totale da pagare</span>
+                    <strong>CHF <?php echo esc_html( number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ) ); ?></strong>
+                </div>
+            </section>
+            <section class="invoice-qr">
+                <?php echo $payment_part; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+            </section>
+        </article>
+    </div>
+</body>
+</html>
+    <?php
+    exit;
+}
+add_action( 'admin_post_act_iscrizione_invoice', 'sport_theme_handle_iscrizione_invoice' );
+add_action( 'admin_post_nopriv_act_iscrizione_invoice', 'sport_theme_handle_iscrizione_invoice' );
+
+function sport_theme_create_iscrizione_invoice_pdf( $registration, $children, $invoice_url = '' ) {
+    try {
+        list( $qr_bill, $reference, , $message, $child_names ) = sport_theme_create_iscrizione_qr_bill( $registration, $children );
+    } catch ( Exception $e ) {
+        return new WP_Error( 'invoice_qr_failed', $e->getMessage() );
+    }
+
+    $upload_dir = wp_upload_dir();
+    if ( ! empty( $upload_dir['error'] ) ) {
+        return new WP_Error( 'invoice_upload_dir', $upload_dir['error'] );
+    }
+
+    $dir = trailingslashit( $upload_dir['basedir'] ) . 'act-iscrizioni-pdf';
+    if ( ! wp_mkdir_p( $dir ) ) {
+        return new WP_Error( 'invoice_pdf_dir', 'Impossibile creare la cartella PDF fatture.' );
+    }
+
+    $pdf_path = trailingslashit( $dir ) . sanitize_file_name( 'fattura-iscrizione-' . (int) $registration->id . '.pdf' );
+    $qr_png   = trailingslashit( $dir ) . sanitize_file_name( 'fattura-iscrizione-' . (int) $registration->id . '-qr.png' );
+    $qr_jpg   = trailingslashit( $dir ) . sanitize_file_name( 'fattura-iscrizione-' . (int) $registration->id . '-qr.jpg' );
+
+    try {
+        $qr_bill->getQrCode( 'png' )->writeFile( $qr_png );
+    } catch ( Exception $e ) {
+        return new WP_Error( 'invoice_qr_image_failed', $e->getMessage() );
+    }
+
+    $image_path = '';
+    if ( function_exists( 'imagecreatefrompng' ) && function_exists( 'imagejpeg' ) ) {
+        $png_image = @imagecreatefrompng( $qr_png );
+        if ( $png_image ) {
+            $width  = imagesx( $png_image );
+            $height = imagesy( $png_image );
+            $canvas = imagecreatetruecolor( $width, $height );
+            $white  = imagecolorallocate( $canvas, 255, 255, 255 );
+            imagefilledrectangle( $canvas, 0, 0, $width, $height, $white );
+            imagecopy( $canvas, $png_image, 0, 0, 0, 0, $width, $height );
+            imagejpeg( $canvas, $qr_jpg, 92 );
+            imagedestroy( $png_image );
+            imagedestroy( $canvas );
+            $image_path = file_exists( $qr_jpg ) ? $qr_jpg : '';
+        }
+    }
+
+    $image_data = $image_path ? file_get_contents( $image_path ) : false;
+    $image_size = $image_path ? getimagesize( $image_path ) : false;
+    if ( ! $image_data || ! $image_size ) {
+        return new WP_Error( 'invoice_qr_embed_failed', 'Impossibile preparare il QR per il PDF.' );
+    }
+
+    $billing_settings = sport_theme_iscrizione_billing_settings();
+    $responsabile     = trim( (string) $registration->responsabile_nome . ' ' . (string) $registration->responsabile_cognome );
+    $type_label       = $registration->tipo_iscrizione === 'scuola_calcio' ? 'Scuola Calcio' : 'Allievi';
+    $children_label   = implode( ', ', array_filter( $child_names ) );
+    $total_label      = 'CHF ' . number_format( (float) $registration->importo_totale_chf, 2, '.', "'" );
+    $discount_lines   = sport_theme_iscrizione_discount_lines( $registration );
+
+    $text = static function ( $value, $x, $y, $size = 10, $font = 'F1' ) {
+        return sprintf( "BT /%s %F Tf 1 0 0 1 %F %F Tm (%s) Tj ET\n", $font, $size, $x, $y, sport_theme_pdf_escape_text( $value ) );
+    };
+    $line = static function ( $x1, $y1, $x2, $y2 ) {
+        return sprintf( "%F %F m %F %F l S\n", $x1, $y1, $x2, $y2 );
+    };
+    $wrapped_text = static function ( $value, $x, $y, $max_chars, $size = 9, $font = 'F1', $leading = 12 ) use ( $text ) {
+        $out   = '';
+        $lines = explode( "\n", wordwrap( trim( (string) $value ), $max_chars, "\n", true ) );
+        foreach ( $lines as $index => $line_value ) {
+            $out .= $text( $line_value, $x, $y - ( $index * $leading ), $size, $font );
+        }
+        return $out;
+    };
+
+    $stream = "0 0 0 rg 0 0 0 RG 1 w\n";
+    $stream .= $text( 'FATTURA', 42, 786, 28, 'F2' );
+    $stream .= $text( $billing_settings['creditor_name'] ?? 'Associazione Calcio Taverne', 42, 758, 11, 'F2' );
+    $stream .= $text( trim( ( $billing_settings['street'] ?? '' ) . ' ' . ( $billing_settings['house_number'] ?? '' ) ), 42, 742, 10 );
+    $stream .= $text( trim( ( $billing_settings['postal_code'] ?? '' ) . ' ' . ( $billing_settings['city'] ?? '' ) ), 42, 728, 10 );
+    $stream .= $text( 'Pratica #' . (int) $registration->id, 430, 758, 10, 'F2' );
+    $stream .= $text( 'Data: ' . mysql2date( 'd.m.Y', current_time( 'mysql' ) ), 430, 742, 9 );
+    $stream .= $text( 'Stagione: ' . ( $registration->stagione_sportiva ?: sport_theme_current_sport_season() ), 430, 728, 9 );
+    $stream .= $text( 'Riferimento: ' . $reference, 430, 714, 9 );
+    $stream .= $line( 42, 690, 553, 690 );
+
+    $stream .= $text( 'FATTURATO A', 42, 662, 10, 'F2' );
+    $stream .= $text( $responsabile ?: '-', 42, 642, 12, 'F2' );
+    $stream .= $text( $registration->responsabile_email ?: '-', 42, 624, 10 );
+
+    $stream .= $text( 'DESCRIZIONE', 300, 662, 10, 'F2' );
+    $stream .= $text( sport_theme_iscrizione_payment_description(), 300, 642, 12, 'F2' );
+    $stream .= $text( $type_label . ' · ' . ( $registration->stagione_sportiva ?: sport_theme_current_sport_season() ), 300, 624, 10 );
+    $stream .= $wrapped_text( $children_label ?: '-', 300, 606, 42, 10 );
+    $discount_y = 582;
+    foreach ( $discount_lines as $discount_line ) {
+        $stream .= $text( $discount_line, 300, $discount_y, 9, 'F2' );
+        $discount_y -= 12;
+    }
+
+    $stream .= $line( 42, 560, 553, 560 );
+    $stream .= $text( 'TOTALE DA PAGARE', 42, 528, 13, 'F2' );
+    $stream .= $text( $total_label, 428, 526, 22, 'F2' );
+
+    $stream .= $line( 42, 286, 553, 286 );
+    $stream .= $text( 'SEZIONE PAGAMENTO', 42, 260, 14, 'F2' );
+    $stream .= "q 150 0 0 150 42 84 cm /Im1 Do Q\n";
+    $stream .= $text( 'Conto / Pagabile a', 230, 246, 9, 'F2' );
+    $stream .= $text( $billing_settings['iban'] ?? '', 230, 232, 10 );
+    $stream .= $text( $billing_settings['creditor_name'] ?? 'Associazione Calcio Taverne', 230, 218, 10 );
+    $stream .= $text( trim( ( $billing_settings['street'] ?? '' ) . ' ' . ( $billing_settings['house_number'] ?? '' ) ), 230, 204, 10 );
+    $stream .= $text( trim( ( $billing_settings['postal_code'] ?? '' ) . ' ' . ( $billing_settings['city'] ?? '' ) ), 230, 190, 10 );
+    $stream .= $text( 'Riferimento', 230, 166, 9, 'F2' );
+    $stream .= $text( $reference, 230, 152, 10 );
+    $stream .= $text( 'Informazioni supplementari', 230, 128, 9, 'F2' );
+    $stream .= $wrapped_text( $message, 230, 114, 54, 9 );
+    $stream .= $text( 'Valuta', 42, 54, 8, 'F2' );
+    $stream .= $text( 'Importo', 92, 54, 8, 'F2' );
+    $stream .= $text( 'CHF', 42, 40, 10 );
+    $stream .= $text( number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ), 92, 40, 10 );
+    if ( $invoice_url ) {
+        $stream .= $text( 'Link fattura online: ' . $invoice_url, 230, 40, 7 );
+    }
+
+    $image_object = "<< /Type /XObject /Subtype /Image /Width {$image_size[0]} /Height {$image_size[1]} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length " . strlen( $image_data ) . " >>\nstream\n{$image_data}\nendstream";
+    $objects = array(
+        '<< /Type /Catalog /Pages 2 0 R >>',
+        '<< /Type /Pages /Kids [7 0 R] /Count 1 >>',
+        '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
+        '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>',
+        $image_object,
+        "<< /Length " . strlen( $stream ) . " >>\nstream\n{$stream}\nendstream",
+        '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> /XObject << /Im1 5 0 R >> >> /Contents 6 0 R >>',
+    );
+
+    $pdf     = "%PDF-1.4\n";
+    $offsets = array( 0 );
+    foreach ( $objects as $index => $object ) {
+        $offsets[] = strlen( $pdf );
+        $object_id = $index + 1;
+        $pdf      .= "{$object_id} 0 obj\n{$object}\nendobj\n";
+    }
+
+    $xref = strlen( $pdf );
+    $pdf .= "xref\n0 " . ( count( $objects ) + 1 ) . "\n0000000000 65535 f \n";
+    for ( $i = 1; $i <= count( $objects ); $i++ ) {
+        $pdf .= sprintf( "%010d 00000 n \n", $offsets[ $i ] );
+    }
+    $pdf .= "trailer\n<< /Size " . ( count( $objects ) + 1 ) . " /Root 1 0 R >>\nstartxref\n{$xref}\n%%EOF";
+
+    if ( file_put_contents( $pdf_path, $pdf ) === false ) {
+        return new WP_Error( 'invoice_pdf_write_failed', 'Impossibile scrivere il PDF fattura.' );
+    }
+
+    return $pdf_path;
+}
+
+function sport_theme_handle_send_iscrizione_invoice() {
+    sport_theme_iscrizioni_require_segreteria_access();
+    check_admin_referer( 'act_send_iscrizione_invoice' );
+
+    $id = isset( $_POST['iscrizione_id'] ) ? absint( $_POST['iscrizione_id'] ) : 0;
+    $redirect = $id ? add_query_arg( 'edit_iscrizione', $id, home_url( '/area-segreteria/' ) ) : home_url( '/area-segreteria/' );
+    $invoice_data = $id ? sport_theme_load_iscrizione_for_invoice( $id ) : null;
+
+    if ( ! $invoice_data ) {
+        wp_safe_redirect( add_query_arg( 'invoice_sent', '0', $redirect ) );
+        exit;
+    }
+
+    list( $registration, $children ) = $invoice_data;
+
+    if ( ! is_email( $registration->responsabile_email ) ) {
+        wp_safe_redirect( add_query_arg( 'invoice_sent', '0', $redirect ) );
+        exit;
+    }
+
+    try {
+        list( , $reference, , $message, $child_names ) = sport_theme_create_iscrizione_qr_bill( $registration, $children );
+    } catch ( Exception $e ) {
+        wp_safe_redirect( add_query_arg( 'invoice_sent', '0', $redirect ) );
+        exit;
+    }
+
+    $invoice_url = sport_theme_iscrizione_invoice_url( $registration, true );
+    $invoice_pdf = sport_theme_create_iscrizione_invoice_pdf( $registration, $children, $invoice_url );
+    $invoice_attachments = is_wp_error( $invoice_pdf ) ? array() : array( $invoice_pdf );
+    $responsabile = trim( (string) $registration->responsabile_nome . ' ' . (string) $registration->responsabile_cognome );
+    $subject = 'AC Taverne - Fattura iscrizione';
+    $email_message = "Gentile {$responsabile},\n\n";
+    $email_message .= "Grazie mille, la pratica d'iscrizione è stata verificata.\n";
+    if ( $invoice_attachments ) {
+        $email_message .= "In allegato trovate la fattura con cedola di versamento QR in formato PDF.\n";
+        $email_message .= "Se l'allegato non fosse visibile, potete aprire la fattura anche da questo link:\n";
+        $email_message .= $invoice_url . "\n\n";
+    } else {
+        $email_message .= "Potete aprire la fattura con cedola di versamento QR dal seguente link:\n";
+        $email_message .= $invoice_url . "\n\n";
+    }
+    $email_message .= "Dettagli:\n";
+    $email_message .= "Pratica: #{$registration->id}\n";
+    $email_message .= "Stagione: {$registration->stagione_sportiva}\n";
+    $email_message .= "Descrizione: " . sport_theme_iscrizione_payment_description() . "\n";
+    $email_message .= "Iscrizione: {$message}\n";
+    $email_message .= "Bambino/i: " . implode( ', ', array_filter( $child_names ) ) . "\n";
+    $email_message .= "Importo: CHF " . number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ) . "\n";
+    foreach ( sport_theme_iscrizione_discount_lines( $registration ) as $discount_line ) {
+        $email_message .= $discount_line . "\n";
+    }
+    $email_message .= "Riferimento: {$reference}\n\n";
+    $email_message .= "AC Taverne";
+
+    $sent = wp_mail(
+        $registration->responsabile_email,
+        $subject,
+        $email_message,
+        array( 'Content-Type: text/plain; charset=UTF-8' ),
+        $invoice_attachments
+    );
+
+    global $wpdb;
+    $tables = sport_theme_iscrizioni_table_names();
+
+    if ( $sent ) {
+        $wpdb->update(
+            $tables['registrations'],
+            array(
+                'metodo_pagamento' => 'fattura',
+                'stato_pagamento'  => $registration->stato_pagamento === 'pagato' ? 'pagato' : 'in_attesa',
+                'updated_at'       => current_time( 'mysql' ),
+            ),
+            array( 'id' => $id ),
+            array( '%s', '%s', '%s' ),
+            array( '%d' )
+        );
+
+        $wpdb->insert(
+            $tables['logs'],
+            array(
+                'iscrizione_id' => $id,
+                'azione'        => 'fattura_inviata',
+                'messaggio'     => 'Fattura QR inviata a ' . $registration->responsabile_email,
+                'created_by'    => get_current_user_id(),
+                'created_at'    => current_time( 'mysql' ),
+            ),
+            array( '%d', '%s', '%s', '%d', '%s' )
+        );
+
+        $settings           = sport_theme_iscrizioni_email_settings();
+        $invoice_recipients = sport_theme_parse_email_list( $settings['invoice_notice_recipients'] ?? '' );
+
+        if ( $invoice_recipients ) {
+            $internal_message = "La pratica #{$registration->id} è stata impostata con pagamento tramite fattura/cedola.\n\n";
+            $internal_message .= "Responsabile: {$responsabile}\n";
+            $internal_message .= "Email genitore: {$registration->responsabile_email}\n";
+            $internal_message .= "Bambino/i: " . implode( ', ', array_filter( $child_names ) ) . "\n";
+            $internal_message .= "Importo: CHF " . number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ) . "\n";
+            foreach ( sport_theme_iscrizione_discount_lines( $registration ) as $discount_line ) {
+                $internal_message .= $discount_line . "\n";
+            }
+            $internal_message .= "Descrizione fattura: " . sport_theme_iscrizione_payment_description() . "\n";
+            $internal_message .= "Link fattura: {$invoice_url}";
+
+            wp_mail(
+                $invoice_recipients,
+                'AC Taverne - Fattura iscrizione da gestire',
+                $internal_message,
+                array( 'Content-Type: text/plain; charset=UTF-8' ),
+                $invoice_attachments
+            );
+        }
+    }
+
+    wp_safe_redirect( add_query_arg( 'invoice_sent', $sent ? '1' : '0', $redirect ) );
+    exit;
+}
+add_action( 'admin_post_act_send_iscrizione_invoice', 'sport_theme_handle_send_iscrizione_invoice' );
+
+function sport_theme_stripe_settings() {
+    $settings = array(
+        'publishable_key' => defined( 'ACT_TAVERNE_STRIPE_PUBLISHABLE_KEY' ) ? ACT_TAVERNE_STRIPE_PUBLISHABLE_KEY : '',
+        'secret_key'      => defined( 'ACT_TAVERNE_STRIPE_SECRET_KEY' ) ? ACT_TAVERNE_STRIPE_SECRET_KEY : '',
+        'webhook_secret'  => defined( 'ACT_TAVERNE_STRIPE_WEBHOOK_SECRET' ) ? ACT_TAVERNE_STRIPE_WEBHOOK_SECRET : '',
+    );
+
+    return apply_filters( 'sport_theme_stripe_settings', $settings );
+}
+
+function sport_theme_stripe_secret_key() {
+    $settings = sport_theme_stripe_settings();
+    return trim( (string) ( $settings['secret_key'] ?? '' ) );
+}
+
+function sport_theme_stripe_is_configured() {
+    return class_exists( '\Stripe\StripeClient' ) && sport_theme_stripe_secret_key() !== '';
+}
+
+function sport_theme_stripe_child_names( $children ) {
+    $names = array();
+    foreach ( $children as $child ) {
+        $names[] = trim( (string) $child->nome . ' ' . (string) $child->cognome );
+    }
+
+    return array_filter( $names );
+}
+
+function sport_theme_stripe_payment_return_url( $registration, $status ) {
+    return add_query_arg(
+        array(
+            'action'        => 'act_stripe_payment_return',
+            'iscrizione_id' => (int) $registration->id,
+            'status'        => $status,
+            'payment_token' => sport_theme_iscrizione_invoice_token( $registration ),
+        ),
+        admin_url( 'admin-post.php' )
+    );
+}
+
+function sport_theme_create_stripe_checkout_session( $registration, $children ) {
+    if ( ! sport_theme_stripe_is_configured() ) {
+        throw new Exception( 'Stripe non configurato.' );
+    }
+
+    $amount = (float) $registration->importo_totale_chf;
+    if ( $amount <= 0 ) {
+        throw new Exception( 'Importo iscrizione non valido.' );
+    }
+
+    $stripe = new \Stripe\StripeClient( sport_theme_stripe_secret_key() );
+    $child_names = sport_theme_stripe_child_names( $children );
+    $type_label = $registration->tipo_iscrizione === 'scuola_calcio' ? 'Scuola Calcio' : 'Allievi';
+    $description = trim( sprintf(
+        '%s - %s %s - %s',
+        sport_theme_iscrizione_payment_description(),
+        $type_label,
+        $registration->stagione_sportiva,
+        implode( ', ', $child_names )
+    ) );
+
+    return $stripe->checkout->sessions->create(
+        array(
+            'mode'                 => 'payment',
+            'customer_creation'    => 'always',
+            'customer_email'       => $registration->responsabile_email ?: null,
+            'client_reference_id'  => (string) $registration->id,
+            'success_url'          => sport_theme_stripe_payment_return_url( $registration, 'success' ) . '&session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url'           => sport_theme_stripe_payment_return_url( $registration, 'cancel' ),
+            'invoice_creation'     => array(
+                'enabled'      => true,
+                'invoice_data' => array(
+                    'description' => sport_theme_iscrizione_payment_description(),
+                    'footer'      => 'AC Taverne - ' . sport_theme_iscrizione_payment_description(),
+                    'metadata'    => array(
+                        'iscrizione_id' => (string) $registration->id,
+                        'uuid'          => (string) $registration->uuid,
+                    ),
+                ),
+            ),
+            'metadata'             => array(
+                'iscrizione_id' => (string) $registration->id,
+                'uuid'          => (string) $registration->uuid,
+            ),
+            'payment_intent_data'  => array(
+                'metadata' => array(
+                    'iscrizione_id' => (string) $registration->id,
+                    'uuid'          => (string) $registration->uuid,
+                ),
+            ),
+            'line_items'           => array(
+                array(
+                    'quantity'   => 1,
+                    'price_data' => array(
+                        'currency'     => 'chf',
+                        'unit_amount'  => (int) round( $amount * 100 ),
+                        'product_data' => array(
+                            'name'        => sport_theme_iscrizione_payment_description(),
+                            'description' => mb_substr( $description, 0, 255 ),
+                        ),
+                    ),
+                ),
+            ),
+        )
+    );
+}
+
+function sport_theme_handle_send_stripe_payment() {
+    sport_theme_iscrizioni_require_segreteria_access();
+    check_admin_referer( 'act_send_stripe_payment' );
+
+    $id = isset( $_POST['iscrizione_id'] ) ? absint( $_POST['iscrizione_id'] ) : 0;
+    $redirect = $id ? add_query_arg( 'edit_iscrizione', $id, home_url( '/area-segreteria/' ) ) : home_url( '/area-segreteria/' );
+    $invoice_data = $id ? sport_theme_load_iscrizione_for_invoice( $id ) : null;
+
+    if ( ! $invoice_data ) {
+        wp_safe_redirect( add_query_arg( 'stripe_sent', '0', $redirect ) );
+        exit;
+    }
+
+    list( $registration, $children ) = $invoice_data;
+    if ( ! is_email( $registration->responsabile_email ) ) {
+        wp_safe_redirect( add_query_arg( 'stripe_sent', '0', $redirect ) );
+        exit;
+    }
+
+    try {
+        $session = sport_theme_create_stripe_checkout_session( $registration, $children );
+    } catch ( Exception $e ) {
+        wp_safe_redirect( add_query_arg( 'stripe_sent', '0', $redirect ) );
+        exit;
+    }
+
+    $payment_url = (string) $session->url;
+    $child_names = sport_theme_stripe_child_names( $children );
+    $responsabile = trim( (string) $registration->responsabile_nome . ' ' . (string) $registration->responsabile_cognome );
+    $subject = 'AC Taverne - Pagamento iscrizione';
+    $email_message = "Gentile {$responsabile},\n\n";
+    $email_message .= "Complimenti, la tua/e iscrizione/i è/sono stata/e confermata/e.\n";
+    $email_message .= "Ti preghiamo di passare al prossimo step per effettuare il pagamento della tassa sociale con carta.\n\n";
+    $email_message .= "Potete effettuare il pagamento online dal seguente link:\n";
+    $email_message .= $payment_url . "\n\n";
+    $email_message .= "Dettagli:\n";
+    $email_message .= "Pratica: #{$registration->id}\n";
+    $email_message .= "Stagione: {$registration->stagione_sportiva}\n";
+    $email_message .= "Descrizione: " . sport_theme_iscrizione_payment_description() . "\n";
+    $email_message .= "Bambino/i: " . implode( ', ', $child_names ) . "\n";
+    $email_message .= "Importo: CHF " . number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ) . "\n";
+    foreach ( sport_theme_iscrizione_discount_lines( $registration ) as $discount_line ) {
+        $email_message .= $discount_line . "\n";
+    }
+    $email_message .= "\n";
+    $email_message .= "AC Taverne";
+
+    $sent = wp_mail(
+        $registration->responsabile_email,
+        $subject,
+        $email_message,
+        array( 'Content-Type: text/plain; charset=UTF-8' )
+    );
+
+    global $wpdb;
+    $tables = sport_theme_iscrizioni_table_names();
+
+    if ( $sent ) {
+        $wpdb->update(
+            $tables['registrations'],
+            array(
+                'metodo_pagamento'           => 'stripe',
+                'stato_pagamento'            => $registration->stato_pagamento === 'pagato' ? 'pagato' : 'in_attesa',
+                'stripe_checkout_session_id' => (string) $session->id,
+                'stripe_payment_url'         => esc_url_raw( $payment_url ),
+                'stripe_payment_sent_at'     => current_time( 'mysql' ),
+                'updated_at'                 => current_time( 'mysql' ),
+            ),
+            array( 'id' => $id ),
+            array( '%s', '%s', '%s', '%s', '%s', '%s' ),
+            array( '%d' )
+        );
+
+        $wpdb->insert(
+            $tables['logs'],
+            array(
+                'iscrizione_id' => $id,
+                'azione'        => 'stripe_inviato',
+                'messaggio'     => 'Link pagamento Stripe inviato a ' . $registration->responsabile_email,
+                'created_by'    => get_current_user_id(),
+                'created_at'    => current_time( 'mysql' ),
+            ),
+            array( '%d', '%s', '%s', '%d', '%s' )
+        );
+    }
+
+    wp_safe_redirect( add_query_arg( 'stripe_sent', $sent ? '1' : '0', $redirect ) );
+    exit;
+}
+add_action( 'admin_post_act_send_stripe_payment', 'sport_theme_handle_send_stripe_payment' );
+
+function sport_theme_stripe_value( $object, $key ) {
+    if ( is_array( $object ) ) {
+        return $object[ $key ] ?? null;
+    }
+
+    if ( is_object( $object ) ) {
+        return $object->{$key} ?? null;
+    }
+
+    return null;
+}
+
+function sport_theme_stripe_metadata_array( $metadata ) {
+    if ( is_array( $metadata ) ) {
+        return $metadata;
+    }
+
+    if ( is_object( $metadata ) && method_exists( $metadata, 'toArray' ) ) {
+        return $metadata->toArray();
+    }
+
+    if ( is_object( $metadata ) ) {
+        return get_object_vars( $metadata );
+    }
+
+    return array();
+}
+
+function sport_theme_get_stripe_invoice_details_from_session( $session ) {
+    $details = array(
+        'customer_id'  => '',
+        'invoice_id'   => '',
+        'invoice_url'  => '',
+        'invoice_pdf'  => '',
+    );
+
+    $session_id = (string) sport_theme_stripe_value( $session, 'id' );
+    $customer   = sport_theme_stripe_value( $session, 'customer' );
+    $invoice    = sport_theme_stripe_value( $session, 'invoice' );
+
+    if ( is_string( $customer ) ) {
+        $details['customer_id'] = $customer;
+    } elseif ( $customer ) {
+        $details['customer_id'] = (string) sport_theme_stripe_value( $customer, 'id' );
+    }
+
+    if ( is_string( $invoice ) ) {
+        $details['invoice_id'] = $invoice;
+    } elseif ( $invoice ) {
+        $details['invoice_id']  = (string) sport_theme_stripe_value( $invoice, 'id' );
+        $details['invoice_url'] = (string) sport_theme_stripe_value( $invoice, 'hosted_invoice_url' );
+        $details['invoice_pdf'] = (string) sport_theme_stripe_value( $invoice, 'invoice_pdf' );
+    }
+
+    if ( ( ! $details['invoice_url'] || ! $details['invoice_pdf'] ) && $session_id && sport_theme_stripe_is_configured() ) {
+        try {
+            $stripe          = new \Stripe\StripeClient( sport_theme_stripe_secret_key() );
+            $expanded_session = $stripe->checkout->sessions->retrieve( $session_id, array( 'expand' => array( 'invoice' ) ) );
+            $expanded_invoice = sport_theme_stripe_value( $expanded_session, 'invoice' );
+            $expanded_customer = sport_theme_stripe_value( $expanded_session, 'customer' );
+
+            if ( is_string( $expanded_customer ) ) {
+                $details['customer_id'] = $expanded_customer;
+            } elseif ( $expanded_customer ) {
+                $details['customer_id'] = (string) sport_theme_stripe_value( $expanded_customer, 'id' );
+            }
+
+            if ( is_string( $expanded_invoice ) ) {
+                $details['invoice_id'] = $expanded_invoice;
+            } elseif ( $expanded_invoice ) {
+                $details['invoice_id']  = (string) sport_theme_stripe_value( $expanded_invoice, 'id' );
+                $details['invoice_url'] = (string) sport_theme_stripe_value( $expanded_invoice, 'hosted_invoice_url' );
+                $details['invoice_pdf'] = (string) sport_theme_stripe_value( $expanded_invoice, 'invoice_pdf' );
+            }
+        } catch ( Exception $e ) {
+            // Il pagamento resta valido anche se Stripe non restituisce subito la fattura.
+        }
+    }
+
+    return $details;
+}
+
+function sport_theme_send_stripe_paid_notifications( $registration_id, $session_id = '' ) {
+    global $wpdb;
+
+    $tables = sport_theme_iscrizioni_table_names();
+    $registration = $wpdb->get_row(
+        $wpdb->prepare( "SELECT * FROM {$tables['registrations']} WHERE id = %d", $registration_id )
+    );
+
+    if ( ! $registration ) {
+        return false;
+    }
+
+    $children = $wpdb->get_results(
+        $wpdb->prepare( "SELECT * FROM {$tables['children']} WHERE iscrizione_id = %d ORDER BY child_index ASC", $registration_id )
+    );
+    $child_names = array();
+    foreach ( $children as $child ) {
+        $child_names[] = trim( (string) $child->nome . ' ' . (string) $child->cognome );
+    }
+
+    $responsabile = trim( (string) $registration->responsabile_nome . ' ' . (string) $registration->responsabile_cognome );
+    $headers      = array( 'Content-Type: text/plain; charset=UTF-8' );
+
+    if ( is_email( $registration->responsabile_email ) ) {
+        $parent_message = "Gentile {$responsabile},\n\n";
+        $parent_message .= "Il tuo pagamento è andato a buon fine, riceverai la fattura come giustificativo nei prossimi giorni.\n\n";
+        $parent_message .= "Dettagli:\n";
+        $parent_message .= "Pratica: #{$registration->id}\n";
+        $parent_message .= "Descrizione: " . sport_theme_iscrizione_payment_description() . "\n";
+        $parent_message .= "Importo: CHF " . number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ) . "\n\n";
+        foreach ( sport_theme_iscrizione_discount_lines( $registration ) as $discount_line ) {
+            $parent_message .= $discount_line . "\n";
+        }
+        $parent_message .= "\n";
+        if ( ! empty( $registration->stripe_invoice_pdf ) ) {
+            $parent_message .= "Fattura Stripe PDF: {$registration->stripe_invoice_pdf}\n\n";
+        } elseif ( ! empty( $registration->stripe_invoice_url ) ) {
+            $parent_message .= "Fattura Stripe: {$registration->stripe_invoice_url}\n\n";
+        }
+        $parent_message .= "AC Taverne";
+
+        wp_mail( $registration->responsabile_email, 'AC Taverne - Pagamento ricevuto', $parent_message, $headers );
+    }
+
+    $settings           = sport_theme_iscrizioni_email_settings();
+    $payment_recipients = sport_theme_parse_email_list( $settings['payment_card_recipients'] ?? '' );
+
+    if ( $payment_recipients ) {
+        $internal_message = "Pagamento con carta confermato da Stripe.\n\n";
+        $internal_message .= "Pratica: #{$registration->id}\n";
+        $internal_message .= "Responsabile: {$responsabile}\n";
+        $internal_message .= "Email genitore: {$registration->responsabile_email}\n";
+        $internal_message .= "Bambino/i: " . implode( ', ', array_filter( $child_names ) ) . "\n";
+        $internal_message .= "Importo: CHF " . number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ) . "\n";
+        foreach ( sport_theme_iscrizione_discount_lines( $registration ) as $discount_line ) {
+            $internal_message .= $discount_line . "\n";
+        }
+        $internal_message .= "Descrizione: " . sport_theme_iscrizione_payment_description() . "\n";
+        if ( ! empty( $registration->stripe_invoice_id ) ) {
+            $internal_message .= "Fattura Stripe: {$registration->stripe_invoice_id}\n";
+        }
+        if ( ! empty( $registration->stripe_invoice_pdf ) ) {
+            $internal_message .= "PDF fattura Stripe: {$registration->stripe_invoice_pdf}\n";
+        } elseif ( ! empty( $registration->stripe_invoice_url ) ) {
+            $internal_message .= "Link fattura Stripe: {$registration->stripe_invoice_url}\n";
+        }
+        $internal_message .= "Sessione Stripe: {$session_id}";
+
+        wp_mail( $payment_recipients, 'AC Taverne - Pagamento carta ricevuto', $internal_message, $headers );
+    }
+
+    return true;
+}
+
+function sport_theme_mark_stripe_session_paid( $session ) {
+    global $wpdb;
+
+    $tables = sport_theme_iscrizioni_table_names();
+    $session_id = (string) sport_theme_stripe_value( $session, 'id' );
+    $payment_intent = sport_theme_stripe_value( $session, 'payment_intent' );
+    $payment_intent = is_string( $payment_intent ) ? $payment_intent : (string) sport_theme_stripe_value( $payment_intent, 'id' );
+    $metadata = sport_theme_stripe_metadata_array( sport_theme_stripe_value( $session, 'metadata' ) );
+    $registration_id = isset( $metadata['iscrizione_id'] ) ? absint( $metadata['iscrizione_id'] ) : 0;
+
+    if ( ! $registration_id && $session_id ) {
+        $registration_id = (int) $wpdb->get_var(
+            $wpdb->prepare( "SELECT id FROM {$tables['registrations']} WHERE stripe_checkout_session_id = %s", $session_id )
+        );
+    }
+
+    if ( ! $registration_id ) {
+        return false;
+    }
+
+    $previous_payment_status = $wpdb->get_var(
+        $wpdb->prepare( "SELECT stato_pagamento FROM {$tables['registrations']} WHERE id = %d", $registration_id )
+    );
+    $stripe_invoice_details = sport_theme_get_stripe_invoice_details_from_session( $session );
+
+    $wpdb->update(
+        $tables['registrations'],
+        array(
+            'metodo_pagamento'           => 'stripe',
+            'stato_pagamento'            => 'pagato',
+            'stripe_customer_id'          => $stripe_invoice_details['customer_id'],
+            'stripe_checkout_session_id' => $session_id,
+            'stripe_payment_intent_id'   => $payment_intent,
+            'stripe_invoice_id'           => $stripe_invoice_details['invoice_id'],
+            'stripe_invoice_url'          => esc_url_raw( $stripe_invoice_details['invoice_url'] ),
+            'stripe_invoice_pdf'          => esc_url_raw( $stripe_invoice_details['invoice_pdf'] ),
+            'stripe_paid_at'             => current_time( 'mysql' ),
+            'updated_at'                 => current_time( 'mysql' ),
+        ),
+        array( 'id' => $registration_id ),
+        array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ),
+        array( '%d' )
+    );
+
+    $wpdb->insert(
+        $tables['logs'],
+        array(
+            'iscrizione_id' => $registration_id,
+            'azione'        => 'stripe_pagato',
+            'messaggio'     => 'Pagamento Stripe confermato. Sessione: ' . $session_id . ( $stripe_invoice_details['invoice_id'] ? '. Fattura Stripe: ' . $stripe_invoice_details['invoice_id'] : '' ),
+            'created_by'    => 0,
+            'created_at'    => current_time( 'mysql' ),
+        ),
+        array( '%d', '%s', '%s', '%d', '%s' )
+    );
+
+    if ( $previous_payment_status !== 'pagato' ) {
+        sport_theme_send_stripe_paid_notifications( $registration_id, $session_id );
+    }
+
+    return true;
+}
+
+function sport_theme_handle_stripe_payment_return() {
+    $id = isset( $_GET['iscrizione_id'] ) ? absint( $_GET['iscrizione_id'] ) : 0;
+    $status = isset( $_GET['status'] ) ? sanitize_key( wp_unslash( $_GET['status'] ) ) : '';
+    $invoice_data = $id ? sport_theme_load_iscrizione_for_invoice( $id ) : null;
+
+    if ( ! $invoice_data ) {
+        wp_die( 'Pratica non trovata.', 404 );
+    }
+
+    list( $registration ) = $invoice_data;
+    $token = isset( $_GET['payment_token'] ) ? sanitize_text_field( wp_unslash( $_GET['payment_token'] ) ) : '';
+    if ( ! hash_equals( sport_theme_iscrizione_invoice_token( $registration ), $token ) ) {
+        wp_die( 'Link pagamento non valido.', 403 );
+    }
+
+    if ( $status === 'success' && isset( $_GET['session_id'] ) && sport_theme_stripe_is_configured() ) {
+        try {
+            $stripe = new \Stripe\StripeClient( sport_theme_stripe_secret_key() );
+            $session = $stripe->checkout->sessions->retrieve( sanitize_text_field( wp_unslash( $_GET['session_id'] ) ) );
+            if ( $session && $session->payment_status === 'paid' ) {
+                sport_theme_mark_stripe_session_paid( $session );
+            }
+        } catch ( Exception $e ) {
+            // Il webhook resta la fonte principale; questa verifica è solo un fallback.
+        }
+    }
+
+    nocache_headers();
+    header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );
+    ?>
+<!doctype html>
+<html <?php language_attributes(); ?>>
+<head>
+    <meta charset="<?php bloginfo( 'charset' ); ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?php echo esc_html( $status === 'success' ? 'Pagamento ricevuto' : 'Pagamento annullato' ); ?></title>
+    <style>
+        body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #050505; color: #fff; font-family: Arial, Helvetica, sans-serif; }
+        main { width: min(100% - 32px, 680px); border: 2px solid #e30613; padding: 34px; background: #0b0b0b; }
+        h1 { margin: 0 0 14px; color: #e30613; font-size: 34px; line-height: 1; text-transform: uppercase; }
+        p { margin: 0; font-size: 18px; line-height: 1.55; }
+    </style>
+</head>
+<body>
+    <main>
+        <?php if ( $status === 'success' ) : ?>
+            <h1>Pagamento ricevuto</h1>
+            <p>Grazie. Il pagamento è stato registrato o verrà confermato automaticamente appena Stripe invierà la conferma.</p>
+        <?php else : ?>
+            <h1>Pagamento annullato</h1>
+            <p>Il pagamento non è stato completato. Potete riaprire il link ricevuto via email per riprovare.</p>
+        <?php endif; ?>
+    </main>
+</body>
+</html>
+    <?php
+    exit;
+}
+add_action( 'admin_post_act_stripe_payment_return', 'sport_theme_handle_stripe_payment_return' );
+add_action( 'admin_post_nopriv_act_stripe_payment_return', 'sport_theme_handle_stripe_payment_return' );
+
+function sport_theme_register_stripe_webhook_route() {
+    register_rest_route(
+        'act/v1',
+        '/stripe-webhook',
+        array(
+            'methods'             => 'POST',
+            'callback'            => 'sport_theme_handle_stripe_webhook',
+            'permission_callback' => '__return_true',
+        )
+    );
+}
+add_action( 'rest_api_init', 'sport_theme_register_stripe_webhook_route' );
+
+function sport_theme_handle_stripe_webhook( WP_REST_Request $request ) {
+    $settings = sport_theme_stripe_settings();
+    $webhook_secret = trim( (string) ( $settings['webhook_secret'] ?? '' ) );
+
+    if ( ! $webhook_secret || ! class_exists( '\Stripe\Webhook' ) ) {
+        return new WP_REST_Response( array( 'message' => 'Webhook Stripe non configurato.' ), 400 );
+    }
+
+    $payload = $request->get_body();
+    $signature = $request->get_header( 'stripe-signature' );
+
+    try {
+        $event = \Stripe\Webhook::constructEvent( $payload, $signature, $webhook_secret );
+    } catch ( Exception $e ) {
+        return new WP_REST_Response( array( 'message' => 'Firma webhook non valida.' ), 400 );
+    }
+
+    if ( $event->type === 'checkout.session.completed' ) {
+        sport_theme_mark_stripe_session_paid( $event->data->object );
+    }
+
+    return new WP_REST_Response( array( 'received' => true ), 200 );
+}
 
 function sport_theme_handle_delete_iscrizione() {
     sport_theme_iscrizioni_require_segreteria_access();
@@ -4618,6 +6944,7 @@ function sport_theme_handle_update_iscrizione_detail() {
     $metodo_pagamento = sport_theme_sanitize_iscrizione_key( $_POST['metodo_pagamento'] ?? $registration->metodo_pagamento, array( 'stripe', 'fattura' ), 'fattura' );
     $stato_pagamento = sport_theme_sanitize_iscrizione_key( $_POST['stato_pagamento'] ?? $registration->stato_pagamento, array( 'non_pagato', 'in_attesa', 'pagato', 'annullato' ), 'non_pagato' );
     $responsabilita = sport_theme_sanitize_iscrizione_key( $_POST['responsabilita_genitoriale'] ?? $registration->responsabilita_genitoriale, array( 'padre', 'madre', 'tutore_legale' ), 'padre' );
+    $riduzione_fratelli = ! empty( $_POST['riduzione_fratelli'] ) && $tipo_iscrizione === 'allievi' ? 1 : 0;
     $stagione_sportiva = sanitize_text_field( wp_unslash( $_POST['stagione_sportiva'] ?? $registration->stagione_sportiva ) );
     if ( ! preg_match( '/^\d{4}\/\d{4}$/', $stagione_sportiva ) ) {
         $stagione_sportiva = sport_theme_current_sport_season();
@@ -4631,6 +6958,7 @@ function sport_theme_handle_update_iscrizione_detail() {
             'stato'                      => $stato,
             'metodo_pagamento'           => $metodo_pagamento,
             'stato_pagamento'            => $stato_pagamento,
+            'riduzione_fratelli'         => $riduzione_fratelli,
             'responsabilita_genitoriale' => $responsabilita,
             'responsabile_nome'          => sport_theme_clean_text_field( 'responsabile_nome' ),
             'responsabile_cognome'       => sport_theme_clean_text_field( 'responsabile_cognome' ),
@@ -4640,7 +6968,7 @@ function sport_theme_handle_update_iscrizione_detail() {
             'updated_at'                 => current_time( 'mysql' ),
         ),
         array( 'id' => $id ),
-        array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ),
+        array( '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ),
         array( '%d' )
     );
 
@@ -4651,8 +6979,8 @@ function sport_theme_handle_update_iscrizione_detail() {
             continue;
         }
 
-        $existing_child = $wpdb->get_var(
-            $wpdb->prepare( "SELECT id FROM {$tables['children']} WHERE id = %d AND iscrizione_id = %d", $child_id, $id )
+        $existing_child = $wpdb->get_row(
+            $wpdb->prepare( "SELECT id, child_index FROM {$tables['children']} WHERE id = %d AND iscrizione_id = %d", $child_id, $id )
         );
 
         if ( ! $existing_child ) {
@@ -4665,6 +6993,10 @@ function sport_theme_handle_update_iscrizione_detail() {
             array_keys( sport_theme_iscrizioni_category_options() ),
             ''
         );
+        $quota_chf = isset( $child_data['quota_chf'] ) ? (float) str_replace( ',', '.', sanitize_text_field( $child_data['quota_chf'] ) ) : null;
+        if ( $quota_chf === null || $quota_chf < 0 ) {
+            $quota_chf = sport_theme_calculate_iscrizione_child_amount( $tipo_iscrizione, (int) $existing_child->child_index );
+        }
 
         $wpdb->update(
             $tables['children'],
@@ -4679,6 +7011,7 @@ function sport_theme_handle_update_iscrizione_detail() {
                 'email'                      => sanitize_email( $child_data['email'] ?? '' ),
                 'cellulare'                  => sanitize_text_field( $child_data['cellulare'] ?? '' ),
                 'categoria'                  => $categoria,
+                'quota_chf'                  => $quota_chf,
                 'salute_allergie_medicinali' => sport_theme_sanitize_iscrizione_key( $child_data['salute_allergie_medicinali'] ?? '', array( 'si', 'no' ), 'no' ),
                 'salute_dettagli'            => sanitize_textarea_field( $child_data['salute_dettagli'] ?? '' ),
                 'altro_sport'                => sport_theme_sanitize_iscrizione_key( $child_data['altro_sport'] ?? '', array( 'si', 'no' ), 'no' ),
@@ -4690,7 +7023,7 @@ function sport_theme_handle_update_iscrizione_detail() {
                 'updated_at'                 => current_time( 'mysql' ),
             ),
             array( 'id' => $child_id ),
-            array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ),
+            array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%f', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ),
             array( '%d' )
         );
     }
@@ -4727,11 +7060,12 @@ function sport_theme_handle_update_iscrizione_detail() {
         $tables['registrations'],
         array(
             'numero_bambini' => count( $updated_children ),
+            'importo_totale_chf' => sport_theme_sum_iscrizione_children_amounts( $updated_children, $tipo_iscrizione, (bool) $riduzione_fratelli ),
             'dati_json'      => wp_json_encode( array( 'children' => $updated_children ), JSON_UNESCAPED_UNICODE ),
             'updated_at'     => current_time( 'mysql' ),
         ),
         array( 'id' => $id ),
-        array( '%d', '%s', '%s' ),
+        array( '%d', '%f', '%s', '%s' ),
         array( '%d' )
     );
 
@@ -4765,7 +7099,7 @@ function sport_theme_handle_update_iscrizione_detail() {
         sport_theme_send_iscrizione_status_email( $id, $stato );
     }
 
-    wp_safe_redirect( add_query_arg( array( 'updated' => '1' ), home_url( '/area-segreteria/' ) ) );
+    wp_safe_redirect( add_query_arg( array( 'updated' => '1' ), home_url( '/area-segreteria/' ) ) . '#segreteria-dashboard' );
     exit;
 }
 add_action( 'admin_post_act_update_iscrizione_detail', 'sport_theme_handle_update_iscrizione_detail' );
@@ -4899,9 +7233,9 @@ function sport_theme_handle_export_iscrizioni_csv() {
     $where_sql = sport_theme_build_iscrizioni_where_sql( $filters, $wpdb );
 
     $rows = $wpdb->get_results(
-        "SELECT i.id, i.uuid, i.tipo_iscrizione, i.stagione_sportiva, i.stato, i.metodo_pagamento, i.stato_pagamento, i.responsabilita_genitoriale,
+        "SELECT i.id, i.uuid, i.tipo_iscrizione, i.stagione_sportiva, i.stato, i.metodo_pagamento, i.stato_pagamento, i.importo_totale_chf, i.riduzione_fratelli, i.sconto_meta_stagione, i.responsabilita_genitoriale,
                 i.responsabile_nome, i.responsabile_cognome, i.responsabile_telefono, i.responsabile_email, i.numero_bambini, i.note_interne, i.created_at,
-                b.child_index, b.nome, b.cognome, b.data_nascita, b.nazionalita, b.avs, b.indirizzo, b.cap_citta, b.email, b.cellulare, b.categoria,
+                b.child_index, b.nome, b.cognome, b.data_nascita, b.nazionalita, b.avs, b.indirizzo, b.cap_citta, b.email, b.cellulare, b.categoria, b.quota_chf,
                 b.salute_allergie_medicinali, b.salute_dettagli, b.altro_sport, b.sport_societa, b.sport_giorni, b.tragitto_autonomo, b.abile_sport, b.tipo_documento
          FROM {$tables['registrations']} i
          LEFT JOIN {$tables['children']} b ON b.iscrizione_id = i.id
@@ -4962,6 +7296,9 @@ function sport_theme_handle_export_iscrizioni_csv() {
         'Stato iscrizione',
         'Metodo pagamento',
         'Stato pagamento',
+        'Quota allievo CHF',
+        'Riduzione fratelli',
+        'Sconto metà stagione',
         'Data invio',
         'Responsabilita genitoriale',
         'Nome responsabile',
@@ -5011,6 +7348,21 @@ function sport_theme_handle_export_iscrizioni_csv() {
         }
 
         $guardian_links = $registration_documents['certificato_tutela'] ?? array();
+        $child_amount = sport_theme_get_iscrizione_child_amount( $row, $row->tipo_iscrizione );
+        $sibling_reduction_label = 'No';
+        if ( ! empty( $row->riduzione_fratelli ) ) {
+            $sibling_reduction_label = 'Sì, CHF 50';
+        } elseif (
+            $row->tipo_iscrizione === 'allievi'
+            && (int) $row->numero_bambini > 1
+            && (int) $row->child_index > 1
+            && (
+                ( empty( $row->sconto_meta_stagione ) && $child_amount < 300 )
+                || ( ! empty( $row->sconto_meta_stagione ) && $child_amount < 150 )
+            )
+        ) {
+            $sibling_reduction_label = 'Sì';
+        }
 
         fputcsv( $out, array(
             $row->id,
@@ -5020,6 +7372,9 @@ function sport_theme_handle_export_iscrizioni_csv() {
             $row->stato,
             $row->metodo_pagamento,
             $row->stato_pagamento,
+            number_format( $child_amount, 2, '.', '' ),
+            $sibling_reduction_label,
+            ! empty( $row->sconto_meta_stagione ) ? 'Sì' : 'No',
             $row->created_at,
             $row->responsabilita_genitoriale,
             $row->responsabile_nome,

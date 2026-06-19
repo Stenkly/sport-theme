@@ -150,8 +150,8 @@ $btn_inactive = "padding: 8px 40px; font-weight: 700; text-transform: uppercase;
             ),
         );
     } else {
-        // Progetto Sportivo: ultime 4 foto ESCLUDENDO quelle caricate per Storia
-        $gallery_args['posts_per_page'] = 4;
+        // Presente e Futuro: stessa fotogallery della home Prima Squadra.
+        $gallery_args['posts_per_page'] = -1;
         $gallery_args['tax_query'] = array(
             array(
                 'taxonomy' => 'categoria_galleria',
@@ -194,36 +194,108 @@ $btn_inactive = "padding: 8px 40px; font-weight: 700; text-transform: uppercase;
             </div>
         <?php else : ?>
             <!-- Layout CAROUSEL 4-GRID per Progetto Sportivo (uguale a Prima Squadra) -->
-            <div class="ps-grid grid-4 ps-gallery">
-                <?php 
-                if ($gallery_query->have_posts()) :
-                    while ($gallery_query->have_posts()) : $gallery_query->the_post(); 
-                        if (has_post_thumbnail()) :
-                            $img_url = get_the_post_thumbnail_url(get_the_ID(), 'large');
-                            echo '<a data-fancybox="gallery" href="' . esc_url($img_url) . '"><div class="gallery-item cover-bg" style="background-image: url(\'' . esc_url($img_url) . '\')"></div></a>';
-                        endif;
-                    endwhile; wp_reset_postdata(); 
+            <div id="progetto-gallery-carousel" style="display:flex; gap:20px; align-items:center; overflow:hidden; scroll-behavior:smooth;">
+                <?php
+                $foto_count = 0;
+                if ( $gallery_query->have_posts() ) :
+                    while ( $gallery_query->have_posts() ) : $gallery_query->the_post();
+                        $img_url = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'large') : 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=800';
+                        $active_class = $foto_count === 0 ? ' active' : '';
+                        echo '<a data-fancybox="gallery" href="' . esc_url($img_url) . '" class="gallery-slide' . esc_attr($active_class) . '"><div class="gallery-item cover-bg" style="background-image: url(\'' . esc_url($img_url) . '\')"></div></a>';
+                        $foto_count++;
+                    endwhile;
+                    wp_reset_postdata();
                 else :
-                    // Mockup Segnaposto per PROGETTO SPORTIVO
-                    for($i=0; $i<4; $i++) {
-                        $demo_img = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=1000';
-                        echo '<a data-fancybox="gallery" href="' . esc_url($demo_img) . '"><div class="gallery-item cover-bg" style="background-image: url(\'' . esc_url($demo_img) . '\')"></div></a>';
+                    $foto_count = 4;
+                    for ( $i = 0; $i < 4; $i++ ) {
+                        $demo_img = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=800';
+                        $active_class = $i === 0 ? ' active' : '';
+                        echo '<a data-fancybox="gallery" href="' . esc_url($demo_img) . '" class="gallery-slide' . esc_attr($active_class) . '"><div class="gallery-item cover-bg" style="background-image: url(\'' . esc_url($demo_img) . '\')"></div></a>';
                     }
-                endif; 
+                endif;
                 ?>
             </div>
-            
-            <!-- Indicatori Slider (Estetica / Mockup per Progetto Sportivo) -->
-            <div class="gallery-navigation" style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
-                <span style="color: var(--c-primary); font-size: 24px; font-weight: bold; cursor: pointer;">&lt;</span>
-                <div class="gallery-dots" style="display: flex; gap: 8px;">
-                    <span style="width: 8px; height: 8px; background-color: var(--c-primary); border-radius: 50%; display: inline-block;"></span>
-                    <span style="width: 8px; height: 8px; border: 1px solid var(--c-primary); border-radius: 50%; display: inline-block;"></span>
-                    <span style="width: 8px; height: 8px; border: 1px solid var(--c-primary); border-radius: 50%; display: inline-block;"></span>
-                    <span style="width: 8px; height: 8px; border: 1px solid var(--c-primary); border-radius: 50%; display: inline-block;"></span>
-                </div>
-                <span style="color: var(--c-primary); font-size: 24px; font-weight: bold; cursor: pointer;">&gt;</span>
+
+            <div class="carousel-nav gallery-nav" style="margin-top:15px;">
+                <span class="nav-arrow text-primary" id="progetto-gallery-prev" style="cursor:pointer;"><i class="fa-solid fa-chevron-left"></i></span>
+                <span class="nav-dots" id="progetto-gallery-dots">
+                    <?php for ( $i = 0; $i < $foto_count; $i++ ) : ?>
+                        <i class="<?php echo $i === 0 ? 'fa-solid' : 'fa-regular'; ?> fa-circle<?php echo $i === 0 ? ' active' : ''; ?>" data-page="<?php echo esc_attr($i); ?>"></i>
+                    <?php endfor; ?>
+                </span>
+                <span class="nav-arrow text-primary" id="progetto-gallery-next" style="cursor:pointer;"><i class="fa-solid fa-chevron-right"></i></span>
             </div>
+
+            <script>
+            (function(){
+                var car = document.getElementById('progetto-gallery-carousel');
+                if (!car) return;
+
+                var prev = document.getElementById('progetto-gallery-prev');
+                var next = document.getElementById('progetto-gallery-next');
+                var dots = document.querySelectorAll('#progetto-gallery-dots .fa-circle');
+                var slides = car.querySelectorAll('.gallery-slide');
+                var cur = 0;
+                var isAnimating = false;
+
+                function getScrollPosition(index) {
+                    var pos = 0;
+                    for (var i = 0; i < index; i++) {
+                        pos += slides[i].offsetWidth + 20;
+                    }
+                    return pos;
+                }
+
+                function updateActiveState(index) {
+                    cur = index;
+                    dots.forEach(function(d,i){
+                        if (i === cur) {
+                            d.classList.remove('fa-regular');
+                            d.classList.add('fa-solid', 'active');
+                        } else {
+                            d.classList.remove('fa-solid', 'active');
+                            d.classList.add('fa-regular');
+                        }
+                    });
+                    slides.forEach(function(s,i){ s.classList.toggle('active', i === cur); });
+                }
+
+                function go(n) {
+                    var max = slides.length - 1;
+                    cur = Math.max(0, Math.min(n, max));
+                    var maxScroll = car.scrollWidth - car.clientWidth;
+                    var targetScroll = Math.min(getScrollPosition(cur), maxScroll);
+
+                    isAnimating = true;
+                    car.scrollTo({ left: targetScroll, behavior: 'smooth' });
+                    updateActiveState(cur);
+
+                    setTimeout(function(){ isAnimating = false; }, 400);
+                }
+
+                if (prev) prev.addEventListener('click', function(){ go(cur - 1); });
+                if (next) next.addEventListener('click', function(){ go(cur + 1); });
+                dots.forEach(function(d,i){ d.addEventListener('click', function(){ go(i); }); });
+
+                car.addEventListener('scroll', function() {
+                    if (isAnimating) return;
+                    var scrollLeft = car.scrollLeft;
+                    var closestIndex = 0;
+                    var minDiff = Infinity;
+                    for (var i = 0; i < slides.length; i++) {
+                        var slidePos = getScrollPosition(i);
+                        var diff = Math.abs(slidePos - scrollLeft);
+                        if (diff < minDiff) {
+                            minDiff = diff;
+                            closestIndex = i;
+                        }
+                    }
+                    if (closestIndex !== cur && closestIndex >= 0 && closestIndex < slides.length) {
+                        updateActiveState(closestIndex);
+                    }
+                });
+            })();
+            </script>
         <?php endif; ?>
     </section>
 

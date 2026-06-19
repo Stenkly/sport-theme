@@ -5,11 +5,16 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="profile" href="https://gmpg.org/xfn/11">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
 	<?php wp_head(); ?>
 </head>
 
 <body <?php body_class('societa-site'); ?>>
 <?php wp_body_open(); ?>
+<?php
+$sport_theme_logo_url = function_exists('sport_theme_get_context_logo_url') ? sport_theme_get_context_logo_url() : site_url('/ac-taverne');
+$sport_theme_logo_src = function_exists('sport_theme_get_site_logo_url') ? sport_theme_get_site_logo_url() : get_template_directory_uri() . '/assets/images/logo.png';
+?>
 
 <!-- ===================== MOBILE MENU OVERLAY (Società) ===================== -->
 <div id="hs-mobile-overlay" style="
@@ -25,10 +30,8 @@
     <!-- Top bar: X + Logo -->
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;">
         <button id="hs-mob-close" style="background:none; border:none; color:white; font-size:26px; cursor:pointer; padding:0;">✕</button>
-        <a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>">
-            <?php if ( has_custom_logo() ): the_custom_logo(); else: ?>
-            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo.png' ); ?>" alt="AC Taverne" style="max-height:70px;">
-            <?php endif; ?>
+        <a href="<?php echo esc_url($sport_theme_logo_url); ?>" class="custom-logo-link" rel="home" aria-label="AC Taverne">
+            <img src="<?php echo esc_url($sport_theme_logo_src); ?>" alt="AC Taverne" class="site-logo" style="max-height:70px;">
         </a>
         <div style="width:40px;"></div>
     </div>
@@ -84,9 +87,9 @@
     <hr style="border-color: rgba(255,255,255,0.15); margin: 20px 0;">
 
     <div style="display:flex; gap:18px; justify-content:flex-start; align-items:center;">
-        <a href="https://www.instagram.com/ac_taverne?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" style="color:white; font-size:22px;" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="https://www.facebook.com/share/1BZrVQUTfb/?mibextid=wwXIfr" target="_blank" style="color:white; font-size:22px;" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-        <a href="https://www.tiktok.com/@actaverne?_r=1&_t=ZN-96cub3rtWfm" target="_blank" style="color:white; font-size:22px;" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        <a href="https://www.instagram.com/actaverne1950?igsh=MXdkenlhaXVzaW43cA==" target="_blank" style="color:white; font-size:22px;" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.facebook.com/share/14gZtNL1yjs/?mibextid=wwXIfr" target="_blank" style="color:white; font-size:22px;" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="#" style="color:white; font-size:22px; pointer-events:none; opacity:0.45;" aria-label="TikTok" aria-disabled="true" tabindex="-1"><i class="fa-brands fa-tiktok"></i></a>
     </div>
 </div>
 <!-- ===================== END MOBILE MENU ===================== -->
@@ -112,18 +115,16 @@
 
             <!-- Logo centrato -->
             <div class="site-branding" style="display: inline-block;">
-                <?php if ( has_custom_logo() ): the_custom_logo(); else: ?>
-                <a href="<?php echo esc_url( site_url('/ac-taverne') ); ?>">
-                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo.png' ); ?>" alt="AC Taverne Logo" class="site-logo" style="max-height: 120px;">
+                <a href="<?php echo esc_url($sport_theme_logo_url); ?>" class="custom-logo-link" rel="home" aria-label="AC Taverne">
+                    <img src="<?php echo esc_url($sport_theme_logo_src); ?>" alt="AC Taverne Logo" class="site-logo" style="max-height: 120px;">
                 </a>
-                <?php endif; ?>
             </div>
 
             <!-- Icone social top-right -->
             <div class="header-right-icons" style="position: absolute; top: 30px; right: 70px; display: flex; gap: 15px;">
-                <a href="https://www.instagram.com/ac_taverne?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                <a href="https://www.facebook.com/share/1BZrVQUTfb/?mibextid=wwXIfr" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="https://www.tiktok.com/@actaverne?_r=1&_t=ZN-96cub3rtWfm" target="_blank" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="https://www.instagram.com/actaverne1950?igsh=MXdkenlhaXVzaW43cA==" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://www.facebook.com/share/14gZtNL1yjs/?mibextid=wwXIfr" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" style="pointer-events:none; opacity:0.45;" aria-label="TikTok" aria-disabled="true" tabindex="-1"><i class="fa-brands fa-tiktok"></i></a>
             </div>
         </div>
 

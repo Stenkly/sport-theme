@@ -72,5 +72,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <?php wp_footer(); ?>
 
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof Fancybox === 'undefined') return;
+
+    Fancybox.bind('[data-fancybox]', {
+        Toolbar: {
+            display: [
+                { id: 'prev', position: 'center' },
+                { id: 'counter', position: 'center' },
+                { id: 'next', position: 'center' },
+                'close'
+            ]
+        },
+        Thumbs: false,
+        Carousel: {
+            infinite: false
+        }
+    });
+});
+</script>
+
 </body>
 </html>

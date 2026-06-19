@@ -24,13 +24,46 @@ get_header();
                 $hero_image_url = get_template_directory_uri() . '/assets/images/team-hero.jpg';
             }
         }
+        $hero_logo_url = function_exists('sport_theme_get_site_logo_url') ? sport_theme_get_site_logo_url() : get_template_directory_uri() . '/assets/images/logo.png';
         ?>
         <div class="container" style="overflow: hidden; position: relative; line-height: 0;">
             <img src="<?php echo esc_url( $hero_image_url ); ?>" 
                  style="width: 100%; height: auto; display: block; animation: heroFadeIn 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;" 
                  alt="<?php echo esc_attr(get_the_title()); ?>">
             <!-- Sfumatura nera in basso per fondersi con il resto della pagina -->
-            <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 30%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); pointer-events: none;"></div>
+            <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 38%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.72) 34%, transparent 100%); pointer-events: none;"></div>
+
+            <nav class="prima-hero-nav" aria-label="Navigazione Prima Squadra">
+                <div class="prima-hero-links prima-hero-links-left">
+                    <a href="<?php echo esc_url(site_url('/news')); ?>">NEWS</a>
+                    <a class="prima-hero-link-shop" href="https://actaverneshop.com/" target="_blank" rel="noopener">SHOP</a>
+                    <a href="<?php echo esc_url(site_url('/giocatori')); ?>">TEAM</a>
+                    <a href="<?php echo esc_url(site_url('/stagione')); ?>">STAGIONE</a>
+                </div>
+
+                <a class="prima-hero-logo" href="<?php echo esc_url(site_url('/prima-squadra')); ?>" aria-label="Home Prima Squadra">
+                    <img src="<?php echo esc_url($hero_logo_url); ?>" alt="AC Taverne">
+                </a>
+
+                <div class="prima-hero-links prima-hero-links-right">
+                    <a href="<?php echo esc_url(site_url('/organigramma')); ?>">CLUB</a>
+                    <a href="<?php echo esc_url(sport_theme_get_page_url('partner', 'NETWORK')); ?>">NETWORK</a>
+                    <a href="<?php echo esc_url(site_url('/contatti')); ?>">CONTATTI</a>
+                    <a href="<?php echo esc_url(site_url('/ac-taverne')); ?>">AC TAVERNE</a>
+                </div>
+            </nav>
+
+            <button type="button" class="prima-mobile-menu-open" data-mobile-menu-open aria-label="Apri menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="prima-hero-social">
+                <a href="https://www.instagram.com/ac_taverne?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://www.facebook.com/share/1BZrVQUTfb/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="https://www.linkedin.com/company/actaverne/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="https://whatsapp.com/channel/0029VbBqO0G7YSd4VsRANF2G" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                <a href="https://www.tiktok.com/@actaverne?_r=1&_t=ZN-96cub3rtWfm" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+            </div>
         </div>
         <style>
         @keyframes heroFadeIn {
@@ -38,224 +71,6 @@ get_header();
             to { opacity: 1; transform: scale(1); }
         }
         </style>
-    </section>
-
-    <!-- FOTOGALLERY -->
-    <section class="ps-section container">
-        <h2 class="section-title text-white" style="margin-bottom:30px;">FOTOGALLERY</h2>
-
-        <!-- Gallery carousel -->
-        <div id="gallery-carousel" style="display:flex; gap:20px; align-items:center; overflow:hidden; scroll-behavior:smooth;">
-            <?php
-            $gallery_query = new WP_Query(array(
-                'post_type'      => 'fotogallery',
-                'posts_per_page' => -1,
-                'tax_query'      => array(array(
-                    'taxonomy' => 'categoria_galleria',
-                    'field'    => 'slug',
-                    'terms'    => 'storia',
-                    'operator' => 'NOT IN',
-                )),
-            ));
-
-            $foto_count = 0;
-            if ( $gallery_query->have_posts() ) {
-                while ( $gallery_query->have_posts() ) {
-                    $gallery_query->the_post();
-                    $img_url = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'large') : 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=800';
-                    $active_class = ($foto_count === 0) ? ' active' : '';
-                    echo '<a data-fancybox="gallery" href="' . esc_url($img_url) . '" class="gallery-slide' . $active_class . '"><div class="gallery-item cover-bg" style="background-image: url(\'' . esc_url($img_url) . '\')"></div></a>';
-                    $foto_count++;
-                }
-                wp_reset_postdata();
-            } else {
-                $foto_count = 4;
-                for($i=0; $i<4; $i++) {
-                    $demo_url = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=800';
-                    $active_class = ($i === 0) ? ' active' : '';
-                    echo '<a data-fancybox="gallery" href="' . esc_url($demo_url) . '" class="gallery-slide' . $active_class . '"><div class="gallery-item cover-bg" style="background-image: url(\'' . esc_url($demo_url) . '\')"></div></a>';
-                }
-            }
-            ?>
-        </div>
-
-        <!-- Navigation arrows + dots -->
-        <div class="carousel-nav gallery-nav" style="margin-top:15px;">
-            <span class="nav-arrow text-primary" id="gallery-prev" style="cursor:pointer;"><i class="fa-solid fa-chevron-left"></i></span>
-            <span class="nav-dots" id="gallery-dots">
-                <?php for($i=0; $i<$foto_count; $i++): ?>
-                <i class="<?php echo $i===0 ? 'fa-solid' : 'fa-regular'; ?> fa-circle<?php echo $i===0 ? ' active' : ''; ?>" data-page="<?php echo $i; ?>"></i>
-                <?php endfor; ?>
-            </span>
-            <span class="nav-arrow text-primary" id="gallery-next" style="cursor:pointer;"><i class="fa-solid fa-chevron-right"></i></span>
-        </div>
-
-        <script>
-        (function(){
-            var car   = document.getElementById('gallery-carousel');
-            var prev  = document.getElementById('gallery-prev');
-            var next  = document.getElementById('gallery-next');
-            var dots  = document.querySelectorAll('#gallery-dots .fa-circle');
-            var slides = car.querySelectorAll('.gallery-slide');
-            var cur   = 0;
-            var isAnimating = false;
-
-            function getScrollPosition(index) {
-                var pos = 0;
-                for (var i = 0; i < index; i++) {
-                    pos += slides[i].offsetWidth + 20; // width + gap
-                }
-                return pos;
-            }
-
-            function updateActiveState(index) {
-                cur = index;
-                dots.forEach(function(d,i){
-                    if (i === cur) {
-                        d.classList.remove('fa-regular');
-                        d.classList.add('fa-solid', 'active');
-                    } else {
-                        d.classList.remove('fa-solid', 'active');
-                        d.classList.add('fa-regular');
-                    }
-                });
-                slides.forEach(function(s,i){ s.classList.toggle('active', i===cur); });
-            }
-
-            function go(n) {
-                var max = slides.length - 1;
-                cur = Math.max(0, Math.min(n, max));
-                
-                var maxScroll = car.scrollWidth - car.clientWidth;
-                var targetScroll = Math.min(getScrollPosition(cur), maxScroll);
-                
-                isAnimating = true;
-                car.scrollTo({
-                    left: targetScroll,
-                    behavior: 'smooth'
-                });
-                
-                updateActiveState(cur);
-                
-                setTimeout(function() {
-                    isAnimating = false;
-                }, 400);
-            }
-
-            prev.addEventListener('click', function(){ go(cur - 1); });
-            next.addEventListener('click', function(){ go(cur + 1); });
-            dots.forEach(function(d,i){ d.addEventListener('click', function(){ go(i); }); });
-
-            car.addEventListener('scroll', function() {
-                if (isAnimating) return;
-                var scrollLeft = car.scrollLeft;
-                var closestIndex = 0;
-                var minDiff = Infinity;
-                for (var i = 0; i < slides.length; i++) {
-                    var slidePos = getScrollPosition(i);
-                    var diff = Math.abs(slidePos - scrollLeft);
-                    if (diff < minDiff) {
-                        minDiff = diff;
-                        closestIndex = i;
-                    }
-                }
-                if (closestIndex !== cur && closestIndex >= 0 && closestIndex < slides.length) {
-                    updateActiveState(closestIndex);
-                }
-            });
-        })();
-        </script>
-    </section>
-
-    <!-- PROSSIMI INCONTRI -->
-    <section class="ps-section container">
-        <div class="section-header">
-            <h2 class="section-title text-primary">PROSSIMI INCONTRI</h2>
-            <?php $stagione_page = get_page_by_title('Stagione'); ?>
-            <a href="<?php echo $stagione_page ? esc_url(get_permalink($stagione_page->ID)) : '#'; ?>" class="btn-sm btn-primary">CALENDARIO</a>
-        </div>
-        <div class="ps-grid grid-2">
-            <?php
-            if (!function_exists('get_it_day_of_week')) {
-                function get_it_day_of_week($date_str) {
-                    $date_str = str_replace(array('-', '/'), '.', $date_str);
-                    $parts = explode('.', $date_str);
-                    if (count($parts) === 3) {
-                        if (strlen($parts[0]) === 4) {
-                            $year = intval($parts[0]);
-                            $month = intval($parts[1]);
-                            $day = intval($parts[2]);
-                        } else {
-                            $day = intval($parts[0]);
-                            $month = intval($parts[1]);
-                            $year = intval($parts[2]);
-                        }
-                        $timestamp = mktime(0, 0, 0, $month, $day, $year);
-                        if ($timestamp !== false) {
-                            $w = date('w', $timestamp);
-                            $days = array('Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato');
-                            return $days[$w];
-                        }
-                    }
-                    return '';
-                }
-            }
-
-            // Ottieni dinamicamente le prossime 2 partite future (senza risultato)
-            $all_hp_matches = new WP_Query(array('post_type' => 'partita', 'posts_per_page' => -1, 'order' => 'ASC'));
-            $hp_calendario = [];
-            while($all_hp_matches->have_posts()) {
-                $all_hp_matches->the_post();
-                if (get_post_meta(get_the_ID(), '_risultato', true) == '') {
-                    $hp_calendario[] = get_post();
-                }
-            }
-            wp_reset_postdata();
-            
-            $hp_calendario = array_slice($hp_calendario, 0, 2);
-            $taverne_logo = has_custom_logo() ? wp_get_attachment_image_url(get_theme_mod('custom_logo'), 'full') : 'https://via.placeholder.com/40';
-            
-            if(count($hp_calendario) === 0) {
-                echo '<p class="text-white">Nessuna partita futura in programma.</p>';
-            }
-            
-            foreach($hp_calendario as $post) : setup_postdata($post);
-                $data_p = get_post_meta($post->ID, '_data_partita', true);
-                $ora_p = get_post_meta($post->ID, '_ora_partita', true);
-                $stadio = sport_theme_get_match_stadium($post->ID);
-                $tipo_evento = get_post_meta($post->ID, '_tipo_evento', true);
-                $avversario = get_post_meta($post->ID, '_avversario', true) ? get_post_meta($post->ID, '_avversario', true) : 'Sfidante';
-                $logo_avversario = sport_theme_get_opponent_logo($post->ID);
-                $in_casa = get_post_meta($post->ID, '_in_casa', true);
-
-                $t1_name = $in_casa == '1' ? 'AC Taverne' : $avversario;
-                $t1_logo = $in_casa == '1' ? $taverne_logo : $logo_avversario;
-                $t2_name = $in_casa == '1' ? $avversario : 'AC Taverne';
-                $t2_logo = $in_casa == '1' ? $logo_avversario : $taverne_logo;
-
-                $giorno = get_it_day_of_week($data_p);
-                $formatted_date = '<span class="match-date-label">' . esc_html($giorno ? $giorno . ', ' : '') . '</span><span class="match-date-value">' . esc_html($data_p) . '</span>';
-            ?>
-            <div class="match-card">
-                <span class="match-type-badge"><?php echo esc_html($tipo_evento ?: 'Campionato'); ?></span>
-                <div class="match-info">
-                    <p class="match-date text-white"><span class="match-date-day"><?php echo $formatted_date; ?>, </span><span class="match-date-time"><span class="match-time-label">ore </span><span class="match-time-value"><?php echo esc_html($ora_p); ?></span></span></p>
-                    <p class="match-venue"><?php echo esc_html($stadio); ?></p>
-                </div>
-                <div class="match-teams">
-                    <span class="team-name team-1-name"><?php echo esc_html($t1_name); ?></span>
-                    <div class="team-logo-container team-1-logo-container">
-                        <img class="team-logo" src="<?php echo esc_url($t1_logo); ?>" alt="<?php echo esc_attr($t1_name); ?>">
-                    </div>
-                    <span class="vs">VS</span>
-                    <div class="team-logo-container team-2-logo-container">
-                        <img class="team-logo" src="<?php echo esc_url($t2_logo); ?>" alt="<?php echo esc_attr($t2_name); ?>">
-                    </div>
-                    <span class="team-name team-2-name"><?php echo esc_html($t2_name); ?></span>
-                </div>
-            </div>
-            <?php endforeach; wp_reset_postdata(); ?>
-        </div>
     </section>
 
     <!-- NEWS -->
@@ -343,6 +158,224 @@ get_header();
         </script>
     </section>
 
+    <!-- PROSSIMI INCONTRI -->
+    <section class="ps-section container">
+        <div class="section-header">
+            <h2 class="section-title text-primary">PROSSIME GARE</h2>
+            <?php $stagione_page = get_page_by_title('Stagione'); ?>
+            <a href="<?php echo $stagione_page ? esc_url(get_permalink($stagione_page->ID)) : '#'; ?>" class="btn-sm btn-primary">CALENDARIO</a>
+        </div>
+        <div class="ps-grid grid-2">
+            <?php
+            if (!function_exists('get_it_day_of_week')) {
+                function get_it_day_of_week($date_str) {
+                    $date_str = str_replace(array('-', '/'), '.', $date_str);
+                    $parts = explode('.', $date_str);
+                    if (count($parts) === 3) {
+                        if (strlen($parts[0]) === 4) {
+                            $year = intval($parts[0]);
+                            $month = intval($parts[1]);
+                            $day = intval($parts[2]);
+                        } else {
+                            $day = intval($parts[0]);
+                            $month = intval($parts[1]);
+                            $year = intval($parts[2]);
+                        }
+                        $timestamp = mktime(0, 0, 0, $month, $day, $year);
+                        if ($timestamp !== false) {
+                            $w = date('w', $timestamp);
+                            $days = array('Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato');
+                            return $days[$w];
+                        }
+                    }
+                    return '';
+                }
+            }
+
+            // Ottieni dinamicamente le prossime 2 partite future (senza risultato)
+            $all_hp_matches = new WP_Query(array('post_type' => 'partita', 'posts_per_page' => -1, 'order' => 'ASC'));
+            $hp_calendario = [];
+            while($all_hp_matches->have_posts()) {
+                $all_hp_matches->the_post();
+                if (get_post_meta(get_the_ID(), '_risultato', true) == '') {
+                    $hp_calendario[] = get_post();
+                }
+            }
+            wp_reset_postdata();
+            
+            $hp_calendario = array_slice($hp_calendario, 0, 2);
+            $taverne_logo = function_exists('sport_theme_get_site_logo_url') ? sport_theme_get_site_logo_url() : get_template_directory_uri() . '/assets/images/logo.png';
+            
+            if(count($hp_calendario) === 0) {
+                echo '<p class="text-white">Nessuna partita futura in programma.</p>';
+            }
+            
+            foreach($hp_calendario as $post) : setup_postdata($post);
+                $data_p = get_post_meta($post->ID, '_data_partita', true);
+                $ora_p = get_post_meta($post->ID, '_ora_partita', true);
+                $stadio = sport_theme_get_match_stadium($post->ID);
+                $tipo_evento = get_post_meta($post->ID, '_tipo_evento', true);
+                $avversario = get_post_meta($post->ID, '_avversario', true) ? get_post_meta($post->ID, '_avversario', true) : 'Sfidante';
+                $logo_avversario = sport_theme_get_opponent_logo($post->ID);
+                $in_casa = get_post_meta($post->ID, '_in_casa', true);
+
+                $t1_name = $in_casa == '1' ? 'AC Taverne' : $avversario;
+                $t1_logo = $in_casa == '1' ? $taverne_logo : $logo_avversario;
+                $t2_name = $in_casa == '1' ? $avversario : 'AC Taverne';
+                $t2_logo = $in_casa == '1' ? $logo_avversario : $taverne_logo;
+
+                $giorno = get_it_day_of_week($data_p);
+                $formatted_date = '<span class="match-date-label">' . esc_html($giorno ? $giorno . ', ' : '') . '</span><span class="match-date-value">' . esc_html($data_p) . '</span>';
+            ?>
+            <div class="match-card">
+                <span class="match-type-badge"><?php echo esc_html($tipo_evento ?: 'Campionato'); ?></span>
+                <div class="match-info">
+                    <p class="match-date text-white"><span class="match-date-day"><?php echo $formatted_date; ?>, </span><span class="match-date-time"><span class="match-time-label">ore </span><span class="match-time-value"><?php echo esc_html($ora_p); ?></span></span></p>
+                    <p class="match-venue"><?php echo esc_html($stadio); ?></p>
+                </div>
+                <div class="match-teams">
+                    <span class="team-name team-1-name"><?php echo esc_html($t1_name); ?></span>
+                    <div class="team-logo-container team-1-logo-container">
+                        <img class="team-logo" src="<?php echo esc_url($t1_logo); ?>" alt="<?php echo esc_attr($t1_name); ?>">
+                    </div>
+                    <span class="vs">VS</span>
+                    <div class="team-logo-container team-2-logo-container">
+                        <img class="team-logo" src="<?php echo esc_url($t2_logo); ?>" alt="<?php echo esc_attr($t2_name); ?>">
+                    </div>
+                    <span class="team-name team-2-name"><?php echo esc_html($t2_name); ?></span>
+                </div>
+            </div>
+            <?php endforeach; wp_reset_postdata(); ?>
+        </div>
+    </section>
+
+    <!-- FOTOGALLERY -->
+    <section class="ps-section container">
+        <h2 class="section-title text-white" style="margin-bottom:30px;">FOTOGALLERY</h2>
+
+        <!-- Gallery carousel -->
+        <div id="gallery-carousel" style="display:flex; gap:20px; align-items:center; overflow:hidden; scroll-behavior:smooth;">
+            <?php
+            $gallery_query = new WP_Query(array(
+                'post_type'      => 'fotogallery',
+                'posts_per_page' => -1,
+                'tax_query'      => array(array(
+                    'taxonomy' => 'categoria_galleria',
+                    'field'    => 'slug',
+                    'terms'    => 'storia',
+                    'operator' => 'NOT IN',
+                )),
+            ));
+
+            $foto_count = 0;
+            if ( $gallery_query->have_posts() ) {
+                while ( $gallery_query->have_posts() ) {
+                    $gallery_query->the_post();
+                    $img_url = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'large') : 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=800';
+                    $active_class = ($foto_count === 0) ? ' active' : '';
+                    echo '<a data-fancybox="gallery" href="' . esc_url($img_url) . '" class="gallery-slide' . $active_class . '"><div class="gallery-item cover-bg" style="background-image: url(\'' . esc_url($img_url) . '\')"></div></a>';
+                    $foto_count++;
+                }
+                wp_reset_postdata();
+            } else {
+                $foto_count = 4;
+                for($i=0; $i<4; $i++) {
+                    $demo_url = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=800';
+                    $active_class = ($i === 0) ? ' active' : '';
+                    echo '<a data-fancybox="gallery" href="' . esc_url($demo_url) . '" class="gallery-slide' . $active_class . '"><div class="gallery-item cover-bg" style="background-image: url(\'' . esc_url($demo_url) . '\')"></div></a>';
+                }
+            }
+            ?>
+        </div>
+
+        <!-- Navigation arrows + dots -->
+        <div class="carousel-nav gallery-nav" style="margin-top:15px;">
+            <span class="nav-arrow text-primary" id="gallery-prev" style="cursor:pointer;"><i class="fa-solid fa-chevron-left"></i></span>
+            <span class="nav-dots" id="gallery-dots">
+                <?php for($i=0; $i<$foto_count; $i++): ?>
+                <i class="<?php echo $i===0 ? 'fa-solid' : 'fa-regular'; ?> fa-circle<?php echo $i===0 ? ' active' : ''; ?>" data-page="<?php echo $i; ?>"></i>
+                <?php endfor; ?>
+            </span>
+            <span class="nav-arrow text-primary" id="gallery-next" style="cursor:pointer;"><i class="fa-solid fa-chevron-right"></i></span>
+        </div>
+
+        <script>
+        (function(){
+            var car   = document.getElementById('gallery-carousel');
+            var prev  = document.getElementById('gallery-prev');
+            var next  = document.getElementById('gallery-next');
+            var dots  = document.querySelectorAll('#gallery-dots .fa-circle');
+            var slides = car.querySelectorAll('.gallery-slide');
+            var cur   = 0;
+            var isAnimating = false;
+
+            function getScrollPosition(index) {
+                var pos = 0;
+                for (var i = 0; i < index; i++) {
+                    pos += slides[i].offsetWidth + 20; // width + gap
+                }
+                return pos;
+            }
+
+            function updateActiveState(index) {
+                cur = index;
+                dots.forEach(function(d,i){
+                    if (i === cur) {
+                        d.classList.remove('fa-regular');
+                        d.classList.add('fa-solid', 'active');
+                    } else {
+                        d.classList.remove('fa-solid', 'active');
+                        d.classList.add('fa-regular');
+                    }
+                });
+                slides.forEach(function(s,i){ s.classList.toggle('active', i===cur); });
+            }
+
+            function go(n) {
+                var max = slides.length - 1;
+                cur = Math.max(0, Math.min(n, max));
+
+                var maxScroll = car.scrollWidth - car.clientWidth;
+                var targetScroll = Math.min(getScrollPosition(cur), maxScroll);
+
+                isAnimating = true;
+                car.scrollTo({
+                    left: targetScroll,
+                    behavior: 'smooth'
+                });
+
+                updateActiveState(cur);
+
+                setTimeout(function() {
+                    isAnimating = false;
+                }, 400);
+            }
+
+            prev.addEventListener('click', function(){ go(cur - 1); });
+            next.addEventListener('click', function(){ go(cur + 1); });
+            dots.forEach(function(d,i){ d.addEventListener('click', function(){ go(i); }); });
+
+            car.addEventListener('scroll', function() {
+                if (isAnimating) return;
+                var scrollLeft = car.scrollLeft;
+                var closestIndex = 0;
+                var minDiff = Infinity;
+                for (var i = 0; i < slides.length; i++) {
+                    var slidePos = getScrollPosition(i);
+                    var diff = Math.abs(slidePos - scrollLeft);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        closestIndex = i;
+                    }
+                }
+                if (closestIndex !== cur && closestIndex >= 0 && closestIndex < slides.length) {
+                    updateActiveState(closestIndex);
+                }
+            });
+        })();
+        </script>
+    </section>
+
 
     <!-- TEAM -->
     <section class="ps-section container team-section">
@@ -399,23 +432,46 @@ get_header();
                    data-htp="<?php echo esc_attr($htp); ?>"
                    data-shop="<?php echo esc_attr($shop_url); ?>"
                    data-ruolo="<?php echo esc_attr($ruolo_str); ?>"
-                   style="text-decoration: none; flex: 0 0 calc(25% - 15px); min-width: 0; display: block; overflow: hidden; transition: transform 0.3s;"
-                   onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                   style="text-decoration: none; flex: 0 0 calc(25% - 15px); min-width: 0; display: block; overflow: hidden;">
                     <div class="player-card" style="--player-card-photo: url('<?php echo esc_url($foto_ritratto); ?>'); --player-card-position: <?php echo esc_attr($allineamento_foto); ?>; --player-card-size: <?php echo esc_attr($zoom_foto); ?>; position: relative; aspect-ratio: 3/4; overflow: hidden; background-color: #111;">
                         <div class="player-photo-fill cover-bg" style="background-image: url('<?php echo esc_url($foto_ritratto); ?>'); background-size: cover; background-position: <?php echo esc_attr($allineamento_foto); ?>; width: 100%; height: 100%; border: none; position: absolute; inset: 0;"></div>
                         <div class="player-photo cover-bg" style="background-image: url('<?php echo esc_url($foto_ritratto); ?>'); background-size: <?php echo esc_attr($zoom_foto); ?>; background-position: <?php echo esc_attr($allineamento_foto); ?>; width: 100%; height: 100%; border: none; transition: transform 0.5s ease;"></div>
                         <div class="player-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 90%; background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8) 25%, transparent 100%); pointer-events: none;"></div>
-                        <div class="player-info" style="position: absolute; bottom: 2px; left: 12px; z-index: 2; flex-direction: column; gap: 0; padding: 0;">
-                            <?php if(!empty($numero)): ?>
-                            <span class="player-number" style="display: block; font-size: 50px; font-weight: 700; margin-bottom: 20px; line-height: 1; color: #F2E302;"><?php echo esc_html($numero); ?></span>
-                            <?php elseif(!empty($ruolo_spec)): ?>
-                            <span class="staff-role text-primary" style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 1px;"><?php echo esc_html($ruolo_spec); ?></span>
-                            <?php endif; ?>
-                            <span class="player-name text-white" style="display: block; font-size: 34px; font-weight: 700; line-height: 1.2; margin-top: 0px;">
-                                <?php echo esc_html($nome_riga1); ?><br>
-                                <span style="color: #F9EA86; display:block; margin-top:-3px;"><?php echo esc_html($nome_riga2); ?></span>
-                            </span>
-                        </div>
+                        <?php
+                        $cognome_trimmed = trim($nome_riga2);
+                        $cognome_words = array_filter(explode(' ', $cognome_trimmed));
+
+                        if (count($cognome_words) >= 2) :
+                            $last_word = array_pop($cognome_words);
+                            $first_words = implode(' ', $cognome_words);
+                        ?>
+                            <div class="player-info-container" style="position: absolute; bottom: 10px; left: 12px; right: 12px; z-index: 2; display: flex; flex-direction: column;">
+                                <span class="player-name text-white" style="display: block; font-size: 34px; font-weight: 700; line-height: 1.2; margin-bottom: 0px;">
+                                    <?php echo esc_html($nome_riga1); ?>
+                                </span>
+                                <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                                    <span class="player-name" style="display: block; font-size: 34px; font-weight: 700; line-height: 1.2;">
+                                        <span style="color: #F9EA86; display:block; margin-top:-3px;"><?php echo esc_html($first_words); ?></span>
+                                        <span style="color: #F9EA86; display:block; margin-top:-3px;"><?php echo esc_html($last_word); ?></span>
+                                    </span>
+                                    <?php if(!empty($numero)): ?>
+                                    <span class="player-number" style="display: block; font-size: 60px; font-weight: 700; line-height: 1; color: #F2E302; margin-bottom: 0; white-space: nowrap; flex-shrink: 0;"><?php echo esc_html($numero); ?></span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php else : ?>
+                            <div class="player-info" style="position: absolute; bottom: 10px; left: 12px; right: 12px; z-index: 2; display: flex; justify-content: space-between; align-items: center; padding: 0; gap: 10px;">
+                                <span class="player-name text-white" style="display: block; font-size: 34px; font-weight: 700; line-height: 1.2; margin-top: 0px;">
+                                    <?php echo esc_html($nome_riga1); ?><br>
+                                    <span style="color: #F9EA86; display:block; margin-top:-3px;"><?php echo esc_html($nome_riga2); ?></span>
+                                </span>
+                                <?php if(!empty($numero)): ?>
+                                <span class="player-number" style="display: block; font-size: 60px; font-weight: 700; line-height: 1; color: #F2E302; margin-bottom: 0; white-space: nowrap; flex-shrink: 0;"><?php echo esc_html($numero); ?></span>
+                                <?php elseif(!empty($ruolo_spec)): ?>
+                                <span class="staff-role text-primary" style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;"><?php echo esc_html($ruolo_spec); ?></span>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </a>
                 <?php

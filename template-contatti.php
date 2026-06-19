@@ -30,26 +30,21 @@ get_header();
     </section>
 
     <!-- SEZIONE 2: Info contatto + Form (su sfondo nero) -->
-    <section class="container" style="padding: 40px 0 60px;">
+    <section class="container" style="padding: 8px 0 60px;">
         <div class="contatti-grid">
 
             <!-- Colonna sinistra: informazioni -->
             <div class="contatti-info">
                 <div class="contatti-info-block">
                     <h3 class="contatti-label">EMAIL</h3>
-                    <p style="margin-bottom: 15px;"><strong>INFO:</strong><br><a href="mailto:primasquadra@actaverne.com">primasquadra@actaverne.com</a></p>
-                    <p style="margin-bottom: 15px;"><strong>COMUNICAZIONE:</strong><br><a href="mailto:comunicazione@actaverne.com">comunicazione@actaverne.com</a></p>
-                    <p style="margin-bottom: 0;"><strong>SCOUTING:</strong><br><a href="mailto:scouting@actaverne.com">scouting@actaverne.com</a></p>
-                </div>
-
-                <div class="contatti-info-block">
-                    <h3 class="contatti-label">TELEFONO</h3>
-                    <p><a href="tel:+41000000000">+41 xx xxx xx xx</a></p>
+                    <p style="margin-bottom: 15px;"><strong>SCOUTING:</strong><br><a href="mailto:scoutingprimasquadra@actaverne.com">scoutingprimasquadra@actaverne.com</a></p>
+                    <p style="margin-bottom: 15px;"><strong>PRIMA SQUADRA:</strong><br><a href="mailto:primasquadra@actaverne.com">primasquadra@actaverne.com</a></p>
+                    <p style="margin-bottom: 0;"><strong>COMUNICAZIONE:</strong><br><a href="mailto:comunicazione@actaverne.com">comunicazione@actaverne.com</a></p>
                 </div>
 
                 <div class="contatti-info-block">
                     <h3 class="contatti-label">INDIRIZZO</h3>
-                    <p>Via Traversa 2<br>CP 703<br>6807 Taverne</p>
+                    <p>AC Taverne<br>Via Carvina 1<br>6807 Taverne</p>
                 </div>
 
                 <div class="contatti-info-block">
@@ -57,6 +52,9 @@ get_header();
                     <div class="contatti-social">
                         <a href="https://www.instagram.com/ac_taverne?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                         <a href="https://www.facebook.com/share/1BZrVQUTfb/?mibextid=wwXIfr" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="https://www.linkedin.com/company/actaverne/" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="https://whatsapp.com/channel/0029VbBqO0G7YSd4VsRANF2G" target="_blank" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                        <a href="https://www.tiktok.com/@actaverne?_r=1&_t=ZN-96cub3rtWfm" target="_blank" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
                     </div>
                 </div>
             </div>

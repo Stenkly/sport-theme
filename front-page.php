@@ -219,9 +219,7 @@
 
 <!-- Logo -->
 <div class="hp-top">
-    <?php if ( has_custom_logo() ): the_custom_logo(); else: ?>
-    <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/logo.png'); ?>" alt="AC Taverne 1950">
-    <?php endif; ?>
+    <img src="<?php echo esc_url(function_exists('sport_theme_get_site_logo_url') ? sport_theme_get_site_logo_url() : get_template_directory_uri() . '/assets/images/logo.png'); ?>" alt="AC Taverne 1950">
 </div>
 
 <!-- Benvenuto -->

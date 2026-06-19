@@ -67,8 +67,126 @@ get_header('societa');
 
     </div>
 
+    <?php
+    $club100_page_id = get_queried_object_id();
+    $club100_gallery_ids = get_post_meta( $club100_page_id, '_club100_gallery_ids', true );
+    $club100_gallery_ids = array_filter( array_map( 'absint', explode( ',', (string) $club100_gallery_ids ) ) );
+    $club100_gallery_items = array();
+
+    foreach ( $club100_gallery_ids as $attachment_id ) {
+        $large_url = wp_get_attachment_image_url( $attachment_id, 'large' );
+        $full_url  = wp_get_attachment_image_url( $attachment_id, 'full' );
+        if ( $large_url ) {
+            $club100_gallery_items[] = array(
+                'large' => $large_url,
+                'full'  => $full_url ? $full_url : $large_url,
+                'alt'   => get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ),
+            );
+        }
+    }
+    ?>
+    <?php if ( ! empty( $club100_gallery_items ) ) : ?>
+        <section class="container ps-section club100-gallery-section" style="padding-top: 0;">
+            <h2 class="section-title text-white" style="margin-bottom:30px;">FOTOGALLERY</h2>
+
+            <div id="club100-gallery-carousel" class="club100-gallery-carousel" style="display:flex; gap:20px; align-items:center; overflow:hidden; scroll-behavior:smooth;">
+                <?php foreach ( $club100_gallery_items as $index => $gallery_item ) : ?>
+                    <a data-fancybox="club100-gallery" href="<?php echo esc_url( $gallery_item['full'] ); ?>" class="gallery-slide<?php echo $index === 0 ? ' active' : ''; ?>">
+                        <div class="gallery-item cover-bg" style="background-image: url('<?php echo esc_url( $gallery_item['large'] ); ?>')" role="img" aria-label="<?php echo esc_attr( $gallery_item['alt'] ? $gallery_item['alt'] : 'Foto Club dei 100 AC Taverne' ); ?>"></div>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="carousel-nav gallery-nav club100-gallery-nav" style="margin-top:15px;">
+                <span class="nav-arrow text-primary" id="club100-gallery-prev" style="cursor:pointer;"><i class="fa-solid fa-chevron-left"></i></span>
+                <span class="nav-dots" id="club100-gallery-dots">
+                    <?php foreach ( $club100_gallery_items as $index => $gallery_item ) : ?>
+                        <i class="<?php echo $index === 0 ? 'fa-solid' : 'fa-regular'; ?> fa-circle<?php echo $index === 0 ? ' active' : ''; ?>" data-page="<?php echo esc_attr( $index ); ?>"></i>
+                    <?php endforeach; ?>
+                </span>
+                <span class="nav-arrow text-primary" id="club100-gallery-next" style="cursor:pointer;"><i class="fa-solid fa-chevron-right"></i></span>
+            </div>
+
+            <script>
+            (function(){
+                var car = document.getElementById('club100-gallery-carousel');
+                if (!car) return;
+
+                var prev = document.getElementById('club100-gallery-prev');
+                var next = document.getElementById('club100-gallery-next');
+                var dots = document.querySelectorAll('#club100-gallery-dots .fa-circle');
+                var slides = car.querySelectorAll('.gallery-slide');
+                var cur = 0;
+                var isAnimating = false;
+
+                function getGap() {
+                    var styles = window.getComputedStyle(car);
+                    return parseFloat(styles.columnGap || styles.gap || 20) || 20;
+                }
+
+                function getScrollPosition(index) {
+                    var pos = 0;
+                    var gap = getGap();
+                    for (var i = 0; i < index; i++) {
+                        pos += slides[i].offsetWidth + gap;
+                    }
+                    return pos;
+                }
+
+                function updateActiveState(index) {
+                    cur = index;
+                    dots.forEach(function(d,i){
+                        if (i === cur) {
+                            d.classList.remove('fa-regular');
+                            d.classList.add('fa-solid', 'active');
+                        } else {
+                            d.classList.remove('fa-solid', 'active');
+                            d.classList.add('fa-regular');
+                        }
+                    });
+                    slides.forEach(function(s,i){ s.classList.toggle('active', i === cur); });
+                }
+
+                function go(n) {
+                    var max = slides.length - 1;
+                    cur = Math.max(0, Math.min(n, max));
+                    var maxScroll = car.scrollWidth - car.clientWidth;
+                    var targetScroll = Math.min(getScrollPosition(cur), maxScroll);
+
+                    isAnimating = true;
+                    car.scrollTo({ left: targetScroll, behavior: 'smooth' });
+                    updateActiveState(cur);
+
+                    setTimeout(function(){ isAnimating = false; }, 400);
+                }
+
+                if (prev) prev.addEventListener('click', function(){ go(cur - 1); });
+                if (next) next.addEventListener('click', function(){ go(cur + 1); });
+                dots.forEach(function(d,i){ d.addEventListener('click', function(){ go(i); }); });
+
+                car.addEventListener('scroll', function() {
+                    if (isAnimating) return;
+                    var scrollLeft = car.scrollLeft;
+                    var closestIndex = 0;
+                    var minDiff = Infinity;
+                    for (var i = 0; i < slides.length; i++) {
+                        var diff = Math.abs(getScrollPosition(i) - scrollLeft);
+                        if (diff < minDiff) {
+                            minDiff = diff;
+                            closestIndex = i;
+                        }
+                    }
+                    if (closestIndex !== cur && closestIndex >= 0 && closestIndex < slides.length) {
+                        updateActiveState(closestIndex);
+                    }
+                });
+            })();
+            </script>
+        </section>
+    <?php endif; ?>
+
     <!-- FORM SEZIONE (Larghezza allineata al testo del container superiore) -->
-    <div class="container" style="padding-top: 0; padding-bottom: 40px; margin-top: -55px;">
+    <div class="container" style="padding-top: 0; padding-bottom: 40px; margin-top: <?php echo ! empty( $club100_gallery_items ) ? '0' : '-55px'; ?>;">
         <div class="club100-form-band" style="border-top: 2px solid #555; border-bottom: 2px solid #555; background-color: #000; display: flex; justify-content: center;">
             <!-- Form -->
             <div class="club100-form-left" style="width: 100%; max-width: 900px; padding: 40px 0 40px 0; display: flex; flex-direction: column; justify-content: center;">

@@ -13,7 +13,9 @@
                 <h4>AC TAVERNE</h4>
                 <p>Via Traversone 2<br>
                 CP 703 - 6807 Taverne<br>
-                <a href="mailto:info@actaverne.com">info@actaverne.com</a></p>
+                <a href="mailto:scoutingprimasquadra@actaverne.com">scoutingprimasquadra@actaverne.com</a>
+                <a href="mailto:primasquadra@actaverne.com">primasquadra@actaverne.com</a>
+                <a href="mailto:comunicazione@actaverne.com">comunicazione@actaverne.com</a></p>
                 <div class="fm-social">
                     <a href="https://www.instagram.com/ac_taverne?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank"><i class="fa-brands fa-instagram"></i></a>
                     <a href="https://www.facebook.com/share/1BZrVQUTfb/?mibextid=wwXIfr" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
@@ -25,8 +27,8 @@
             <div class="fm-col">
                 <h4>HOMEPAGE</h4>
                 <a href="<?php echo site_url('/news'); ?>">News</a>
+                <a class="footer-link-shop" href="<?php echo site_url('/shop'); ?>">Shop</a>
                 <a href="<?php echo site_url('/stagione'); ?>">Stagione</a>
-                <a href="<?php echo esc_url( sport_theme_get_page_url('partner', 'Partner') ); ?>">Partner</a>
             </div>
             <div class="fm-col">
                 <h4>TEAM</h4>
@@ -40,9 +42,9 @@
                 <a href="<?php echo site_url('/presente-e-futuro'); ?>">Presente e Futuro</a>
             </div>
             <div class="fm-col fm-col-links">
+                <a href="<?php echo esc_url( sport_theme_get_page_url('partner', 'NETWORK') ); ?>"><b>Network</b></a>
                 <a href="<?php echo site_url('/contatti'); ?>"><b>Contatti</b></a>
-                <a href="<?php echo site_url('/shop'); ?>"><b>Shop</b></a>
-                <a href="<?php echo site_url('/'); ?>" style="color: var(--c-primary);"><b>AC Taverne</b></a>
+                <a href="<?php echo site_url('/'); ?>"><b>AC Taverne</b></a>
             </div>
         </div>
 
@@ -74,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function() {
         <button id="closeModalBtn" class="player-modal-close">X</button>
         
         <div class="player-modal-img-col">
-            <img id="modalFoto" src="" alt="">
+            <img id="modalFoto" data-src="" alt="">
         </div>
         
         <div class="player-modal-data-col">
@@ -149,7 +151,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (link) {
             e.preventDefault();
             var modalFotoUrl = link.getAttribute('data-foto') || '';
-            modalImage.src = modalFotoUrl;
+            if (modalFotoUrl) {
+                modalImage.src = modalFotoUrl;
+            } else {
+                modalImage.removeAttribute('src');
+            }
             if (modalImgCol) {
                 modalImgCol.style.setProperty('--modal-player-photo', modalFotoUrl ? 'url("' + modalFotoUrl + '")' : 'none');
                 modalImgCol.style.removeProperty('--modal-edge-strip');
