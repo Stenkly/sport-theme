@@ -7175,7 +7175,7 @@ function sport_theme_get_iscrizioni_dashboard_filters() {
     if ( ! in_array( $filter_pagamento, array( 'stripe', 'fattura' ), true ) ) {
         $filter_pagamento = '';
     }
-    if ( ! array_key_exists( $filter_categoria, sport_theme_iscrizioni_category_options() ) ) {
+    if ( $filter_categoria !== '__unassigned' && ! array_key_exists( $filter_categoria, sport_theme_iscrizioni_category_options() ) ) {
         $filter_categoria = '';
     }
     if ( $filter_stagione !== '' && ! preg_match( '/^\d{4}\/\d{4}$/', $filter_stagione ) ) {
@@ -7197,7 +7197,9 @@ function sport_theme_build_iscrizioni_where_sql( $filters, $wpdb ) {
     if ( ! empty( $filters['filter_pagamento'] ) ) {
         $where[] = $wpdb->prepare( 'i.metodo_pagamento = %s', $filters['filter_pagamento'] );
     }
-    if ( ! empty( $filters['filter_categoria'] ) ) {
+    if ( ! empty( $filters['filter_categoria'] ) && $filters['filter_categoria'] === '__unassigned' ) {
+        $where[] = "(b.categoria = '' OR b.categoria IS NULL)";
+    } elseif ( ! empty( $filters['filter_categoria'] ) ) {
         $where[] = $wpdb->prepare( 'b.categoria = %s', $filters['filter_categoria'] );
     }
     if ( ! empty( $filters['filter_stagione'] ) ) {

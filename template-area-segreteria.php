@@ -52,7 +52,7 @@ if (!in_array($filter_stato, $allowed_stati, true)) {
 if (!in_array($filter_pagamento, $allowed_pagamenti, true)) {
     $filter_pagamento = '';
 }
-if (!array_key_exists($filter_categoria, $category_options)) {
+if ($filter_categoria !== '__unassigned' && !array_key_exists($filter_categoria, $category_options)) {
     $filter_categoria = '';
 }
 if ($filter_stagione !== '' && !preg_match('/^\d{4}\/\d{4}$/', $filter_stagione)) {
@@ -107,7 +107,9 @@ if ( function_exists( 'sport_theme_create_iscrizioni_tables' ) && function_exist
         if ($filter_pagamento) {
             $where[] = $wpdb->prepare('i.metodo_pagamento = %s', $filter_pagamento);
         }
-        if ($filter_categoria) {
+        if ($filter_categoria === '__unassigned') {
+            $where[] = "(b.categoria = '' OR b.categoria IS NULL)";
+        } elseif ($filter_categoria) {
             $where[] = $wpdb->prepare('b.categoria = %s', $filter_categoria);
         }
         if ($filter_stagione) {
@@ -748,6 +750,7 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                         <label for="segreteria-categoria">Categoria</label>
                         <select id="segreteria-categoria" name="categoria">
                             <option value="">Tutte</option>
+                            <option value="__unassigned" <?php selected($filter_categoria, '__unassigned'); ?>>Da assegnare</option>
                             <?php foreach ($category_options as $category_key => $category_label) : ?>
                                 <?php if ($category_key === '') { continue; } ?>
                                 <option value="<?php echo esc_attr($category_key); ?>" <?php selected($filter_categoria, $category_key); ?>><?php echo esc_html($category_label); ?></option>
