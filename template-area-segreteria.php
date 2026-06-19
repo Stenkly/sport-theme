@@ -74,14 +74,19 @@ if ( function_exists( 'sport_theme_create_iscrizioni_tables' ) && function_exist
 
         $stats = $wpdb->get_row(
             "SELECT
-                COUNT(*) AS totale,
-                SUM(CASE WHEN stato = 'nuova' THEN 1 ELSE 0 END) AS da_verificare,
-                SUM(CASE WHEN stato IN ('approvata', 'confermata') THEN 1 ELSE 0 END) AS confermate,
-                SUM(CASE WHEN tipo_iscrizione = 'allievi' THEN 1 ELSE 0 END) AS allievi,
-                SUM(CASE WHEN tipo_iscrizione = 'scuola_calcio' THEN 1 ELSE 0 END) AS scuola_calcio,
-                SUM(CASE WHEN metodo_pagamento = 'fattura' THEN 1 ELSE 0 END) AS fattura,
-                SUM(CASE WHEN metodo_pagamento = 'stripe' THEN 1 ELSE 0 END) AS stripe
-             FROM {$registrations_table}"
+                COUNT(i.id) AS totale,
+                SUM(CASE WHEN i.stato = 'nuova' THEN 1 ELSE 0 END) AS da_verificare,
+                SUM(CASE WHEN i.stato IN ('approvata', 'confermata') THEN 1 ELSE 0 END) AS confermate,
+                SUM(CASE WHEN i.tipo_iscrizione = 'allievi' THEN COALESCE(NULLIF(child_counts.children_count, 0), NULLIF(i.numero_bambini, 0), 1) ELSE 0 END) AS allievi,
+                SUM(CASE WHEN i.tipo_iscrizione = 'scuola_calcio' THEN COALESCE(NULLIF(child_counts.children_count, 0), NULLIF(i.numero_bambini, 0), 1) ELSE 0 END) AS scuola_calcio,
+                SUM(CASE WHEN i.metodo_pagamento = 'fattura' THEN 1 ELSE 0 END) AS fattura,
+                SUM(CASE WHEN i.metodo_pagamento = 'stripe' THEN 1 ELSE 0 END) AS stripe
+             FROM {$registrations_table} i
+             LEFT JOIN (
+                SELECT iscrizione_id, COUNT(*) AS children_count
+                FROM {$children_table}
+                GROUP BY iscrizione_id
+             ) child_counts ON child_counts.iscrizione_id = i.id"
         );
 
         $totale_iscrizioni = (int) ($stats->totale ?? 0);
@@ -253,7 +258,7 @@ if ($filter_stagione) {
 if ($search_query !== '') {
     $export_args['q'] = $search_query;
 }
-$export_url = add_query_arg($export_args, admin_url('admin-post.php'));
+$export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ? 'https' : 'http'));
 ?>
 
 <main id="primary" class="site-main page-area-segreteria">

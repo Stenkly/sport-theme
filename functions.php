@@ -7219,6 +7219,152 @@ function sport_theme_build_iscrizioni_where_sql( $filters, $wpdb ) {
     return 'WHERE ' . implode( ' AND ', $where );
 }
 
+function sport_theme_xlsx_clean_text( $value ) {
+    $value = (string) $value;
+    return preg_replace( '/[\x00-\x08\x0B\x0C\x0E-\x1F]/', '', $value );
+}
+
+function sport_theme_xlsx_escape( $value ) {
+    return htmlspecialchars( sport_theme_xlsx_clean_text( $value ), ENT_XML1 | ENT_COMPAT, 'UTF-8' );
+}
+
+function sport_theme_xlsx_column_name( $index ) {
+    $index = (int) $index;
+    $name  = '';
+
+    while ( $index > 0 ) {
+        $index--;
+        $name  = chr( 65 + ( $index % 26 ) ) . $name;
+        $index = (int) floor( $index / 26 );
+    }
+
+    return $name;
+}
+
+function sport_theme_xlsx_unique_sheet_name( $name, &$used_names ) {
+    $name = trim( preg_replace( '/[\[\]\:\*\?\/\\\\]/', ' ', (string) $name ) );
+    $name = preg_replace( '/\s+/', ' ', $name );
+    $name = $name !== '' ? $name : 'Foglio';
+    $base = mb_substr( $name, 0, 31 );
+    $name = $base;
+    $i    = 2;
+
+    while ( isset( $used_names[ mb_strtolower( $name ) ] ) ) {
+        $suffix = ' ' . $i;
+        $name   = mb_substr( $base, 0, 31 - mb_strlen( $suffix ) ) . $suffix;
+        $i++;
+    }
+
+    $used_names[ mb_strtolower( $name ) ] = true;
+    return $name;
+}
+
+function sport_theme_xlsx_worksheet_xml( $rows ) {
+    $row_count = count( $rows );
+    $col_count = 0;
+
+    foreach ( $rows as $row ) {
+        $col_count = max( $col_count, count( $row ) );
+    }
+
+    $last_cell = sport_theme_xlsx_column_name( max( 1, $col_count ) ) . max( 1, $row_count );
+    $xml       = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+    $xml      .= '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">';
+    $xml      .= '<dimension ref="A1:' . $last_cell . '"/>';
+    $xml      .= '<sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>';
+    $xml      .= '<sheetData>';
+
+    foreach ( $rows as $row_index => $row ) {
+        $excel_row = $row_index + 1;
+        $xml      .= '<row r="' . $excel_row . '">';
+
+        for ( $col_index = 0; $col_index < $col_count; $col_index++ ) {
+            $cell_ref = sport_theme_xlsx_column_name( $col_index + 1 ) . $excel_row;
+            $value    = $row[ $col_index ] ?? '';
+            $xml     .= '<c r="' . $cell_ref . '" t="inlineStr"><is><t>' . sport_theme_xlsx_escape( $value ) . '</t></is></c>';
+        }
+
+        $xml .= '</row>';
+    }
+
+    $xml .= '</sheetData>';
+
+    if ( $row_count > 1 && $col_count > 0 ) {
+        $xml .= '<autoFilter ref="A1:' . sport_theme_xlsx_column_name( $col_count ) . $row_count . '"/>';
+    }
+
+    $xml .= '</worksheet>';
+    return $xml;
+}
+
+function sport_theme_output_iscrizioni_xlsx( $sheets, $filename ) {
+    if ( ! class_exists( 'ZipArchive' ) ) {
+        wp_die( 'Export Excel non disponibile: estensione ZIP mancante.', 500 );
+    }
+
+    $tmp = tempnam( get_temp_dir(), 'act-export-' );
+    if ( ! $tmp ) {
+        wp_die( 'Impossibile creare il file Excel temporaneo.', 500 );
+    }
+
+    $zip = new ZipArchive();
+    if ( true !== $zip->open( $tmp, ZipArchive::OVERWRITE ) ) {
+        wp_die( 'Impossibile preparare il file Excel.', 500 );
+    }
+
+    $used_names = array();
+    $sheet_defs = array();
+    $sheet_id   = 1;
+
+    foreach ( $sheets as $sheet_name => $rows ) {
+        $sheet_defs[] = array(
+            'id'   => $sheet_id,
+            'name' => sport_theme_xlsx_unique_sheet_name( $sheet_name, $used_names ),
+            'rows' => $rows,
+        );
+        $sheet_id++;
+    }
+
+    $content_types = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+    $content_types .= '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">';
+    $content_types .= '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>';
+    $content_types .= '<Default Extension="xml" ContentType="application/xml"/>';
+    $content_types .= '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>';
+
+    foreach ( $sheet_defs as $sheet ) {
+        $content_types .= '<Override PartName="/xl/worksheets/sheet' . $sheet['id'] . '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>';
+    }
+
+    $content_types .= '</Types>';
+    $zip->addFromString( '[Content_Types].xml', $content_types );
+    $zip->addFromString( '_rels/.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>' );
+
+    $workbook = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>';
+    $rels     = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
+
+    foreach ( $sheet_defs as $sheet ) {
+        $workbook .= '<sheet name="' . sport_theme_xlsx_escape( $sheet['name'] ) . '" sheetId="' . $sheet['id'] . '" r:id="rId' . $sheet['id'] . '"/>';
+        $rels     .= '<Relationship Id="rId' . $sheet['id'] . '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet' . $sheet['id'] . '.xml"/>';
+        $zip->addFromString( 'xl/worksheets/sheet' . $sheet['id'] . '.xml', sport_theme_xlsx_worksheet_xml( $sheet['rows'] ) );
+    }
+
+    $workbook .= '</sheets></workbook>';
+    $rels     .= '</Relationships>';
+
+    $zip->addFromString( 'xl/workbook.xml', $workbook );
+    $zip->addFromString( 'xl/_rels/workbook.xml.rels', $rels );
+    $zip->close();
+
+    nocache_headers();
+    header( 'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' );
+    header( 'X-Content-Type-Options: nosniff' );
+    header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+    header( 'Content-Length: ' . filesize( $tmp ) );
+    readfile( $tmp );
+    unlink( $tmp );
+    exit;
+}
+
 function sport_theme_handle_export_iscrizioni_csv() {
     sport_theme_iscrizioni_require_segreteria_access();
 
@@ -7281,14 +7427,7 @@ function sport_theme_handle_export_iscrizioni_csv() {
         }
     }
 
-    nocache_headers();
-    header( 'Content-Type: text/csv; charset=UTF-8' );
-    header( 'Content-Disposition: attachment; filename="iscrizioni-ac-taverne-' . date( 'Y-m-d' ) . '.csv"' );
-
-    $out = fopen( 'php://output', 'w' );
-    fwrite( $out, "\xEF\xBB\xBF" );
-
-    fputcsv( $out, array(
+    $headers = array(
         'ID iscrizione',
         'Codice',
         'Tipo iscrizione',
@@ -7329,9 +7468,11 @@ function sport_theme_handle_export_iscrizioni_csv() {
         'Link documenti identita',
         'Link certificato tutela',
         'Note interne',
-    ), ';' );
+    );
 
     $category_options = sport_theme_iscrizioni_category_options();
+    $all_export_rows  = array();
+    $category_rows    = array();
 
     foreach ( $rows as $row ) {
         $child_documents = $documents_by_child[ (int) $row->id ][ (int) $row->child_index ] ?? array();
@@ -7364,7 +7505,12 @@ function sport_theme_handle_export_iscrizioni_csv() {
             $sibling_reduction_label = 'Sì';
         }
 
-        fputcsv( $out, array(
+        $category_label = sport_theme_iscrizione_label_value( $row->categoria, $category_options );
+        if ( ! $category_label ) {
+            $category_label = 'Da assegnare';
+        }
+
+        $export_row = array(
             $row->id,
             $row->uuid,
             $row->tipo_iscrizione,
@@ -7405,10 +7551,38 @@ function sport_theme_handle_export_iscrizioni_csv() {
             implode( ' | ', $identity_links ),
             implode( ' | ', $guardian_links ),
             $row->note_interne,
-        ), ';' );
+        );
+
+        $all_export_rows[] = $export_row;
+
+        if ( ! isset( $category_rows[ $category_label ] ) ) {
+            $category_rows[ $category_label ] = array();
+        }
+        $category_rows[ $category_label ][] = $export_row;
     }
 
-    fclose( $out );
-    exit;
+    $sheets = array(
+        'Tutte' => array_merge( array( $headers ), $all_export_rows ),
+    );
+
+    foreach ( $category_options as $category_key => $category_label ) {
+        if ( $category_key === '' ) {
+            continue;
+        }
+
+        if ( ! empty( $category_rows[ $category_label ] ) ) {
+            $sheets[ $category_label ] = array_merge( array( $headers ), $category_rows[ $category_label ] );
+            unset( $category_rows[ $category_label ] );
+        }
+    }
+
+    foreach ( $category_rows as $category_label => $category_export_rows ) {
+        $sheets[ $category_label ] = array_merge( array( $headers ), $category_export_rows );
+    }
+
+    sport_theme_output_iscrizioni_xlsx(
+        $sheets,
+        'iscrizioni-ac-taverne-' . date( 'Y-m-d' ) . '.xlsx'
+    );
 }
 add_action( 'admin_post_act_export_iscrizioni_csv', 'sport_theme_handle_export_iscrizioni_csv' );
