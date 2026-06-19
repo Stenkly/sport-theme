@@ -17,6 +17,11 @@ $iscrizioni_allievi = 0;
 $iscrizioni_scuola_calcio = 0;
 $iscrizioni_fattura = 0;
 $iscrizioni_stripe = 0;
+$totale_allievi = 0;
+$iscrizioni_da_assegnare = 0;
+$iscrizioni_pagamento_aperto = 0;
+$iscrizioni_pagamento_pagato = 0;
+$iscrizioni_duplicate = 0;
 $filtered_count = 0;
 $recent_iscrizioni = array();
 $documents_by_iscrizione = array();
@@ -24,7 +29,9 @@ $edit_iscrizione_id = isset($_GET['edit_iscrizione']) ? absint($_GET['edit_iscri
 $edit_iscrizione = null;
 $edit_children = array();
 $edit_documents = array();
+$edit_logs = array();
 $duplicate_email_counts = array();
+$duplicate_email_has_discount = array();
 $edit_duplicate_iscrizioni = array();
 $table_exists = false;
 
@@ -32,8 +39,12 @@ $filter_tipo = isset($_GET['tipo']) ? sanitize_key(wp_unslash($_GET['tipo'])) : 
 $filter_stato = isset($_GET['stato']) ? sanitize_key(wp_unslash($_GET['stato'])) : '';
 $filter_pagamento = isset($_GET['pagamento']) ? sanitize_key(wp_unslash($_GET['pagamento'])) : '';
 $filter_categoria = isset($_GET['categoria']) ? sanitize_key(wp_unslash($_GET['categoria'])) : '';
+$filter_pratiche = isset($_GET['pratiche']) ? sanitize_key(wp_unslash($_GET['pratiche'])) : '';
 $filter_stagione = isset($_GET['stagione']) ? sanitize_text_field(wp_unslash($_GET['stagione'])) : '';
 $search_query = isset($_GET['q']) ? sanitize_text_field(wp_unslash($_GET['q'])) : '';
+$current_page = isset($_GET['pagina']) ? max(1, absint($_GET['pagina'])) : 1;
+$per_page = 30;
+$total_pages = 1;
 
 $allowed_tipi = array('allievi', 'scuola_calcio');
 $category_options = function_exists('sport_theme_iscrizioni_category_options') ? sport_theme_iscrizioni_category_options() : array('' => 'Da assegnare');
@@ -54,6 +65,9 @@ if (!in_array($filter_pagamento, $allowed_pagamenti, true)) {
 }
 if ($filter_categoria !== '__unassigned' && !array_key_exists($filter_categoria, $category_options)) {
     $filter_categoria = '';
+}
+if (!in_array($filter_pratiche, array('incomplete', 'duplicate'), true)) {
+    $filter_pratiche = '';
 }
 if ($filter_stagione !== '' && !preg_match('/^\d{4}\/\d{4}$/', $filter_stagione)) {
     $filter_stagione = '';
@@ -80,13 +94,25 @@ if ( function_exists( 'sport_theme_create_iscrizioni_tables' ) && function_exist
                 SUM(CASE WHEN i.tipo_iscrizione = 'allievi' THEN COALESCE(NULLIF(child_counts.children_count, 0), NULLIF(i.numero_bambini, 0), 1) ELSE 0 END) AS allievi,
                 SUM(CASE WHEN i.tipo_iscrizione = 'scuola_calcio' THEN COALESCE(NULLIF(child_counts.children_count, 0), NULLIF(i.numero_bambini, 0), 1) ELSE 0 END) AS scuola_calcio,
                 SUM(CASE WHEN i.metodo_pagamento = 'fattura' THEN 1 ELSE 0 END) AS fattura,
-                SUM(CASE WHEN i.metodo_pagamento = 'stripe' THEN 1 ELSE 0 END) AS stripe
+                SUM(CASE WHEN i.metodo_pagamento = 'stripe' THEN 1 ELSE 0 END) AS stripe,
+                SUM(CASE WHEN child_counts.unassigned_count > 0 THEN 1 ELSE 0 END) AS da_assegnare,
+                SUM(CASE WHEN i.stato_pagamento = 'pagato' THEN 1 ELSE 0 END) AS pagamento_pagato,
+                SUM(CASE WHEN i.stato_pagamento <> 'pagato' THEN 1 ELSE 0 END) AS pagamento_aperto,
+                SUM(CASE WHEN duplicate_counts.email_total > 1 THEN 1 ELSE 0 END) AS duplicate_email
              FROM {$registrations_table} i
              LEFT JOIN (
-                SELECT iscrizione_id, COUNT(*) AS children_count
+                SELECT iscrizione_id,
+                    COUNT(*) AS children_count,
+                    SUM(CASE WHEN categoria = '' OR categoria IS NULL THEN 1 ELSE 0 END) AS unassigned_count
                 FROM {$children_table}
                 GROUP BY iscrizione_id
              ) child_counts ON child_counts.iscrizione_id = i.id"
+             . " LEFT JOIN (
+                SELECT LOWER(responsabile_email) AS email_key, COUNT(*) AS email_total
+                FROM {$registrations_table}
+                WHERE responsabile_email <> ''
+                GROUP BY LOWER(responsabile_email)
+             ) duplicate_counts ON duplicate_counts.email_key = LOWER(i.responsabile_email)"
         );
 
         $totale_iscrizioni = (int) ($stats->totale ?? 0);
@@ -96,6 +122,11 @@ if ( function_exists( 'sport_theme_create_iscrizioni_tables' ) && function_exist
         $iscrizioni_scuola_calcio = (int) ($stats->scuola_calcio ?? 0);
         $iscrizioni_fattura = (int) ($stats->fattura ?? 0);
         $iscrizioni_stripe = (int) ($stats->stripe ?? 0);
+        $totale_allievi = $iscrizioni_allievi + $iscrizioni_scuola_calcio;
+        $iscrizioni_da_assegnare = (int) ($stats->da_assegnare ?? 0);
+        $iscrizioni_pagamento_aperto = (int) ($stats->pagamento_aperto ?? 0);
+        $iscrizioni_pagamento_pagato = (int) ($stats->pagamento_pagato ?? 0);
+        $iscrizioni_duplicate = (int) ($stats->duplicate_email ?? 0);
 
         $where = array('1=1');
         if ($filter_tipo) {
@@ -115,10 +146,21 @@ if ( function_exists( 'sport_theme_create_iscrizioni_tables' ) && function_exist
         if ($filter_stagione) {
             $where[] = $wpdb->prepare('i.stagione_sportiva = %s', $filter_stagione);
         }
+        if ($filter_pratiche === 'incomplete') {
+            $where[] = "(i.stato NOT IN ('approvata', 'confermata') OR i.metodo_pagamento = '' OR i.metodo_pagamento IS NULL OR i.stato_pagamento <> 'pagato' OR EXISTS (SELECT 1 FROM {$children_table} bi WHERE bi.iscrizione_id = i.id AND (bi.categoria = '' OR bi.categoria IS NULL)))";
+        } elseif ($filter_pratiche === 'duplicate') {
+            $where[] = "LOWER(i.responsabile_email) IN (SELECT email_key FROM (SELECT LOWER(responsabile_email) AS email_key FROM {$registrations_table} WHERE responsabile_email <> '' GROUP BY LOWER(responsabile_email) HAVING COUNT(*) > 1) duplicate_filter)";
+        }
         if ($search_query !== '') {
             $like = '%' . $wpdb->esc_like($search_query) . '%';
             $where[] = $wpdb->prepare(
-                '(i.uuid LIKE %s OR i.responsabile_nome LIKE %s OR i.responsabile_cognome LIKE %s OR i.responsabile_email LIKE %s OR b.nome LIKE %s OR b.cognome LIKE %s)',
+                '(i.uuid LIKE %s OR i.responsabile_nome LIKE %s OR i.responsabile_cognome LIKE %s OR i.responsabile_email LIKE %s OR i.responsabile_telefono LIKE %s OR b.nome LIKE %s OR b.cognome LIKE %s OR b.email LIKE %s OR b.cellulare LIKE %s OR b.avs LIKE %s OR b.data_nascita LIKE %s OR b.categoria LIKE %s)',
+                $like,
+                $like,
+                $like,
+                $like,
+                $like,
+                $like,
                 $like,
                 $like,
                 $like,
@@ -135,17 +177,25 @@ if ( function_exists( 'sport_theme_create_iscrizioni_tables' ) && function_exist
              LEFT JOIN {$children_table} b ON b.iscrizione_id = i.id
              {$where_sql}"
         );
+        $total_pages = max(1, (int) ceil($filtered_count / $per_page));
+        $current_page = min($current_page, $total_pages);
+        $offset = ($current_page - 1) * $per_page;
 
         $recent_iscrizioni = $wpdb->get_results(
-            "SELECT i.id, i.uuid, i.tipo_iscrizione, i.stagione_sportiva, i.stato, i.metodo_pagamento, i.stato_pagamento, i.importo_totale_chf, i.riduzione_fratelli, i.sconto_meta_stagione, i.responsabile_nome, i.responsabile_cognome, i.responsabile_email, i.numero_bambini, i.stripe_invoice_url, i.stripe_invoice_pdf, i.created_at,
+            $wpdb->prepare(
+                "SELECT i.id, i.uuid, i.tipo_iscrizione, i.stagione_sportiva, i.stato, i.metodo_pagamento, i.stato_pagamento, i.importo_totale_chf, i.riduzione_fratelli, i.sconto_meta_stagione, i.responsabile_nome, i.responsabile_cognome, i.responsabile_email, i.numero_bambini, i.stripe_invoice_url, i.stripe_invoice_pdf, i.stripe_payment_url, i.created_at,
                     GROUP_CONCAT(CONCAT(b.nome, ' ', b.cognome) ORDER BY b.child_index SEPARATOR ', ') AS bambini,
-                    GROUP_CONCAT(DISTINCT NULLIF(b.categoria, '') ORDER BY b.categoria SEPARATOR ', ') AS categorie
-             FROM {$registrations_table} i
-             LEFT JOIN {$children_table} b ON b.iscrizione_id = i.id
-             {$where_sql}
-             GROUP BY i.id, i.uuid, i.tipo_iscrizione, i.stagione_sportiva, i.stato, i.metodo_pagamento, i.stato_pagamento, i.importo_totale_chf, i.riduzione_fratelli, i.sconto_meta_stagione, i.responsabile_nome, i.responsabile_cognome, i.responsabile_email, i.numero_bambini, i.stripe_invoice_url, i.stripe_invoice_pdf, i.created_at
-             ORDER BY i.created_at DESC
-             LIMIT 30"
+                    GROUP_CONCAT(DISTINCT NULLIF(b.categoria, '') ORDER BY b.categoria SEPARATOR ', ') AS categorie,
+                    SUM(CASE WHEN b.categoria = '' OR b.categoria IS NULL THEN 1 ELSE 0 END) AS categorie_da_assegnare
+                 FROM {$registrations_table} i
+                 LEFT JOIN {$children_table} b ON b.iscrizione_id = i.id
+                 {$where_sql}
+                 GROUP BY i.id, i.uuid, i.tipo_iscrizione, i.stagione_sportiva, i.stato, i.metodo_pagamento, i.stato_pagamento, i.importo_totale_chf, i.riduzione_fratelli, i.sconto_meta_stagione, i.responsabile_nome, i.responsabile_cognome, i.responsabile_email, i.numero_bambini, i.stripe_invoice_url, i.stripe_invoice_pdf, i.stripe_payment_url, i.created_at
+                 ORDER BY i.created_at DESC
+                 LIMIT %d OFFSET %d",
+                $per_page,
+                $offset
+            )
         );
 
         if (!empty($recent_iscrizioni)) {
@@ -164,7 +214,9 @@ if ( function_exists( 'sport_theme_create_iscrizioni_tables' ) && function_exist
                 $email_placeholders = implode(',', array_fill(0, count($recent_emails), '%s'));
                 $duplicate_rows = $wpdb->get_results(
                     $wpdb->prepare(
-                        "SELECT LOWER(responsabile_email) AS email_key, COUNT(*) AS total
+                        "SELECT LOWER(responsabile_email) AS email_key,
+                                COUNT(*) AS total,
+                                MAX(CASE WHEN riduzione_fratelli = 1 THEN 1 ELSE 0 END) AS has_discount
                          FROM {$registrations_table}
                          WHERE LOWER(responsabile_email) IN ({$email_placeholders})
                          GROUP BY LOWER(responsabile_email)
@@ -175,6 +227,7 @@ if ( function_exists( 'sport_theme_create_iscrizioni_tables' ) && function_exist
 
                 foreach ($duplicate_rows as $duplicate_row) {
                     $duplicate_email_counts[$duplicate_row->email_key] = (int) $duplicate_row->total;
+                    $duplicate_email_has_discount[$duplicate_row->email_key] = !empty($duplicate_row->has_discount);
                 }
             }
 
@@ -219,6 +272,19 @@ if ( function_exists( 'sport_theme_create_iscrizioni_tables' ) && function_exist
                     $edit_documents[(int) ($document_row->child_index ?: 0)][] = $document_row;
                 }
 
+                $logs_table = $tables['logs'];
+                $edit_logs = $wpdb->get_results(
+                    $wpdb->prepare(
+                        "SELECT l.*, u.display_name
+                         FROM {$logs_table} l
+                         LEFT JOIN {$wpdb->users} u ON u.ID = l.created_by
+                         WHERE l.iscrizione_id = %d
+                         ORDER BY l.created_at DESC
+                         LIMIT 20",
+                        $edit_iscrizione_id
+                    )
+                );
+
                 if (!empty($edit_iscrizione->responsabile_email)) {
                     $edit_duplicate_iscrizioni = $wpdb->get_results(
                         $wpdb->prepare(
@@ -237,7 +303,7 @@ if ( function_exists( 'sport_theme_create_iscrizioni_tables' ) && function_exist
     }
 }
 
-$active_filters = array_filter(array($filter_tipo, $filter_stato, $filter_pagamento, $filter_categoria, $filter_stagione, $search_query));
+$active_filters = array_filter(array($filter_tipo, $filter_stato, $filter_pagamento, $filter_categoria, $filter_pratiche, $filter_stagione, $search_query));
 $export_args = array(
     'action'   => 'act_export_iscrizioni_csv',
     '_wpnonce' => wp_create_nonce('act_export_iscrizioni_csv'),
@@ -253,6 +319,9 @@ if ($filter_pagamento) {
 }
 if ($filter_categoria) {
     $export_args['categoria'] = $filter_categoria;
+}
+if ($filter_pratiche) {
+    $export_args['pratiche'] = $filter_pratiche;
 }
 if ($filter_stagione) {
     $export_args['stagione'] = $filter_stagione;
@@ -343,6 +412,18 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                             <?php if ($stripe_invoice_link) : ?>
                                 <a class="segreteria-export-link" data-payment-action="stripe" <?php echo $edit_iscrizione->metodo_pagamento !== 'stripe' ? 'style="display:none;"' : ''; ?> target="_blank" rel="noopener" href="<?php echo esc_url($stripe_invoice_link); ?>">Fattura Stripe</a>
                             <?php endif; ?>
+                            <form class="segreteria-inline-action-form" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" onsubmit="return confirm('Reinviare la conferma iscrizione al responsabile?');">
+                                <?php wp_nonce_field('act_resend_iscrizione_confirmation'); ?>
+                                <input type="hidden" name="action" value="act_resend_iscrizione_confirmation">
+                                <input type="hidden" name="iscrizione_id" value="<?php echo esc_attr((int) $edit_iscrizione->id); ?>">
+                                <button type="submit">Reinvia conferma</button>
+                            </form>
+                            <form class="segreteria-inline-action-form" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" onsubmit="return confirm('Inviare un promemoria pagamento al responsabile?');">
+                                <?php wp_nonce_field('act_send_payment_reminder'); ?>
+                                <input type="hidden" name="action" value="act_send_payment_reminder">
+                                <input type="hidden" name="iscrizione_id" value="<?php echo esc_attr((int) $edit_iscrizione->id); ?>">
+                                <button type="submit">Promemoria pagamento</button>
+                            </form>
                             <a class="segreteria-export-link" href="<?php echo esc_url(get_permalink() . '#segreteria-dashboard'); ?>">Torna alla dashboard</a>
                         </div>
                     </div>
@@ -359,6 +440,16 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                         <div class="segreteria-edit-notice">Link pagamento Stripe inviato correttamente al genitore.</div>
                     <?php elseif (isset($_GET['stripe_sent']) && $_GET['stripe_sent'] === '0') : ?>
                         <div class="segreteria-edit-notice segreteria-edit-notice-error">Link Stripe non inviato. Controlla configurazione Stripe, email e importo.</div>
+                    <?php endif; ?>
+                    <?php if (isset($_GET['confirmation_sent']) && $_GET['confirmation_sent'] === '1') : ?>
+                        <div class="segreteria-edit-notice">Conferma iscrizione reinviata correttamente.</div>
+                    <?php elseif (isset($_GET['confirmation_sent']) && $_GET['confirmation_sent'] === '0') : ?>
+                        <div class="segreteria-edit-notice segreteria-edit-notice-error">Conferma non reinviata. Controlla email responsabile.</div>
+                    <?php endif; ?>
+                    <?php if (isset($_GET['payment_reminder_sent']) && $_GET['payment_reminder_sent'] === '1') : ?>
+                        <div class="segreteria-edit-notice">Promemoria pagamento inviato correttamente.</div>
+                    <?php elseif (isset($_GET['payment_reminder_sent']) && $_GET['payment_reminder_sent'] === '0') : ?>
+                        <div class="segreteria-edit-notice segreteria-edit-notice-error">Promemoria non inviato. Controlla email o link pagamento disponibile.</div>
                     <?php endif; ?>
                     <?php if (!empty($edit_duplicate_iscrizioni)) : ?>
                         <div class="segreteria-edit-notice segreteria-edit-notice-warning">
@@ -400,6 +491,34 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                                     <button type="submit"><?php echo esc_html($quick_label); ?></button>
                                 </form>
                             <?php endforeach; ?>
+                        </div>
+                    </section>
+
+                    <?php
+                    $edit_unassigned_children = 0;
+                    foreach ($edit_children as $edit_child_check) {
+                        if (empty($edit_child_check->categoria)) {
+                            $edit_unassigned_children++;
+                        }
+                    }
+                    $edit_payment_open = ($edit_iscrizione->stato_pagamento ?? '') !== 'pagato';
+                    ?>
+                    <section class="segreteria-operational-summary">
+                        <div class="segreteria-summary-item <?php echo $edit_unassigned_children ? 'is-warning' : 'is-ok'; ?>">
+                            <span>Categoria</span>
+                            <strong><?php echo $edit_unassigned_children ? esc_html($edit_unassigned_children . ' da assegnare') : 'OK'; ?></strong>
+                        </div>
+                        <div class="segreteria-summary-item <?php echo $edit_payment_open ? 'is-warning' : 'is-ok'; ?>">
+                            <span>Pagamento</span>
+                            <strong><?php echo esc_html($edit_iscrizione->stato_pagamento ?: 'non_pagato'); ?></strong>
+                        </div>
+                        <div class="segreteria-summary-item <?php echo !empty($edit_duplicate_iscrizioni) ? 'is-warning' : 'is-ok'; ?>">
+                            <span>Duplicati</span>
+                            <strong><?php echo !empty($edit_duplicate_iscrizioni) ? esc_html(count($edit_duplicate_iscrizioni) . ' trovati') : 'Nessuno'; ?></strong>
+                        </div>
+                        <div class="segreteria-summary-item">
+                            <span>Documenti</span>
+                            <strong><?php echo esc_html(count($edit_document_rows ?? array())); ?></strong>
                         </div>
                     </section>
 
@@ -646,6 +765,23 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                             </div>
                         </section>
 
+                        <section class="segreteria-edit-card">
+                            <h3>Storico modifiche</h3>
+                            <?php if (!empty($edit_logs)) : ?>
+                                <div class="segreteria-log-list">
+                                    <?php foreach ($edit_logs as $log_entry) : ?>
+                                        <article class="segreteria-log-entry">
+                                            <strong><?php echo esc_html(str_replace('_', ' ', $log_entry->azione)); ?></strong>
+                                            <span><?php echo esc_html(mysql2date('d.m.Y H:i', $log_entry->created_at)); ?> · <?php echo esc_html($log_entry->display_name ?: 'Sistema'); ?></span>
+                                            <p><?php echo esc_html($log_entry->messaggio ?: '-'); ?></p>
+                                        </article>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php else : ?>
+                                <p class="segreteria-record-meta">Nessuna modifica registrata.</p>
+                            <?php endif; ?>
+                        </section>
+
                         <div class="segreteria-edit-actions">
                             <button type="submit">Salva modifiche</button>
                             <a href="<?php echo esc_url(get_permalink() . '#segreteria-dashboard'); ?>">Annulla</a>
@@ -694,34 +830,34 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                         <small><?php echo esc_html($filtered_count); ?> nel filtro attuale</small>
                     </article>
                     <article class="segreteria-stat-card">
-                        <span>Da verificare</span>
-                        <strong><?php echo esc_html($iscrizioni_da_verificare); ?></strong>
-                        <small>Nuove pratiche ricevute</small>
+                        <span>Allievi totali</span>
+                        <strong><?php echo esc_html($totale_allievi); ?></strong>
+                        <small><?php echo esc_html($iscrizioni_allievi); ?> allievi · <?php echo esc_html($iscrizioni_scuola_calcio); ?> scuola calcio</small>
                     </article>
                     <article class="segreteria-stat-card">
-                        <span>Confermate</span>
-                        <strong><?php echo esc_html($iscrizioni_confermate); ?></strong>
-                        <small>Approvate o confermate</small>
+                        <span>Da assegnare</span>
+                        <strong><?php echo esc_html($iscrizioni_da_assegnare); ?></strong>
+                        <small>Pratiche con almeno una categoria mancante</small>
                     </article>
                     <article class="segreteria-stat-card">
-                        <span>Pagamenti</span>
-                        <strong><?php echo esc_html($iscrizioni_fattura + $iscrizioni_stripe); ?></strong>
-                        <small><?php echo esc_html($iscrizioni_fattura); ?> fattura · <?php echo esc_html($iscrizioni_stripe); ?> Stripe</small>
+                        <span>Pagamenti aperti</span>
+                        <strong><?php echo esc_html($iscrizioni_pagamento_aperto); ?></strong>
+                        <small><?php echo esc_html($iscrizioni_pagamento_pagato); ?> pagati · <?php echo esc_html($iscrizioni_fattura); ?> fattura · <?php echo esc_html($iscrizioni_stripe); ?> Stripe</small>
                     </article>
                 </div>
 
                 <div class="segreteria-insights">
                     <div class="segreteria-insight">
-                        <span>Allievi</span>
-                        <strong><?php echo esc_html($iscrizioni_allievi); ?></strong>
+                        <span>Da verificare</span>
+                        <strong><?php echo esc_html($iscrizioni_da_verificare); ?></strong>
                     </div>
                     <div class="segreteria-insight">
-                        <span>Scuola Calcio</span>
-                        <strong><?php echo esc_html($iscrizioni_scuola_calcio); ?></strong>
+                        <span>Confermate</span>
+                        <strong><?php echo esc_html($iscrizioni_confermate); ?></strong>
                     </div>
                     <div class="segreteria-insight">
-                        <span>Conversione verifica</span>
-                        <strong><?php echo $totale_iscrizioni ? esc_html(round(($iscrizioni_confermate / max(1, $totale_iscrizioni)) * 100)) . '%' : '0%'; ?></strong>
+                        <span>Email duplicate</span>
+                        <strong><?php echo esc_html($iscrizioni_duplicate); ?></strong>
                     </div>
                     <div class="segreteria-insight">
                         <span>Risultati lista</span>
@@ -732,7 +868,7 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                 <form class="segreteria-filters" method="get" action="<?php echo esc_url(get_permalink()); ?>">
                     <div class="segreteria-filter-field segreteria-filter-search">
                         <label for="segreteria-q">Cerca</label>
-                        <input id="segreteria-q" type="search" name="q" value="<?php echo esc_attr($search_query); ?>" placeholder="Nome, email o codice iscrizione">
+                        <input id="segreteria-q" type="search" name="q" value="<?php echo esc_attr($search_query); ?>" placeholder="Nome, email, telefono, AVS o codice">
                     </div>
                     <div class="segreteria-filter-field">
                         <label for="segreteria-tipo">Tipo</label>
@@ -772,6 +908,14 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                             <option value="">Tutti</option>
                             <option value="fattura" <?php selected($filter_pagamento, 'fattura'); ?>>Fattura</option>
                             <option value="stripe" <?php selected($filter_pagamento, 'stripe'); ?>>Stripe</option>
+                        </select>
+                    </div>
+                    <div class="segreteria-filter-field">
+                        <label for="segreteria-pratiche">Pratiche</label>
+                        <select id="segreteria-pratiche" name="pratiche">
+                            <option value="">Tutte</option>
+                            <option value="incomplete" <?php selected($filter_pratiche, 'incomplete'); ?>>Incomplete</option>
+                            <option value="duplicate" <?php selected($filter_pratiche, 'duplicate'); ?>>Email duplicate</option>
                         </select>
                     </div>
                     <div class="segreteria-filter-actions">
@@ -820,6 +964,7 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                                     $payment_class = 'payment-' . sanitize_html_class($iscrizione->metodo_pagamento ?: 'none');
                                     $email_key = strtolower((string) $iscrizione->responsabile_email);
                                     $same_email_count = $email_key && isset($duplicate_email_counts[$email_key]) ? (int) $duplicate_email_counts[$email_key] : 0;
+                                    $same_email_discount_applied = $email_key && !empty($duplicate_email_has_discount[$email_key]);
                                     $invoice_url = function_exists('sport_theme_iscrizione_invoice_url')
                                         ? sport_theme_iscrizione_invoice_url($iscrizione, false)
                                         : wp_nonce_url(
@@ -843,8 +988,10 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                                             <div class="segreteria-record-title"><?php echo esc_html($iscrizione->bambini ?: 'Iscrizione #' . $iscrizione->id); ?></div>
                                             <div class="segreteria-record-meta">#<?php echo esc_html($iscrizione->id); ?> · <?php echo esc_html((int) $iscrizione->numero_bambini); ?> bambino/i</div>
                                             <div class="segreteria-record-meta"><?php echo esc_html($responsabile ?: '-'); ?> · <?php echo esc_html($iscrizione->responsabile_email ?: '-'); ?></div>
-                                            <?php if ($same_email_count > 1) : ?>
-                                                <div class="segreteria-family-alert">Possibile secondo figlio · <?php echo esc_html($same_email_count); ?> pratiche con la stessa email</div>
+                                            <?php if ($same_email_count > 1 && !$same_email_discount_applied) : ?>
+                                                <div class="segreteria-family-alert">Possibile secondo figlio · verifica riduzione fratelli</div>
+                                            <?php elseif ($same_email_count > 1) : ?>
+                                                <div class="segreteria-family-alert segreteria-family-alert-muted">Email condivisa con altra pratica</div>
                                             <?php endif; ?>
                                             <div class="segreteria-record-meta"><?php echo esc_html($tipo_label); ?> · <?php echo esc_html($iscrizione->stagione_sportiva ?: (function_exists('sport_theme_current_sport_season') ? sport_theme_current_sport_season() : '')); ?></div>
                                         </td>
@@ -892,23 +1039,6 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                                                         <button type="submit">Invia Stripe</button>
                                                     </form>
                                                 <?php endif; ?>
-                                                <?php if (empty($iscrizione->sconto_meta_stagione)) : ?>
-                                                    <form class="segreteria-discount-form" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" onsubmit="return confirm('Applicare lo sconto metà stagione del 50% a questa pratica?');">
-                                                        <?php wp_nonce_field('act_quick_iscrizione_action'); ?>
-                                                        <input type="hidden" name="action" value="act_quick_iscrizione_action">
-                                                        <input type="hidden" name="iscrizione_id" value="<?php echo esc_attr((int) $iscrizione->id); ?>">
-                                                        <input type="hidden" name="quick_action" value="meta_stagione_50">
-                                                        <button type="submit">Sconto 50%</button>
-                                                    </form>
-                                                <?php else : ?>
-                                                    <form class="segreteria-discount-form segreteria-discount-form-remove" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" onsubmit="return confirm('Rimuovere lo sconto metà stagione e ripristinare le quote standard?');">
-                                                        <?php wp_nonce_field('act_quick_iscrizione_action'); ?>
-                                                        <input type="hidden" name="action" value="act_quick_iscrizione_action">
-                                                        <input type="hidden" name="iscrizione_id" value="<?php echo esc_attr((int) $iscrizione->id); ?>">
-                                                        <input type="hidden" name="quick_action" value="rimuovi_meta_stagione_50">
-                                                        <button type="submit">Togli sconto</button>
-                                                    </form>
-                                                <?php endif; ?>
                                                 <form class="segreteria-delete-form" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" onsubmit="return confirm('Eliminare definitivamente questa iscrizione e i documenti collegati?');">
                                                     <?php wp_nonce_field('act_delete_iscrizione'); ?>
                                                     <input type="hidden" name="action" value="act_delete_iscrizione">
@@ -932,6 +1062,49 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                         </tbody>
                     </table>
                     </div>
+                    <?php if ($total_pages > 1) : ?>
+                        <?php
+                        $pagination_args = array();
+                        if ($filter_tipo) {
+                            $pagination_args['tipo'] = $filter_tipo;
+                        }
+                        if ($filter_stato) {
+                            $pagination_args['stato'] = $filter_stato;
+                        }
+                        if ($filter_pagamento) {
+                            $pagination_args['pagamento'] = $filter_pagamento;
+                        }
+                        if ($filter_categoria) {
+                            $pagination_args['categoria'] = $filter_categoria;
+                        }
+                        if ($filter_pratiche) {
+                            $pagination_args['pratiche'] = $filter_pratiche;
+                        }
+                        if ($filter_stagione) {
+                            $pagination_args['stagione'] = $filter_stagione;
+                        }
+                        if ($search_query !== '') {
+                            $pagination_args['q'] = $search_query;
+                        }
+                        $previous_url = add_query_arg(array_merge($pagination_args, array('pagina' => max(1, $current_page - 1))), get_permalink()) . '#segreteria-dashboard';
+                        $next_url = add_query_arg(array_merge($pagination_args, array('pagina' => min($total_pages, $current_page + 1))), get_permalink()) . '#segreteria-dashboard';
+                        ?>
+                        <nav class="segreteria-pagination" aria-label="Paginazione iscrizioni">
+                            <span>Pagina <?php echo esc_html($current_page); ?> di <?php echo esc_html($total_pages); ?></span>
+                            <div>
+                                <?php if ($current_page > 1) : ?>
+                                    <a href="<?php echo esc_url($previous_url); ?>">Indietro</a>
+                                <?php else : ?>
+                                    <span class="disabled">Indietro</span>
+                                <?php endif; ?>
+                                <?php if ($current_page < $total_pages) : ?>
+                                    <a href="<?php echo esc_url($next_url); ?>">Avanti</a>
+                                <?php else : ?>
+                                    <span class="disabled">Avanti</span>
+                                <?php endif; ?>
+                            </div>
+                        </nav>
+                    <?php endif; ?>
                 </div>
             </section>
             <?php endif; ?>

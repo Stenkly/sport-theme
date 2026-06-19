@@ -151,24 +151,15 @@ if ( ! function_exists( 'sport_theme_ensure_calendar_weekly_view' ) ) {
             $b_img1 = get_post_meta( get_the_ID(), '_infra_buvette_img_1', true );
             $b_img2 = get_post_meta( get_the_ID(), '_infra_buvette_img_2', true ) ?: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1200&auto=format&fit=crop';
             $b_img3 = get_post_meta( get_the_ID(), '_infra_buvette_img_3', true );
-            $b_img4 = get_post_meta( get_the_ID(), '_infra_buvette_img_4', true ) ?: 'https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?q=80&w=800&auto=format&fit=crop';
-            $b_img5 = get_post_meta( get_the_ID(), '_infra_buvette_img_5', true );
-            $b_img6 = get_post_meta( get_the_ID(), '_infra_buvette_img_6', true );
             ?>
 
             <!-- GALLERIA IMMAGINI BUVETTE -->
             <div class="infra-gallery" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 80px;">
-                <!-- Riga Superiore (25% - 50% - 25%) -->
+                <!-- Prime 3 immagini (25% - 50% - 25%) -->
                 <div style="display: flex; gap: 15px; height: 400px;">
                     <div style="flex: 1; background-color: #333; <?php if($b_img1) echo "background-image: url('".esc_url($b_img1)."'); background-size: cover; background-position: center;"; ?>"></div>
                     <div style="flex: 2; background-color: #333; <?php if($b_img2) echo "background-image: url('".esc_url($b_img2)."'); background-size: cover; background-position: center;"; ?>"></div>
                     <div style="flex: 1; background-color: #333; <?php if($b_img3) echo "background-image: url('".esc_url($b_img3)."'); background-size: cover; background-position: center;"; ?>"></div>
-                </div>
-                <!-- Riga Inferiore (33% - 33% - 33%) -->
-                <div style="display: flex; gap: 15px; height: 400px;">
-                    <div style="flex: 1; background-color: #333; <?php if($b_img4) echo "background-image: url('".esc_url($b_img4)."'); background-size: cover; background-position: center;"; ?>"></div>
-                    <div style="flex: 1; background-color: #333; <?php if($b_img5) echo "background-image: url('".esc_url($b_img5)."'); background-size: cover; background-position: center;"; ?>"></div>
-                    <div style="flex: 1; background-color: #333; <?php if($b_img6) echo "background-image: url('".esc_url($b_img6)."'); background-size: cover; background-position: center;"; ?>"></div>
                 </div>
             </div>
         </div>

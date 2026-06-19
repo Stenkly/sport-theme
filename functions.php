@@ -2649,10 +2649,10 @@ function sport_theme_squadra_sezione_meta_html($post) {
     echo "<textarea name='_ss_giorni' style='width:100%;height:80px;'>" . esc_textarea($giorni) . "</textarea>";
 
     echo "<label style='display:block;margin-top:10px;'>Allenatore:</label>";
-    echo "<input type='text' name='_ss_allenatore' value='" . esc_attr($allenatore) . "' style='width:100%;max-width:400px;'>";
+    echo "<textarea name='_ss_allenatore' style='width:100%;max-width:400px;height:70px;' placeholder='Inserisci un nome per riga'>" . esc_textarea($allenatore) . "</textarea>";
 
     echo "<label style='display:block;margin-top:10px;'>Assistente (opzionale):</label>";
-    echo "<input type='text' name='_ss_assistente' value='" . esc_attr($assistente) . "' style='width:100%;max-width:400px;'>";
+    echo "<textarea name='_ss_assistente' style='width:100%;max-width:400px;height:70px;' placeholder='Inserisci un nome per riga'>" . esc_textarea($assistente) . "</textarea>";
 
     echo "<hr><label style='display:block;margin-top:10px;font-weight:bold;'>Codice Iframe Classifica (ftc.football.ch):</label>";
     echo "<p>Incolla qui l'iframe per mostrare la classifica. Se vuoto, mostreremo una tabella finta di design.</p>";
@@ -2664,8 +2664,8 @@ function sport_theme_salva_squadra_sezione_meta($post_id) {
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
 
     if (isset($_POST['_ss_giorni'])) update_post_meta($post_id, '_ss_giorni', sanitize_textarea_field($_POST['_ss_giorni']));
-    if (isset($_POST['_ss_allenatore'])) update_post_meta($post_id, '_ss_allenatore', sanitize_text_field($_POST['_ss_allenatore']));
-    if (isset($_POST['_ss_assistente'])) update_post_meta($post_id, '_ss_assistente', sanitize_text_field($_POST['_ss_assistente']));
+    if (isset($_POST['_ss_allenatore'])) update_post_meta($post_id, '_ss_allenatore', sanitize_textarea_field($_POST['_ss_allenatore']));
+    if (isset($_POST['_ss_assistente'])) update_post_meta($post_id, '_ss_assistente', sanitize_textarea_field($_POST['_ss_assistente']));
     
     if (isset($_POST['_ss_iframe'])) {
         $iframe_rules = array(
@@ -4195,8 +4195,8 @@ function sport_theme_render_hero_custom_styles() {
                 $fallback_post = get_page_by_title( 'Club' );
             }
         }
-        // 2. Pagine Team/Prima Squadra: fallback alla pagina con slug 'team'
-        elseif ( is_page_template( array( 'template-staff.php', 'template-rosa.php', 'template-prima-squadra.php' ) ) || is_page( array( 'staff', 'giocatori', 'prima-squadra' ) ) ) {
+        // 2. Pagine Team/Prima Squadra/Contatti: fallback alla pagina con slug 'team'
+        elseif ( is_page_template( array( 'template-staff.php', 'template-rosa.php', 'template-prima-squadra.php', 'template-contatti.php' ) ) || is_page( array( 'staff', 'giocatori', 'prima-squadra', 'contatti' ) ) ) {
             $fallback_post = get_page_by_path( 'team' );
             if ( ! $fallback_post ) {
                 $fallback_post = get_page_by_title( 'Team' );
@@ -5145,6 +5145,7 @@ function sport_theme_create_simple_a4_pdf( $title, $lines, $filename ) {
 function sport_theme_create_iscrizione_confirmation_pdf( $registration, $children ) {
     $responsabile = trim( (string) $registration->responsabile_nome . ' ' . (string) $registration->responsabile_cognome );
     $type_label   = $registration->tipo_iscrizione === 'scuola_calcio' ? 'Scuola Calcio' : 'Allievi';
+    $season       = $registration->stagione_sportiva ?: sport_theme_current_sport_season();
     $upload_dir = wp_upload_dir();
     if ( ! empty( $upload_dir['error'] ) ) {
         return new WP_Error( 'pdf_upload_dir', $upload_dir['error'] );
@@ -5158,8 +5159,17 @@ function sport_theme_create_iscrizione_confirmation_pdf( $registration, $childre
     $filename = sanitize_file_name( 'conferma-iscrizione-' . (int) $registration->id . '.pdf' );
     $path     = trailingslashit( $dir ) . $filename;
 
+    $company_profile = function_exists( 'sport_theme_invoice_company_profile' ) ? sport_theme_invoice_company_profile() : array();
+    $logo_path       = $company_profile['logo_path'] ?? '';
+    $logo_data       = ( $logo_path && file_exists( $logo_path ) ) ? file_get_contents( $logo_path ) : false;
+    $logo_size       = ( $logo_path && file_exists( $logo_path ) ) ? getimagesize( $logo_path ) : false;
+    if ( $logo_size && ( $logo_size['mime'] ?? '' ) !== 'image/jpeg' ) {
+        $logo_data = false;
+        $logo_size = false;
+    }
+
     $document_labels = array(
-        'carta_identita'     => 'Carta d’identita',
+        'carta_identita'     => 'Carta d’identità',
         'permesso_soggiorno' => 'Permesso di soggiorno',
         'passaporto'         => 'Passaporto',
     );
@@ -5173,6 +5183,9 @@ function sport_theme_create_iscrizione_confirmation_pdf( $registration, $childre
         '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
         '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>',
     );
+    if ( $logo_data && $logo_size ) {
+        $objects[] = "<< /Type /XObject /Subtype /Image /Width {$logo_size[0]} /Height {$logo_size[1]} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length " . strlen( $logo_data ) . " >>\nstream\n{$logo_data}\nendstream";
+    }
     $page_ids = array();
 
     $text = static function ( $value, $x, $y, $size = 10, $font = 'F1' ) {
@@ -5195,79 +5208,95 @@ function sport_theme_create_iscrizione_confirmation_pdf( $registration, $childre
 
     foreach ( $children_chunks as $page_index => $page_children ) {
         $stream = "0 0 0 rg 0 0 0 RG 1 w\n";
-        $stream .= "0.95 0.95 0.95 rg\n" . $rect( 0, 772, 595, 70, true );
-        $stream .= "0 0 0 rg\n";
-        $stream .= $text( 'CONFERMA D’ISCRIZIONE', 42, 802, 22, 'F2' );
-        $stream .= $text( 'AC Taverne', 42, 784, 10, 'F2' );
-        $stream .= $text( 'Pratica #' . (int) $registration->id, 435, 804, 11, 'F2' );
-        $stream .= $text( 'Data: ' . mysql2date( 'd.m.Y', current_time( 'mysql' ) ), 435, 789, 9 );
-        $stream .= $text( 'Stagione: ' . ( $registration->stagione_sportiva ?: sport_theme_current_sport_season() ), 435, 776, 9 );
+        if ( $logo_data && $logo_size ) {
+            $stream .= "q 82 0 0 115 42 684 cm /ImLogo Do Q\n";
+        }
+        $company_x = ( $logo_data && $logo_size ) ? 142 : 42;
+        $stream .= $text( $company_profile['name'] ?? 'AC Taverne', $company_x, 790, 13, 'F2' );
+        $stream .= $text( $company_profile['society_number'] ?? '', $company_x, 774, 11 );
+        $company_y = 748;
+        foreach ( (array) ( $company_profile['address_lines'] ?? array() ) as $company_line ) {
+            $stream .= $text( $company_line, $company_x, $company_y, 10 );
+            $company_y -= 14;
+        }
+        $company_y -= 10;
+        $stream .= $text( $company_profile['phone'] ?? '', $company_x, $company_y, 10 );
+        $company_y -= 14;
+        $stream .= $text( $company_profile['email'] ?? '', $company_x, $company_y, 10 );
+        $company_y -= 14;
+        $stream .= $text( $company_profile['website'] ?? '', $company_x, $company_y, 10 );
+        $company_y -= 14;
+        $stream .= $text( $company_profile['vat'] ?? '', $company_x, $company_y, 10, 'F2' );
 
-        $stream .= $text( 'Riepilogo pratica', 42, 742, 12, 'F2' );
-        $stream .= $line( 42, 734, 553, 734 );
-        $stream .= $text( 'Codice pratica', 42, 712, 8, 'F2' );
-        $stream .= $wrapped_text( $registration->uuid, 42, 699, 42, 9 );
-        $stream .= $text( 'Tipo iscrizione', 214, 712, 8, 'F2' );
-        $stream .= $text( $type_label, 214, 699, 9 );
-        $stream .= $text( 'Stato', 342, 712, 8, 'F2' );
-        $stream .= $text( sport_theme_iscrizione_label_value( $registration->stato, $status_labels ), 342, 699, 9 );
-        $stream .= $text( 'Importo previsto', 447, 712, 8, 'F2' );
-        $stream .= $text( 'CHF ' . number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ), 447, 699, 10, 'F2' );
+        $stream .= $text( 'CONFERMA', 390, 790, 26, 'F2' );
+        $stream .= $text( 'ISCRIZIONE', 390, 764, 26, 'F2' );
+        $stream .= $text( 'Pratica: #' . (int) $registration->id, 390, 728, 9, 'F2' );
+        $stream .= $text( 'Data conferma: ' . mysql2date( 'd.m.Y', current_time( 'mysql' ) ), 390, 714, 9 );
+        $stream .= $text( 'Stagione: ' . $season, 390, 700, 9 );
+        $stream .= $line( 42, 642, 553, 642 );
 
-        $stream .= $text( 'Responsabile legale', 42, 662, 12, 'F2' );
-        $stream .= $line( 42, 654, 553, 654 );
-        $stream .= $text( $responsabile ?: '-', 42, 632, 12, 'F2' );
-        $stream .= $text( 'Email: ' . ( $registration->responsabile_email ?: '-' ), 42, 616, 9 );
-        $stream .= $text( 'Telefono: ' . ( $registration->responsabile_telefono ?: '-' ), 300, 616, 9 );
-        $stream .= $text( 'Responsabilita genitoriale: ' . sport_theme_iscrizione_label_value(
+        $stream .= $text( 'RIEPILOGO PRATICA', 42, 612, 10, 'F2' );
+        $stream .= $text( 'Codice pratica', 42, 592, 8, 'F2' );
+        $stream .= $wrapped_text( $registration->uuid, 42, 580, 48, 8 );
+        $stream .= $text( 'Tipo iscrizione', 300, 592, 8, 'F2' );
+        $stream .= $text( $type_label, 300, 580, 9 );
+        $stream .= $text( 'Stato', 390, 592, 8, 'F2' );
+        $stream .= $text( sport_theme_iscrizione_label_value( $registration->stato, $status_labels ), 390, 580, 9 );
+        $stream .= $text( 'Importo previsto', 485, 592, 8, 'F2' );
+        $stream .= $text( 'CHF ' . number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ), 485, 580, 9, 'F2' );
+
+        $stream .= $text( 'RESPONSABILE LEGALE', 42, 542, 10, 'F2' );
+        $stream .= $text( $responsabile ?: '-', 42, 522, 12, 'F2' );
+        $stream .= $text( 'Email: ' . ( $registration->responsabile_email ?: '-' ), 42, 506, 9 );
+        $stream .= $text( 'Telefono: ' . ( $registration->responsabile_telefono ?: '-' ), 300, 506, 9 );
+        $stream .= $text( 'Responsabilità genitoriale: ' . sport_theme_iscrizione_label_value(
             $registration->responsabilita_genitoriale,
             array(
                 'padre'         => 'Padre',
                 'madre'         => 'Madre',
                 'tutore_legale' => 'Tutore legale',
             )
-        ), 42, 601, 9 );
+        ), 42, 491, 9 );
 
-        $stream .= $text( 'Bambino/i iscritti', 42, 566, 12, 'F2' );
-        $stream .= $line( 42, 558, 553, 558 );
+        $stream .= $line( 42, 466, 553, 466 );
+        $stream .= $text( 'ISCRITTI', 42, 444, 10, 'F2' );
 
-        $box_y = 522;
+        $box_y = 416;
         foreach ( $page_children as $child ) {
             $child_name = trim( (string) $child->nome . ' ' . (string) $child->cognome );
             $birth_date = $child->data_nascita ? mysql2date( 'd.m.Y', $child->data_nascita ) : '-';
             $address = trim( (string) $child->indirizzo . ' ' . (string) $child->cap_citta );
 
-            $stream .= "0.98 0.98 0.98 rg\n" . $rect( 42, $box_y - 78, 511, 94, true ) . "0 0 0 rg\n";
-            $stream .= $rect( 42, $box_y - 78, 511, 94, false );
-            $stream .= $text( $child_name ?: 'Bambino', 58, $box_y - 4, 11, 'F2' );
-            $stream .= $text( 'Nascita: ' . $birth_date, 58, $box_y - 22, 9 );
-            $stream .= $text( 'Nazionalita: ' . ( $child->nazionalita ?: '-' ), 216, $box_y - 22, 9 );
-            $stream .= $text( 'Categoria: ' . ( $child->categoria ? sport_theme_iscrizione_label_value( $child->categoria, sport_theme_iscrizioni_category_options() ) : 'Da assegnare' ), 378, $box_y - 22, 9 );
-            $stream .= $wrapped_text( 'Indirizzo: ' . ( $address ?: '-' ), 58, $box_y - 40, 78, 9 );
-            $stream .= $text( 'Documento: ' . sport_theme_iscrizione_label_value( $child->tipo_documento, $document_labels ), 58, $box_y - 66, 9 );
-            $stream .= $text( 'Cellulare: ' . ( $child->cellulare ?: '-' ), 300, $box_y - 66, 9 );
-            $box_y -= 110;
+            $stream .= $text( $child_name ?: 'Iscritto', 42, $box_y, 11, 'F2' );
+            $stream .= $text( 'Nascita: ' . $birth_date, 42, $box_y - 18, 8.5 );
+            $stream .= $text( 'Nazionalità: ' . ( $child->nazionalita ?: '-' ), 172, $box_y - 18, 8.5 );
+            $stream .= $text( 'Categoria: ' . ( $child->categoria ? sport_theme_iscrizione_label_value( $child->categoria, sport_theme_iscrizioni_category_options() ) : 'Da assegnare' ), 315, $box_y - 18, 8.5 );
+            $stream .= $wrapped_text( 'Indirizzo: ' . ( $address ?: '-' ), 42, $box_y - 34, 82, 8.5 );
+            $stream .= $text( 'Documento: ' . sport_theme_iscrizione_label_value( $child->tipo_documento, $document_labels ), 42, $box_y - 58, 8.5 );
+            $stream .= $text( 'Cellulare: ' . ( $child->cellulare ?: '-' ), 300, $box_y - 58, 8.5 );
+            $stream .= $line( 42, $box_y - 76, 553, $box_y - 76 );
+            $box_y -= 98;
         }
 
         if ( $page_index === $page_count - 1 ) {
-            $stream .= $text( 'Pagamento', 42, 178, 12, 'F2' );
-            $stream .= $line( 42, 170, 553, 170 );
-            $stream .= $text( sport_theme_iscrizione_payment_description(), 42, 149, 11, 'F2' );
-            $stream .= $text( 'Importo previsto: CHF ' . number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ), 42, 132, 10 );
-            $discount_y = 116;
+            $stream .= $text( 'PAGAMENTO', 42, 142, 10, 'F2' );
+            $stream .= $text( sport_theme_iscrizione_payment_description(), 42, 122, 11, 'F2' );
+            $stream .= $text( 'Importo previsto: CHF ' . number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ), 42, 106, 9 );
+            $discount_y = 92;
             foreach ( sport_theme_iscrizione_discount_lines( $registration ) as $discount_line ) {
                 $stream .= $text( $discount_line, 42, $discount_y, 9 );
                 $discount_y -= 12;
             }
-            $stream .= $wrapped_text( 'La presente conferma attesta la ricezione della richiesta d’iscrizione. La pratica sara verificata dalla segreteria AC Taverne.', 42, 102, 96, 9 );
+            $stream .= $wrapped_text( 'La presente conferma attesta la ricezione della richiesta d’iscrizione. La pratica sarà verificata dalla segreteria AC Taverne.', 42, 68, 96, 8.5 );
         }
 
         $stream .= $text( 'Pagina ' . ( $page_index + 1 ) . ' di ' . $page_count, 500, 34, 8 );
 
         $content_id = count( $objects ) + 1;
         $page_id = $content_id + 1;
+        $xobjects = ( $logo_data && $logo_size ) ? ' /XObject << /ImLogo 5 0 R >>' : '';
         $objects[] = "<< /Length " . strlen( $stream ) . " >>\nstream\n{$stream}\nendstream";
-        $objects[] = "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents {$content_id} 0 R >>";
+        $objects[] = "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >>{$xobjects} >> /Contents {$content_id} 0 R >>";
         $page_ids[] = $page_id;
     }
 
@@ -5300,7 +5329,25 @@ function sport_theme_iscrizione_label_value( $value, $labels ) {
     return $labels[ $value ] ?? str_replace( '_', ' ', (string) $value );
 }
 
-function sport_theme_send_iscrizione_received_email( $iscrizione_id ) {
+function sport_theme_log_iscrizione_event( $iscrizione_id, $azione, $messaggio, $created_by = null ) {
+    global $wpdb;
+
+    $tables = sport_theme_iscrizioni_table_names();
+
+    return $wpdb->insert(
+        $tables['logs'],
+        array(
+            'iscrizione_id' => (int) $iscrizione_id,
+            'azione'        => sanitize_key( $azione ),
+            'messaggio'     => sanitize_textarea_field( $messaggio ),
+            'created_by'    => $created_by === null ? get_current_user_id() : (int) $created_by,
+            'created_at'    => current_time( 'mysql' ),
+        ),
+        array( '%d', '%s', '%s', '%d', '%s' )
+    );
+}
+
+function sport_theme_send_iscrizione_received_email( $iscrizione_id, $notify_internal = true ) {
     global $wpdb;
 
     $tables = sport_theme_iscrizioni_table_names();
@@ -5320,7 +5367,8 @@ function sport_theme_send_iscrizione_received_email( $iscrizione_id ) {
     $internal_recipients  = sport_theme_parse_email_list( $settings['new_registration_recipients'] ?? '' );
     $confirmation_pdf     = sport_theme_create_iscrizione_confirmation_pdf( $registration, $children );
     $attachments          = is_wp_error( $confirmation_pdf ) ? array() : array( $confirmation_pdf );
-    $headers              = array( 'Content-Type: text/plain; charset=UTF-8' );
+    $parent_headers       = array( 'Content-Type: text/plain; charset=UTF-8' );
+    $internal_headers     = array( 'Content-Type: text/plain; charset=UTF-8' );
     $responsabile         = trim( (string) $registration->responsabile_nome . ' ' . (string) $registration->responsabile_cognome );
     $child_names          = array();
 
@@ -5328,20 +5376,44 @@ function sport_theme_send_iscrizione_received_email( $iscrizione_id ) {
         $child_names[] = trim( (string) $child->nome . ' ' . (string) $child->cognome );
     }
 
-    $subject = 'AC Taverne - Iscrizione ricevuta';
-    $message = "Gentile {$responsabile},\n\n";
-    $message .= "abbiamo ricevuto correttamente la vostra iscrizione.\n";
+    $type_label = $registration->tipo_iscrizione === 'scuola_calcio' ? 'Scuola Calcio' : 'Allievi';
+    $payment_label = sport_theme_iscrizione_label_value(
+        $registration->metodo_pagamento,
+        array(
+            'stripe'  => 'Pagamento online con carta',
+            'fattura' => 'Fattura QR',
+        )
+    );
+    $subject = 'AC Taverne - Conferma ricezione iscrizione #' . (int) $registration->id;
+    $season = $registration->stagione_sportiva ?: sport_theme_current_sport_season();
+    $amount_label = 'CHF ' . number_format( (float) $registration->importo_totale_chf, 2, '.', "'" );
+    $discount_lines = sport_theme_iscrizione_discount_lines( $registration );
+    $greeting_name = $responsabile ?: 'famiglia';
+    $message = "Gentile {$greeting_name},\n\n";
+    $message .= "abbiamo ricevuto correttamente la vostra richiesta d’iscrizione.\n";
+    $message .= "La segreteria verificherà i dati inseriti e i documenti caricati; vi contatteremo via email solo se saranno necessarie informazioni mancanti o correzioni.\n\n";
+    $message .= "RIEPILOGO PRATICA\n";
+    $message .= "Pratica: #{$registration->id}\n";
     $message .= "Codice pratica: {$registration->uuid}\n";
-    $message .= "Stagione sportiva: " . ( $registration->stagione_sportiva ?: sport_theme_current_sport_season() ) . "\n\n";
-    $message .= "La segreteria controllerà i dati e vi contatterà se saranno necessari ulteriori documenti.\n\n";
+    $message .= "Stagione sportiva: {$season}\n";
+    $message .= "Tipo iscrizione: {$type_label}\n";
+    $message .= "Iscritto/i: " . ( implode( ', ', array_filter( $child_names ) ) ?: '-' ) . "\n";
+    $message .= "Importo previsto: {$amount_label}\n";
+    $message .= "Metodo pagamento scelto: " . ( $payment_label ?: 'Da definire' ) . "\n";
+    foreach ( $discount_lines as $discount_line ) {
+        $message .= $discount_line . "\n";
+    }
+    $message .= "\n";
+    $message .= "In allegato trovate il riepilogo della richiesta d’iscrizione in formato PDF.\n\n";
+    $message .= "Per domande o correzioni potete rispondere a questa email indicando il codice pratica.\n\n";
     $message .= "AC Taverne";
 
     $sent_parent = true;
     if ( is_email( $registration->responsabile_email ) ) {
-        $sent_parent = wp_mail( $registration->responsabile_email, $subject, $message, $headers, $attachments );
+        $sent_parent = wp_mail( $registration->responsabile_email, $subject, $message, $parent_headers, $attachments );
     }
 
-    if ( $internal_recipients ) {
+    if ( $notify_internal && $internal_recipients ) {
         $internal_subject = 'AC Taverne - Nuova iscrizione ricevuta';
         $internal_message = "È stata inviata una nuova iscrizione dal sito.\n\n";
         $internal_message .= "Pratica: #{$registration->id}\n";
@@ -5358,7 +5430,7 @@ function sport_theme_send_iscrizione_received_email( $iscrizione_id ) {
         $internal_message .= "\n";
         $internal_message .= "La conferma d’iscrizione PDF è allegata alla presente email.";
 
-        wp_mail( $internal_recipients, $internal_subject, $internal_message, $headers, $attachments );
+        wp_mail( $internal_recipients, $internal_subject, $internal_message, $internal_headers, $attachments );
     }
 
     return $sent_parent;
@@ -5609,10 +5681,88 @@ function sport_theme_handle_quick_iscrizione_action() {
 }
 add_action( 'admin_post_act_quick_iscrizione_action', 'sport_theme_handle_quick_iscrizione_action' );
 
+function sport_theme_handle_resend_iscrizione_confirmation() {
+    sport_theme_iscrizioni_require_segreteria_access();
+    check_admin_referer( 'act_resend_iscrizione_confirmation' );
+
+    $id = isset( $_POST['iscrizione_id'] ) ? absint( $_POST['iscrizione_id'] ) : 0;
+    $redirect = $id ? add_query_arg( 'edit_iscrizione', $id, home_url( '/area-segreteria/' ) ) : home_url( '/area-segreteria/' );
+    $sent = $id ? sport_theme_send_iscrizione_received_email( $id, false ) : false;
+
+    if ( $sent ) {
+        sport_theme_log_iscrizione_event( $id, 'conferma_reinviata', 'Conferma iscrizione reinviata manualmente.' );
+    }
+
+    wp_safe_redirect( add_query_arg( 'confirmation_sent', $sent ? '1' : '0', $redirect ) . '#segreteria-edit' );
+    exit;
+}
+add_action( 'admin_post_act_resend_iscrizione_confirmation', 'sport_theme_handle_resend_iscrizione_confirmation' );
+
+function sport_theme_handle_send_payment_reminder() {
+    sport_theme_iscrizioni_require_segreteria_access();
+    check_admin_referer( 'act_send_payment_reminder' );
+
+    $id = isset( $_POST['iscrizione_id'] ) ? absint( $_POST['iscrizione_id'] ) : 0;
+    $redirect = $id ? add_query_arg( 'edit_iscrizione', $id, home_url( '/area-segreteria/' ) ) : home_url( '/area-segreteria/' );
+    $invoice_data = $id ? sport_theme_load_iscrizione_for_invoice( $id ) : null;
+
+    if ( ! $invoice_data ) {
+        wp_safe_redirect( add_query_arg( 'payment_reminder_sent', '0', $redirect ) . '#segreteria-edit' );
+        exit;
+    }
+
+    list( $registration, $children ) = $invoice_data;
+    if ( ! is_email( $registration->responsabile_email ) ) {
+        wp_safe_redirect( add_query_arg( 'payment_reminder_sent', '0', $redirect ) . '#segreteria-edit' );
+        exit;
+    }
+
+    $responsabile = trim( (string) $registration->responsabile_nome . ' ' . (string) $registration->responsabile_cognome );
+    $child_names = array();
+    foreach ( $children as $child ) {
+        $child_names[] = trim( (string) $child->nome . ' ' . (string) $child->cognome );
+    }
+
+    $payment_link = '';
+    if ( $registration->metodo_pagamento === 'stripe' ) {
+        $payment_link = $registration->stripe_payment_url ?: '';
+    } elseif ( $registration->metodo_pagamento === 'fattura' ) {
+        $payment_link = sport_theme_iscrizione_invoice_url( $registration, true );
+    }
+
+    if ( ! $payment_link ) {
+        wp_safe_redirect( add_query_arg( 'payment_reminder_sent', '0', $redirect ) . '#segreteria-edit' );
+        exit;
+    }
+
+    $message = "Gentile {$responsabile},\n\n";
+    $message .= "vi ricordiamo che il pagamento della tassa sociale risulta ancora aperto.\n\n";
+    $message .= "Pratica: #{$registration->id}\n";
+    $message .= "Bambino/i: " . implode( ', ', array_filter( $child_names ) ) . "\n";
+    $message .= "Importo: CHF " . number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ) . "\n";
+    $message .= "Link pagamento/fattura: {$payment_link}\n\n";
+    $message .= "AC Taverne";
+
+    $sent = wp_mail(
+        $registration->responsabile_email,
+        'AC Taverne - Promemoria pagamento iscrizione',
+        $message,
+        array( 'Content-Type: text/plain; charset=UTF-8' )
+    );
+
+    if ( $sent ) {
+        sport_theme_log_iscrizione_event( $id, 'promemoria_pagamento', 'Promemoria pagamento inviato a ' . $registration->responsabile_email );
+    }
+
+    wp_safe_redirect( add_query_arg( 'payment_reminder_sent', $sent ? '1' : '0', $redirect ) . '#segreteria-edit' );
+    exit;
+}
+add_action( 'admin_post_act_send_payment_reminder', 'sport_theme_handle_send_payment_reminder' );
+
 function sport_theme_iscrizione_billing_settings() {
     $settings = array(
-        'creditor_name' => 'Associazione Calcio Taverne',
-        'street'        => 'Via Traversee',
+        'creditor_name' => 'AC Taverne',
+        'street'        => 'Via Traversée',
         'house_number'  => '2',
         'postal_code'   => '6807',
         'city'          => 'Taverne',
@@ -5621,6 +5771,27 @@ function sport_theme_iscrizione_billing_settings() {
     );
 
     return apply_filters( 'sport_theme_iscrizione_billing_settings', $settings );
+}
+
+function sport_theme_invoice_company_profile() {
+    return apply_filters(
+        'sport_theme_invoice_company_profile',
+        array(
+            'logo_path'      => get_template_directory() . '/assets/images/invoice/ac-taverne-word-logo.jpg',
+            'logo_url'       => get_template_directory_uri() . '/assets/images/invoice/ac-taverne-word-logo.jpg',
+            'name'           => 'AC Taverne',
+            'society_number' => 'Nr. Società 4091',
+            'address_lines'  => array(
+                'Via Traversée 2',
+                '6807 Taverne',
+                'Casella Postale 703',
+            ),
+            'phone'          => 'Tel: +4191 945 22 95',
+            'email'          => 'info@actaverne.com',
+            'website'        => 'www.actaverne.com',
+            'vat'            => 'P. Iva: CHE-169.678.709',
+        )
+    );
 }
 
 function sport_theme_normalize_iban( $iban ) {
@@ -5805,6 +5976,9 @@ function sport_theme_create_iscrizione_qr_bill( $registration, $children ) {
         $child_names[] = trim( (string) $child->nome . ' ' . (string) $child->cognome );
     }
     $discount_lines = sport_theme_iscrizione_discount_lines( $registration );
+    $invoice_number = date_i18n( 'Y', current_time( 'timestamp' ) ) . '-' . str_pad( (string) (int) $registration->id, 4, '0', STR_PAD_LEFT );
+    $base_amount = sport_theme_calculate_iscrizione_amount( $registration->tipo_iscrizione, count( $children ), false );
+    $discount_amount = max( 0, $base_amount - (float) $registration->importo_totale_chf );
 
     $type_label = $registration->tipo_iscrizione === 'scuola_calcio' ? 'Scuola Calcio' : 'Allievi';
     $message = trim( sprintf(
@@ -5871,13 +6045,16 @@ function sport_theme_handle_iscrizione_invoice() {
     $responsabile = trim( (string) $registration->responsabile_nome . ' ' . (string) $registration->responsabile_cognome );
     $type_label = $registration->tipo_iscrizione === 'scuola_calcio' ? 'Scuola Calcio' : 'Allievi';
     $billing_settings = sport_theme_iscrizione_billing_settings();
-    $invoice_logo_id = get_theme_mod( 'custom_logo' );
-    $invoice_logo_url = $invoice_logo_id ? wp_get_attachment_image_url( $invoice_logo_id, 'full' ) : get_template_directory_uri() . '/assets/images/logo.png';
+    $company_profile = sport_theme_invoice_company_profile();
+    $invoice_logo_url = $company_profile['logo_url'] ?? '';
     $child_names = array();
     foreach ( $children as $child ) {
         $child_names[] = trim( (string) $child->nome . ' ' . (string) $child->cognome );
     }
     $discount_lines = sport_theme_iscrizione_discount_lines( $registration );
+    $invoice_number = date_i18n( 'Y', current_time( 'timestamp' ) ) . '-' . str_pad( (string) (int) $registration->id, 4, '0', STR_PAD_LEFT );
+    $base_amount = sport_theme_calculate_iscrizione_amount( $registration->tipo_iscrizione, count( $children ), false );
+    $discount_amount = max( 0, $base_amount - (float) $registration->importo_totale_chf );
 
     nocache_headers();
     header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );
@@ -5893,21 +6070,29 @@ function sport_theme_handle_iscrizione_invoice() {
         body { margin: 0; background: #f3f4f6; color: #111; font-family: Arial, Helvetica, sans-serif; }
         .invoice-wrap { width: min(100%, 210mm); margin: 0 auto; padding: 22px 14px 42px; box-sizing: border-box; }
         .invoice-sheet { width: 210mm; min-height: 297mm; max-width: 100%; margin: 0 auto; background: #fff; box-shadow: 0 16px 40px rgba(0,0,0,.12); box-sizing: border-box; display: flex; flex-direction: column; }
-        .invoice-header { display: flex; justify-content: space-between; gap: 32px; padding: 34px 38px 26px; border-bottom: 2px solid #111; }
-        .invoice-header h1 { margin: 0 0 10px; font-size: 34px; line-height: 1; text-transform: uppercase; letter-spacing: 0; }
-        .invoice-brand { display: flex; align-items: flex-start; gap: 14px; margin-top: 6px; }
-        .invoice-logo { display: block; width: 72px; height: auto; flex: 0 0 auto; }
-        .invoice-header p, .invoice-meta p { margin: 0; font-size: 14px; line-height: 1.45; }
-        .invoice-meta { text-align: right; padding-top: 47px; }
+        .invoice-header { display: flex; justify-content: space-between; gap: 34px; padding: 34px 38px 24px; border-bottom: 1px solid #d7d7d7; }
+        .invoice-header h1 { margin: 0 0 12px; font-size: 32px; line-height: 1; text-transform: uppercase; letter-spacing: 0; }
+        .invoice-brand { display: flex; align-items: flex-start; gap: 16px; }
+        .invoice-logo { display: block; width: 92px; height: auto; flex: 0 0 auto; }
+        .invoice-company p, .invoice-meta p { margin: 0; font-size: 14px; line-height: 1.45; }
+        .invoice-company strong { font-size: 16px; }
+        .invoice-company a { color: #0645ad; text-decoration: underline; }
+        .invoice-company .invoice-vat { font-weight: 700; }
+        .invoice-meta { text-align: right; padding-top: 2px; }
         .invoice-body { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; padding: 28px 38px 34px; }
         .invoice-box h2 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase; letter-spacing: 0; }
         .invoice-box p { margin: 0; font-size: 15px; line-height: 1.55; }
         .invoice-box strong { display: block; margin-bottom: 6px; font-size: 16px; }
         .invoice-muted { color: #555; }
+        .invoice-child-line { display: block; color: #111; }
         .invoice-discount { display: block; margin-top: 6px; font-weight: 700; color: #111; }
         .invoice-total { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; padding-top: 22px; border-top: 1px solid #ddd; }
         .invoice-total span { font-size: 14px; text-transform: uppercase; font-weight: 700; }
         .invoice-total strong { font-size: 30px; }
+        .invoice-summary { grid-column: 1 / -1; margin-top: -12px; padding: 0 0 4px; }
+        .invoice-summary h2 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase; letter-spacing: 0; }
+        .invoice-summary-row { display: flex; justify-content: space-between; gap: 24px; max-width: 100%; margin: 4px 0; font-size: 14px; line-height: 1.35; }
+        .invoice-summary-row strong { font-size: 14px; }
         .invoice-actions { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 16px; }
         .invoice-actions button { border: 0; background: #e30613; color: #fff; padding: 12px 18px; font-weight: 800; text-transform: uppercase; cursor: pointer; }
         .invoice-qr { overflow-x: auto; margin-top: auto; padding: 0 0 20px; }
@@ -5917,7 +6102,7 @@ function sport_theme_handle_iscrizione_invoice() {
             .invoice-wrap { width: 210mm; padding: 0; }
             .invoice-sheet { box-shadow: none; }
             .invoice-header { display: flex; }
-            .invoice-meta { text-align: right; margin-top: 0; padding-top: 47px; }
+            .invoice-meta { text-align: right; margin-top: 0; padding-top: 2px; }
             .invoice-body { display: grid; grid-template-columns: 1fr 1fr; }
             .invoice-actions { display: none; }
         }
@@ -5935,44 +6120,81 @@ function sport_theme_handle_iscrizione_invoice() {
         </div>
         <article class="invoice-sheet">
             <header class="invoice-header">
-                <div>
-                    <h1>Fattura</h1>
-                    <div class="invoice-brand">
-                        <?php if ( $invoice_logo_url ) : ?>
-                            <img class="invoice-logo" src="<?php echo esc_url( $invoice_logo_url ); ?>" alt="AC Taverne">
-                        <?php endif; ?>
-                        <p><strong><?php echo esc_html( $billing_settings['creditor_name'] ?? 'AC Taverne' ); ?></strong><br><?php echo esc_html( trim( ( $billing_settings['street'] ?? '' ) . ' ' . ( $billing_settings['house_number'] ?? '' ) ) ); ?><br><?php echo esc_html( trim( ( $billing_settings['postal_code'] ?? '' ) . ' ' . ( $billing_settings['city'] ?? '' ) ) ); ?></p>
+                <div class="invoice-brand">
+                    <?php if ( $invoice_logo_url ) : ?>
+                        <img class="invoice-logo" src="<?php echo esc_url( $invoice_logo_url ); ?>" alt="AC Taverne">
+                    <?php endif; ?>
+                    <div class="invoice-company">
+                        <p>
+                            <strong><?php echo esc_html( $company_profile['name'] ?? 'AC Taverne' ); ?></strong><br>
+                            <?php echo esc_html( $company_profile['society_number'] ?? '' ); ?><br><br>
+                            <?php foreach ( (array) ( $company_profile['address_lines'] ?? array() ) as $company_line ) : ?>
+                                <?php echo esc_html( $company_line ); ?><br>
+                            <?php endforeach; ?>
+                            <br>
+                            <?php echo esc_html( $company_profile['phone'] ?? '' ); ?><br>
+                            <?php if ( ! empty( $company_profile['email'] ) ) : ?>
+                                <a href="mailto:<?php echo esc_attr( $company_profile['email'] ); ?>"><?php echo esc_html( $company_profile['email'] ); ?></a><br>
+                            <?php endif; ?>
+                            <?php echo esc_html( $company_profile['website'] ?? '' ); ?><br>
+                            <span class="invoice-vat"><?php echo esc_html( $company_profile['vat'] ?? '' ); ?></span>
+                        </p>
                     </div>
                 </div>
                 <div class="invoice-meta">
-                    <p><strong>Pratica #<?php echo esc_html( $registration->id ); ?></strong></p>
-                    <p>Data: <?php echo esc_html( mysql2date( 'd.m.Y', current_time( 'mysql' ) ) ); ?></p>
+                    <h1>Fattura</h1>
+                    <p><strong>Fattura n.: <?php echo esc_html( $invoice_number ); ?></strong></p>
+                    <p>Pratica: #<?php echo esc_html( $registration->id ); ?></p>
+                    <p>Data fattura: <?php echo esc_html( mysql2date( 'd.m.Y', current_time( 'mysql' ) ) ); ?></p>
                     <p>Stagione: <?php echo esc_html( $registration->stagione_sportiva ); ?></p>
                     <p>Riferimento: <?php echo esc_html( $reference ); ?></p>
                 </div>
             </header>
             <section class="invoice-body">
                 <div class="invoice-box">
-                    <h2>Fatturato a</h2>
+                    <h2>Destinatario fattura</h2>
                     <p>
                         <strong><?php echo esc_html( $responsabile ?: '-' ); ?></strong>
                         <?php echo esc_html( $registration->responsabile_email ?: '' ); ?>
                     </p>
                 </div>
                 <div class="invoice-box">
-                    <h2>Descrizione</h2>
+                    <h2>Dettaglio iscrizione</h2>
                     <p>
                         <strong><?php echo esc_html( sport_theme_iscrizione_payment_description() ); ?></strong>
-                        <?php echo esc_html( $type_label ); ?> · <?php echo esc_html( $registration->stagione_sportiva ); ?><br>
-                        <span class="invoice-muted"><?php echo esc_html( implode( ', ', array_filter( $child_names ) ) ); ?></span>
+                        Categoria: <?php echo esc_html( $type_label ); ?> · Stagione <?php echo esc_html( $registration->stagione_sportiva ); ?><br>
+                        <?php if ( array_filter( $child_names ) ) : ?>
+                            <?php foreach ( array_values( array_filter( $child_names ) ) as $child_index => $child_name ) : ?>
+                                <span class="invoice-child-line">Iscritto <?php echo esc_html( $child_index + 1 ); ?>: <?php echo esc_html( $child_name ); ?></span>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <span class="invoice-child-line">Iscritto 1: -</span>
+                        <?php endif; ?>
                         <?php foreach ( $discount_lines as $discount_line ) : ?>
                             <span class="invoice-discount"><?php echo esc_html( $discount_line ); ?></span>
                         <?php endforeach; ?>
                     </p>
                 </div>
                 <div class="invoice-total">
-                    <span>Totale da pagare</span>
+                    <span>Totale fattura da pagare</span>
                     <strong>CHF <?php echo esc_html( number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ) ); ?></strong>
+                </div>
+                <div class="invoice-summary">
+                    <h2>Riepilogo importo</h2>
+                    <div class="invoice-summary-row">
+                        <span>Tassa sociale iscrizione</span>
+                        <span>CHF <?php echo esc_html( number_format( $base_amount, 2, '.', "'" ) ); ?></span>
+                    </div>
+                    <?php if ( $discount_amount > 0 ) : ?>
+                        <div class="invoice-summary-row">
+                            <span>Riduzioni applicate</span>
+                            <span>- CHF <?php echo esc_html( number_format( $discount_amount, 2, '.', "'" ) ); ?></span>
+                        </div>
+                    <?php endif; ?>
+                    <div class="invoice-summary-row">
+                        <strong>Totale fattura</strong>
+                        <strong>CHF <?php echo esc_html( number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ) ); ?></strong>
+                    </div>
                 </div>
             </section>
             <section class="invoice-qr">
@@ -6038,12 +6260,32 @@ function sport_theme_create_iscrizione_invoice_pdf( $registration, $children, $i
         return new WP_Error( 'invoice_qr_embed_failed', 'Impossibile preparare il QR per il PDF.' );
     }
 
+    $company_profile = sport_theme_invoice_company_profile();
+    $logo_path       = $company_profile['logo_path'] ?? '';
+    $logo_data       = ( $logo_path && file_exists( $logo_path ) ) ? file_get_contents( $logo_path ) : false;
+    $logo_size       = ( $logo_path && file_exists( $logo_path ) ) ? getimagesize( $logo_path ) : false;
+    if ( $logo_size && ( $logo_size['mime'] ?? '' ) !== 'image/jpeg' ) {
+        $logo_data = false;
+        $logo_size = false;
+    }
+
     $billing_settings = sport_theme_iscrizione_billing_settings();
     $responsabile     = trim( (string) $registration->responsabile_nome . ' ' . (string) $registration->responsabile_cognome );
     $type_label       = $registration->tipo_iscrizione === 'scuola_calcio' ? 'Scuola Calcio' : 'Allievi';
-    $children_label   = implode( ', ', array_filter( $child_names ) );
     $total_label      = 'CHF ' . number_format( (float) $registration->importo_totale_chf, 2, '.', "'" );
     $discount_lines   = sport_theme_iscrizione_discount_lines( $registration );
+    $invoice_number   = date_i18n( 'Y', current_time( 'timestamp' ) ) . '-' . str_pad( (string) (int) $registration->id, 4, '0', STR_PAD_LEFT );
+    $base_amount      = sport_theme_calculate_iscrizione_amount( $registration->tipo_iscrizione, count( $children ), false );
+    $discount_amount  = max( 0, $base_amount - (float) $registration->importo_totale_chf );
+    $reference_label  = trim( chunk_split( (string) $reference, 4, ' ' ) );
+    $first_child      = $children[0] ?? null;
+    $debtor_lines     = array_filter(
+        array(
+            $responsabile,
+            $first_child->indirizzo ?? '',
+            $first_child->cap_citta ?? '',
+        )
+    );
 
     $text = static function ( $value, $x, $y, $size = 10, $font = 'F1' ) {
         return sprintf( "BT /%s %F Tf 1 0 0 1 %F %F Tm (%s) Tj ET\n", $font, $size, $x, $y, sport_theme_pdf_escape_text( $value ) );
@@ -6061,64 +6303,138 @@ function sport_theme_create_iscrizione_invoice_pdf( $registration, $children, $i
     };
 
     $stream = "0 0 0 rg 0 0 0 RG 1 w\n";
-    $stream .= $text( 'FATTURA', 42, 786, 28, 'F2' );
-    $stream .= $text( $billing_settings['creditor_name'] ?? 'Associazione Calcio Taverne', 42, 758, 11, 'F2' );
-    $stream .= $text( trim( ( $billing_settings['street'] ?? '' ) . ' ' . ( $billing_settings['house_number'] ?? '' ) ), 42, 742, 10 );
-    $stream .= $text( trim( ( $billing_settings['postal_code'] ?? '' ) . ' ' . ( $billing_settings['city'] ?? '' ) ), 42, 728, 10 );
-    $stream .= $text( 'Pratica #' . (int) $registration->id, 430, 758, 10, 'F2' );
-    $stream .= $text( 'Data: ' . mysql2date( 'd.m.Y', current_time( 'mysql' ) ), 430, 742, 9 );
-    $stream .= $text( 'Stagione: ' . ( $registration->stagione_sportiva ?: sport_theme_current_sport_season() ), 430, 728, 9 );
-    $stream .= $text( 'Riferimento: ' . $reference, 430, 714, 9 );
-    $stream .= $line( 42, 690, 553, 690 );
+    if ( $logo_data && $logo_size ) {
+        $stream .= "q 82 0 0 115 42 684 cm /ImLogo Do Q\n";
+    }
+    $company_x = ( $logo_data && $logo_size ) ? 142 : 42;
+    $stream .= $text( $company_profile['name'] ?? 'AC Taverne', $company_x, 790, 13, 'F2' );
+    $stream .= $text( $company_profile['society_number'] ?? '', $company_x, 774, 11 );
+    $company_y = 748;
+    foreach ( (array) ( $company_profile['address_lines'] ?? array() ) as $company_line ) {
+        $stream .= $text( $company_line, $company_x, $company_y, 10 );
+        $company_y -= 14;
+    }
+    $company_y -= 10;
+    $stream .= $text( $company_profile['phone'] ?? '', $company_x, $company_y, 10 );
+    $company_y -= 14;
+    $stream .= $text( $company_profile['email'] ?? '', $company_x, $company_y, 10 );
+    $company_y -= 14;
+    $stream .= $text( $company_profile['website'] ?? '', $company_x, $company_y, 10 );
+    $company_y -= 14;
+    $stream .= $text( $company_profile['vat'] ?? '', $company_x, $company_y, 10, 'F2' );
 
-    $stream .= $text( 'FATTURATO A', 42, 662, 10, 'F2' );
-    $stream .= $text( $responsabile ?: '-', 42, 642, 12, 'F2' );
-    $stream .= $text( $registration->responsabile_email ?: '-', 42, 624, 10 );
+    $stream .= $text( 'FATTURA', 430, 790, 26, 'F2' );
+    $stream .= $text( 'Fattura n.: ' . $invoice_number, 430, 758, 10, 'F2' );
+    $stream .= $text( 'Pratica: #' . (int) $registration->id, 430, 745, 9 );
+    $stream .= $text( 'Data fattura: ' . mysql2date( 'd.m.Y', current_time( 'mysql' ) ), 430, 732, 9 );
+    $stream .= $text( 'Stagione: ' . ( $registration->stagione_sportiva ?: sport_theme_current_sport_season() ), 430, 719, 9 );
+    $stream .= $text( 'Riferimento: ' . $reference, 430, 706, 9 );
+    $stream .= $line( 42, 642, 553, 642 );
 
-    $stream .= $text( 'DESCRIZIONE', 300, 662, 10, 'F2' );
-    $stream .= $text( sport_theme_iscrizione_payment_description(), 300, 642, 12, 'F2' );
-    $stream .= $text( $type_label . ' · ' . ( $registration->stagione_sportiva ?: sport_theme_current_sport_season() ), 300, 624, 10 );
-    $stream .= $wrapped_text( $children_label ?: '-', 300, 606, 42, 10 );
-    $discount_y = 582;
+    $stream .= $text( 'DESTINATARIO FATTURA', 42, 612, 10, 'F2' );
+    $stream .= $text( $responsabile ?: '-', 42, 592, 12, 'F2' );
+    $stream .= $text( $registration->responsabile_email ?: '-', 42, 574, 10 );
+
+    $stream .= $text( 'DETTAGLIO ISCRIZIONE', 300, 612, 10, 'F2' );
+    $stream .= $text( sport_theme_iscrizione_payment_description(), 300, 592, 12, 'F2' );
+    $stream .= $text( 'Categoria: ' . $type_label . ' · Stagione ' . ( $registration->stagione_sportiva ?: sport_theme_current_sport_season() ), 300, 574, 10 );
+    $child_y = 556;
+    if ( $child_names ) {
+        foreach ( array_values( array_filter( $child_names ) ) as $child_index => $child_name ) {
+            $stream .= $wrapped_text( 'Iscritto ' . ( $child_index + 1 ) . ': ' . $child_name, 300, $child_y, 42, 10 );
+            $child_y -= 14;
+        }
+    } else {
+        $stream .= $text( 'Iscritto 1: -', 300, $child_y, 10 );
+        $child_y -= 14;
+    }
+    $discount_y = $child_y - 10;
     foreach ( $discount_lines as $discount_line ) {
         $stream .= $text( $discount_line, 300, $discount_y, 9, 'F2' );
         $discount_y -= 12;
     }
 
-    $stream .= $line( 42, 560, 553, 560 );
-    $stream .= $text( 'TOTALE DA PAGARE', 42, 528, 13, 'F2' );
-    $stream .= $text( $total_label, 428, 526, 22, 'F2' );
+    $stream .= $line( 42, 500, 553, 500 );
+    $stream .= $text( 'TOTALE FATTURA DA PAGARE', 42, 468, 13, 'F2' );
+    $stream .= $text( $total_label, 428, 466, 22, 'F2' );
+    $stream .= $text( 'RIEPILOGO IMPORTO', 42, 430, 10, 'F2' );
+    $stream .= $text( 'Tassa sociale iscrizione', 42, 414, 9 );
+    $stream .= $text( 'CHF ' . number_format( $base_amount, 2, '.', "'" ), 428, 414, 9 );
+    $summary_y = 400;
+    if ( $discount_amount > 0 ) {
+        $stream .= $text( 'Riduzioni applicate', 42, $summary_y, 9 );
+        $stream .= $text( '- CHF ' . number_format( $discount_amount, 2, '.', "'" ), 428, $summary_y, 9 );
+        $summary_y -= 14;
+    }
+    $stream .= $text( 'Totale fattura', 42, $summary_y, 9, 'F2' );
+    $stream .= $text( $total_label, 428, $summary_y, 9, 'F2' );
 
     $stream .= $line( 42, 286, 553, 286 );
-    $stream .= $text( 'SEZIONE PAGAMENTO', 42, 260, 14, 'F2' );
-    $stream .= "q 150 0 0 150 42 84 cm /Im1 Do Q\n";
-    $stream .= $text( 'Conto / Pagabile a', 230, 246, 9, 'F2' );
-    $stream .= $text( $billing_settings['iban'] ?? '', 230, 232, 10 );
-    $stream .= $text( $billing_settings['creditor_name'] ?? 'Associazione Calcio Taverne', 230, 218, 10 );
-    $stream .= $text( trim( ( $billing_settings['street'] ?? '' ) . ' ' . ( $billing_settings['house_number'] ?? '' ) ), 230, 204, 10 );
-    $stream .= $text( trim( ( $billing_settings['postal_code'] ?? '' ) . ' ' . ( $billing_settings['city'] ?? '' ) ), 230, 190, 10 );
-    $stream .= $text( 'Riferimento', 230, 166, 9, 'F2' );
-    $stream .= $text( $reference, 230, 152, 10 );
-    $stream .= $text( 'Informazioni supplementari', 230, 128, 9, 'F2' );
-    $stream .= $wrapped_text( $message, 230, 114, 54, 9 );
-    $stream .= $text( 'Valuta', 42, 54, 8, 'F2' );
-    $stream .= $text( 'Importo', 92, 54, 8, 'F2' );
-    $stream .= $text( 'CHF', 42, 40, 10 );
-    $stream .= $text( number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ), 92, 40, 10 );
-    if ( $invoice_url ) {
-        $stream .= $text( 'Link fattura online: ' . $invoice_url, 230, 40, 7 );
+    $stream .= $line( 200, 286, 200, 40 );
+    $stream .= $text( 'Ricevuta', 42, 260, 12, 'F2' );
+    $stream .= $text( 'Conto / Pagabile a', 42, 238, 7.5, 'F2' );
+    $stream .= $text( $billing_settings['iban'] ?? '', 42, 226, 7.5 );
+    $stream .= $text( $billing_settings['creditor_name'] ?? 'AC Taverne', 42, 214, 7.5 );
+    $stream .= $text( trim( ( $billing_settings['street'] ?? '' ) . ' ' . ( $billing_settings['house_number'] ?? '' ) ), 42, 202, 7.5 );
+    $stream .= $text( trim( ( $billing_settings['postal_code'] ?? '' ) . ' ' . ( $billing_settings['city'] ?? '' ) ), 42, 190, 7.5 );
+    $stream .= $text( 'Riferimento', 42, 170, 7.5, 'F2' );
+    $stream .= $wrapped_text( $reference_label, 42, 158, 24, 7.5, 'F1', 9 );
+    $stream .= $text( 'Pagabile da', 42, 134, 7.5, 'F2' );
+    $receipt_debtor_y = 122;
+    foreach ( $debtor_lines as $debtor_line ) {
+        $stream .= $wrapped_text( $debtor_line, 42, $receipt_debtor_y, 24, 7.5, 'F1', 9 );
+        $receipt_debtor_y -= 9;
+    }
+    $stream .= $text( 'Valuta', 42, 68, 7.5, 'F2' );
+    $stream .= $text( 'Importo', 92, 68, 7.5, 'F2' );
+    $stream .= $text( 'CHF', 42, 54, 9 );
+    $stream .= $text( number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ), 92, 54, 9 );
+    $stream .= $text( 'Punto di accettazione', 104, 88, 7.5 );
+
+    $stream .= $text( 'Sezione pagamento', 218, 260, 14, 'F2' );
+    $stream .= "q 130 0 0 130 218 92 cm /Im1 Do Q\n";
+    $stream .= $text( 'Valuta', 218, 72, 8, 'F2' );
+    $stream .= $text( 'Importo', 268, 72, 8, 'F2' );
+    $stream .= $text( 'CHF', 218, 58, 10 );
+    $stream .= $text( number_format( (float) $registration->importo_totale_chf, 2, '.', "'" ), 268, 58, 10 );
+    $stream .= $text( 'Conto / Pagabile a', 365, 238, 8, 'F2' );
+    $stream .= $text( $billing_settings['iban'] ?? '', 365, 224, 9 );
+    $stream .= $text( $billing_settings['creditor_name'] ?? 'AC Taverne', 365, 210, 9 );
+    $stream .= $text( trim( ( $billing_settings['street'] ?? '' ) . ' ' . ( $billing_settings['house_number'] ?? '' ) ), 365, 196, 9 );
+    $stream .= $text( trim( ( $billing_settings['postal_code'] ?? '' ) . ' ' . ( $billing_settings['city'] ?? '' ) ), 365, 182, 9 );
+    $stream .= $text( 'Riferimento', 365, 160, 8, 'F2' );
+    $stream .= $wrapped_text( $reference_label, 365, 146, 28, 9 );
+    $stream .= $text( 'Informazioni supplementari', 365, 118, 8, 'F2' );
+    $stream .= $wrapped_text( $message, 365, 104, 30, 8, 'F1', 10 );
+    $stream .= $text( 'Pagabile da', 365, 66, 8, 'F2' );
+    $payment_debtor_y = 54;
+    foreach ( $debtor_lines as $debtor_line ) {
+        $stream .= $wrapped_text( $debtor_line, 365, $payment_debtor_y, 30, 8, 'F1', 9 );
+        $payment_debtor_y -= 9;
     }
 
     $image_object = "<< /Type /XObject /Subtype /Image /Width {$image_size[0]} /Height {$image_size[1]} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length " . strlen( $image_data ) . " >>\nstream\n{$image_data}\nendstream";
+    $logo_object  = ( $logo_data && $logo_size ) ? "<< /Type /XObject /Subtype /Image /Width {$logo_size[0]} /Height {$logo_size[1]} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length " . strlen( $logo_data ) . " >>\nstream\n{$logo_data}\nendstream" : '';
+
+    $page_object_id    = ( $logo_object ) ? 8 : 7;
+    $content_object_id = ( $logo_object ) ? 7 : 6;
+    $xobjects          = '/Im1 5 0 R';
+    if ( $logo_object ) {
+        $xobjects .= ' /ImLogo 6 0 R';
+    }
+
     $objects = array(
         '<< /Type /Catalog /Pages 2 0 R >>',
-        '<< /Type /Pages /Kids [7 0 R] /Count 1 >>',
+        '<< /Type /Pages /Kids [' . $page_object_id . ' 0 R] /Count 1 >>',
         '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
         '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>',
         $image_object,
-        "<< /Length " . strlen( $stream ) . " >>\nstream\n{$stream}\nendstream",
-        '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> /XObject << /Im1 5 0 R >> >> /Contents 6 0 R >>',
     );
+    if ( $logo_object ) {
+        $objects[] = $logo_object;
+    }
+    $objects[] = "<< /Length " . strlen( $stream ) . " >>\nstream\n{$stream}\nendstream";
+    $objects[] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> /XObject << ' . $xobjects . ' >> >> /Contents ' . $content_object_id . ' 0 R >>';
 
     $pdf     = "%PDF-1.4\n";
     $offsets = array( 0 );
@@ -6939,6 +7255,9 @@ function sport_theme_handle_update_iscrizione_detail() {
         exit;
     }
 
+    $change_messages = array();
+    $status_labels = sport_theme_iscrizioni_status_labels();
+    $category_labels = sport_theme_iscrizioni_category_options();
     $tipo_iscrizione = sport_theme_sanitize_iscrizione_key( $_POST['tipo_iscrizione'] ?? $registration->tipo_iscrizione, array( 'allievi', 'scuola_calcio' ), 'allievi' );
     $stato = sport_theme_sanitize_iscrizione_key( $_POST['stato'] ?? $registration->stato, sport_theme_iscrizioni_allowed_statuses(), 'nuova' );
     $metodo_pagamento = sport_theme_sanitize_iscrizione_key( $_POST['metodo_pagamento'] ?? $registration->metodo_pagamento, array( 'stripe', 'fattura' ), 'fattura' );
@@ -6948,6 +7267,22 @@ function sport_theme_handle_update_iscrizione_detail() {
     $stagione_sportiva = sanitize_text_field( wp_unslash( $_POST['stagione_sportiva'] ?? $registration->stagione_sportiva ) );
     if ( ! preg_match( '/^\d{4}\/\d{4}$/', $stagione_sportiva ) ) {
         $stagione_sportiva = sport_theme_current_sport_season();
+    }
+
+    if ( $registration->stato !== $stato ) {
+        $change_messages[] = 'Stato: ' . sport_theme_iscrizione_label_value( $registration->stato, $status_labels ) . ' -> ' . sport_theme_iscrizione_label_value( $stato, $status_labels );
+    }
+    if ( $registration->metodo_pagamento !== $metodo_pagamento ) {
+        $change_messages[] = 'Metodo pagamento: ' . ( $registration->metodo_pagamento ?: 'Da definire' ) . ' -> ' . $metodo_pagamento;
+    }
+    if ( $registration->stato_pagamento !== $stato_pagamento ) {
+        $change_messages[] = 'Stato pagamento: ' . ( $registration->stato_pagamento ?: 'non_pagato' ) . ' -> ' . $stato_pagamento;
+    }
+    if ( (string) $registration->responsabile_email !== sport_theme_clean_email_field( 'responsabile_email' ) ) {
+        $change_messages[] = 'Email responsabile aggiornata.';
+    }
+    if ( trim( (string) $registration->note_interne ) !== trim( sport_theme_clean_textarea_field( 'note_interne' ) ) ) {
+        $change_messages[] = 'Note interne aggiornate.';
     }
 
     $wpdb->update(
@@ -6980,7 +7315,7 @@ function sport_theme_handle_update_iscrizione_detail() {
         }
 
         $existing_child = $wpdb->get_row(
-            $wpdb->prepare( "SELECT id, child_index FROM {$tables['children']} WHERE id = %d AND iscrizione_id = %d", $child_id, $id )
+            $wpdb->prepare( "SELECT id, child_index, nome, cognome, categoria FROM {$tables['children']} WHERE id = %d AND iscrizione_id = %d", $child_id, $id )
         );
 
         if ( ! $existing_child ) {
@@ -6993,6 +7328,10 @@ function sport_theme_handle_update_iscrizione_detail() {
             array_keys( sport_theme_iscrizioni_category_options() ),
             ''
         );
+        if ( (string) $existing_child->categoria !== $categoria ) {
+            $child_name = trim( (string) $existing_child->nome . ' ' . (string) $existing_child->cognome );
+            $change_messages[] = ( $child_name ?: 'Bambino ' . (int) $existing_child->child_index ) . ': categoria ' . sport_theme_iscrizione_label_value( $existing_child->categoria, $category_labels ) . ' -> ' . sport_theme_iscrizione_label_value( $categoria, $category_labels );
+        }
         $quota_chf = isset( $child_data['quota_chf'] ) ? (float) str_replace( ',', '.', sanitize_text_field( $child_data['quota_chf'] ) ) : null;
         if ( $quota_chf === null || $quota_chf < 0 ) {
             $quota_chf = sport_theme_calculate_iscrizione_child_amount( $tipo_iscrizione, (int) $existing_child->child_index );
@@ -7069,16 +7408,10 @@ function sport_theme_handle_update_iscrizione_detail() {
         array( '%d' )
     );
 
-    $wpdb->insert(
-        $tables['logs'],
-        array(
-            'iscrizione_id' => $id,
-            'azione'        => 'dati_modificati',
-            'messaggio'     => 'Dati iscrizione aggiornati dalla segreteria.',
-            'created_by'    => get_current_user_id(),
-            'created_at'    => current_time( 'mysql' ),
-        ),
-        array( '%d', '%s', '%s', '%d', '%s' )
+    sport_theme_log_iscrizione_event(
+        $id,
+        'dati_modificati',
+        $change_messages ? implode( '; ', array_unique( $change_messages ) ) : 'Dati iscrizione aggiornati dalla segreteria.'
     );
 
     if ( $documents_replaced > 0 ) {
@@ -7163,6 +7496,7 @@ function sport_theme_get_iscrizioni_dashboard_filters() {
     $filter_stato     = isset( $_GET['stato'] ) ? sanitize_key( wp_unslash( $_GET['stato'] ) ) : '';
     $filter_pagamento = isset( $_GET['pagamento'] ) ? sanitize_key( wp_unslash( $_GET['pagamento'] ) ) : '';
     $filter_categoria = isset( $_GET['categoria'] ) ? sanitize_key( wp_unslash( $_GET['categoria'] ) ) : '';
+    $filter_pratiche  = isset( $_GET['pratiche'] ) ? sanitize_key( wp_unslash( $_GET['pratiche'] ) ) : '';
     $filter_stagione  = isset( $_GET['stagione'] ) ? sanitize_text_field( wp_unslash( $_GET['stagione'] ) ) : '';
     $search_query     = isset( $_GET['q'] ) ? sanitize_text_field( wp_unslash( $_GET['q'] ) ) : '';
 
@@ -7178,11 +7512,14 @@ function sport_theme_get_iscrizioni_dashboard_filters() {
     if ( $filter_categoria !== '__unassigned' && ! array_key_exists( $filter_categoria, sport_theme_iscrizioni_category_options() ) ) {
         $filter_categoria = '';
     }
+    if ( ! in_array( $filter_pratiche, array( 'incomplete', 'duplicate' ), true ) ) {
+        $filter_pratiche = '';
+    }
     if ( $filter_stagione !== '' && ! preg_match( '/^\d{4}\/\d{4}$/', $filter_stagione ) ) {
         $filter_stagione = '';
     }
 
-    return compact( 'filter_tipo', 'filter_stato', 'filter_pagamento', 'filter_categoria', 'filter_stagione', 'search_query' );
+    return compact( 'filter_tipo', 'filter_stato', 'filter_pagamento', 'filter_categoria', 'filter_pratiche', 'filter_stagione', 'search_query' );
 }
 
 function sport_theme_build_iscrizioni_where_sql( $filters, $wpdb ) {
@@ -7205,10 +7542,23 @@ function sport_theme_build_iscrizioni_where_sql( $filters, $wpdb ) {
     if ( ! empty( $filters['filter_stagione'] ) ) {
         $where[] = $wpdb->prepare( 'i.stagione_sportiva = %s', $filters['filter_stagione'] );
     }
+    if ( ! empty( $filters['filter_pratiche'] ) && $filters['filter_pratiche'] === 'incomplete' ) {
+        $tables = sport_theme_iscrizioni_table_names();
+        $where[] = "(i.stato NOT IN ('approvata', 'confermata') OR i.metodo_pagamento = '' OR i.metodo_pagamento IS NULL OR i.stato_pagamento <> 'pagato' OR EXISTS (SELECT 1 FROM {$tables['children']} bi WHERE bi.iscrizione_id = i.id AND (bi.categoria = '' OR bi.categoria IS NULL)))";
+    } elseif ( ! empty( $filters['filter_pratiche'] ) && $filters['filter_pratiche'] === 'duplicate' ) {
+        $tables = sport_theme_iscrizioni_table_names();
+        $where[] = "LOWER(i.responsabile_email) IN (SELECT email_key FROM (SELECT LOWER(responsabile_email) AS email_key FROM {$tables['registrations']} WHERE responsabile_email <> '' GROUP BY LOWER(responsabile_email) HAVING COUNT(*) > 1) duplicate_filter)";
+    }
     if ( ! empty( $filters['search_query'] ) ) {
         $like = '%' . $wpdb->esc_like( $filters['search_query'] ) . '%';
         $where[] = $wpdb->prepare(
-            '(i.uuid LIKE %s OR i.responsabile_nome LIKE %s OR i.responsabile_cognome LIKE %s OR i.responsabile_email LIKE %s OR b.nome LIKE %s OR b.cognome LIKE %s)',
+            '(i.uuid LIKE %s OR i.responsabile_nome LIKE %s OR i.responsabile_cognome LIKE %s OR i.responsabile_email LIKE %s OR i.responsabile_telefono LIKE %s OR b.nome LIKE %s OR b.cognome LIKE %s OR b.email LIKE %s OR b.cellulare LIKE %s OR b.avs LIKE %s OR b.data_nascita LIKE %s OR b.categoria LIKE %s)',
+            $like,
+            $like,
+            $like,
+            $like,
+            $like,
+            $like,
             $like,
             $like,
             $like,
@@ -7274,6 +7624,18 @@ function sport_theme_xlsx_worksheet_xml( $rows ) {
     $xml      .= '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">';
     $xml      .= '<dimension ref="A1:' . $last_cell . '"/>';
     $xml      .= '<sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>';
+    $xml      .= '<sheetFormatPr defaultRowHeight="18"/>';
+    if ( $col_count > 0 ) {
+        $xml .= '<cols>';
+        for ( $col_index = 1; $col_index <= $col_count; $col_index++ ) {
+            $width = in_array( $col_index, array( 1, 8, 9, 10, 11, 17, 18 ), true ) ? 14 : 22;
+            if ( in_array( $col_index, array( 2, 13, 14, 15, 16, 19, 20, 23, 24, 25, 37, 38, 39, 40 ), true ) ) {
+                $width = 30;
+            }
+            $xml .= '<col min="' . $col_index . '" max="' . $col_index . '" width="' . $width . '" customWidth="1"/>';
+        }
+        $xml .= '</cols>';
+    }
     $xml      .= '<sheetData>';
 
     foreach ( $rows as $row_index => $row ) {
@@ -7283,7 +7645,8 @@ function sport_theme_xlsx_worksheet_xml( $rows ) {
         for ( $col_index = 0; $col_index < $col_count; $col_index++ ) {
             $cell_ref = sport_theme_xlsx_column_name( $col_index + 1 ) . $excel_row;
             $value    = $row[ $col_index ] ?? '';
-            $xml     .= '<c r="' . $cell_ref . '" t="inlineStr"><is><t>' . sport_theme_xlsx_escape( $value ) . '</t></is></c>';
+            $style    = $row_index === 0 ? ' s="1"' : '';
+            $xml     .= '<c r="' . $cell_ref . '"' . $style . ' t="inlineStr"><is><t>' . sport_theme_xlsx_escape( $value ) . '</t></is></c>';
         }
 
         $xml .= '</row>';
@@ -7337,6 +7700,7 @@ function sport_theme_output_iscrizioni_xlsx( $sheets, $filename ) {
         $content_types .= '<Override PartName="/xl/worksheets/sheet' . $sheet['id'] . '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>';
     }
 
+    $content_types .= '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>';
     $content_types .= '</Types>';
     $zip->addFromString( '[Content_Types].xml', $content_types );
     $zip->addFromString( '_rels/.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>' );
@@ -7351,10 +7715,23 @@ function sport_theme_output_iscrizioni_xlsx( $sheets, $filename ) {
     }
 
     $workbook .= '</sheets></workbook>';
+    $rels     .= '<Relationship Id="rIdStyles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>';
     $rels     .= '</Relationships>';
 
     $zip->addFromString( 'xl/workbook.xml', $workbook );
     $zip->addFromString( 'xl/_rels/workbook.xml.rels', $rels );
+    $zip->addFromString(
+        'xl/styles.xml',
+        '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+        . '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+        . '<fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FF000000"/><name val="Calibri"/></font></fonts>'
+        . '<fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFFE600"/><bgColor indexed="64"/></patternFill></fill></fills>'
+        . '<borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border><border><left style="thin"><color rgb="FFCCCCCC"/></left><right style="thin"><color rgb="FFCCCCCC"/></right><top style="thin"><color rgb="FFCCCCCC"/></top><bottom style="thin"><color rgb="FFCCCCCC"/></bottom><diagonal/></border></borders>'
+        . '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
+        . '<cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1"/></cellXfs>'
+        . '<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>'
+        . '</styleSheet>'
+    );
     $zip->close();
 
     nocache_headers();
@@ -7475,6 +7852,9 @@ function sport_theme_handle_export_iscrizioni_csv() {
     $category_options = sport_theme_iscrizioni_category_options();
     $all_export_rows  = array();
     $category_rows    = array();
+    $summary_statuses = array();
+    $summary_payments = array();
+    $summary_categories = array();
 
     foreach ( $rows as $row ) {
         $child_documents = $documents_by_child[ (int) $row->id ][ (int) $row->child_index ] ?? array();
@@ -7511,6 +7891,9 @@ function sport_theme_handle_export_iscrizioni_csv() {
         if ( ! $category_label ) {
             $category_label = 'Da assegnare';
         }
+        $summary_statuses[ $row->stato ] = ( $summary_statuses[ $row->stato ] ?? 0 ) + 1;
+        $summary_payments[ $row->stato_pagamento ] = ( $summary_payments[ $row->stato_pagamento ] ?? 0 ) + 1;
+        $summary_categories[ $category_label ] = ( $summary_categories[ $category_label ] ?? 0 ) + 1;
 
         $export_row = array(
             $row->id,
@@ -7563,8 +7946,30 @@ function sport_theme_handle_export_iscrizioni_csv() {
         $category_rows[ $category_label ][] = $export_row;
     }
 
+    $summary_rows = array(
+        array( 'Indicatore', 'Valore' ),
+        array( 'Righe esportate', count( $all_export_rows ) ),
+        array( 'Pratiche esportate', count( array_unique( array_map( static function ( $row ) { return $row[0]; }, $all_export_rows ) ) ) ),
+        array( '', '' ),
+        array( 'Stato iscrizione', 'Righe' ),
+    );
+    foreach ( $summary_statuses as $status => $count ) {
+        $summary_rows[] = array( sport_theme_iscrizione_label_value( $status, sport_theme_iscrizioni_status_labels() ), $count );
+    }
+    $summary_rows[] = array( '', '' );
+    $summary_rows[] = array( 'Stato pagamento', 'Righe' );
+    foreach ( $summary_payments as $payment_status => $count ) {
+        $summary_rows[] = array( $payment_status ?: 'non_pagato', $count );
+    }
+    $summary_rows[] = array( '', '' );
+    $summary_rows[] = array( 'Categoria', 'Righe' );
+    foreach ( $summary_categories as $category_label => $count ) {
+        $summary_rows[] = array( $category_label, $count );
+    }
+
     $sheets = array(
         'Tutte' => array_merge( array( $headers ), $all_export_rows ),
+        'Riepilogo' => $summary_rows,
     );
 
     foreach ( $category_options as $category_key => $category_label ) {

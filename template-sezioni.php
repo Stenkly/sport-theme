@@ -61,6 +61,8 @@ if ( ! empty($root_categories) && ! is_wp_error($root_categories) ) {
                     $teams_data[] = array(
                         'id'          => $t->ID,
                         'titolo'      => $t->post_title,
+                        'categoria_principale' => $root_cat->name,
+                        'categoria'   => $sub->name,
                         'descrizione' => $t->post_content,
                         'giorni'      => get_post_meta($t->ID, '_ss_giorni', true),
                         'allenatore'  => get_post_meta($t->ID, '_ss_allenatore', true),
@@ -89,6 +91,8 @@ if ( ! empty($root_categories) && ! is_wp_error($root_categories) ) {
                 $teams_data[] = array(
                     'id'          => $t->ID,
                     'titolo'      => $t->post_title,
+                    'categoria_principale' => $root_cat->name,
+                    'categoria'   => $root_cat->name,
                     'descrizione' => $t->post_content,
                     'giorni'      => get_post_meta($t->ID, '_ss_giorni', true),
                     'allenatore'  => get_post_meta($t->ID, '_ss_allenatore', true),
@@ -287,6 +291,97 @@ if ( ! $has_real_data ) {
     );
 }
 // Funzione helper per stampare il pannello di una singola squadra
+if(!function_exists('sezioni_allenatore_label')) {
+    function sezioni_allenatore_label($sq) {
+        $label_context = implode(' ', array_filter(array(
+            $sq['categoria_principale'] ?? '',
+            $sq['categoria'] ?? '',
+            $sq['titolo'] ?? '',
+        )));
+        $label_context = strtolower(remove_accents(wp_strip_all_tags($label_context)));
+
+        if (strpos($label_context, 'femminile') !== false) {
+            return 'RESPONSABILI FORMAZIONE';
+        }
+
+        $use_formatori = (
+            strpos($label_context, 'scuola calcio') !== false ||
+            strpos($label_context, 'allievi e') !== false ||
+            strpos($label_context, 'allieve e') !== false ||
+            strpos($label_context, 'piccoli amici') !== false ||
+            strpos($label_context, 'primi calci') !== false
+        );
+
+        return $use_formatori ? 'FORMATORI' : 'ALLENATORE';
+    }
+}
+
+if(!function_exists('sezioni_assistente_label')) {
+    function sezioni_assistente_label($sq) {
+        $label_context = implode(' ', array_filter(array(
+            $sq['categoria_principale'] ?? '',
+            $sq['categoria'] ?? '',
+            $sq['titolo'] ?? '',
+        )));
+        $label_context = strtolower(remove_accents(wp_strip_all_tags($label_context)));
+
+        return strpos($label_context, 'femminile') !== false ? 'PREPARATORE PORTIERI' : 'ASSISTENTE';
+    }
+}
+
+if(!function_exists('sezioni_format_staff_text')) {
+    function sezioni_format_staff_text($text) {
+        $text = trim((string) $text);
+        if ($text === '') {
+            return '';
+        }
+
+        $has_markup = preg_match('/<\s*(br|b|strong|em|span|p)\b/i', $text);
+
+        if ($has_markup) {
+            return nl2br(wp_kses_post($text));
+        }
+
+        $text = preg_replace('/(\p{Ll})(\p{Lu})/u', "$1\n$2", $text);
+        $text = preg_replace('/(\p{L})(\+41)/u', "$1\n$2", $text);
+        $text = preg_replace('/\s*(\/|;|,)\s*/', "\n", $text);
+        $lines = preg_split('/\r\n|\r|\n/', $text);
+        $lines = array_values(array_filter(array_map('trim', $lines), static function($line) {
+            return $line !== '';
+        }));
+
+        if (count($lines) === 1) {
+            $text = preg_replace('/\s*(\/|;|,)\s*/', "\n", $text);
+            $words = preg_split('/\s+/', trim($text));
+            $is_simple_name_list = count($words) >= 4 && count($words) % 2 === 0;
+
+            if ($is_simple_name_list) {
+                foreach ($words as $word) {
+                    if (!preg_match('/^\p{Lu}[\p{L}\'-]*$/u', $word)) {
+                        $is_simple_name_list = false;
+                        break;
+                    }
+                }
+            }
+
+            if ($is_simple_name_list) {
+                $lines = array();
+                for ($i = 0; $i < count($words); $i += 2) {
+                    $lines[] = $words[$i] . ' ' . $words[$i + 1];
+                }
+            }
+        }
+
+        if (empty($lines)) {
+            return '';
+        }
+
+        return implode('', array_map(static function($line) {
+            return '<span style="display:block;">' . esc_html($line) . '</span>';
+        }, $lines));
+    }
+}
+
 if(!function_exists('print_sezione_panel')) {
     function print_sezione_panel($sq) {
         ?>
@@ -317,18 +412,18 @@ if(!function_exists('print_sezione_panel')) {
 
                             <?php if($sq['allenatore']): ?>
                                 <div class="sezione-panel-meta" style="margin-bottom: 25px;">
-                                    <h4 class="sezione-panel-subtitle" style="color: var(--c-primary); font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;">ALLENATORE</h4>
+                                    <h4 class="sezione-panel-subtitle" style="color: var(--c-primary); font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;"><?php echo esc_html(sezioni_allenatore_label($sq)); ?></h4>
                                     <div class="sezione-panel-text" style="color: white; font-size: 14px; line-height: 1.6;">
-                                        <?php echo nl2br(wp_kses_post($sq['allenatore'])); ?>
+                                        <?php echo sezioni_format_staff_text($sq['allenatore']); ?>
                                     </div>
                                 </div>
                             <?php endif; ?>
 
                             <?php if($sq['assistente']): ?>
                                 <div class="sezione-panel-meta" style="margin-bottom: 25px;">
-                                    <h4 class="sezione-panel-subtitle" style="color: var(--c-primary); font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;">ASSISTENTE</h4>
+                                    <h4 class="sezione-panel-subtitle" style="color: var(--c-primary); font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;"><?php echo esc_html(sezioni_assistente_label($sq)); ?></h4>
                                     <div class="sezione-panel-text" style="color: white; font-size: 14px; line-height: 1.6;">
-                                        <?php echo nl2br(wp_kses_post($sq['assistente'])); ?>
+                                        <?php echo sezioni_format_staff_text($sq['assistente']); ?>
                                     </div>
                                 </div>
                             <?php endif; ?>

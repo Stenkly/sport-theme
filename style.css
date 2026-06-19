@@ -629,7 +629,6 @@ main.page-contatti.site-main > section.container {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
     object-fit: cover !important;
-    object-position: center !important;
     display: block !important;
 }
 
@@ -2029,7 +2028,7 @@ main.page-contatti.site-main > section.container {
 
 .segreteria-filters {
     display: grid;
-    grid-template-columns: minmax(240px, 1.35fr) repeat(5, minmax(145px, 0.7fr)) auto;
+    grid-template-columns: minmax(240px, 1.35fr) repeat(6, minmax(135px, 0.7fr)) auto;
     gap: 14px;
     align-items: end;
     padding: 18px;
@@ -2144,6 +2143,54 @@ main.page-contatti.site-main > section.container {
     overflow-x: auto;
 }
 
+.segreteria-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 18px 26px;
+    border-top: 2px solid rgba(255,255,255,0.14);
+}
+
+.segreteria-pagination > span {
+    color: rgba(255,255,255,0.72);
+    font-size: 13px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.segreteria-pagination div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.segreteria-pagination a,
+.segreteria-pagination .disabled {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    padding: 7px 12px 5px;
+    border: 2px solid rgba(255,255,255,0.28);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.segreteria-pagination a:hover {
+    border-color: var(--c-primary);
+    color: var(--c-primary);
+}
+
+.segreteria-pagination .disabled {
+    opacity: 0.42;
+}
+
 .segreteria-table {
     width: 100%;
     min-width: 980px;
@@ -2207,6 +2254,12 @@ main.page-contatti.site-main > section.container {
     font-weight: 900;
     line-height: 1.15;
     text-transform: uppercase;
+}
+
+.segreteria-family-alert-muted {
+    border-color: rgba(255,255,255,0.22);
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.68);
 }
 
 .segreteria-type-badge,
@@ -2479,6 +2532,7 @@ main.page-contatti.site-main > section.container {
 }
 
 .segreteria-delete-form {
+    flex: 0 0 100%;
     margin: 0;
 }
 
@@ -2551,6 +2605,34 @@ main.page-contatti.site-main > section.container {
     padding: 8px 14px 6px;
 }
 
+.segreteria-inline-action-form {
+    margin: 0;
+}
+
+.segreteria-inline-action-form button {
+    min-height: 30px;
+    padding: 5px 10px 4px;
+    background: #111;
+    border: 2px solid rgba(255,255,255,0.28);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.segreteria-head-actions .segreteria-inline-action-form button {
+    min-height: 30px;
+    padding: 6px 12px 3px;
+    font-size: 12px;
+}
+
+.segreteria-inline-action-form button:hover {
+    border-color: var(--c-primary);
+    color: var(--c-primary);
+}
+
 .segreteria-discount-form {
     margin: 0;
 }
@@ -2610,6 +2692,48 @@ main.page-contatti.site-main > section.container {
 .segreteria-edit {
     display: grid;
     gap: 24px;
+}
+
+.segreteria-operational-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.segreteria-summary-item {
+    padding: 16px;
+    background: #080808;
+    border: 2px solid rgba(255,255,255,0.18);
+}
+
+.segreteria-summary-item span {
+    display: block;
+    margin-bottom: 8px;
+    color: rgba(255,255,255,0.62);
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.segreteria-summary-item strong {
+    display: block;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.1;
+}
+
+.segreteria-summary-item.is-warning {
+    border-color: rgba(255,230,0,0.7);
+}
+
+.segreteria-summary-item.is-warning strong {
+    color: var(--c-primary);
+}
+
+.segreteria-summary-item.is-ok {
+    border-color: rgba(94,224,122,0.42);
 }
 
 .segreteria-edit-notice {
@@ -2759,6 +2883,47 @@ main.page-contatti.site-main > section.container {
     margin-bottom: 10px;
 }
 
+.segreteria-log-list {
+    display: grid;
+    gap: 10px;
+}
+
+.segreteria-log-entry {
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: #0f0f0f;
+}
+
+.segreteria-log-entry strong,
+.segreteria-log-entry span,
+.segreteria-log-entry p {
+    display: block;
+}
+
+.segreteria-log-entry strong {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 900;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+.segreteria-log-entry span {
+    margin-top: 5px;
+    color: rgba(255,255,255,0.56);
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.25;
+}
+
+.segreteria-log-entry p {
+    margin: 8px 0 0;
+    color: rgba(255,255,255,0.78);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
 .segreteria-edit-actions {
     display: flex;
     align-items: center;
@@ -2872,6 +3037,7 @@ main.page-contatti.site-main > section.container {
 
     .segreteria-dashboard-head,
     .segreteria-table-head,
+    .segreteria-pagination,
     .segreteria-filter-actions {
         align-items: flex-start;
         flex-direction: column;
@@ -2887,6 +3053,10 @@ main.page-contatti.site-main > section.container {
     }
 
     .segreteria-detail-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .segreteria-operational-summary {
         grid-template-columns: 1fr;
     }
 
@@ -2911,6 +3081,7 @@ main.page-contatti.site-main > section.container {
     .segreteria-quick-actions {
         max-width: none;
     }
+
 }
 
 .page-la-societa .news-hero-wrapper .page-submenu,

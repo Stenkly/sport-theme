@@ -16,11 +16,16 @@ get_header();
         if ( has_post_thumbnail() ) {
             $hero_image_url = get_the_post_thumbnail_url( get_the_ID(), 'full' );
         } else {
-            $hero_image_url = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=2000&auto=format&fit=crop';
+            $team_page = get_page_by_path( 'team' );
+            if ( $team_page && has_post_thumbnail( $team_page->ID ) ) {
+                $hero_image_url = get_the_post_thumbnail_url( $team_page->ID, 'full' );
+            } else {
+                $hero_image_url = 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=2000&auto=format&fit=crop';
+            }
         }
         ?>
         <div class="news-hero-wrapper" style="position: relative; width: 100%; height: 45vh; overflow: hidden;">
-            <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="width: 100%; height: 100%; object-fit: cover; object-position: center top;" alt="<?php echo esc_attr(get_the_title()); ?>">
+            <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="width: 100%; height: 100%; object-fit: cover; object-position: center center;" alt="<?php echo esc_attr(get_the_title()); ?>">
             <div class="club-hero-fade"></div>
             <div class="news-hero-content container" style="position: absolute; bottom: 40px; left: 0; right: 0; text-align: left;">
                 <h1 style="font-size: 55px; font-weight: 700; line-height: 1.1; text-transform: uppercase; color: white; margin: 0; letter-spacing: 2px;">CONTATTI</h1>
