@@ -59,7 +59,7 @@ get_header('societa');
 /* Sezioni banner */
 .hs-sezioni-band {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 0;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -94,6 +94,37 @@ get_header('societa');
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 2px;
+}
+
+.hs-youth-sponsor-section {
+    padding-top: 10px;
+    padding-bottom: 50px;
+}
+
+.hs-youth-sponsor-marquee .sponsor-item {
+    flex: 0 0 240px;
+    min-height: 120px;
+    padding: 18px;
+    background: #fff;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.hs-youth-sponsor-marquee .sponsor-item img {
+    width: 100%;
+    height: 82px;
+    max-width: 200px;
+    object-fit: contain;
+}
+
+.hs-youth-sponsor-marquee .sponsor-placeholder {
+    background: transparent;
+    color: #111;
+    font-weight: 800;
+}
+
+.hs-youth-sponsor-marquee .sponsor-marquee-track {
+    animation-duration: 58s;
 }
 
 /* Section header */
@@ -197,63 +228,6 @@ get_header('societa');
 .hs-nav-dots i { font-size: 7px; color: rgba(255,255,255,0.3); }
 .hs-nav-dots i.active { color: var(--c-primary); }
 
-/* Event cards */
-.hs-eventi-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-}
-.hs-event-card {
-    background: #1a1a1a;
-    overflow: hidden;
-}
-.hs-event-card-img {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 4/3;
-    overflow: hidden;
-}
-.hs-event-card-img img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-}
-.hs-event-card-img .yellow-tint {
-    position: absolute; inset: 0;
-    background: rgba(242,200,2,0.22);
-    pointer-events: none;
-}
-.hs-event-date {
-    position: absolute;
-    top: 14px; left: 14px;
-    background: rgba(0,0,0,0.85);
-    border-left: 4px solid var(--c-primary);
-    color: #fff;
-    font-size: 32px;
-    font-weight: 700;
-    padding: 5px 12px;
-    z-index: 2;
-}
-.hs-event-body { padding: 20px; }
-.hs-event-body h3 {
-    color: #fff;
-    font-size: 32px;
-    font-weight: 700;
-    text-transform: uppercase;
-    line-height: 1.4;
-    margin: 0 0 16px 0;
-}
-.hs-event-link {
-    color: #fff;
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    text-decoration: none;
-    letter-spacing: 1px;
-}
-.hs-event-link span { opacity: 0.4; margin-left: 6px; }
-
-
-
 /* Instagram */
 .hs-insta-bar {
     background: #111;
@@ -322,16 +296,15 @@ get_header('societa');
     .hs-hero-title { font-size: 34px; }
     .hs-hero-content { bottom: 40px; }
     .hs-sezioni-band { grid-template-columns: 1fr; }
-    .hs-news-grid, .hs-eventi-grid {
+    .hs-news-grid {
         display: flex;
         overflow-x: auto;
         scroll-snap-type: x mandatory;
         gap: 15px;
         scrollbar-width: none;
     }
-    .hs-news-grid::-webkit-scrollbar,
-    .hs-eventi-grid::-webkit-scrollbar { display: none; }
-    .hs-news-card, .hs-event-card {
+    .hs-news-grid::-webkit-scrollbar { display: none; }
+    .hs-news-card {
         flex: 0 0 80%;
         scroll-snap-align: start;
     }
@@ -341,7 +314,7 @@ get_header('societa');
 }
 @media (max-width: 480px) {
     .hs-hero-title { font-size: 26px; }
-    .hs-news-card, .hs-event-card { flex: 0 0 90%; }
+    .hs-news-card { flex: 0 0 90%; }
     .hs-insta-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
@@ -372,6 +345,7 @@ get_header('societa');
         <?php
         $sezioni = [
             ['label' => 'SCUOLA CALCIO', 'url' => '/scuola-calcio',          'img' => get_template_directory_uri() . '/assets/images/scuola-calcio.jpg'],
+            ['label' => 'ATTIVI',        'url' => '/sezioni?cat=attivi',     'img' => get_template_directory_uri() . '/assets/images/attivi-home.jpg'],
             ['label' => 'ALLIEVI',       'url' => '/sezioni?cat=allievi',    'img' => get_template_directory_uri() . '/assets/images/allievi-home.jpg'],
             ['label' => 'FEMMINILE',     'url' => '/sezioni?cat=femminile',  'img' => get_template_directory_uri() . '/assets/images/femminile-home.jpg'],
         ];
@@ -441,74 +415,83 @@ get_header('societa');
         </div>
     </section>
 
-    <!-- ═══ 4. EVENTI ═══ -->
-    <section class="ps-section container">
+    <!-- ═══ 4. SPONSOR ═══ -->
+    <section class="hs-youth-sponsor-section container">
         <div class="section-header">
-            <h2 class="section-title text-white">EVENTI</h2>
-            <a href="<?php echo esc_url(site_url('/eventi')); ?>" class="btn-sm btn-outline">SCOPRI</a>
+            <h2 class="section-title text-white">SPONSOR</h2>
         </div>
 
         <?php
-        $eventi_q = new WP_Query(['post_type' => 'evento', 'posts_per_page' => 6, 'orderby' => 'date', 'order' => 'DESC']);
-        $eventi_count = 0;
-        $ev_imgs = [
-            'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=600&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1508344928928-7137b29de218?q=80&w=600&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1553147573-0ff7d2b45053?q=80&w=600&auto=format&fit=crop',
-        ];
-        ob_start();
-        if ($eventi_q->have_posts()):
-            while ($eventi_q->have_posts()): $eventi_q->the_post();
-                $eventi_count++;
-                $thumb = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'medium_large') : $ev_imgs[0];
-                $data_ev = get_post_meta(get_the_ID(), '_data_evento', true);
-                $date_display = $data_ev ? date('d.m', strtotime($data_ev)) : get_the_date('d.m');
-        ?>
-            <div class="news-slide">
-                <div class="news-card cover-bg" style="background-image: url('<?php echo esc_url($thumb); ?>'); height: 350px;">
-                    <div class="news-date"><?php echo $date_display; ?></div>
-                    <div class="news-content">
-                        <h3 class="news-title text-white"><?php echo wp_trim_words(get_the_title(), 7, '...'); ?></h3>
-                        <a href="<?php echo esc_url(get_permalink()); ?>" class="btn-sm btn-primary" style="display:inline-block;">SCOPRI</a>
-                    </div>
+        $sponsor_q = new WP_Query([
+            'post_type'      => 'sponsor',
+            'posts_per_page' => -1,
+            'orderby'        => 'title',
+            'order'          => 'ASC',
+            'meta_query'     => [
+                [
+                    'relation' => 'OR',
+                    [
+                        'key'     => '_destinazione_sponsor',
+                        'value'   => 'societa',
+                        'compare' => '=',
+                    ],
+                    [
+                        'key'     => '_destinazione_sponsor',
+                        'value'   => 'entrambi',
+                        'compare' => '=',
+                    ],
+                    [
+                        'key'     => '_destinazione_sponsor',
+                        'compare' => 'NOT EXISTS',
+                    ],
+                ],
+            ],
+        ]);
+
+        $sponsor_items = [];
+        if ($sponsor_q->have_posts()):
+            while ($sponsor_q->have_posts()): $sponsor_q->the_post();
+                $site = get_post_meta(get_the_ID(), '_sito_url', true);
+                $logo = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'full') : '';
+                ob_start();
+                ?>
+                <div class="sponsor-item">
+                    <?php if ($site): ?><a href="<?php echo esc_url($site); ?>" target="_blank" rel="noopener"><?php endif; ?>
+                        <?php if ($logo): ?>
+                            <img src="<?php echo esc_url($logo); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy">
+                        <?php else: ?>
+                            <div class="sponsor-placeholder"><?php the_title(); ?></div>
+                        <?php endif; ?>
+                    <?php if ($site): ?></a><?php endif; ?>
                 </div>
-            </div>
-        <?php
+                <?php
+                $sponsor_items[] = ob_get_clean();
             endwhile;
             wp_reset_postdata();
-        else:
-            $eventi_count = 3;
-            for ($i = 0; $i < 3; $i++):
+        endif;
+
+        if (!empty($sponsor_items)):
+            $marquee_items = $sponsor_items;
+            while (count($marquee_items) < 8) {
+                $marquee_items = array_merge($marquee_items, $sponsor_items);
+            }
         ?>
-            <div class="news-slide">
-                <div class="news-card cover-bg" style="background-image: url('https://images.unsplash.com/photo-1508344928928-7137b29de218?q=80&w=600&auto=format&fit=crop'); height: 350px;">
-                    <div class="news-date">15.03</div>
-                    <div class="news-content">
-                        <h3 class="news-title text-white">TORNEO PASQUALE ALLIEVI E...</h3>
-                        <a href="#" class="btn-sm btn-primary" style="display:inline-block;">SCOPRI</a>
+            <div class="sponsor-marquee sponsor-marquee-network hs-youth-sponsor-marquee">
+                <div class="sponsor-marquee-track">
+                    <div class="sponsor-marquee-group">
+                        <?php echo implode('', $marquee_items); ?>
+                    </div>
+                    <div class="sponsor-marquee-group" aria-hidden="true">
+                        <?php echo implode('', $marquee_items); ?>
                     </div>
                 </div>
             </div>
-        <?php endfor; endif;
-        $eventi_html = ob_get_clean();
-        ?>
-
-        <div id="hs-eventi-carousel" style="display:flex; gap:16px; overflow:hidden; scroll-behavior:smooth;">
-            <?php echo $eventi_html; ?>
-        </div>
-
-        <div class="hs-carousel-nav">
-            <span class="nav-arrow" id="hs-ev-prev"><i class="fa-solid fa-chevron-left"></i></span>
-            <div class="hs-nav-dots" id="hs-ev-dots">
-                <?php for ($i = 0; $i < max(1, ceil($eventi_count/3)); $i++): ?>
-                <i class="<?php echo $i === 0 ? 'fa-solid' : 'fa-regular'; ?> fa-circle<?php echo $i === 0 ? ' active' : ''; ?>"></i>
-                <?php endfor; ?>
-            </div>
-            <span class="nav-arrow" id="hs-ev-next"><i class="fa-solid fa-chevron-right"></i></span>
-        </div>
+        <?php else: ?>
+            <p class="sponsor-empty-message">Nessuno sponsor del settore giovanile inserito.</p>
+        <?php endif; ?>
     </section>
 
-    <!-- ═══ 6. INSTAGRAM ═══ -->
+    <!-- ═══ 5. INSTAGRAM ═══ -->
     <section class="hs-instagram-strip">
         <div class="container">
             <?php echo do_shortcode('[instagram-feed feed=2]'); ?>
@@ -574,7 +557,6 @@ get_header('societa');
     }
 
     makeCarousel('hs-news-carousel',   'hs-news-prev',  'hs-news-next',  'hs-news-dots',  3);
-    makeCarousel('hs-eventi-carousel', 'hs-ev-prev',    'hs-ev-next',    'hs-ev-dots',    3);
 })();
 </script>
 

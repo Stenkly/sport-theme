@@ -34,6 +34,8 @@ $duplicate_email_counts = array();
 $duplicate_email_has_discount = array();
 $edit_duplicate_iscrizioni = array();
 $table_exists = false;
+$allievi_birthdate_cutoff = function_exists('sport_theme_get_allievi_birthdate_cutoff') ? sport_theme_get_allievi_birthdate_cutoff() : '2017-12-31';
+$scuola_calcio_birthdate_min = function_exists('sport_theme_get_scuola_calcio_birthdate_min') ? sport_theme_get_scuola_calcio_birthdate_min() : '2018-01-01';
 
 $filter_tipo = isset($_GET['tipo']) ? sanitize_key(wp_unslash($_GET['tipo'])) : '';
 $filter_stato = isset($_GET['stato']) ? sanitize_key(wp_unslash($_GET['stato'])) : '';
@@ -48,6 +50,7 @@ $total_pages = 1;
 
 $allowed_tipi = array('allievi', 'scuola_calcio');
 $category_options = function_exists('sport_theme_iscrizioni_category_options') ? sport_theme_iscrizioni_category_options() : array('' => 'Da assegnare');
+$edit_category_options = array_diff_key($category_options, array('allievi_f' => true, 'allievi_g' => true));
 $status_labels = function_exists('sport_theme_iscrizioni_status_labels') ? sport_theme_iscrizioni_status_labels() : array();
 $allowed_stati = function_exists('sport_theme_iscrizioni_allowed_statuses')
     ? sport_theme_iscrizioni_allowed_statuses()
@@ -331,6 +334,88 @@ if ($search_query !== '') {
 }
 $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ? 'https' : 'http'));
 ?>
+
+<style>
+@media (max-width: 600px) {
+    .page-area-segreteria #segreteria-edit,
+    .page-area-segreteria #segreteria-edit .segreteria-dashboard-head,
+    .page-area-segreteria #segreteria-edit .segreteria-head-actions,
+    .page-area-segreteria #segreteria-edit .segreteria-detail-actions,
+    .page-area-segreteria #segreteria-edit .segreteria-operational-summary,
+    .page-area-segreteria #segreteria-edit .segreteria-summary-item,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-form,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-grid,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-card,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-fields,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-documents,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-actions,
+    .page-area-segreteria #segreteria-edit .segreteria-fee-breakdown {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .page-area-segreteria #segreteria-edit,
+    .page-area-segreteria #segreteria-edit .segreteria-dashboard-head,
+    .page-area-segreteria #segreteria-edit .segreteria-head-actions,
+    .page-area-segreteria #segreteria-edit .segreteria-detail-actions,
+    .page-area-segreteria #segreteria-edit .segreteria-operational-summary,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-form,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-grid,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-fields,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-actions,
+    .page-area-segreteria #segreteria-edit .segreteria-quick-actions-detail {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+    }
+
+    .page-area-segreteria #segreteria-edit .segreteria-dashboard-head,
+    .page-area-segreteria #segreteria-edit .segreteria-head-actions,
+    .page-area-segreteria #segreteria-edit .segreteria-detail-actions,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-card {
+        padding: 16px !important;
+    }
+
+    .page-area-segreteria #segreteria-edit .segreteria-detail-actions > *,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-fields > *,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-fields label,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-fields label.wide,
+    .page-area-segreteria #segreteria-edit .segreteria-document-row,
+    .page-area-segreteria #segreteria-edit .segreteria-file-replace,
+    .page-area-segreteria #segreteria-edit .segreteria-documents-list,
+    .page-area-segreteria #segreteria-edit .segreteria-log-list {
+        grid-column: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .page-area-segreteria #segreteria-edit .segreteria-head-actions a,
+    .page-area-segreteria #segreteria-edit .segreteria-head-actions button,
+    .page-area-segreteria #segreteria-edit .segreteria-head-actions form,
+    .page-area-segreteria #segreteria-edit .segreteria-quick-actions-detail button,
+    .page-area-segreteria #segreteria-edit .segreteria-quick-actions-detail form,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-actions a,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-actions button,
+    .page-area-segreteria #segreteria-edit input,
+    .page-area-segreteria #segreteria-edit select,
+    .page-area-segreteria #segreteria-edit textarea {
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .page-area-segreteria #segreteria-edit .segreteria-head-actions,
+    .page-area-segreteria #segreteria-edit .segreteria-quick-actions-detail,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-actions {
+        align-items: stretch !important;
+        justify-content: stretch !important;
+        white-space: normal !important;
+    }
+}
+</style>
 
 <main id="primary" class="site-main page-area-segreteria">
     <section class="news-hero">
@@ -657,7 +742,7 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                                     </label>
                                     <label>Categoria assegnata
                                         <select name="children[<?php echo esc_attr((int) $child->id); ?>][categoria]">
-                                            <?php foreach ($category_options as $category_key => $category_label) : ?>
+                                            <?php foreach ($edit_category_options as $category_key => $category_label) : ?>
                                                 <option value="<?php echo esc_attr($category_key); ?>" <?php selected($child->categoria ?? '', $category_key); ?>><?php echo esc_html($category_label); ?></option>
                                             <?php endforeach; ?>
                                         </select>
@@ -865,6 +950,26 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                     </div>
                 </div>
 
+                <form class="segreteria-filters" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="margin-top:20px;">
+                    <input type="hidden" name="action" value="act_update_allievi_birthdate_cutoff">
+                    <?php wp_nonce_field('act_update_allievi_birthdate_cutoff'); ?>
+                    <div class="segreteria-filter-field">
+                        <label for="allievi-birthdate-cutoff">Allievi fino al</label>
+                        <input id="allievi-birthdate-cutoff" type="date" name="allievi_birthdate_cutoff" value="<?php echo esc_attr($allievi_birthdate_cutoff); ?>">
+                    </div>
+                    <div class="segreteria-filter-field">
+                        <label for="scuola-calcio-birthdate-min">Scuola Calcio dal</label>
+                        <input id="scuola-calcio-birthdate-min" type="date" name="scuola_calcio_birthdate_min" value="<?php echo esc_attr($scuola_calcio_birthdate_min); ?>">
+                    </div>
+                    <div class="segreteria-filter-field" style="min-width:280px;">
+                        <label>Regola attiva</label>
+                        <small>Allievi: nati fino al <?php echo esc_html(substr($allievi_birthdate_cutoff, 0, 4)); ?>. Scuola Calcio: nati dal <?php echo esc_html(substr($scuola_calcio_birthdate_min, 0, 4)); ?> in avanti.</small>
+                    </div>
+                    <div class="segreteria-filter-actions">
+                        <button type="submit">Salva regola</button>
+                    </div>
+                </form>
+
                 <form class="segreteria-filters" method="get" action="<?php echo esc_url(get_permalink()); ?>">
                     <div class="segreteria-filter-field segreteria-filter-search">
                         <label for="segreteria-q">Cerca</label>
@@ -984,7 +1089,7 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                                     }
                                     ?>
                                     <tr>
-                                        <td>
+                                        <td data-label="Iscrizione">
                                             <div class="segreteria-record-title"><?php echo esc_html($iscrizione->bambini ?: 'Iscrizione #' . $iscrizione->id); ?></div>
                                             <div class="segreteria-record-meta">#<?php echo esc_html($iscrizione->id); ?> · <?php echo esc_html((int) $iscrizione->numero_bambini); ?> bambino/i</div>
                                             <div class="segreteria-record-meta"><?php echo esc_html($responsabile ?: '-'); ?> · <?php echo esc_html($iscrizione->responsabile_email ?: '-'); ?></div>
@@ -995,13 +1100,13 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                                             <?php endif; ?>
                                             <div class="segreteria-record-meta"><?php echo esc_html($tipo_label); ?> · <?php echo esc_html($iscrizione->stagione_sportiva ?: (function_exists('sport_theme_current_sport_season') ? sport_theme_current_sport_season() : '')); ?></div>
                                         </td>
-                                        <td>
+                                        <td data-label="Categoria">
                                             <span class="segreteria-record-title"><?php echo esc_html($category_labels ? implode(', ', $category_labels) : 'Da assegnare'); ?></span>
                                         </td>
-                                        <td>
+                                        <td data-label="Stato">
                                             <span class="segreteria-status <?php echo esc_attr($status_class); ?>"><?php echo esc_html($status_labels[$iscrizione->stato] ?? $iscrizione->stato); ?></span>
                                         </td>
-                                        <td>
+                                        <td data-label="Pagamento">
                                             <span class="segreteria-payment <?php echo esc_attr($payment_class); ?>"><?php echo esc_html($iscrizione->metodo_pagamento ?: 'Da definire'); ?></span>
                                             <span class="segreteria-record-meta"><?php echo esc_html($iscrizione->stato_pagamento ?: 'non_pagato'); ?></span>
                                             <?php if (!empty($iscrizione->riduzione_fratelli)) : ?>
@@ -1012,11 +1117,11 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                                             <?php endif; ?>
                                             <span class="segreteria-record-meta">CHF <?php echo esc_html(number_format((float) $iscrizione->importo_totale_chf, 0, '.', "'")); ?></span>
                                         </td>
-                                        <td>
+                                        <td data-label="Data">
                                             <?php echo esc_html(mysql2date('d.m.Y', $iscrizione->created_at)); ?><br>
                                             <span class="segreteria-record-meta"><?php echo esc_html(mysql2date('H:i', $iscrizione->created_at)); ?></span>
                                         </td>
-                                        <td>
+                                        <td data-label="Azioni">
                                             <div class="segreteria-row-actions">
                                                 <a class="segreteria-edit-link" href="<?php echo esc_url(add_query_arg('edit_iscrizione', (int) $iscrizione->id, get_permalink()) . '#segreteria-edit'); ?>">Apri</a>
                                                 <?php if ($iscrizione->metodo_pagamento === 'fattura') : ?>

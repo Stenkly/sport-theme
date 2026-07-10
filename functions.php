@@ -311,6 +311,60 @@ function sport_theme_iscrizioni_email_settings() {
     return wp_parse_args( is_array( $settings ) ? $settings : array(), $defaults );
 }
 
+function sport_theme_iscrizioni_default_allievi_birthdate_cutoff() {
+    return '2017-12-31';
+}
+
+function sport_theme_iscrizioni_default_scuola_calcio_birthdate_min() {
+    return '2018-01-01';
+}
+
+function sport_theme_sanitize_date_option( $value, $default = '' ) {
+    $value = sanitize_text_field( wp_unslash( $value ) );
+
+    return preg_match( '/^\d{4}-\d{2}-\d{2}$/', $value ) ? $value : $default;
+}
+
+function sport_theme_get_allievi_birthdate_cutoff() {
+    $default = sport_theme_iscrizioni_default_allievi_birthdate_cutoff();
+    $cutoff  = get_option( 'sport_theme_allievi_birthdate_cutoff', $default );
+
+    return sport_theme_sanitize_date_option( $cutoff, $default );
+}
+
+function sport_theme_get_scuola_calcio_birthdate_min() {
+    $default = sport_theme_iscrizioni_default_scuola_calcio_birthdate_min();
+    $min     = get_option( 'sport_theme_scuola_calcio_birthdate_min', $default );
+
+    return sport_theme_sanitize_date_option( $min, $default );
+}
+
+function sport_theme_migrate_iscrizioni_birthdate_rules() {
+    if ( get_option( 'sport_theme_birthdate_rules_v2' ) ) {
+        return;
+    }
+
+    $allievi_cutoff = get_option( 'sport_theme_allievi_birthdate_cutoff', '' );
+    if ( $allievi_cutoff === '' || $allievi_cutoff === '2018-12-31' ) {
+        update_option( 'sport_theme_allievi_birthdate_cutoff', sport_theme_iscrizioni_default_allievi_birthdate_cutoff() );
+    }
+
+    if ( get_option( 'sport_theme_scuola_calcio_birthdate_min', '' ) === '' ) {
+        update_option( 'sport_theme_scuola_calcio_birthdate_min', sport_theme_iscrizioni_default_scuola_calcio_birthdate_min() );
+    }
+
+    update_option( 'sport_theme_birthdate_rules_v2', true );
+}
+add_action( 'init', 'sport_theme_migrate_iscrizioni_birthdate_rules' );
+
+function sport_theme_format_date_ch( $date ) {
+    if ( ! preg_match( '/^(\d{4})-(\d{2})-(\d{2})$/', (string) $date, $matches ) ) {
+        return $date;
+    }
+
+    return $matches[3] . '.' . $matches[2] . '.' . $matches[1];
+}
+
 function sport_theme_parse_email_list( $value ) {
     $items  = preg_split( '/[\s,;]+/', (string) $value );
     $emails = array();
@@ -347,6 +401,28 @@ function sport_theme_register_iscrizioni_settings() {
             'default'           => sport_theme_iscrizioni_default_email_settings(),
         )
     );
+    register_setting(
+        'sport_theme_iscrizioni_email_settings',
+        'sport_theme_allievi_birthdate_cutoff',
+        array(
+            'type'              => 'string',
+            'sanitize_callback' => function( $value ) {
+                return sport_theme_sanitize_date_option( $value, sport_theme_iscrizioni_default_allievi_birthdate_cutoff() );
+            },
+            'default'           => sport_theme_iscrizioni_default_allievi_birthdate_cutoff(),
+        )
+    );
+    register_setting(
+        'sport_theme_iscrizioni_email_settings',
+        'sport_theme_scuola_calcio_birthdate_min',
+        array(
+            'type'              => 'string',
+            'sanitize_callback' => function( $value ) {
+                return sport_theme_sanitize_date_option( $value, sport_theme_iscrizioni_default_scuola_calcio_birthdate_min() );
+            },
+            'default'           => sport_theme_iscrizioni_default_scuola_calcio_birthdate_min(),
+        )
+    );
 }
 add_action( 'admin_init', 'sport_theme_register_iscrizioni_settings' );
 
@@ -378,6 +454,9 @@ function sport_theme_render_iscrizioni_settings_page() {
     if ( ! current_user_can( 'manage_options' ) ) {
         return;
     }
+
+    $allievi_cutoff = sport_theme_get_allievi_birthdate_cutoff();
+    $scuola_calcio_min = sport_theme_get_scuola_calcio_birthdate_min();
     ?>
     <div class="wrap">
         <h1>Iscrizioni AC Taverne</h1>
@@ -401,6 +480,21 @@ function sport_theme_render_iscrizioni_settings_page() {
                     'Una email per riga. Ricevono l’avviso quando una pratica viene gestita con fattura/cedola.'
                 );
                 ?>
+                <tr>
+                    <th scope="row"><label for="sport_theme_allievi_birthdate_cutoff">Limite data nascita Allievi</label></th>
+                    <td>
+                        <input id="sport_theme_allievi_birthdate_cutoff" type="date" name="sport_theme_allievi_birthdate_cutoff" value="<?php echo esc_attr( $allievi_cutoff ); ?>">
+                        <p class="description">Allievi: usare questo modulo per i nati fino a questa data inclusa, quindi 2017 o anni precedenti.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Limiti data nascita Scuola Calcio</th>
+                    <td>
+                        <label for="sport_theme_scuola_calcio_birthdate_min">Dal</label>
+                        <input id="sport_theme_scuola_calcio_birthdate_min" type="date" name="sport_theme_scuola_calcio_birthdate_min" value="<?php echo esc_attr( $scuola_calcio_min ); ?>">
+                        <p class="description">Scuola Calcio: usare questo modulo per i nati da questa data in avanti, quindi 2018 e più giovani.</p>
+                    </td>
+                </tr>
             </table>
             <?php submit_button( 'Salva impostazioni' ); ?>
         </form>
@@ -630,6 +724,302 @@ function sport_theme_cpt_fotogallery() {
 }
 add_action('init', 'sport_theme_cpt_fotogallery');
 
+function sport_theme_fotogallery_admin_menu() {
+    add_submenu_page(
+        'edit.php?post_type=fotogallery',
+        'Caricamento multiplo',
+        'Caricamento multiplo',
+        'edit_posts',
+        'fotogallery-bulk-upload',
+        'sport_theme_fotogallery_bulk_upload_page'
+    );
+}
+add_action( 'admin_menu', 'sport_theme_fotogallery_admin_menu' );
+
+function sport_theme_admin_fotogallery_scripts( $hook ) {
+    if ( current_user_can( 'upload_files' ) ) {
+        wp_enqueue_media();
+        wp_enqueue_script( 'media-editor' );
+        wp_enqueue_script( 'media-views' );
+    }
+}
+add_action( 'admin_enqueue_scripts', 'sport_theme_admin_fotogallery_scripts' );
+
+function sport_theme_fotogallery_bulk_upload_notice() {
+    $screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+
+    if ( ! $screen || $screen->id !== 'edit-fotogallery' ) {
+        return;
+    }
+
+    $bulk_url = admin_url( 'edit.php?post_type=fotogallery&page=fotogallery-bulk-upload' );
+    ?>
+    <div class="notice notice-info">
+        <p>
+            <strong>Caricamento multiplo:</strong>
+            puoi creare più foto della galleria in una sola volta.
+            <a class="button button-primary" href="<?php echo esc_url( $bulk_url ); ?>" style="margin-left:8px;">Carica più foto</a>
+        </p>
+    </div>
+    <?php
+}
+add_action( 'admin_notices', 'sport_theme_fotogallery_bulk_upload_notice' );
+
+function sport_theme_fotogallery_post_exists_for_attachment( $attachment_id, $term_id = 0 ) {
+    $query_args = array(
+        'post_type'      => 'fotogallery',
+        'post_status'    => array( 'publish', 'draft', 'pending', 'private' ),
+        'posts_per_page' => 1,
+        'fields'         => 'ids',
+        'meta_query'     => array(
+            array(
+                'key'   => '_thumbnail_id',
+                'value' => $attachment_id,
+            ),
+        ),
+    );
+
+    if ( $term_id ) {
+        $query_args['tax_query'] = array(
+            array(
+                'taxonomy' => 'categoria_galleria',
+                'field'    => 'term_id',
+                'terms'    => array( $term_id ),
+            ),
+        );
+    }
+
+    $existing = get_posts( $query_args );
+
+    return ! empty( $existing );
+}
+
+function sport_theme_fotogallery_create_posts_from_attachments( $attachment_ids, $term_id = 0 ) {
+    $created = 0;
+    $skipped = 0;
+
+    foreach ( $attachment_ids as $attachment_id ) {
+        $attachment_id = absint( $attachment_id );
+
+        if ( ! $attachment_id || get_post_type( $attachment_id ) !== 'attachment' ) {
+            continue;
+        }
+
+        if ( sport_theme_fotogallery_post_exists_for_attachment( $attachment_id, $term_id ) ) {
+            $skipped++;
+            continue;
+        }
+
+        $attachment = get_post( $attachment_id );
+        $title      = $attachment && $attachment->post_title ? $attachment->post_title : basename( get_attached_file( $attachment_id ) );
+
+        $post_id = wp_insert_post(
+            array(
+                'post_type'   => 'fotogallery',
+                'post_status' => 'publish',
+                'post_title'  => sanitize_text_field( $title ),
+            ),
+            true
+        );
+
+        if ( is_wp_error( $post_id ) ) {
+            continue;
+        }
+
+        set_post_thumbnail( $post_id, $attachment_id );
+
+        if ( $term_id ) {
+            wp_set_post_terms( $post_id, array( $term_id ), 'categoria_galleria', false );
+        }
+
+        $created++;
+    }
+
+    return array(
+        'created' => $created,
+        'skipped' => $skipped,
+    );
+}
+
+function sport_theme_fotogallery_handle_direct_uploads() {
+    if ( empty( $_FILES['fotogallery_files']['name'] ) || ! is_array( $_FILES['fotogallery_files']['name'] ) ) {
+        return array();
+    }
+
+    require_once ABSPATH . 'wp-admin/includes/image.php';
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+    require_once ABSPATH . 'wp-admin/includes/media.php';
+
+    $uploaded_ids = array();
+    $files        = $_FILES['fotogallery_files'];
+
+    foreach ( $files['name'] as $index => $name ) {
+        if ( empty( $name ) || ( isset( $files['error'][ $index ] ) && (int) $files['error'][ $index ] === UPLOAD_ERR_NO_FILE ) ) {
+            continue;
+        }
+
+        if ( isset( $files['error'][ $index ] ) && (int) $files['error'][ $index ] !== UPLOAD_ERR_OK ) {
+            continue;
+        }
+
+        $_FILES['fotogallery_single_file'] = array(
+            'name'     => $files['name'][ $index ],
+            'type'     => $files['type'][ $index ],
+            'tmp_name' => $files['tmp_name'][ $index ],
+            'error'    => $files['error'][ $index ],
+            'size'     => $files['size'][ $index ],
+        );
+
+        $attachment_id = media_handle_upload( 'fotogallery_single_file', 0 );
+
+        if ( ! is_wp_error( $attachment_id ) ) {
+            $uploaded_ids[] = (int) $attachment_id;
+        }
+    }
+
+    unset( $_FILES['fotogallery_single_file'] );
+
+    return $uploaded_ids;
+}
+
+function sport_theme_fotogallery_bulk_upload_page() {
+    if ( ! current_user_can( 'edit_posts' ) ) {
+        wp_die( esc_html__( 'Non hai i permessi per accedere a questa pagina.', 'sport-theme' ) );
+    }
+
+    $message = '';
+
+    if (
+        isset( $_POST['sport_theme_fotogallery_bulk_nonce'], $_POST['fotogallery_attachment_ids'] )
+        && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['sport_theme_fotogallery_bulk_nonce'] ) ), 'sport_theme_fotogallery_bulk_upload' )
+    ) {
+        $media_attachment_ids = array_filter( array_map( 'absint', explode( ',', sanitize_text_field( wp_unslash( $_POST['fotogallery_attachment_ids'] ) ) ) ) );
+        $uploaded_ids         = sport_theme_fotogallery_handle_direct_uploads();
+        $attachment_ids       = array_values( array_unique( array_merge( $media_attachment_ids, $uploaded_ids ) ) );
+        $term_id              = isset( $_POST['fotogallery_category'] ) ? absint( $_POST['fotogallery_category'] ) : 0;
+
+        if ( empty( $attachment_ids ) ) {
+            $message = 'Nessuna immagine selezionata o caricata.';
+        } else {
+            $result = sport_theme_fotogallery_create_posts_from_attachments( $attachment_ids, $term_id );
+
+            $message = sprintf(
+                'Foto create: %d. Foto già presenti nella categoria selezionata: %d.',
+                $result['created'],
+                $result['skipped']
+            );
+        }
+    }
+    ?>
+    <div class="wrap">
+        <h1>Caricamento multiplo Foto Gallery</h1>
+
+        <?php if ( $message ) : ?>
+            <div class="notice notice-success is-dismissible">
+                <p><?php echo esc_html( $message ); ?></p>
+            </div>
+        <?php endif; ?>
+
+        <p>Carica prima le immagini nella Media Library, poi selezionale qui tutte insieme. Verrà creato automaticamente un elemento “Foto Gallery” per ogni immagine.</p>
+
+        <form method="post" enctype="multipart/form-data">
+            <?php wp_nonce_field( 'sport_theme_fotogallery_bulk_upload', 'sport_theme_fotogallery_bulk_nonce' ); ?>
+            <input type="hidden" id="fotogallery_attachment_ids" name="fotogallery_attachment_ids" value="">
+
+            <table class="form-table" role="presentation">
+                <tr>
+                    <th scope="row"><label for="fotogallery_category">Categoria</label></th>
+                    <td>
+                        <?php
+                        wp_dropdown_categories(
+                            array(
+                                'taxonomy'         => 'categoria_galleria',
+                                'name'             => 'fotogallery_category',
+                                'id'               => 'fotogallery_category',
+                                'hide_empty'       => false,
+                                'show_option_none' => 'Senza categoria',
+                                'option_none_value'=> '0',
+                            )
+                        );
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Media Library</th>
+                    <td>
+                        <button type="button" class="button button-secondary" id="fotogallery_bulk_select">Seleziona immagini dalla Media Library</button>
+                        <p class="description">Apri la libreria, clicca sulle immagini da aggiungere e poi premi “Usa queste immagini”.</p>
+                        <p id="fotogallery_media_error" class="notice notice-error" style="display:none;margin:12px 0 0;padding:8px 12px;"></p>
+                        <div id="fotogallery_bulk_preview" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px;max-width:900px;margin-top:14px;"></div>
+                    </td>
+                </tr>
+            </table>
+
+            <?php submit_button( 'Crea foto nella galleria', 'primary', 'submit', true, array( 'id' => 'fotogallery_bulk_submit' ) ); ?>
+        </form>
+    </div>
+
+    <script>
+    jQuery(function($){
+        var frame;
+        var $ids = $('#fotogallery_attachment_ids');
+        var $preview = $('#fotogallery_bulk_preview');
+        var $error = $('#fotogallery_media_error');
+
+        function syncState(selection) {
+            var ids = [];
+            var html = '';
+
+            selection.each(function(attachment){
+                var item = attachment.toJSON();
+                var thumb = item.sizes && item.sizes.thumbnail ? item.sizes.thumbnail.url : item.url;
+
+                ids.push(item.id);
+                html += '<div style="background:#fff;border:1px solid #ccd0d4;padding:8px;">' +
+                    '<img src="' + thumb + '" alt="" style="display:block;width:100%;aspect-ratio:1;object-fit:cover;margin-bottom:6px;">' +
+                    '<strong style="display:block;font-size:12px;line-height:1.3;word-break:break-word;">' + $('<div>').text(item.title || item.filename || ('Foto ' + item.id)).html() + '</strong>' +
+                    '</div>';
+            });
+
+            $ids.val(ids.join(','));
+            $preview.html(html);
+        }
+
+        $(document).on('click', '#fotogallery_bulk_select', function(e){
+            e.preventDefault();
+
+            if (!window.wp || !wp.media) {
+                $error.text('La Media Library non e disponibile in questa schermata. Ricarica la pagina e riprova.').show();
+                return;
+            }
+
+            $error.hide().text('');
+
+            if (frame) {
+                frame.open();
+                return;
+            }
+
+            frame = wp.media({
+                frame: 'select',
+                state: 'library',
+                title: 'Seleziona immagini per Foto Gallery',
+                button: { text: 'Usa queste immagini' },
+                library: { type: 'image' },
+                multiple: 'add'
+            });
+
+            frame.on('select', function(){
+                syncState(frame.state().get('selection'));
+            });
+
+            frame.open();
+        });
+    });
+    </script>
+    <?php
+}
+
 /**
  * ----------------------------------------------------
  * CUSTOM POST TYPE: GIOCATORI DELLA ROSA
@@ -663,7 +1053,7 @@ add_action('init', 'sport_theme_cpt_giocatore');
 
 function sport_theme_admin_scripts($hook) {
     global $post_type;
-    if ('giocatore' === $post_type || 'page' === $post_type) {
+    if ('giocatore' === $post_type || 'page' === $post_type || 'partita' === $post_type) {
         wp_enqueue_media();
     }
 }
@@ -1128,6 +1518,53 @@ function sport_theme_giocatore_metabox() {
 }
 add_action('add_meta_boxes', 'sport_theme_giocatore_metabox');
 
+function sport_theme_player_photo_zoom_percent( $zoom_value ) {
+    if ( preg_match( '/(\d+)/', (string) $zoom_value, $matches ) ) {
+        return max( 60, min( 180, (int) $matches[1] ) );
+    }
+
+    return 100;
+}
+
+function sport_theme_player_photo_axis_value( $value, $axis ) {
+    $value = strtolower( trim( (string) $value ) );
+
+    if ( preg_match( '/(-?\d+)%/', $value, $matches ) ) {
+        return max( 0, min( 100, (int) $matches[1] ) );
+    }
+
+    if ( $axis === 'x' ) {
+        if ( strpos( $value, 'left' ) !== false ) {
+            return 0;
+        }
+        if ( strpos( $value, 'right' ) !== false ) {
+            return 100;
+        }
+    }
+
+    if ( $axis === 'y' ) {
+        if ( strpos( $value, 'top' ) !== false ) {
+            return 0;
+        }
+        if ( strpos( $value, 'bottom' ) !== false ) {
+            return 100;
+        }
+    }
+
+    return 50;
+}
+
+function sport_theme_player_photo_position_values( $alignment_value ) {
+    $parts = preg_split( '/\s+/', trim( (string) $alignment_value ) );
+    $x_part = $parts[0] ?? 'center';
+    $y_part = $parts[1] ?? 'top';
+
+    return array(
+        'x' => sport_theme_player_photo_axis_value( $x_part, 'x' ),
+        'y' => sport_theme_player_photo_axis_value( $y_part, 'y' ),
+    );
+}
+
 function sport_theme_giocatore_meta_html($post) {
     $nome           = get_post_meta($post->ID, '_nome_calciatore', true);
     $cognome        = get_post_meta($post->ID, '_cognome_calciatore', true);
@@ -1139,10 +1576,27 @@ function sport_theme_giocatore_meta_html($post) {
     $nazionalita    = get_post_meta($post->ID, '_nazionalita', true);
     $htp            = get_post_meta($post->ID, '_htp', true);
     $shop_url       = get_post_meta($post->ID, '_shop_url', true);
+    $zoom_value     = get_post_meta($post->ID, '_zoom_foto', true) ?: 'cover';
+    $align_value    = get_post_meta($post->ID, '_allineamento_foto', true) ?: 'center top';
+    $zoom_percent   = sport_theme_player_photo_zoom_percent( $zoom_value );
+    $position       = sport_theme_player_photo_position_values( $align_value );
+    $esultanza_zoom_value = get_post_meta($post->ID, '_foto_esultanza_zoom', true) ?: '100';
+    $esultanza_position_value = get_post_meta($post->ID, '_foto_esultanza_position', true) ?: '50% 0%';
+    $esultanza_zoom_percent = sport_theme_player_photo_zoom_percent( $esultanza_zoom_value );
+    $esultanza_position = sport_theme_player_photo_position_values( $esultanza_position_value );
+    $esultanza_edge_sample = get_post_meta($post->ID, '_foto_esultanza_edge_sample', true);
+    $esultanza_edge_sample = $esultanza_edge_sample === 'top_right_50' ? 'top_right_50' : 'full';
     
     wp_nonce_field('salva_giocatore_meta', 'giocatore_meta_nonce');
     ?>
-    <style>.g-meta input { width:100%; max-width:400px; margin-bottom:10px; }</style>
+    <style>
+        .g-meta input { width:100%; max-width:400px; margin-bottom:10px; }
+        .g-photo-controls { max-width: 520px; padding: 16px; margin: 15px 0; border: 1px solid #ccd0d4; background: #fff; }
+        .g-photo-controls label { display: block; margin: 0 0 12px; }
+        .g-photo-controls input[type="range"] { max-width: 360px; vertical-align: middle; }
+        .g-photo-controls .g-photo-value { display: inline-block; min-width: 44px; margin-left: 10px; font-weight: 700; }
+        .g-photo-help { color: #646970; margin: 0 0 14px; }
+    </style>
     <div class="g-meta">
         <label><b>Nome/i (es. Mario Achille):</b></label><br>
         <input type="text" name="_nome_calciatore" value="<?php echo esc_attr($nome); ?>" placeholder="Lascia vuoto per rilevare dal titolo"><br>
@@ -1150,7 +1604,7 @@ function sport_theme_giocatore_meta_html($post) {
         <label><b>Cognome/i (es. Casanova):</b></label><br>
         <input type="text" name="_cognome_calciatore" value="<?php echo esc_attr($cognome); ?>" placeholder="Lascia vuoto per rilevare dal titolo"><br>
 
-        <label><b>Foto Esultanza / Azione (mostrata nella card dei Giocatori):</b></label><br>
+        <label><b>Foto Esultanza / Azione (mostrata nel popup del giocatore):</b></label><br>
         <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
             <input type="text" id="foto_esultanza_url" name="_foto_esultanza" value="<?php echo esc_url($foto_esultanza); ?>" style="width:100%; max-width:300px; margin-bottom:0;" placeholder="Seleziona o carica un'immagine...">
             <button type="button" id="upload_esultanza_btn" class="button button-secondary">Scegli Immagine</button>
@@ -1159,6 +1613,39 @@ function sport_theme_giocatore_meta_html($post) {
             <?php if (!empty($foto_esultanza)) : ?>
                 <img src="<?php echo esc_url($foto_esultanza); ?>" style="max-width: 150px; height: auto; border: 1px solid #ccc; display: block;">
             <?php endif; ?>
+        </div>
+
+        <div class="g-photo-controls">
+            <h3 style="margin-top:0;">Regolazione foto esultanza / popup</h3>
+            <p class="g-photo-help">Usa questi valori per sistemare l'immagine grande del popup senza modificare la foto della card.</p>
+
+            <label>
+                <b>Zoom</b><br>
+                <input type="range" name="_foto_esultanza_zoom_percent" min="60" max="180" step="5" value="<?php echo esc_attr( $esultanza_zoom_percent ); ?>" oninput="document.getElementById('esultanza_zoom_value').innerText = this.value + '%';">
+                <span id="esultanza_zoom_value" class="g-photo-value"><?php echo esc_html( $esultanza_zoom_percent ); ?>%</span>
+            </label>
+
+            <label>
+                <b>Posizione X</b><br>
+                <input type="range" name="_foto_esultanza_position_x" min="0" max="100" step="5" value="<?php echo esc_attr( $esultanza_position['x'] ); ?>" oninput="document.getElementById('esultanza_x_value').innerText = this.value + '%';">
+                <span id="esultanza_x_value" class="g-photo-value"><?php echo esc_html( $esultanza_position['x'] ); ?>%</span>
+            </label>
+
+            <label>
+                <b>Posizione Y</b><br>
+                <input type="range" name="_foto_esultanza_position_y" min="0" max="100" step="5" value="<?php echo esc_attr( $esultanza_position['y'] ); ?>" oninput="document.getElementById('esultanza_y_value').innerText = this.value + '%';">
+                <span id="esultanza_y_value" class="g-photo-value"><?php echo esc_html( $esultanza_position['y'] ); ?>%</span>
+            </label>
+
+            <label>
+                <b>Sfumatura laterale</b><br>
+                <select name="_foto_esultanza_edge_sample" style="width:100%; max-width:360px;">
+                    <option value="full" <?php selected( $esultanza_edge_sample, 'full' ); ?>>Standard: ultimi pixel su tutta l'altezza</option>
+                    <option value="top_right_50" <?php selected( $esultanza_edge_sample, 'top_right_50' ); ?>>Alto destro 50px: campione breve ripetuto</option>
+                </select>
+            </label>
+
+            <p class="g-photo-help">Valori attuali salvati: zoom <code><?php echo esc_html( $esultanza_zoom_value ); ?></code>, posizione <code><?php echo esc_html( $esultanza_position_value ); ?></code>.</p>
         </div>
 
         <label><b>Numero Maglia (es. 10):</b></label><br>
@@ -1182,11 +1669,30 @@ function sport_theme_giocatore_meta_html($post) {
         <br><label><b>URL Shop Personale (opzionale):</b></label><br>
         <input type="text" name="_shop_url" value="<?php echo esc_attr($shop_url); ?>" placeholder="https://...">
 
-        <br><label><b>Zoom Foto in Evidenza (es. cover, 110%, 120%, 150% - default: cover):</b></label><br>
-        <input type="text" name="_zoom_foto" value="<?php echo esc_attr(get_post_meta($post->ID, '_zoom_foto', true) ?: 'cover'); ?>" style="width:100%; max-width:400px; margin-bottom:10px;"><br>
-        
-        <br><label><b>Allineamento Foto (es. center top, center 10%, center 20% - default: center top):</b></label><br>
-        <input type="text" name="_allineamento_foto" value="<?php echo esc_attr(get_post_meta($post->ID, '_allineamento_foto', true) ?: 'center top'); ?>" style="width:100%; max-width:400px; margin-bottom:10px;">
+        <div class="g-photo-controls">
+            <h3 style="margin-top:0;">Regolazione foto card</h3>
+            <p class="g-photo-help">Per giocatori con braccia larghe abbassa lo zoom. Usa X/Y per spostare il soggetto dentro la card.</p>
+
+            <label>
+                <b>Zoom</b><br>
+                <input type="range" name="_photo_zoom_percent" min="60" max="180" step="5" value="<?php echo esc_attr( $zoom_percent ); ?>" oninput="document.getElementById('photo_zoom_value').innerText = this.value + '%';">
+                <span id="photo_zoom_value" class="g-photo-value"><?php echo esc_html( $zoom_percent ); ?>%</span>
+            </label>
+
+            <label>
+                <b>Posizione X</b><br>
+                <input type="range" name="_photo_position_x" min="0" max="100" step="5" value="<?php echo esc_attr( $position['x'] ); ?>" oninput="document.getElementById('photo_x_value').innerText = this.value + '%';">
+                <span id="photo_x_value" class="g-photo-value"><?php echo esc_html( $position['x'] ); ?>%</span>
+            </label>
+
+            <label>
+                <b>Posizione Y</b><br>
+                <input type="range" name="_photo_position_y" min="0" max="100" step="5" value="<?php echo esc_attr( $position['y'] ); ?>" oninput="document.getElementById('photo_y_value').innerText = this.value + '%';">
+                <span id="photo_y_value" class="g-photo-value"><?php echo esc_html( $position['y'] ); ?>%</span>
+            </label>
+
+            <p class="g-photo-help">Valori attuali salvati: zoom <code><?php echo esc_html( $zoom_value ); ?></code>, posizione <code><?php echo esc_html( $align_value ); ?></code>.</p>
+        </div>
     </div>
     
     <script>
@@ -1214,12 +1720,43 @@ function sport_theme_salva_giocatore_meta($post_id) {
     if (!isset($_POST['giocatore_meta_nonce']) || !wp_verify_nonce($_POST['giocatore_meta_nonce'], 'salva_giocatore_meta')) return;
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
     
-    $fields = ['_nome_calciatore', '_cognome_calciatore', '_foto_esultanza', '_numero_maglia', '_data_nascita', '_altezza', '_peso', '_nazionalita', '_htp', '_shop_url', '_zoom_foto', '_allineamento_foto'];
+    $fields = ['_nome_calciatore', '_cognome_calciatore', '_foto_esultanza', '_numero_maglia', '_data_nascita', '_altezza', '_peso', '_nazionalita', '_htp', '_shop_url'];
     foreach($fields as $field) {
         if(isset($_POST[$field])) {
             update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
         }
     }
+
+    if ( isset( $_POST['_photo_zoom_percent'], $_POST['_photo_position_x'], $_POST['_photo_position_y'] ) ) {
+        $zoom = max( 60, min( 180, (int) $_POST['_photo_zoom_percent'] ) );
+        $x    = max( 0, min( 100, (int) $_POST['_photo_position_x'] ) );
+        $y    = max( 0, min( 100, (int) $_POST['_photo_position_y'] ) );
+        $old_zoom  = get_post_meta( $post_id, '_zoom_foto', true );
+        $old_align = get_post_meta( $post_id, '_allineamento_foto', true );
+
+        if ( $zoom === 100 && $x === 50 && $y === 0 && ( $old_zoom === '' || $old_zoom === 'cover' ) && ( $old_align === '' || $old_align === 'center top' ) ) {
+            update_post_meta( $post_id, '_zoom_foto', 'cover' );
+            update_post_meta( $post_id, '_allineamento_foto', 'center top' );
+        } else {
+            update_post_meta( $post_id, '_zoom_foto', $zoom . '%' );
+            update_post_meta( $post_id, '_allineamento_foto', $x . '% ' . $y . '%' );
+        }
+    }
+
+    if ( isset( $_POST['_foto_esultanza_zoom_percent'], $_POST['_foto_esultanza_position_x'], $_POST['_foto_esultanza_position_y'] ) ) {
+        $esultanza_zoom = max( 60, min( 180, (int) $_POST['_foto_esultanza_zoom_percent'] ) );
+        $esultanza_x    = max( 0, min( 100, (int) $_POST['_foto_esultanza_position_x'] ) );
+        $esultanza_y    = max( 0, min( 100, (int) $_POST['_foto_esultanza_position_y'] ) );
+
+        update_post_meta( $post_id, '_foto_esultanza_zoom', $esultanza_zoom );
+        update_post_meta( $post_id, '_foto_esultanza_position', $esultanza_x . '% ' . $esultanza_y . '%' );
+    }
+
+    if ( isset( $_POST['_foto_esultanza_edge_sample'] ) ) {
+        $edge_sample = sanitize_key( $_POST['_foto_esultanza_edge_sample'] );
+        update_post_meta( $post_id, '_foto_esultanza_edge_sample', $edge_sample === 'top_right_50' ? 'top_right_50' : 'full' );
+    }
+
 }
 add_action('save_post_giocatore', 'sport_theme_salva_giocatore_meta');
 
@@ -1385,7 +1922,13 @@ function sport_theme_partita_meta_html($post) {
     
     wp_nonce_field('salva_partita_meta', 'partita_meta_nonce');
     ?>
-    <style>.p-meta input, .p-meta select { width: 100%; max-width: 400px; margin-bottom: 15px; }</style>
+    <style>
+        .p-meta input:not([type="hidden"]), .p-meta select { width: 100%; max-width: 400px; margin-bottom: 15px; }
+        .p-logo-preview { width: 96px; min-height: 96px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccd0d4; background: #fff; margin: 8px 0 12px; }
+        .p-logo-preview img { max-width: 84px; max-height: 84px; object-fit: contain; }
+        .p-logo-preview span { color: #646970; font-size: 12px; text-align: center; padding: 8px; }
+        .p-logo-actions .button { width: auto; margin-right: 8px; margin-bottom: 8px; }
+    </style>
     <div class="p-meta">
         <label><b>Data Partita (es. SAB. 10.02.2024):</b></label><br>
         <input type="text" name="_data_partita" value="<?php echo esc_attr($data_p); ?>">
@@ -1412,13 +1955,65 @@ function sport_theme_partita_meta_html($post) {
         <br><label><b>Nome Avversario (es. AC Bellinzona):</b></label><br>
         <input type="text" name="_avversario" value="<?php echo esc_attr($avversario); ?>">
         
-        <br><label><b>URL Logo Avversario (copia il link da "Media" - opzionale ma consigliato):</b></label><br>
-        <input type="text" name="_logo_avversario" value="<?php echo esc_attr($logo_avversario); ?>" placeholder="https://tuosito.com/wp-content/uploads/.../logo.png">
+        <br><label><b>Logo Avversario:</b></label><br>
+        <input id="partita-logo-avversario" type="hidden" name="_logo_avversario" value="<?php echo esc_attr($logo_avversario); ?>">
+        <div id="partita-logo-preview" class="p-logo-preview">
+            <?php if ($logo_avversario) : ?>
+                <img src="<?php echo esc_url($logo_avversario); ?>" alt="Logo avversario">
+            <?php else : ?>
+                <span>Nessun logo selezionato</span>
+            <?php endif; ?>
+        </div>
+        <div class="p-logo-actions">
+            <button type="button" class="button" id="partita-logo-select">Scegli logo dalla Media Library</button>
+            <button type="button" class="button" id="partita-logo-remove" <?php echo $logo_avversario ? '' : 'style="display:none;"'; ?>>Rimuovi logo</button>
+        </div>
+        <p style="font-size:12px; color:#666; margin-top:-2px;">Seleziona il logo dell’avversario dalla Libreria Media. Il logo AC Taverne viene inserito automaticamente.</p>
         
         <br><label><b>RISULTATO:</b></label><br>
         <input type="text" name="_risultato" value="<?php echo esc_attr($risultato); ?>" placeholder="es. 1 - 1" style="background:#fefed4; font-weight:bold;">
         <p style="font-size:12px; color:#666; margin-top:-10px;">SE LASCI VUOTO apparirà nei "Prossimi Incontri". Se lo COMPILI andrà automaticamente in "Risultati".</p>
     </div>
+    <script>
+    jQuery(function($) {
+        var opponentLogoFrame;
+        var $input = $('#partita-logo-avversario');
+        var $preview = $('#partita-logo-preview');
+        var $remove = $('#partita-logo-remove');
+
+        $('#partita-logo-select').on('click', function(event) {
+            event.preventDefault();
+
+            if (opponentLogoFrame) {
+                opponentLogoFrame.open();
+                return;
+            }
+
+            opponentLogoFrame = wp.media({
+                title: 'Scegli logo avversario',
+                button: { text: 'Usa questo logo' },
+                library: { type: 'image' },
+                multiple: false
+            });
+
+            opponentLogoFrame.on('select', function() {
+                var attachment = opponentLogoFrame.state().get('selection').first().toJSON();
+                $input.val(attachment.url);
+                $preview.html('<img src="' + attachment.url + '" alt="Logo avversario">');
+                $remove.show();
+            });
+
+            opponentLogoFrame.open();
+        });
+
+        $remove.on('click', function(event) {
+            event.preventDefault();
+            $input.val('');
+            $preview.html('<span>Nessun logo selezionato</span>');
+            $remove.hide();
+        });
+    });
+    </script>
     <?php
 }
 
@@ -1429,7 +2024,8 @@ function sport_theme_salva_partita_meta($post_id) {
     $fields = ['_data_partita', '_ora_partita', '_stadio', '_tipo_evento', '_avversario', '_logo_avversario', '_in_casa', '_risultato'];
     foreach($fields as $field) {
         if(isset($_POST[$field])) {
-            update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
+            $value = $field === '_logo_avversario' ? esc_url_raw($_POST[$field]) : sanitize_text_field($_POST[$field]);
+            update_post_meta($post_id, $field, $value);
         }
     }
 }
@@ -2082,9 +2678,77 @@ function sport_theme_populate_dummy_content() {
 }
 add_action('init', 'sport_theme_populate_dummy_content');
 
+function sport_theme_storia_content_html() {
+    return <<<'HTML'
+<h2>Le origini</h2>
+<p>La storia della prima squadra di Taverne affonda le sue radici negli anni Venti, quando nasce il Football Club Stella Taverne, prima vera formazione locale, seppur avvolta da notizie frammentarie e denominazioni variabili. Inizialmente si gioca nella zona di Livorno, lungo il corso del Vedeggio, con una caratteristica maglia nera impreziosita da una stella bianca sul petto. Successivamente il campo si sposta a Taverne Superiore, nel Comune di Sigirino, e negli anni Quaranta, con il F.C. Taverne, nell’area della stazione, tra il fiume e la ferrovia.</p>
+<h2>Fondazione, periodo eroico e Trofeo Ticino</h2>
+<p>Nel secondo dopoguerra nasce l’Associazione Calcio Taverne, sostenuta da un grande entusiasmo popolare. La società diventa rapidamente un punto di riferimento sportivo per tutta la valle, grazie a un ambiente favorevole, a buoni allenatori e a una comunità solida e appassionata.</p>
+<p>A questo periodo, definito “eroico”, si legano nomi importanti come Mario Banfi, Flaminio Petrocchi e Gino Gova. Già negli anni Trenta si distinguono inoltre a livello regionale i fratelli Zambelli, in particolare il portiere Emilio, soprannominato “Zamorra”, figura simbolica del calcio locale.</p>
+<p>Un momento chiave arriva nel 1950, quando l’AC Taverne entra ufficialmente nella Federazione calcistica ticinese partecipando al campionato di Quarta Divisione e ottenendo subito la promozione in Terza. La crescita prosegue fino alla stagione 1956-57, nella quale, sotto la guida di Bruno Passardi, la squadra conquista il titolo di campione di Terza Divisione. L’anno successivo, con Dino Leoni alla guida, il Taverne si conferma vincendo sia il campionato sia il Trofeo Ticino, firmando una delle pagine più significative della sua storia.</p>
+<h2>Il calcio regionale</h2>
+<p>Nel corso della sua storia, il Taverne costruisce un percorso solido e coerente, caratterizzato da tappe significative e da una crescita costante nel panorama calcistico regionale e nazionale.</p>
+<p>Tra gli anni Ottanta e Novanta, la prima squadra partecipa con regolarità ai campionati di Seconda e Terza Lega, consolidando la propria presenza e gettando le basi per i successi futuri. Un primo importante salto di qualità si registra nella stagione 2009-2010, quando il Taverne conquista il terzo rango in Seconda Lega regionale ottenendo la promozione in Seconda Lega Interregionale. Si tratta di un traguardo storico, che segna l’ingresso del club, a partire dal 2010, in un contesto di competizione nazionale.</p>
+<p>Nel campionato 2011-2012, il Taverne tenta la scalata alla Seconda Lega élite, categoria già raggiunta con merito due anni prima e sfortunatamente persa nella stagione successiva 2012-2013.</p>
+<h2>L’era di Carlo Burà e l’approdo in Prima Lega Classic</h2>
+<p>Figura simbolo del calcio ticinese e autentica icona dell’AC Taverne, Carlo Burà lega il proprio nome ad alcune delle pagine più importanti della storia del club. La sua avventura alla guida della società inizia nella stagione 1974-1975, in un periodo in cui il Taverne milita stabilmente tra la Seconda e la Terza Lega, rappresentando con orgoglio il territorio e la propria comunità.</p>
+<p>Con passione, determinazione e una visione chiara, Burà guida il club per quasi vent’anni, contribuendo alla crescita della società sia sul piano sportivo sia su quello organizzativo. La sua prima esperienza presidenziale si conclude nella stagione 1992-1993, coronata dalla promozione in Seconda Lega, traguardo che conferma la solidità del lavoro svolto durante quegli anni.</p>
+<p>Dopo un periodo lontano dalla presidenza, Carlo Burà torna alla guida dell’AC Taverne nella stagione 2010-2011, con la squadra impegnata nel campionato di Seconda Lega regionale. Inizia così una nuova fase storica per il club. Già nella stagione 2011-2012 arriva la promozione in Seconda Lega Interregionale, seguita però dall’amara retrocessione dell’anno successivo. Il Taverne reagisce immediatamente e, nella stagione 2013-2014, conquista nuovamente la promozione in Seconda Lega Interregionale, dimostrando carattere e continuità.</p>
+<p>La stagione 2014-2015 segna uno dei momenti più importanti dell’intera storia rossoblù: sotto la presidenza Burà, il Taverne conquista infatti una storica promozione in Prima Lega, raggiungendo per la prima volta una categoria di grande prestigio nel panorama calcistico svizzero. Nonostante la retrocessione nella stagione 2015-2016, la società continua a crescere e a consolidarsi.</p>
+<p>Nel 2021 arriva un’altra impresa memorabile: il Taverne conquista nuovamente la promozione in Prima Lega, categoria nella quale milita ancora oggi, confermandosi una realtà importante del calcio regionale e nazionale.</p>
+<p>L’era di Carlo Burà si conclude infine nella stagione 2024-2025, lasciando in eredità una storia fatta di passione, sacrificio e straordinari successi sportivi. Il suo nome rimane indissolubilmente legato all’identità e alla crescita dell’AC Taverne.</p>
+<h2>I successi in campionato e le Coppe Ticino</h2>
+<p>Nel corso della sua storia, il Taverne conquista numerosi successi che ne consolidano il prestigio nel panorama calcistico regionale e nazionale.</p>
+<p>Nella stagione 1956-1957 la squadra si laurea campione ticinese di Terza Divisione, ottenendo la promozione in Seconda Lega. Due anni più tardi, nella stagione 1958-1959, il Taverne conquista anche il titolo di campione ticinese di Seconda Divisione, confermando la propria crescita sportiva.</p>
+<p>Negli anni successivi il club continua a essere protagonista. Nella stagione 1979-1980 il Taverne vince il proprio gruppo di Terza Divisione e conquista la promozione in Seconda Lega. Lo stesso traguardo viene raggiunto anche nelle stagioni 1992-1993 e 2004-2005, a testimonianza della continuità e della solidità della prima squadra.</p>
+<p>Un ulteriore passo storico arriva nella stagione 2009-2010, quando il Taverne chiude al terzo posto il campionato di Seconda Lega regionale, ottenendo la promozione in Seconda Lega Interregionale e affacciandosi così al panorama nazionale.</p>
+<p>Di particolare rilievo risulta anche il percorso nelle competizioni regionali: il Taverne conquista sei Coppe Ticino, stabilendo un prestigioso primato, e ottiene inoltre un primo e un secondo posto nella Coppa Campioni del calcio regionale ticinese.</p>
+<p>Dalla stagione attuale, la prima squadra si presenta con un nuovo assetto societario, aprendo una nuova fase nel percorso di crescita e sviluppo del club.</p>
+<h2>75° Anniversario: l’inizio di una nuova era</h2>
+<p>La stagione 2025-2026 dell’AC Taverne segna un momento storico per il club: il 75° anniversario dalla sua fondazione coincide con l’inizio di una nuova era. Non è soltanto una ricorrenza celebrativa, ma un punto di svolta che definisce identità, ambizioni e direzione futura della società.</p>
+<p>Sotto la guida dell’imprenditore Leonid Novoselskiy, il Taverne sta costruisce un progetto solido e coerente, fondato su principi chiari: sostenibilità, valorizzazione dei giovani e sviluppo di un calcio propositivo. La prima squadra diventa il simbolo di questa visione, incarnando un modello moderno in cui il risultato non è mai separato dalla qualità del gioco e dalla crescita dei singoli.</p>
+<p>Il club si afferma con un’identità precisa: propone un calcio offensivo, dinamico e spettacolare, che cerca sempre di imporre ritmo e idee. La vittoria arriva attraverso il gioco, ma anche attraverso il rispetto per gli avversari, per le regole e per i valori dello sport. Ogni partita diventa così un’espressione di mentalità, oltre che di tecnica.</p>
+<p>In questo contesto, il Taverne assume sempre più i contorni di una scuola di formazione calcistica e umana. I giocatori della prima squadra vivono il calcio come professione e responsabilità quotidiana: disciplina, serietà e costanza diventano elementi fondamentali del percorso individuale e collettivo. Il campo è il luogo in cui si costruisce il presente, ma anche il futuro di ogni atleta.</p>
+<p>Il tratto distintivo più evidente è la giovinezza della rosa. L’età media si mantiene attorno ai 21 anni, trasformando di fatto la prima squadra in un gruppo Under 23 che compete ad alto livello nel calcio adulto. Questa scelta non è casuale, ma rappresenta il cuore del progetto: investire sui giovani, dare loro spazio e responsabilità, accelerare il loro percorso di crescita.</p>
+<p>La squadra risponde con entusiasmo e coraggio. In campo si riconosce un’identità chiara: intensità, gioco verticale, coraggio nelle scelte e voglia di proporre calcio. Anche contro avversari più esperti, il Taverne non rinuncia mai alla propria idea, dimostrando personalità e maturità crescente.</p>
+<p>Attorno al gruppo si inseriscono anche figure di esperienza, fondamentali per guidare i più giovani nei momenti decisivi della stagione. La loro presenza contribuisce a creare equilibrio, trasmettendo mentalità vincente e stabilità emotiva all’interno dello spogliatoio.</p>
+<p>Il 75° anniversario diventa così il simbolo di una trasformazione profonda: il Taverne non si limita a ricordare la propria storia, ma la rilancia. La tradizione incontra il futuro, e da questa unione nasce una nuova identità. Una società che vuole crescere senza perdere i propri valori, che punta a vincere attraverso il gioco e che mette i giovani al centro del proprio destino.</p>
+HTML;
+}
+
+function sport_theme_fix_storia_content() {
+    if ( get_option( 'sport_theme_fix_storia_v4' ) ) {
+        return;
+    }
+
+    $p = get_page_by_path('storia');
+    if (!$p) $p = get_page_by_title('Storia');
+
+    if ($p) {
+        if ( trim( wp_strip_all_tags( $p->post_content ) ) === '' ) {
+            wp_update_post(array(
+                'ID' => $p->ID,
+                'post_content' => sport_theme_storia_content_html()
+            ));
+        }
+        update_option('sport_theme_fix_storia_v4', true);
+    }
+}
+add_action('init', 'sport_theme_fix_storia_content');
+
+function sport_theme_presente_futuro_content_html() {
+    return '<h2>PROGETTO SPORTIVO</h2>' .
+        '<p>La Prima Squadra del Taverne rappresenta una visione di calcio moderna, ambiziosa e fortemente orientata alla crescita dei giovani. Il nostro progetto nasce dalla convinzione che il talento debba essere valorizzato attraverso un’identità di gioco chiara, coraggiosa e riconoscibile, capace di coniugare risultati, spettacolo e sviluppo individuale.</p>' .
+        '<p>Al centro del percorso c’è una rosa giovane, dinamica e motivata, che costituisce il cuore pulsante del presente e il patrimonio del futuro del club. Crediamo in un calcio intenso e propositivo, basato su pressing organizzato, aggressività positiva, ritmo elevato e continua ricerca dell’iniziativa. Una squadra che vuole essere protagonista, capace di interpretare il gioco con personalità, coraggio e mentalità moderna.</p>' .
+        '<p>La valorizzazione dei giovani talenti ticinesi e provenienti da altre realtà rappresenta una missione fondamentale. Il Taverne offre ai propri giocatori un ambiente competitivo, professionale e stimolante, nel quale crescere come atleti e come persone. Ogni allenamento è pensato per sviluppare qualità tecniche, comprensione tattica, responsabilità individuale e spirito collettivo, accompagnando ogni ragazzo nel percorso verso il massimo livello che le sue capacità possono raggiungere.</p>' .
+        '<p>I principi che guidano il nostro lavoro quotidiano sono chiari: rispetto, disciplina, umiltà, dedizione e spirito di sacrificio. Valori che si riflettono non solo nelle prestazioni sul campo, ma anche nel comportamento dentro e fuori dallo spogliatoio. Perché crediamo che la formazione di un calciatore passi prima di tutto dalla crescita della persona.</p>' .
+        '<p>Il bel calcio, per noi, non è un semplice ideale estetico. È l’espressione concreta della nostra identità. Significa giocare con intensità, coraggio e organizzazione, cercando sempre di costruire, proporre e dominare il gioco. Significa onorare la maglia attraverso il lavoro, l’impegno e la volontà costante di migliorarsi.</p>' .
+        '<p>Il Progetto Sportivo del Taverne guarda al futuro con entusiasmo e determinazione: una squadra giovane, un calcio moderno e valori solidi come fondamenta di una crescita sostenibile e duratura. Perché vincere è importante, ma costruire giocatori, uomini e una cultura calcistica di qualità è ciò che lascia il segno nel tempo.</p>';
+}
+
 // FIX DB CONTENT PER PRESENTE E FUTURO
 function sport_theme_fix_progetto_content() {
-    if ( get_option( 'sport_theme_fix_progetto_v2' ) ) {
+    if ( get_option( 'sport_theme_fix_progetto_v3' ) ) {
         return;
     }
     
@@ -2094,19 +2758,15 @@ function sport_theme_fix_progetto_content() {
     if (!$p) $p = get_page_by_title('Progetto sportivo'); // Fallback
     
     if ($p) {
-        $lorem_p = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>";
-        $lorem_h3 = "<h3>LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT, SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA.</h3>";
-        
-        $correct_content = '<h2>VISIONE, OBIETTIVI E VALORI SPORTIVI</h2>' . $lorem_h3 . $lorem_p . 
-                           '<h2>FILOSOFIA DI GIOCO</h2>' . $lorem_h3 . $lorem_p . 
-                           '<h2>OBIETTIVI SPORTIVI</h2>' . $lorem_h3 . $lorem_p . 
-                           '<h2>VALORI</h2>' . $lorem_h3 . $lorem_p;
-                           
-        wp_update_post(array(
-            'ID' => $p->ID,
-            'post_content' => $correct_content
-        ));
-        update_option('sport_theme_fix_progetto_v2', true);
+        if ( trim( wp_strip_all_tags( $p->post_content ) ) === '' ) {
+            $correct_content = sport_theme_presente_futuro_content_html();
+
+            wp_update_post(array(
+                'ID' => $p->ID,
+                'post_content' => $correct_content
+            ));
+        }
+        update_option('sport_theme_fix_progetto_v3', true);
     }
 }
 add_action('init', 'sport_theme_fix_progetto_content');
@@ -2515,21 +3175,24 @@ function sport_theme_handle_club100_form() {
     $cognome  = sanitize_text_field($_POST['c100_cognome'] ?? '');
     $telefono = sanitize_text_field($_POST['c100_telefono'] ?? '');
     $email    = sanitize_email($_POST['c100_email'] ?? '');
-    $oggetto  = sanitize_text_field($_POST['c100_oggetto'] ?? '');
+    $indirizzo = sanitize_text_field($_POST['c100_indirizzo'] ?? '');
+    $luogo    = sanitize_text_field($_POST['c100_luogo'] ?? '');
     $testo    = sanitize_textarea_field($_POST['c100_testo'] ?? '');
     
-    if ( empty($nome) || empty($cognome) || empty($email) ) {
+    if ( empty($nome) || empty($cognome) || empty($telefono) || ! is_email($email) || empty($indirizzo) || empty($luogo) ) {
         return;
     }
     
-    $to      = get_option('admin_email');
-    $subject = '[AC Taverne - Club dei 100] ' . $oggetto;
+    $to      = 'marketing@actaverne.com';
+    $subject = '[AC Taverne - Club dei 100] Nuova iscrizione';
     $body    = "Richiesta iscrizione al Club dei 100:\n\n";
     $body   .= "Nome: {$nome}\n";
     $body   .= "Cognome: {$cognome}\n";
     $body   .= "Email: {$email}\n";
-    $body   .= "Telefono: {$telefono}\n\n";
-    $body   .= "Messaggio:\n{$testo}";
+    $body   .= "Telefono: {$telefono}\n";
+    $body   .= "Indirizzo: {$indirizzo}\n";
+    $body   .= "Luogo: {$luogo}\n\n";
+    $body   .= "Messaggio:\n" . ( $testo !== '' ? $testo : '-' );
     $headers = array('Reply-To: ' . $nome . ' ' . $cognome . ' <' . $email . '>');
     
     wp_mail($to, $subject, $body, $headers);
@@ -3709,7 +4372,7 @@ function sport_theme_import_organigramma_finale() {
 }
 
 // TEMPORARY SCRIPT TO IMPORT STORIA
-add_action('init', 'sport_theme_import_storia');
+// add_action('init', 'sport_theme_import_storia');
 function sport_theme_import_storia() {
     if (!isset($_GET['import_storia'])) return;
     if (!current_user_can('manage_options')) return;
@@ -3773,7 +4436,7 @@ Dalla stagione attuale, la prima squadra si presenta con un nuovo assetto societ
 }
 
 // TEMPORARY SCRIPT TO UPDATE STORIA
-add_action('init', 'sport_theme_update_storia_format');
+// add_action('init', 'sport_theme_update_storia_format');
 function sport_theme_update_storia_format() {
     if (!isset($_GET['update_storia'])) return;
     if (!current_user_can('manage_options')) return;
@@ -4699,8 +5362,10 @@ function sport_theme_collect_iscrizione_children( $tipo_iscrizione ) {
     return array_values( $children );
 }
 
-function sport_theme_validate_iscrizione_payload( $children ) {
+function sport_theme_validate_iscrizione_payload( $children, $tipo_iscrizione = 'allievi' ) {
     $errors = array();
+    $allievi_birthdate_cutoff = sport_theme_get_allievi_birthdate_cutoff();
+    $scuola_calcio_birthdate_min = sport_theme_get_scuola_calcio_birthdate_min();
 
     foreach ( $children as $child ) {
         $label = trim( $child['nome'] . ' ' . $child['cognome'] );
@@ -4718,6 +5383,18 @@ function sport_theme_validate_iscrizione_payload( $children ) {
 
         if ( $child['altro_sport'] === 'si' && ( empty( $child['sport_societa'] ) || empty( $child['sport_giorni'] ) ) ) {
             $errors[] = $label . ': indicare società e giorni dell’altro sport.';
+        }
+
+        if ( $tipo_iscrizione === 'allievi' && ! empty( $child['data_nascita'] ) && $child['data_nascita'] > $allievi_birthdate_cutoff ) {
+            $errors[] = $label . ': questa data di nascita rientra nella Scuola Calcio, non negli Allievi.';
+        }
+
+        if (
+            $tipo_iscrizione === 'scuola_calcio'
+            && ! empty( $child['data_nascita'] )
+            && $child['data_nascita'] < $scuola_calcio_birthdate_min
+        ) {
+            $errors[] = $label . ': questa data di nascita rientra negli Allievi, non nella Scuola Calcio.';
         }
 
         if ( ! sport_theme_get_uploaded_file( "figlio_{$child['index']}_foto_giocatore" ) ) {
@@ -4783,7 +5460,7 @@ function sport_theme_handle_iscrizione_submit() {
     $tables          = sport_theme_iscrizioni_table_names();
     $tipo_iscrizione = sport_theme_sanitize_iscrizione_key( $_POST['tipo_iscrizione'] ?? 'allievi', array( 'allievi', 'scuola_calcio' ), 'allievi' );
     $children        = sport_theme_collect_iscrizione_children( $tipo_iscrizione );
-    $errors          = sport_theme_validate_iscrizione_payload( $children );
+    $errors          = sport_theme_validate_iscrizione_payload( $children, $tipo_iscrizione );
 
     if ( $errors ) {
         wp_send_json_error( array( 'message' => 'Controlla i dati inseriti.', 'errors' => $errors ), 422 );
@@ -4928,6 +5605,31 @@ function sport_theme_iscrizioni_require_segreteria_access() {
     }
 }
 
+function sport_theme_handle_update_allievi_birthdate_cutoff() {
+    sport_theme_iscrizioni_require_segreteria_access();
+
+    if ( ! wp_verify_nonce( $_POST['_wpnonce'] ?? '', 'act_update_allievi_birthdate_cutoff' ) ) {
+        wp_die( 'Richiesta non valida.', 403 );
+    }
+
+    $cutoff = sport_theme_sanitize_date_option(
+        $_POST['allievi_birthdate_cutoff'] ?? '',
+        sport_theme_iscrizioni_default_allievi_birthdate_cutoff()
+    );
+    $scuola_min = sport_theme_sanitize_date_option(
+        $_POST['scuola_calcio_birthdate_min'] ?? '',
+        sport_theme_iscrizioni_default_scuola_calcio_birthdate_min()
+    );
+
+    update_option( 'sport_theme_allievi_birthdate_cutoff', $cutoff );
+    update_option( 'sport_theme_scuola_calcio_birthdate_min', $scuola_min );
+
+    $redirect = wp_get_referer() ? wp_get_referer() : site_url( '/area-segreteria/' );
+    wp_safe_redirect( add_query_arg( 'regola_allievi', 'salvata', $redirect ) . '#segreteria-dashboard' );
+    exit;
+}
+add_action( 'admin_post_act_update_allievi_birthdate_cutoff', 'sport_theme_handle_update_allievi_birthdate_cutoff' );
+
 function sport_theme_iscrizioni_allowed_statuses() {
     return array( 'nuova', 'in_verifica', 'documenti_mancanti', 'approvata', 'confermata', 'archiviata' );
 }
@@ -5014,6 +5716,29 @@ function sport_theme_sum_iscrizione_children_amounts( $children, $tipo_iscrizion
     }
 
     return max( 0, $total );
+}
+
+function sport_theme_iscrizione_child_invoice_lines( $children, $tipo_iscrizione = 'allievi' ) {
+    $lines = array();
+
+    foreach ( array_values( (array) $children ) as $fallback_index => $child ) {
+        $child_index = is_array( $child ) ? ( $child['child_index'] ?? $fallback_index + 1 ) : ( $child->child_index ?? $fallback_index + 1 );
+        $nome        = is_array( $child ) ? ( $child['nome'] ?? '' ) : ( $child->nome ?? '' );
+        $cognome     = is_array( $child ) ? ( $child['cognome'] ?? '' ) : ( $child->cognome ?? '' );
+        $child_name  = trim( (string) $nome . ' ' . (string) $cognome );
+        $amount      = sport_theme_get_iscrizione_child_amount( $child, $tipo_iscrizione );
+        $amount_label = 'CHF ' . number_format( $amount, 2, '.', "'" );
+
+        $lines[] = array(
+            'index'        => (int) $child_index,
+            'name'         => $child_name ?: '-',
+            'amount'       => $amount,
+            'amount_label' => $amount_label,
+            'label'        => 'Iscritto ' . (int) $child_index . ': ' . ( $child_name ?: '-' ) . ' - ' . $amount_label,
+        );
+    }
+
+    return $lines;
 }
 
 function sport_theme_has_riduzione_fratelli( $registration ) {
@@ -6051,10 +6776,12 @@ function sport_theme_handle_iscrizione_invoice() {
     foreach ( $children as $child ) {
         $child_names[] = trim( (string) $child->nome . ' ' . (string) $child->cognome );
     }
+    $child_invoice_lines = sport_theme_iscrizione_child_invoice_lines( $children, $registration->tipo_iscrizione );
     $discount_lines = sport_theme_iscrizione_discount_lines( $registration );
     $invoice_number = date_i18n( 'Y', current_time( 'timestamp' ) ) . '-' . str_pad( (string) (int) $registration->id, 4, '0', STR_PAD_LEFT );
     $base_amount = sport_theme_calculate_iscrizione_amount( $registration->tipo_iscrizione, count( $children ), false );
     $discount_amount = max( 0, $base_amount - (float) $registration->importo_totale_chf );
+    $payment_terms = 'Condizioni di pagamento: a ricevimento fattura';
 
     nocache_headers();
     header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );
@@ -6095,7 +6822,9 @@ function sport_theme_handle_iscrizione_invoice() {
         .invoice-summary-row strong { font-size: 14px; }
         .invoice-actions { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 16px; }
         .invoice-actions button { border: 0; background: #e30613; color: #fff; padding: 12px 18px; font-weight: 800; text-transform: uppercase; cursor: pointer; }
-        .invoice-qr { overflow-x: auto; margin-top: auto; padding: 0 0 20px; }
+        .invoice-payment-block { margin-top: auto; }
+        .invoice-payment-terms { margin: 0 38px 10px; text-align: left; font-size: 12px; font-weight: 700; color: #111; }
+        .invoice-qr { overflow-x: auto; padding: 0 0 20px; }
         .invoice-qr #qr-bill { margin: 0 auto; }
         @media print {
             body { background: #fff; }
@@ -6163,9 +6892,9 @@ function sport_theme_handle_iscrizione_invoice() {
                     <p>
                         <strong><?php echo esc_html( sport_theme_iscrizione_payment_description() ); ?></strong>
                         Categoria: <?php echo esc_html( $type_label ); ?> · Stagione <?php echo esc_html( $registration->stagione_sportiva ); ?><br>
-                        <?php if ( array_filter( $child_names ) ) : ?>
-                            <?php foreach ( array_values( array_filter( $child_names ) ) as $child_index => $child_name ) : ?>
-                                <span class="invoice-child-line">Iscritto <?php echo esc_html( $child_index + 1 ); ?>: <?php echo esc_html( $child_name ); ?></span>
+                        <?php if ( $child_invoice_lines ) : ?>
+                            <?php foreach ( $child_invoice_lines as $child_line ) : ?>
+                                <span class="invoice-child-line"><?php echo esc_html( $child_line['label'] ); ?></span>
                             <?php endforeach; ?>
                         <?php else : ?>
                             <span class="invoice-child-line">Iscritto 1: -</span>
@@ -6197,9 +6926,12 @@ function sport_theme_handle_iscrizione_invoice() {
                     </div>
                 </div>
             </section>
-            <section class="invoice-qr">
-                <?php echo $payment_part; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-            </section>
+            <div class="invoice-payment-block">
+                <p class="invoice-payment-terms"><?php echo esc_html( $payment_terms ); ?></p>
+                <section class="invoice-qr">
+                    <?php echo $payment_part; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                </section>
+            </div>
         </article>
     </div>
 </body>
@@ -6278,6 +7010,8 @@ function sport_theme_create_iscrizione_invoice_pdf( $registration, $children, $i
     $base_amount      = sport_theme_calculate_iscrizione_amount( $registration->tipo_iscrizione, count( $children ), false );
     $discount_amount  = max( 0, $base_amount - (float) $registration->importo_totale_chf );
     $reference_label  = trim( chunk_split( (string) $reference, 4, ' ' ) );
+    $payment_terms    = 'Condizioni di pagamento: a ricevimento fattura';
+    $child_invoice_lines = sport_theme_iscrizione_child_invoice_lines( $children, $registration->tipo_iscrizione );
     $first_child      = $children[0] ?? null;
     $debtor_lines     = array_filter(
         array(
@@ -6339,9 +7073,9 @@ function sport_theme_create_iscrizione_invoice_pdf( $registration, $children, $i
     $stream .= $text( sport_theme_iscrizione_payment_description(), 300, 592, 12, 'F2' );
     $stream .= $text( 'Categoria: ' . $type_label . ' · Stagione ' . ( $registration->stagione_sportiva ?: sport_theme_current_sport_season() ), 300, 574, 10 );
     $child_y = 556;
-    if ( $child_names ) {
-        foreach ( array_values( array_filter( $child_names ) ) as $child_index => $child_name ) {
-            $stream .= $wrapped_text( 'Iscritto ' . ( $child_index + 1 ) . ': ' . $child_name, 300, $child_y, 42, 10 );
+    if ( $child_invoice_lines ) {
+        foreach ( $child_invoice_lines as $child_line ) {
+            $stream .= $wrapped_text( $child_line['label'], 300, $child_y, 42, 10 );
             $child_y -= 14;
         }
     } else {
@@ -6369,6 +7103,7 @@ function sport_theme_create_iscrizione_invoice_pdf( $registration, $children, $i
     $stream .= $text( 'Totale fattura', 42, $summary_y, 9, 'F2' );
     $stream .= $text( $total_label, 428, $summary_y, 9, 'F2' );
 
+    $stream .= $text( $payment_terms, 42, 304, 8, 'F2' );
     $stream .= $line( 42, 286, 553, 286 );
     $stream .= $line( 200, 286, 200, 40 );
     $stream .= $text( 'Ricevuta', 42, 260, 12, 'F2' );

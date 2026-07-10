@@ -182,7 +182,7 @@ get_header();
             $args = array(
                 'post_type'      => 'post',
                 'category_name'  => 'prima-squadra',
-                'posts_per_page' => 12, // Nella grafica sono 12
+                'posts_per_page' => 6,
                 'paged'          => $paged,
                 'order'          => strtoupper($ordine),
             );
@@ -212,42 +212,37 @@ get_header();
             ?>
         </div>
 
-        <!-- PAGINAZIONE (Frecce centrali + Numeri pag.) -->
-        <div class="pagination-container news-pagination">
-            <div class="nav-arrow text-primary">
-                <?php
-                $prev_page = get_previous_posts_link('<i class="fa-solid fa-chevron-left"></i>');
-                echo $prev_page ? $prev_page : '<i class="fa-solid fa-chevron-left"></i>';
-                ?>
+        <?php if ( $news_query->max_num_pages > 1 ) : ?>
+            <!-- PAGINAZIONE (Frecce centrali + Numeri pag.) -->
+            <div class="pagination-container news-pagination">
+                <div class="nav-arrow text-primary">
+                    <?php
+                    $prev_page = get_previous_posts_link('<i class="fa-solid fa-chevron-left"></i>');
+                    echo $prev_page ? $prev_page : '<i class="fa-solid fa-chevron-left" style="opacity:0.3;"></i>';
+                    ?>
+                </div>
+                
+                <div class="pagination-numbers">
+                    <?php
+                    echo paginate_links( array(
+                        'total'        => $news_query->max_num_pages,
+                        'current'      => max( 1, get_query_var( 'paged' ) ),
+                        'prev_next'    => false,
+                        'type'         => 'plain',
+                        'end_size'     => 1,
+                        'mid_size'     => 1,
+                    ) );
+                    ?>
+                </div>
+                
+                <div class="nav-arrow text-primary">
+                    <?php
+                    $next_page = get_next_posts_link('<i class="fa-solid fa-chevron-right"></i>', $news_query->max_num_pages);
+                    echo $next_page ? $next_page : '<i class="fa-solid fa-chevron-right" style="opacity:0.3;"></i>';
+                    ?>
+                </div>
             </div>
-            
-            <div class="pagination-numbers">
-                <?php
-                $pagination_links = paginate_links( array(
-                    'total'        => $news_query->max_num_pages,
-                    'current'      => max( 1, get_query_var( 'paged' ) ),
-                    'prev_next'    => false, // Le frecce le abbiamo messe a lato
-                    'type'         => 'plain',
-                    'end_size'     => 1,
-                    'mid_size'     => 1,
-                ) );
-                if ( $pagination_links ) {
-                    echo $pagination_links;
-                } else {
-                    echo '<span class="page-numbers current">1</span>';
-                    echo '<span class="page-numbers">2</span>';
-                    echo '<span class="page-numbers">3</span>';
-                }
-                ?>
-            </div>
-            
-            <div class="nav-arrow text-primary">
-                <?php
-                $next_page = get_next_posts_link('<i class="fa-solid fa-chevron-right"></i>', $news_query->max_num_pages);
-                if($next_page) echo $next_page; else echo '<i class="fa-solid fa-chevron-right" style="opacity:0.3;"></i>';
-                ?>
-            </div>
-        </div>
+        <?php endif; ?>
 
         <?php
             wp_reset_postdata();

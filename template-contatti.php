@@ -49,7 +49,8 @@ get_header();
 
                 <div class="contatti-info-block">
                     <h3 class="contatti-label">INDIRIZZO</h3>
-                    <p>AC Taverne<br>Via Carvina 1<br>6807 Taverne</p>
+                    <p style="margin-bottom: 15px;"><strong>UFFICI PRIMA SQUADRA</strong><br>Via Carvina 1, 6807 Taverne</p>
+                    <p style="margin-bottom: 0;"><strong>SEDE LEGALE</strong><br>Via Traversee 2, 6807 Taverne</p>
                 </div>
 
                 <div class="contatti-info-block">

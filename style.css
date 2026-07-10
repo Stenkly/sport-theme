@@ -474,6 +474,44 @@ p { font-size: 12px; font-weight: 400; line-height: 1.6; }
         left: 20px !important;
         width: calc(100% - 40px) !important;
     }
+
+    .page-scuola-calcio .news-hero-wrapper .news-hero-content {
+        top: auto !important;
+        bottom: 28px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .page-scuola-calcio .news-hero-wrapper .news-hero-content h1,
+    .page-scuola-calcio .news-hero-wrapper .news-hero-content hr,
+    .page-scuola-calcio .news-hero-wrapper .news-hero-content .hero-subtitle {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .page-scuola-calcio .news-hero-wrapper {
+        height: 560px !important;
+        min-height: 560px !important;
+    }
+
+    .page-scuola-calcio .news-hero-wrapper img {
+        height: 560px !important;
+        min-height: 560px !important;
+    }
+
+    .page-scuola-calcio .news-hero-wrapper .news-hero-content h1 {
+        font-size: 42px !important;
+        line-height: 1.05 !important;
+    }
+
+    .page-scuola-calcio .news-hero-wrapper .news-hero-content .hero-subtitle {
+        font-size: 18px !important;
+        line-height: 1.25 !important;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1068,14 +1106,31 @@ main.page-contatti.site-main > section.container {
     }
 
     .page-news-societa .news-filter-form {
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: 1fr;
         gap: 10px;
     }
 
+    .page-news-societa .news-filter-dropdown,
     .page-news-societa .news-filter-control {
         width: 100%;
         min-width: 0;
+        box-sizing: border-box;
         font-size: 18px;
+    }
+
+    .page-news-societa .news-societa-filters {
+        margin-bottom: 24px;
+    }
+
+    .page-news-societa .news-societa-card-grid {
+        margin-bottom: 0 !important;
+    }
+
+    .page-news-societa .news-societa-card-grid > p {
+        margin: 0;
+        font-size: 18px;
+        line-height: 1.45;
     }
 }
 
@@ -1459,8 +1514,15 @@ main.page-contatti.site-main > section.container {
         min-height: 220px;
     }
 
+    .page-sezioni .sezione-panel-media {
+        overflow: hidden !important;
+    }
+
     .page-sezioni .sezione-panel-media img {
-        transform: scale(1.12);
+        inset: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        transform: none !important;
     }
 }
 
@@ -1510,6 +1572,18 @@ main.page-contatti.site-main > section.container {
     text-transform: uppercase !important;
     margin: 0 !important;
     letter-spacing: 2px !important;
+}
+
+@media (max-width: 900px) {
+    .page-scuola-calcio .news-hero-wrapper .news-hero-content h1 {
+        font-size: 42px !important;
+        line-height: 1.05 !important;
+    }
+
+    .page-scuola-calcio .news-hero-wrapper .news-hero-content .hero-subtitle {
+        font-size: 18px !important;
+        line-height: 1.25 !important;
+    }
 }
 
 .page-scuola-calcio .news-hero-wrapper .news-hero-content hr,
@@ -1715,6 +1789,7 @@ main.page-contatti.site-main > section.container {
     .page-infrastruttura .news-hero-wrapper img {
         height: 560px !important;
         min-height: 560px !important;
+        object-position: center 35% !important;
     }
 
     .page-infrastruttura .news-hero-wrapper .news-hero-content {
@@ -1729,8 +1804,9 @@ main.page-contatti.site-main > section.container {
     }
 
     .page-infrastruttura .news-hero-wrapper .news-hero-content h1 {
-        font-size: 42px !important;
+        font-size: 36px !important;
         line-height: 1.05 !important;
+        letter-spacing: 1px !important;
     }
 
     .page-infrastruttura .news-hero-wrapper .news-hero-content .hero-subtitle {
@@ -1754,6 +1830,35 @@ main.page-contatti.site-main > section.container {
         font-size: 14px !important;
         line-height: 1.1 !important;
         white-space: normal !important;
+    }
+
+    .page-infrastruttura .infra-tab-content > h2,
+    .page-infrastruttura #prenotazioni-wrapper > h2 {
+        font-size: 30px !important;
+        line-height: 1.08 !important;
+    }
+
+    .page-infrastruttura .infra-gallery {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+        margin-bottom: 48px !important;
+    }
+
+    .page-infrastruttura .infra-gallery > div {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+        height: auto !important;
+    }
+
+    .page-infrastruttura .infra-gallery > div > div {
+        width: 100% !important;
+        min-height: 0 !important;
+        aspect-ratio: 4 / 3 !important;
+        flex: none !important;
+        background-size: cover !important;
+        background-position: center !important;
     }
 }
 
@@ -3398,6 +3503,19 @@ main.page-contatti.site-main > section.container {
     line-height: 1;
 }
 
+.prima-hero-nav::after {
+    content: '';
+    position: absolute;
+    top: calc(28px + clamp(54px, 5.3vw, 82px) + 14px);
+    left: 194px;
+    right: 194px;
+    height: 1px;
+    background: rgba(255,255,255,0.72);
+    transform: scaleY(0.6);
+    transform-origin: center;
+    pointer-events: none;
+}
+
 .prima-hero-links {
     display: flex;
     align-items: center;
@@ -3497,6 +3615,12 @@ main.page-contatti.site-main > section.container {
         padding: 0 16px;
     }
 
+    .prima-hero-nav::after {
+        top: calc(16px + 62px + 12px);
+        left: 16px;
+        right: 16px;
+    }
+
     .prima-hero-logo {
         order: 1;
         width: 62px;
@@ -3546,6 +3670,12 @@ main.page-contatti.site-main > section.container {
         justify-content: center;
         padding: 0;
         pointer-events: none;
+    }
+
+    .page-prima-squadra .prima-hero-nav::after {
+        top: 96px;
+        left: 18px;
+        right: 18px;
     }
 
     .page-prima-squadra .prima-hero-links {
@@ -3598,6 +3728,12 @@ main.page-contatti.site-main > section.container {
         justify-content: center;
         padding: 0;
         pointer-events: none;
+    }
+
+    .page-prima-squadra .prima-hero-nav::after {
+        top: 92px;
+        left: 18px;
+        right: 18px;
     }
 
     .page-prima-squadra .prima-hero-links {
@@ -4764,6 +4900,32 @@ main.page-contatti.site-main > section.container {
     gap: 12px;
     font-size: 12px;
 }
+.storia-gallery-nav #storia-gallery-dots {
+    display: none !important;
+}
+.storia-gallery-nav .gallery-counter,
+.page-club .gallery-nav .gallery-counter {
+    color: var(--c-primary);
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1;
+    min-width: 64px;
+    text-align: center;
+}
+.page-club .gallery-nav #progetto-gallery-dots {
+    display: none !important;
+}
+.club100-gallery-nav #club100-gallery-dots {
+    display: none !important;
+}
+.club100-gallery-nav .gallery-counter {
+    color: var(--c-primary);
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1;
+    min-width: 64px;
+    text-align: center;
+}
 .club100-gallery-nav {
     margin-top: 24px !important;
 }
@@ -4870,8 +5032,8 @@ main.page-contatti.site-main > section.container {
 .player-modal-img-col::before {
     content: ''; position: absolute; top: 0; left: 45%; width: 55%; height: 100%;
     background-image: var(--modal-edge-strip), linear-gradient(to right, #9f9f9a 0%, #5c5d5a 36%, #171717 72%, #000 100%);
-    background-repeat: repeat-x, no-repeat;
-    background-size: auto 100%, 100% 100%;
+    background-repeat: var(--modal-edge-strip-repeat, repeat-x), no-repeat;
+    background-size: var(--modal-edge-strip-size, auto 100%), 100% 100%;
     opacity: 1;
     pointer-events: none;
     z-index: 1;
@@ -4882,7 +5044,7 @@ main.page-contatti.site-main > section.container {
     pointer-events: none; z-index: 3;
 }
 .player-modal-img-col img {
-    position: relative; width: 54%; height: 100%; object-fit: cover; object-position: top center; display: block; z-index: 1;
+    position: relative; width: var(--modal-player-width, 54%); height: 100%; object-fit: cover; object-position: var(--modal-player-position, 50% 0%); display: block; z-index: 1; transform: scale(var(--modal-player-scale, 1)); transform-origin: var(--modal-player-position, 50% 0%);
 }
 .player-modal-data-col {
     width: 50%; flex: 0 0 50%; padding: 115px 95px 95px 42px; min-height: inherit; box-sizing: border-box;
@@ -4911,7 +5073,7 @@ main.page-contatti.site-main > section.container {
     .player-modal-content { flex-direction: column; width: 92%; max-width: 100%; margin: 40px auto 20px; height: auto; min-height: 0; aspect-ratio: auto; }
     .player-modal-img-col { position: relative; width: 100%; height: auto; min-width: 100%; }
     .player-modal-img-col::after { background: linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,1) 100%); }
-    .player-modal-img-col img { min-height: 300px; height: 300px; width: 100%; object-position: top center; }
+    .player-modal-img-col img { min-height: 300px; height: 300px; width: 100%; object-position: var(--modal-player-position, 50% 0%); }
     .player-modal-data-col { min-width: 100%; width: 100%; flex: none; padding: 30px 20px; }
     .player-modal-data-col { transform: none; }
     .player-modal-overlay { padding: 15px 10px; }
@@ -5554,6 +5716,16 @@ body.network-modal-open {
     grid-template-columns: 1fr 1fr;
     gap: 50px 30px;
 }
+
+.page-comitato .dirigenti-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+}
+
+.page-comitato .dirigente-card {
+    width: 100%;
+}
+
 .organigramma-area-title {
     color: var(--c-white);
     font-size: 42px;
@@ -8586,6 +8758,17 @@ body.network-modal-open {
         padding-top: 36px;
     }
 
+    .page-iscritti .iscrizione-intro,
+    .page-iscritti .iscrizione-form-section {
+        width: calc(100% - 40px) !important;
+        max-width: none !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        box-sizing: border-box !important;
+    }
+
     .iscrizione-panel h1 {
         margin-bottom: 38px;
     }
@@ -8596,8 +8779,46 @@ body.network-modal-open {
 }
 
 @media (max-width: 600px) {
+    .page-iscritti {
+        padding-top: 32px;
+        padding-bottom: 72px;
+        overflow-x: hidden;
+    }
+
+    .page-iscritti .iscrizione-intro,
+    .page-iscritti .iscrizione-form-section {
+        width: calc(100% - 40px) !important;
+        max-width: none !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        box-sizing: border-box !important;
+    }
+
     .iscrizione-panel {
         padding-top: 24px;
+    }
+
+    .iscrizione-panel h1 {
+        font-size: 38px;
+        line-height: 1.05;
+        margin-bottom: 34px;
+        overflow-wrap: anywhere;
+    }
+
+    .iscrizione-grid,
+    .iscrizione-copy,
+    .iscrizione-checklist,
+    .iscrizione-item,
+    .iscrizione-item > div,
+    .iscrizione-classificazione-preview,
+    .iscrizione-acceptance,
+    .iscrizione-cta-group {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
     }
 
     .iscrizione-copy h2,
@@ -8613,6 +8834,32 @@ body.network-modal-open {
     .iscrizione-item {
         grid-template-columns: 1fr;
         gap: 12px;
+    }
+
+    .iscrizione-rule-link,
+    .iscrizione-cta,
+    .iscrizione-back-btn,
+    .iscrizione-next-btn {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .iscrizione-back-btn,
+    .iscrizione-next-btn {
+        justify-content: center;
+        padding-left: 14px;
+        padding-right: 14px;
+        font-size: 14px;
+        line-height: 1.12;
+        text-align: center;
+    }
+
+    .iscrizione-acceptance {
+        align-items: flex-start;
+    }
+
+    .iscrizione-cta-group {
+        justify-items: stretch;
     }
 
     .iscrizione-add-children,
@@ -9039,6 +9286,62 @@ body.network-modal-open {
     opacity: 1;
 }
 
+.page-news-societa .news-societa-card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+.page-news-societa .news-societa-card-grid .news-card {
+    aspect-ratio: 1 / 1 !important;
+    height: auto !important;
+    min-height: 0;
+}
+
+.page-news-societa .news-societa-card-grid .news-card > img {
+    height: 100% !important;
+    inset: 0;
+    object-fit: cover;
+    position: absolute;
+    width: 100% !important;
+}
+
+.page-news-societa .news-societa-card-grid .news-card h3 {
+    font-size: 32px;
+    line-height: 1.3;
+}
+
+.page-news-societa .news-societa-card-grid .news-card.is-carousel-hidden {
+    display: none !important;
+}
+
+.page-news-societa .news-societa-carousel-nav {
+    min-height: 28px;
+}
+
+.page-news-societa .news-societa-carousel-nav .nav-arrow.is-disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.page-news-societa .news-societa-carousel-nav.has-single-page .nav-arrow {
+    opacity: 0.3;
+}
+
+.page-news-societa .news-societa-carousel-nav .nav-dots i {
+    cursor: pointer;
+}
+
+@media (max-width: 900px) {
+    .page-news-societa .news-societa-card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .page-news-societa .news-societa-card-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
 .page-organigramma .club-hero-wrapper .org-submenu a,
 .page-storia .club-hero-wrapper .page-submenu a,
 .page-club .club-hero-wrapper .page-submenu a,
@@ -9242,6 +9545,260 @@ body.network-modal-open {
     }
 }
 
+@media (max-width: 600px) {
+    .page-la-societa .news-hero-wrapper,
+    .page-comitato .news-hero-wrapper,
+    .page-club100 .news-hero-wrapper,
+    .page-allenatori .news-hero-wrapper,
+    .page-area-segreteria .news-hero-wrapper {
+        height: 560px !important;
+        min-height: 560px !important;
+    }
+
+    .page-la-societa .news-hero-wrapper .news-hero-content,
+    .page-comitato .news-hero-wrapper .news-hero-content,
+    .page-club100 .news-hero-wrapper .news-hero-content,
+    .page-allenatori .news-hero-wrapper .news-hero-content,
+    .page-area-segreteria .news-hero-wrapper .news-hero-content {
+        top: auto !important;
+        bottom: 30px !important;
+    }
+
+    .page-la-societa .news-hero-wrapper .page-submenu,
+    .page-comitato .news-hero-wrapper .page-submenu,
+    .page-club100 .news-hero-wrapper .page-submenu,
+    .page-allenatori .news-hero-wrapper .page-submenu,
+    .page-area-segreteria .news-hero-wrapper .page-submenu {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+        width: 100% !important;
+    }
+
+    .page-la-societa .news-hero-wrapper .page-submenu a,
+    .page-comitato .news-hero-wrapper .page-submenu a,
+    .page-club100 .news-hero-wrapper .page-submenu a,
+    .page-allenatori .news-hero-wrapper .page-submenu a,
+    .page-area-segreteria .news-hero-wrapper .page-submenu a {
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+        white-space: nowrap !important;
+    }
+
+    .page-comitato .dirigenti-grid {
+        gap: 34px !important;
+    }
+
+    .page-comitato .dirigente-card {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+
+    .page-comitato .dirigente-photo {
+        width: 100% !important;
+        margin-right: 0 !important;
+        margin-bottom: 18px !important;
+    }
+
+    .page-comitato .dirigente-photo::before {
+        padding-top: 82% !important;
+    }
+
+    .page-comitato .dirigente-info {
+        width: 100% !important;
+        min-height: 0 !important;
+        box-sizing: border-box !important;
+        padding-top: 0 !important;
+        padding-left: 16px !important;
+    }
+
+    .page-comitato .dirigente-name {
+        font-size: 28px !important;
+        line-height: 1.12 !important;
+        margin-top: 8px !important;
+    }
+
+    .page-comitato .dirigente-desc p {
+        font-size: 16px !important;
+        line-height: 1.55 !important;
+    }
+
+    .page-club100 .club100-gallery-section {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .page-club100 #club100-gallery-carousel {
+        display: grid !important;
+        grid-auto-flow: column !important;
+        grid-auto-columns: 100% !important;
+        gap: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory !important;
+    }
+
+    .page-club100 #club100-gallery-carousel .gallery-slide {
+        display: block !important;
+        width: 100% !important;
+        inline-size: 100% !important;
+        min-width: 0 !important;
+        flex: none !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        scroll-snap-align: start !important;
+    }
+
+    .page-club100 #club100-gallery-carousel .gallery-item,
+    .page-club100 #club100-gallery-carousel .gallery-slide.active .gallery-item {
+        width: 100% !important;
+        transform: none !important;
+    }
+
+    .page-area-segreteria .segreteria-table-wrap {
+        overflow-x: visible !important;
+    }
+
+    .page-area-segreteria .segreteria-table {
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+    }
+
+    .page-area-segreteria .segreteria-table thead {
+        display: none !important;
+    }
+
+    .page-area-segreteria .segreteria-table tbody,
+    .page-area-segreteria .segreteria-table tr,
+    .page-area-segreteria .segreteria-table td {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .page-area-segreteria .segreteria-table tr {
+        margin-bottom: 18px !important;
+        border: 1px solid rgba(255,255,255,0.16) !important;
+        background: #050505 !important;
+    }
+
+    .page-area-segreteria .segreteria-table td {
+        padding: 14px 16px !important;
+        border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+    }
+
+    .page-area-segreteria .segreteria-table td:last-child {
+        border-bottom: 0 !important;
+    }
+
+    .page-area-segreteria .segreteria-table td::before {
+        content: attr(data-label);
+        display: block;
+        color: var(--c-primary);
+        font-size: 11px;
+        font-weight: 900;
+        line-height: 1;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+    }
+
+    .page-area-segreteria .segreteria-row-actions {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+        width: 100% !important;
+    }
+
+    .page-area-segreteria .segreteria-row-actions a,
+    .page-area-segreteria .segreteria-row-actions button,
+    .page-area-segreteria .segreteria-row-actions form {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .page-area-segreteria #segreteria-edit,
+    .page-area-segreteria .segreteria-dashboard-head,
+    .page-area-segreteria .segreteria-head-actions,
+    .page-area-segreteria .segreteria-detail-actions,
+    .page-area-segreteria .segreteria-operational-summary,
+    .page-area-segreteria .segreteria-edit-form,
+    .page-area-segreteria .segreteria-edit-grid,
+    .page-area-segreteria .segreteria-edit-card,
+    .page-area-segreteria .segreteria-edit-fields,
+    .page-area-segreteria .segreteria-edit-documents,
+    .page-area-segreteria .segreteria-edit-actions {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .page-area-segreteria #segreteria-edit,
+    .page-area-segreteria .segreteria-edit-form,
+    .page-area-segreteria .segreteria-edit-grid,
+    .page-area-segreteria .segreteria-edit-fields,
+    .page-area-segreteria .segreteria-operational-summary,
+    .page-area-segreteria .segreteria-detail-actions {
+        grid-template-columns: 1fr !important;
+    }
+
+    .page-area-segreteria .segreteria-dashboard-head,
+    .page-area-segreteria .segreteria-head-actions,
+    .page-area-segreteria .segreteria-quick-actions-detail,
+    .page-area-segreteria .segreteria-edit-actions {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        align-items: stretch !important;
+    }
+
+    .page-area-segreteria .segreteria-head-actions,
+    .page-area-segreteria .segreteria-detail-actions,
+    .page-area-segreteria .segreteria-edit-card {
+        padding: 16px !important;
+    }
+
+    .page-area-segreteria .segreteria-head-actions a,
+    .page-area-segreteria .segreteria-head-actions button,
+    .page-area-segreteria .segreteria-head-actions form,
+    .page-area-segreteria .segreteria-quick-actions-detail button,
+    .page-area-segreteria .segreteria-quick-actions-detail form,
+    .page-area-segreteria .segreteria-edit-actions a,
+    .page-area-segreteria .segreteria-edit-actions button {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .page-area-segreteria .segreteria-edit-fields label,
+    .page-area-segreteria .segreteria-edit-fields label.wide,
+    .page-area-segreteria .segreteria-fee-breakdown,
+    .page-area-segreteria .segreteria-document-row,
+    .page-area-segreteria .segreteria-file-replace,
+    .page-area-segreteria .segreteria-documents-list,
+    .page-area-segreteria .segreteria-log-list {
+        grid-column: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .page-area-segreteria .segreteria-edit-fields input,
+    .page-area-segreteria .segreteria-edit-fields select,
+    .page-area-segreteria .segreteria-edit-fields textarea,
+    .page-area-segreteria .segreteria-file-replace input {
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+}
+
 /* Override finale mobile: Sezioni usa menu gerarchici sotto l'hero. */
 @media (max-width: 768px) {
     .page-sezioni .news-hero {
@@ -9344,5 +9901,565 @@ body.network-modal-open {
 @media (max-width: 480px) {
     .page-sezioni .sezioni-panels-wrap {
         padding-top: 230px !important;
+    }
+}
+
+/* Mobile QA: evita overflow orizzontale su News e marquee sponsor. */
+.ps-sponsors.is-marquee {
+    max-width: 100%;
+    overflow-x: clip;
+}
+
+@media (max-width: 900px) {
+    .page-news .news-hero-wrapper .news-hero-content,
+    .page-giocatori .news-hero-wrapper .news-hero-content,
+    .page-staff .news-hero-wrapper .news-hero-content {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .page-news .news-list-section .ps-grid.grid-3 {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        overflow: visible !important;
+        gap: 18px !important;
+        padding-bottom: 0 !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .page-news .news-hero-wrapper .news-hero-content {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .page-news .news-hero-wrapper .news-filter-form,
+    .page-news .news-filter-form {
+        width: 100% !important;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    .page-news .news-filter-control,
+    .page-news .news-filter-menu,
+    .page-news .news-filter-menu.is-floating {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .page-news .news-list-section .ps-grid.grid-3 {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        overflow: visible !important;
+        gap: 18px !important;
+        padding-bottom: 0 !important;
+    }
+
+    .page-news .news-list-section {
+        margin-top: 0 !important;
+        padding-top: 24px !important;
+    }
+
+    .page-news .news-card .btn-primary {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+}
+
+/* Mobile QA: pagine Giocatori e Staff. */
+@media (max-width: 600px) {
+    .page-giocatori,
+    .page-staff {
+        overflow-x: hidden !important;
+    }
+
+    .page-giocatori .news-hero-wrapper .news-hero-content,
+    .page-staff .news-hero-wrapper .news-hero-content {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .page-giocatori .news-hero-wrapper .page-submenu,
+    .page-staff .news-hero-wrapper .page-submenu {
+        width: 100% !important;
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+    }
+
+    .page-giocatori .news-hero-wrapper .page-submenu h4,
+    .page-staff .news-hero-wrapper .page-submenu h4 {
+        min-width: 0 !important;
+    }
+
+    .page-giocatori .news-hero-wrapper .page-submenu a,
+    .page-staff .news-hero-wrapper .page-submenu a {
+        width: 100% !important;
+        min-width: 0 !important;
+        padding: 9px 8px !important;
+        box-sizing: border-box !important;
+        font-size: 18px !important;
+        white-space: nowrap !important;
+    }
+
+    .page-giocatori .ps-grid.ps-team,
+    .page-staff .ps-grid.ps-team {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 18px !important;
+        overflow: visible !important;
+        padding-bottom: 0 !important;
+    }
+
+    .page-giocatori .player-card .player-info,
+    .page-giocatori .player-card .player-info-container,
+    .page-staff .player-card .player-info {
+        left: 18px !important;
+        right: 18px !important;
+        gap: 10px !important;
+        min-width: 0 !important;
+    }
+
+    .page-staff .player-card .player-info {
+        width: auto !important;
+    }
+
+    .page-giocatori .player-card .player-info > .player-name,
+    .page-staff .player-card .player-info > .player-name {
+        max-width: calc(100% - 76px) !important;
+        min-width: 0 !important;
+    }
+
+    .page-giocatori .player-card .player-name,
+    .page-giocatori .player-card .player-name span,
+    .page-staff .player-card .player-name,
+    .page-staff .player-card .player-name span {
+        font-size: clamp(28px, 8vw, 34px) !important;
+        line-height: 1.08 !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    .page-staff .player-card .staff-role {
+        margin-bottom: 18px !important;
+        font-size: clamp(14px, 4vw, 17px) !important;
+        line-height: 1.1 !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    .page-giocatori .player-card .player-number {
+        margin-left: auto !important;
+        font-size: clamp(48px, 14vw, 60px) !important;
+        line-height: 0.95 !important;
+    }
+
+    .page-giocatori .ps-sponsors.is-marquee,
+    .page-staff .ps-sponsors.is-marquee {
+        contain: layout paint !important;
+        overflow: hidden !important;
+    }
+}
+
+/* Mobile QA: pagina Stagione. */
+@media (max-width: 900px) {
+    .page-stagione .news-hero-wrapper .news-hero-content {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .page-stagione {
+        overflow-x: hidden !important;
+    }
+
+    .page-stagione .custom-classifica-wrapper {
+        overflow-x: hidden !important;
+    }
+
+    .page-stagione .custom-classifica-wrapper table {
+        width: 100% !important;
+        min-width: 0 !important;
+        table-layout: fixed !important;
+        font-size: 12px !important;
+    }
+
+    .page-stagione .custom-classifica-wrapper table th,
+    .page-stagione .custom-classifica-wrapper table td {
+        height: 54px !important;
+        padding: 0 6px !important;
+        font-size: 12px !important;
+        line-height: 1.05 !important;
+    }
+
+    .page-stagione .custom-classifica-wrapper table th:nth-child(4),
+    .page-stagione .custom-classifica-wrapper table td:nth-child(4),
+    .page-stagione .custom-classifica-wrapper table th:nth-child(5),
+    .page-stagione .custom-classifica-wrapper table td:nth-child(5),
+    .page-stagione .custom-classifica-wrapper table th:nth-child(6),
+    .page-stagione .custom-classifica-wrapper table td:nth-child(6) {
+        display: none !important;
+    }
+
+    .page-stagione .custom-classifica-wrapper table th:first-child,
+    .page-stagione .custom-classifica-wrapper table td:first-child {
+        width: 42px !important;
+        padding-left: 6px !important;
+    }
+
+    .page-stagione .custom-classifica-wrapper table th:nth-child(2),
+    .page-stagione .custom-classifica-wrapper table td:nth-child(2) {
+        width: auto !important;
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .page-stagione .custom-classifica-wrapper table th:nth-child(3),
+    .page-stagione .custom-classifica-wrapper table td:nth-child(3),
+    .page-stagione .custom-classifica-wrapper table th:nth-child(7),
+    .page-stagione .custom-classifica-wrapper table td:nth-child(7),
+    .page-stagione .custom-classifica-wrapper table th:nth-child(8),
+    .page-stagione .custom-classifica-wrapper table td:nth-child(8) {
+        width: 38px !important;
+    }
+
+    .page-stagione .custom-classifica-wrapper .standings-team-cell {
+        gap: 6px !important;
+        width: 100% !important;
+    }
+
+    .page-stagione .custom-classifica-wrapper .standings-team-cell img {
+        width: 22px !important;
+        max-width: 22px !important;
+        max-height: 28px !important;
+    }
+
+    .page-stagione .custom-classifica-wrapper .standings-team-name {
+        font-size: 12px !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    .page-stagione .ps-sponsors.is-marquee {
+        contain: layout paint !important;
+        overflow: hidden !important;
+    }
+}
+
+/* Mobile QA: pagina Organigramma. */
+@media (max-width: 900px) {
+    .page-organigramma .club-hero-wrapper .news-hero-content {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .page-organigramma {
+        overflow-x: hidden !important;
+    }
+
+    .page-organigramma .club-hero-wrapper .org-submenu {
+        width: 100% !important;
+    }
+
+    .page-organigramma .club-hero-wrapper .org-submenu a {
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .page-organigramma .dirigenti-grid {
+        grid-template-columns: 1fr !important;
+        gap: 32px !important;
+        overflow: visible !important;
+    }
+
+    .page-organigramma .dirigente-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .page-organigramma .dirigente-photo {
+        width: 142px !important;
+        margin-right: 16px !important;
+        box-sizing: border-box !important;
+    }
+
+    .page-organigramma .dirigente-info {
+        min-width: 0 !important;
+        min-height: 180px !important;
+        padding-left: 16px !important;
+        box-sizing: border-box !important;
+    }
+
+    .page-organigramma .dirigente-role {
+        font-size: 13px !important;
+        line-height: 1.15 !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    .page-organigramma .dirigente-name {
+        font-size: clamp(23px, 7vw, 28px) !important;
+        line-height: 1.08 !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    .page-organigramma .ps-sponsors.is-marquee {
+        contain: layout paint !important;
+        overflow: hidden !important;
+    }
+}
+
+/* Mobile QA: pagina Storia. */
+@media (max-width: 900px) {
+    .page-storia .club-hero-wrapper .news-hero-content {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .page-storia {
+        overflow-x: hidden !important;
+    }
+
+    .page-storia .storia-gallery-section,
+    .page-storia .storia-gallery-carousel,
+    .page-storia #storia-gallery-carousel {
+        max-width: 100% !important;
+        contain: layout paint !important;
+    }
+
+    .page-storia #storia-gallery-carousel {
+        overflow-x: auto !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .page-storia {
+        overflow-x: hidden !important;
+    }
+
+    .page-storia .club-hero-wrapper .page-submenu {
+        width: 100% !important;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+    }
+
+    .page-storia .club-hero-wrapper .page-submenu a {
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        padding: 8px 10px !important;
+        font-size: 13px !important;
+        white-space: nowrap !important;
+    }
+
+    .page-storia .storia-gallery-section,
+    .page-storia .storia-gallery-carousel {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+        contain: layout paint !important;
+    }
+
+    .page-storia #storia-gallery-carousel {
+        display: grid !important;
+        grid-auto-flow: column !important;
+        grid-auto-columns: 100% !important;
+        gap: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory !important;
+    }
+
+    .page-storia #storia-gallery-carousel .gallery-slide {
+        display: block !important;
+        width: 100% !important;
+        inline-size: 100% !important;
+        min-width: 0 !important;
+        flex: none !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        scroll-snap-align: start !important;
+    }
+
+    .page-storia #storia-gallery-carousel .gallery-item,
+    .page-storia #storia-gallery-carousel .gallery-slide.active .gallery-item {
+        width: 100% !important;
+        transform: none !important;
+    }
+
+    .page-storia .ps-sponsors.is-marquee {
+        contain: layout paint !important;
+        overflow: hidden !important;
+    }
+}
+
+/* Mobile QA: pagina Presente e Futuro. */
+@media (max-width: 900px) {
+    .page-club {
+        overflow-x: hidden !important;
+    }
+
+    .page-club #progetto-gallery-carousel {
+        max-width: 100% !important;
+        contain: layout paint !important;
+        overflow-x: auto !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .page-club .club-hero-wrapper .news-hero-content {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .page-club .club-hero-wrapper .page-submenu {
+        width: 100% !important;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+    }
+
+    .page-club .club-hero-wrapper .page-submenu a {
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        padding: 8px 10px !important;
+        font-size: 13px !important;
+        white-space: nowrap !important;
+    }
+
+    .page-club #progetto-gallery-carousel {
+        display: grid !important;
+        grid-auto-flow: column !important;
+        grid-auto-columns: 100% !important;
+        gap: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory !important;
+    }
+
+    .page-club #progetto-gallery-carousel .gallery-slide {
+        display: block !important;
+        width: 100% !important;
+        inline-size: 100% !important;
+        min-width: 0 !important;
+        flex: none !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        scroll-snap-align: start !important;
+    }
+
+    .page-club #progetto-gallery-carousel .gallery-item,
+    .page-club #progetto-gallery-carousel .gallery-slide.active .gallery-item {
+        width: 100% !important;
+        transform: none !important;
+    }
+}
+
+/* QA: hero pagina Partner. */
+.page-template-template-partner .news-hero-wrapper .news-hero-content {
+    text-align: left !important;
+}
+
+.page-template-template-partner .news-hero-wrapper .news-hero-content hr {
+    width: 100% !important;
+    margin: 20px 0 0 !important;
+}
+
+@media (max-width: 900px) {
+    .page-template-template-partner .news-hero-wrapper .news-hero-content.container {
+        left: 20px !important;
+        right: 20px !important;
+        width: auto !important;
+        max-width: none !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}
+
+/* Mobile QA finale: dettaglio Area Segreteria. */
+@media (max-width: 600px) {
+    .page-area-segreteria #segreteria-edit,
+    .page-area-segreteria #segreteria-edit .segreteria-dashboard-head,
+    .page-area-segreteria #segreteria-edit .segreteria-head-actions,
+    .page-area-segreteria #segreteria-edit .segreteria-detail-actions,
+    .page-area-segreteria #segreteria-edit .segreteria-operational-summary,
+    .page-area-segreteria #segreteria-edit .segreteria-summary-item,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-form,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-grid,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-card,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-fields,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-documents,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-actions,
+    .page-area-segreteria #segreteria-edit .segreteria-fee-breakdown {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .page-area-segreteria #segreteria-edit,
+    .page-area-segreteria #segreteria-edit .segreteria-dashboard-head,
+    .page-area-segreteria #segreteria-edit .segreteria-head-actions,
+    .page-area-segreteria #segreteria-edit .segreteria-detail-actions,
+    .page-area-segreteria #segreteria-edit .segreteria-operational-summary,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-form,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-grid,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-fields,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-actions,
+    .page-area-segreteria #segreteria-edit .segreteria-quick-actions-detail {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+    }
+
+    .page-area-segreteria #segreteria-edit .segreteria-dashboard-head,
+    .page-area-segreteria #segreteria-edit .segreteria-head-actions,
+    .page-area-segreteria #segreteria-edit .segreteria-detail-actions,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-card {
+        padding: 16px !important;
+    }
+
+    .page-area-segreteria #segreteria-edit .segreteria-detail-actions > *,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-fields > *,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-fields label,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-fields label.wide,
+    .page-area-segreteria #segreteria-edit .segreteria-document-row,
+    .page-area-segreteria #segreteria-edit .segreteria-file-replace,
+    .page-area-segreteria #segreteria-edit .segreteria-documents-list,
+    .page-area-segreteria #segreteria-edit .segreteria-log-list {
+        grid-column: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .page-area-segreteria #segreteria-edit .segreteria-head-actions a,
+    .page-area-segreteria #segreteria-edit .segreteria-head-actions button,
+    .page-area-segreteria #segreteria-edit .segreteria-head-actions form,
+    .page-area-segreteria #segreteria-edit .segreteria-quick-actions-detail button,
+    .page-area-segreteria #segreteria-edit .segreteria-quick-actions-detail form,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-actions a,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-actions button,
+    .page-area-segreteria #segreteria-edit input,
+    .page-area-segreteria #segreteria-edit select,
+    .page-area-segreteria #segreteria-edit textarea {
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .page-area-segreteria #segreteria-edit .segreteria-head-actions,
+    .page-area-segreteria #segreteria-edit .segreteria-quick-actions-detail,
+    .page-area-segreteria #segreteria-edit .segreteria-edit-actions {
+        align-items: stretch !important;
+        justify-content: stretch !important;
+        white-space: normal !important;
     }
 }

@@ -292,8 +292,14 @@ get_header();
         <div class="carousel-nav gallery-nav" style="margin-top:15px;">
             <span class="nav-arrow text-primary" id="gallery-prev" style="cursor:pointer;"><i class="fa-solid fa-chevron-left"></i></span>
             <span class="nav-dots" id="gallery-dots">
-                <?php for($i=0; $i<$foto_count; $i++): ?>
-                <i class="<?php echo $i===0 ? 'fa-solid' : 'fa-regular'; ?> fa-circle<?php echo $i===0 ? ' active' : ''; ?>" data-page="<?php echo $i; ?>"></i>
+                <?php
+                $gallery_dot_count = min( $foto_count, 8 );
+                for ( $i = 0; $i < $gallery_dot_count; $i++ ) :
+                    $dot_target = ( $gallery_dot_count > 1 && $foto_count > 1 )
+                        ? (int) round( $i * ( ( $foto_count - 1 ) / ( $gallery_dot_count - 1 ) ) )
+                        : 0;
+                ?>
+                <i class="<?php echo $i===0 ? 'fa-solid' : 'fa-regular'; ?> fa-circle<?php echo $i===0 ? ' active' : ''; ?>" data-page="<?php echo esc_attr( $dot_target ); ?>"></i>
                 <?php endfor; ?>
             </span>
             <span class="nav-arrow text-primary" id="gallery-next" style="cursor:pointer;"><i class="fa-solid fa-chevron-right"></i></span>
@@ -319,8 +325,12 @@ get_header();
 
             function updateActiveState(index) {
                 cur = index;
+                var activeDot = 0;
+                if (dots.length > 1 && slides.length > 1) {
+                    activeDot = Math.round(cur * ((dots.length - 1) / (slides.length - 1)));
+                }
                 dots.forEach(function(d,i){
-                    if (i === cur) {
+                    if (i === activeDot) {
                         d.classList.remove('fa-regular');
                         d.classList.add('fa-solid', 'active');
                     } else {
@@ -353,7 +363,11 @@ get_header();
 
             prev.addEventListener('click', function(){ go(cur - 1); });
             next.addEventListener('click', function(){ go(cur + 1); });
-            dots.forEach(function(d,i){ d.addEventListener('click', function(){ go(i); }); });
+            dots.forEach(function(d){
+                d.addEventListener('click', function(){
+                    go(parseInt(d.getAttribute('data-page'), 10) || 0);
+                });
+            });
 
             car.addEventListener('scroll', function() {
                 if (isAnimating) return;
@@ -419,9 +433,17 @@ get_header();
                         $nome_riga2 = $split_name['cognome'];
                         $zoom_foto   = get_post_meta(get_the_ID(), '_zoom_foto', true) ?: 'cover';
                         $allineamento_foto = get_post_meta(get_the_ID(), '_allineamento_foto', true) ?: 'center top';
+                        $foto_esultanza_zoom = sport_theme_player_photo_zoom_percent(get_post_meta(get_the_ID(), '_foto_esultanza_zoom', true) ?: '100');
+                        $foto_esultanza_scale = rtrim(rtrim(number_format($foto_esultanza_zoom / 100, 2, '.', ''), '0'), '.');
+                        $foto_esultanza_position_values = sport_theme_player_photo_position_values(get_post_meta(get_the_ID(), '_foto_esultanza_position', true) ?: '50% 0%');
+                        $foto_esultanza_position = $foto_esultanza_position_values['x'] . '% ' . $foto_esultanza_position_values['y'] . '%';
+                        $foto_esultanza_edge_sample = get_post_meta(get_the_ID(), '_foto_esultanza_edge_sample', true) === 'top_right_50' ? 'top_right_50' : 'full';
                 ?>
                 <a href="#" class="open-player-modal team-slide"
                    data-foto="<?php echo esc_attr($foto_dettaglio); ?>"
+                   data-foto-zoom="<?php echo esc_attr($foto_esultanza_scale); ?>"
+                   data-foto-position="<?php echo esc_attr($foto_esultanza_position); ?>"
+                   data-foto-edge-sample="<?php echo esc_attr($foto_esultanza_edge_sample); ?>"
                    data-numero="<?php echo esc_attr($numero); ?>"
                    data-nome1="<?php echo esc_attr($nome_riga1); ?>"
                    data-nome2="<?php echo esc_attr($nome_riga2); ?>"

@@ -29,6 +29,18 @@ if ( ! function_exists( 'sport_theme_ensure_calendar_weekly_view' ) ) {
         return $iframe_html;
     }
 }
+
+if ( ! function_exists( 'sport_theme_infrastruttura_calendar_iframe' ) ) {
+    function sport_theme_infrastruttura_calendar_iframe( $post_id, $meta_key, $calendar_id ) {
+        $calendar_html = get_post_meta( $post_id, $meta_key, true );
+
+        if ( empty( $calendar_html ) ) {
+            return '<iframe src="https://calendar.google.com/calendar/embed?src=' . esc_attr( urlencode( $calendar_id ) ) . '&ctz=Europe%2FZurich&mode=WEEK" style="border: 0; width: 100%; height: 700px;" frameborder="0" scrolling="no"></iframe>';
+        }
+
+        return sport_theme_ensure_calendar_weekly_view( $calendar_html );
+    }
+}
 ?>
 
 <main id="primary" class="site-main page-infrastruttura">
@@ -173,49 +185,58 @@ if ( ! function_exists( 'sport_theme_ensure_calendar_weekly_view' ) ) {
             </div>
             <?php endif; ?>
 
-            <!-- Calendario Campo Sportivo -->
-            <h3 class="text-white" style="font-size: 26px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Piano occupazione Campo</h3>
-            <div class="google-calendar-wrapper" style="width: 100%; margin-bottom: 60px; background-color: #fff; padding: 10px; border-radius: 5px;">
-                <?php
-                $calendar_html = get_post_meta( get_the_ID(), '_infra_calendar_iframe', true );
-                if ( empty( $calendar_html ) ) {
-                    $calendar_id = 'q5annq4orol4ue2pipv70hlmsc@group.calendar.google.com';
-                    $calendar_html = '<iframe src="https://calendar.google.com/calendar/embed?src=' . urlencode($calendar_id) . '&ctz=Europe%2FZurich&mode=WEEK" style="border: 0; width: 100%; height: 700px;" frameborder="0" scrolling="no"></iframe>';
-                } else {
-                    $calendar_html = sport_theme_ensure_calendar_weekly_view( $calendar_html );
-                }
-                echo $calendar_html;
-                ?>
-            </div>
+            <?php
+            $infra_calendars = array(
+                'campo' => array(
+                    'label'       => 'Campo',
+                    'title'       => 'Piano occupazione Campo',
+                    'meta_key'    => '_infra_calendar_iframe',
+                    'calendar_id' => 'q5annq4orol4ue2pipv70hlmsc@group.calendar.google.com',
+                ),
+                'buvette' => array(
+                    'label'       => 'Buvette',
+                    'title'       => 'Piano occupazione Buvette',
+                    'meta_key'    => '_infra_calendar_buvette_iframe',
+                    'calendar_id' => 'f7b2100de53n0cp2a4nc700i9s@group.calendar.google.com',
+                ),
+                'infra' => array(
+                    'label'       => 'Infrastruttura',
+                    'title'       => 'Piano occupazione Infrastruttura',
+                    'meta_key'    => '_infra_calendar_infra_iframe',
+                    'calendar_id' => 'i9i8o8n999k36rfllaua5aoes0@group.calendar.google.com',
+                ),
+            );
+            ?>
 
-            <!-- Calendario Buvette -->
-            <h3 class="text-white" style="font-size: 26px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Piano occupazione Buvette</h3>
-            <div class="google-calendar-wrapper" style="width: 100%; margin-bottom: 60px; background-color: #fff; padding: 10px; border-radius: 5px;">
-                <?php
-                $calendar_html = get_post_meta( get_the_ID(), '_infra_calendar_buvette_iframe', true );
-                if ( empty( $calendar_html ) ) {
-                    $calendar_id = 'f7b2100de53n0cp2a4nc700i9s@group.calendar.google.com';
-                    $calendar_html = '<iframe src="https://calendar.google.com/calendar/embed?src=' . urlencode($calendar_id) . '&ctz=Europe%2FZurich&mode=WEEK" style="border: 0; width: 100%; height: 700px;" frameborder="0" scrolling="no"></iframe>';
-                } else {
-                    $calendar_html = sport_theme_ensure_calendar_weekly_view( $calendar_html );
-                }
-                echo $calendar_html;
-                ?>
-            </div>
+            <div class="infra-calendar-tabs" data-ajax-url="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" data-post-id="<?php echo esc_attr( get_the_ID() ); ?>">
+                <div class="infra-calendar-tab-buttons" role="tablist" aria-label="Calendari occupazione">
+                    <?php $first_calendar = true; ?>
+                    <?php foreach ( $infra_calendars as $calendar_key => $calendar_data ) : ?>
+                        <button type="button" class="infra-calendar-tab-btn <?php echo $first_calendar ? 'active' : ''; ?>" data-calendar-tab="<?php echo esc_attr( $calendar_key ); ?>">
+                            <?php echo esc_html( $calendar_data['label'] ); ?>
+                        </button>
+                        <?php $first_calendar = false; ?>
+                    <?php endforeach; ?>
+                </div>
 
-            <!-- Calendario Infrastruttura -->
-            <h3 class="text-white" style="font-size: 26px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Piano occupazione Infrastruttura</h3>
-            <div class="google-calendar-wrapper" style="width: 100%; margin-bottom: 80px; background-color: #fff; padding: 10px; border-radius: 5px;">
-                <?php
-                $calendar_html = get_post_meta( get_the_ID(), '_infra_calendar_infra_iframe', true );
-                if ( empty( $calendar_html ) ) {
-                    $calendar_id = 'i9i8o8n999k36rfllaua5aoes0@group.calendar.google.com';
-                    $calendar_html = '<iframe src="https://calendar.google.com/calendar/embed?src=' . urlencode($calendar_id) . '&ctz=Europe%2FZurich&mode=WEEK" style="border: 0; width: 100%; height: 700px;" frameborder="0" scrolling="no"></iframe>';
-                } else {
-                    $calendar_html = sport_theme_ensure_calendar_weekly_view( $calendar_html );
-                }
-                echo $calendar_html;
-                ?>
+                <?php $first_calendar = true; ?>
+                <?php foreach ( $infra_calendars as $calendar_key => $calendar_data ) : ?>
+                    <section class="infra-calendar-panel <?php echo $first_calendar ? 'active' : ''; ?>" data-calendar-panel="<?php echo esc_attr( $calendar_key ); ?>">
+                        <h3 class="text-white" style="font-size: 26px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">
+                            <?php echo esc_html( $calendar_data['title'] ); ?>
+                        </h3>
+
+                        <div class="google-calendar-wrapper" style="width: 100%; margin-bottom: 30px; background-color: #fff; padding: 10px; border-radius: 5px;">
+                            <?php echo sport_theme_infrastruttura_calendar_iframe( get_the_ID(), $calendar_data['meta_key'], $calendar_data['calendar_id'] ); ?>
+                        </div>
+
+                        <div class="infra-mobile-events" data-calendar-events="<?php echo esc_attr( $calendar_key ); ?>">
+                            <div class="infra-mobile-events-title">Prossime occupazioni</div>
+                            <div class="infra-mobile-events-status">Caricamento calendario...</div>
+                        </div>
+                    </section>
+                    <?php $first_calendar = false; ?>
+                <?php endforeach; ?>
             </div>
         </div>
 
@@ -328,6 +349,9 @@ if ( ! function_exists( 'sport_theme_ensure_calendar_weekly_view' ) ) {
 document.addEventListener('DOMContentLoaded', function() {
     const tabs = document.querySelectorAll('.infra-tab-btn');
     const contents = document.querySelectorAll('.infra-tab-content');
+    const calendarRoot = document.querySelector('.infra-calendar-tabs');
+    const calendarButtons = document.querySelectorAll('.infra-calendar-tab-btn');
+    const calendarPanels = document.querySelectorAll('.infra-calendar-panel');
 
     tabs.forEach(tab => {
         tab.addEventListener('click', function() {
@@ -356,10 +380,243 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    function unfoldIcs(icsText) {
+        return (icsText || '').replace(/\r?\n[ \t]/g, '');
+    }
+
+    function readIcsValue(lines, fieldName) {
+        const prefix = fieldName + ';';
+        const direct = fieldName + ':';
+        const line = lines.find(item => item.indexOf(direct) === 0 || item.indexOf(prefix) === 0);
+        if (!line) return '';
+        const colonIndex = line.indexOf(':');
+        return colonIndex >= 0 ? line.slice(colonIndex + 1) : '';
+    }
+
+    function decodeIcsText(value) {
+        return (value || '')
+            .replace(/\\n/gi, ' ')
+            .replace(/\\,/g, ',')
+            .replace(/\\;/g, ';')
+            .replace(/\\\\/g, '\\')
+            .trim();
+    }
+
+    function parseIcsDate(value) {
+        if (!value) return null;
+        const compact = value.trim();
+
+        if (/^\d{8}$/.test(compact)) {
+            return new Date(
+                Number(compact.slice(0, 4)),
+                Number(compact.slice(4, 6)) - 1,
+                Number(compact.slice(6, 8))
+            );
+        }
+
+        const match = compact.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z?)$/);
+        if (!match) return null;
+
+        const year = Number(match[1]);
+        const month = Number(match[2]) - 1;
+        const day = Number(match[3]);
+        const hour = Number(match[4]);
+        const minute = Number(match[5]);
+        const second = Number(match[6]);
+
+        if (match[7] === 'Z') {
+            return new Date(Date.UTC(year, month, day, hour, minute, second));
+        }
+
+        return new Date(year, month, day, hour, minute, second);
+    }
+
+    function parseIcsEvents(icsText) {
+        const lines = unfoldIcs(icsText).split(/\r?\n/);
+        const events = [];
+        let current = null;
+
+        lines.forEach(line => {
+            if (line === 'BEGIN:VEVENT') {
+                current = [];
+            } else if (line === 'END:VEVENT' && current) {
+                const startValue = readIcsValue(current, 'DTSTART');
+                const endValue = readIcsValue(current, 'DTEND');
+                const start = parseIcsDate(startValue);
+                const end = parseIcsDate(endValue) || start;
+                const title = decodeIcsText(readIcsValue(current, 'SUMMARY')) || 'Occupato';
+                const location = decodeIcsText(readIcsValue(current, 'LOCATION'));
+
+                if (start) {
+                    events.push({ start, end, title, location, allDay: /^\d{8}$/.test(startValue) });
+                }
+                current = null;
+            } else if (current) {
+                current.push(line);
+            }
+        });
+
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+
+        return events
+            .filter(event => event.end >= now)
+            .sort((a, b) => a.start - b.start)
+            .slice(0, 10);
+    }
+
+    function formatEventDate(event) {
+        const date = new Intl.DateTimeFormat('it-CH', {
+            weekday: 'short',
+            day: '2-digit',
+            month: '2-digit'
+        }).format(event.start);
+
+        if (event.allDay) {
+            return date;
+        }
+
+        const timeFormat = new Intl.DateTimeFormat('it-CH', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        return date + ' · ' + timeFormat.format(event.start) + ' - ' + timeFormat.format(event.end);
+    }
+
+    function renderCalendarEvents(container, events) {
+        container.innerHTML = '';
+
+        const title = document.createElement('div');
+        title.className = 'infra-mobile-events-title';
+        title.textContent = 'Prossime occupazioni';
+        container.appendChild(title);
+
+        if (!events.length) {
+            const empty = document.createElement('div');
+            empty.className = 'infra-mobile-events-status';
+            empty.textContent = 'Nessuna occupazione prevista nei prossimi giorni.';
+            container.appendChild(empty);
+            return;
+        }
+
+        const list = document.createElement('div');
+        list.className = 'infra-mobile-events-list';
+
+        events.forEach(event => {
+            const item = document.createElement('article');
+            item.className = 'infra-mobile-event';
+
+            const date = document.createElement('div');
+            date.className = 'infra-mobile-event-date';
+            date.textContent = formatEventDate(event);
+            item.appendChild(date);
+
+            const name = document.createElement('div');
+            name.className = 'infra-mobile-event-title';
+            name.textContent = event.title;
+            item.appendChild(name);
+
+            if (event.location) {
+                const location = document.createElement('div');
+                location.className = 'infra-mobile-event-location';
+                location.textContent = event.location;
+                item.appendChild(location);
+            }
+
+            list.appendChild(item);
+        });
+
+        container.appendChild(list);
+    }
+
+    function loadCalendarEvents(calendarKey) {
+        if (!calendarRoot) return;
+
+        const container = document.querySelector('[data-calendar-events="' + calendarKey + '"]');
+        if (!container || container.dataset.loaded === '1') return;
+
+        const params = new URLSearchParams({
+            action: 'get_calendar_ics',
+            field: calendarKey,
+            post_id: calendarRoot.dataset.postId || ''
+        });
+
+        fetch((calendarRoot.dataset.ajaxUrl || '') + '?' + params.toString())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('calendar');
+                }
+                return response.text();
+            })
+            .then(text => {
+                container.dataset.loaded = '1';
+                renderCalendarEvents(container, parseIcsEvents(text));
+            })
+            .catch(() => {
+                const status = container.querySelector('.infra-mobile-events-status');
+                if (status) {
+                    status.textContent = 'Calendario non disponibile al momento.';
+                }
+            });
+    }
+
+    calendarButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const calendarKey = this.getAttribute('data-calendar-tab');
+
+            calendarButtons.forEach(item => item.classList.remove('active'));
+            calendarPanels.forEach(panel => panel.classList.remove('active'));
+
+            this.classList.add('active');
+            const panel = document.querySelector('[data-calendar-panel="' + calendarKey + '"]');
+            if (panel) {
+                panel.classList.add('active');
+            }
+
+            loadCalendarEvents(calendarKey);
+        });
+    });
+
+    const activeCalendarButton = document.querySelector('.infra-calendar-tab-btn.active');
+    if (activeCalendarButton) {
+        loadCalendarEvents(activeCalendarButton.getAttribute('data-calendar-tab'));
+    }
 });
 </script>
 
 <style>
+.infra-calendar-tab-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 30px;
+}
+.infra-calendar-tab-btn {
+    background: transparent;
+    border: 2px solid #fff;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    min-width: 170px;
+    padding: 11px 24px;
+    text-transform: uppercase;
+    transition: 0.2s ease;
+}
+.infra-calendar-tab-btn.active,
+.infra-calendar-tab-btn:hover {
+    background: var(--c-primary);
+    border-color: var(--c-primary);
+    color: #000;
+}
+.infra-calendar-panel {
+    display: none;
+}
+.infra-calendar-panel.active {
+    display: block;
+}
 .google-calendar-wrapper {
     width: 100%;
     height: 750px;
@@ -370,9 +627,71 @@ document.addEventListener('DOMContentLoaded', function() {
     height: 100%;
     border: 0;
 }
+.infra-mobile-events {
+    display: none;
+}
 @media (max-width: 768px) {
+    .infra-calendar-tab-buttons {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr;
+    }
+    .infra-calendar-tab-btn {
+        min-width: 0;
+        width: 100%;
+    }
     .google-calendar-wrapper {
-        height: 500px;
+        display: block;
+        height: 700px;
+        max-height: none;
+        overflow: hidden;
+    }
+    .infra-mobile-events {
+        display: none;
+    }
+    .infra-mobile-events-title {
+        color: var(--c-primary);
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 16px;
+        text-transform: uppercase;
+    }
+    .infra-mobile-events-status {
+        color: #aaa;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    .infra-mobile-events-list {
+        display: grid;
+        gap: 12px;
+    }
+    .infra-mobile-event {
+        border-bottom: 1px solid #242424;
+        padding-bottom: 12px;
+    }
+    .infra-mobile-event:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+    .infra-mobile-event-date {
+        color: #aaa;
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+    }
+    .infra-mobile-event-title {
+        color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.35;
+    }
+    .infra-mobile-event-location {
+        color: #aaa;
+        font-size: 13px;
+        line-height: 1.4;
+        margin-top: 4px;
     }
 }
 </style>

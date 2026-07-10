@@ -114,6 +114,11 @@ get_header();
                 $ruolo_str   = sport_theme_get_singular_role($nome_ruolo);
                 $zoom_foto   = get_post_meta(get_the_ID(), '_zoom_foto', true) ?: 'cover';
                 $allineamento_foto = get_post_meta(get_the_ID(), '_allineamento_foto', true) ?: 'center top';
+                $foto_esultanza_zoom = sport_theme_player_photo_zoom_percent(get_post_meta(get_the_ID(), '_foto_esultanza_zoom', true) ?: '100');
+                $foto_esultanza_scale = rtrim(rtrim(number_format($foto_esultanza_zoom / 100, 2, '.', ''), '0'), '.');
+                $foto_esultanza_position_values = sport_theme_player_photo_position_values(get_post_meta(get_the_ID(), '_foto_esultanza_position', true) ?: '50% 0%');
+                $foto_esultanza_position = $foto_esultanza_position_values['x'] . '% ' . $foto_esultanza_position_values['y'] . '%';
+                $foto_esultanza_edge_sample = get_post_meta(get_the_ID(), '_foto_esultanza_edge_sample', true) === 'top_right_50' ? 'top_right_50' : 'full';
                 
                 // Dividiamo il nome su due righe per emulare il design "Nome \n Cognome"
                 $split_name = sport_theme_get_giocatore_split_name(get_the_ID());
@@ -124,6 +129,9 @@ get_header();
             <!-- Card Giocatore Pixel Perfect -->
             <a href="#" class="open-player-modal" 
                data-foto="<?php echo esc_attr($foto_dettaglio); ?>" 
+               data-foto-zoom="<?php echo esc_attr($foto_esultanza_scale); ?>"
+               data-foto-position="<?php echo esc_attr($foto_esultanza_position); ?>"
+               data-foto-edge-sample="<?php echo esc_attr($foto_esultanza_edge_sample); ?>"
                data-numero="<?php echo esc_attr($numero); ?>" 
                data-nome1="<?php echo esc_attr($nome_riga1); ?>" 
                data-nome2="<?php echo esc_attr($nome_riga2); ?>" 

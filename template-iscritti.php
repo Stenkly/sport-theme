@@ -13,6 +13,9 @@ $classificazione_url = function_exists( 'sport_theme_get_iscrizioni_classificazi
     : '';
 $classificazione_stagione = get_post_meta( get_the_ID(), '_iscrizioni_classificazione_stagione', true );
 $classificazione_is_image = $classificazione_url && preg_match( '/\.(jpe?g|png|webp|gif)(\?.*)?$/i', $classificazione_url );
+$allievi_birthdate_cutoff = function_exists( 'sport_theme_get_allievi_birthdate_cutoff' ) ? sport_theme_get_allievi_birthdate_cutoff() : '2017-12-31';
+$scuola_calcio_birthdate_min = function_exists( 'sport_theme_get_scuola_calcio_birthdate_min' ) ? sport_theme_get_scuola_calcio_birthdate_min() : '2018-01-01';
+$today_date = date( 'Y-m-d' );
 ?>
 
 <main id="primary" class="site-main page-iscritti">
@@ -136,7 +139,7 @@ $classificazione_is_image = $classificazione_url && preg_match( '/\.(jpe?g|png|w
                 <div class="iscrizione-field">
                     <label for="giocatore-data-nascita">Data di nascita <span>*</span></label>
                     <div class="iscrizione-input-wrap has-icon">
-                        <input id="giocatore-data-nascita" type="date" name="giocatore_data_nascita" min="1990-01-01" max="<?php echo esc_attr( date('Y-m-d') ); ?>" required>
+                        <input id="giocatore-data-nascita" type="date" name="giocatore_data_nascita" min="1990-01-01" max="<?php echo esc_attr( $today_date ); ?>" required>
                         <i class="fa-regular fa-calendar" aria-hidden="true"></i>
                     </div>
                 </div>
@@ -521,6 +524,9 @@ window.acTaverneIscrizioni = {
     var registrationType = 'allievi';
     var stepStorageKey = 'ac_taverne_iscrizione_step';
     var typeStorageKey = 'ac_taverne_iscrizione_type';
+    var allieviBirthdateCutoff = '<?php echo esc_js( $allievi_birthdate_cutoff ); ?>';
+    var scuolaCalcioBirthdateMin = '<?php echo esc_js( $scuola_calcio_birthdate_min ); ?>';
+    var todayDate = '<?php echo esc_js( $today_date ); ?>';
 
     if (!modal || !openBtn || !checkbox || !ctaButtons.length || !intro || !formSection) return;
 
@@ -533,6 +539,33 @@ window.acTaverneIscrizioni = {
 
     function isScuolaCalcioRegistration() {
         return registrationType === 'scuola_calcio';
+    }
+
+    function validateBirthdateField(input) {
+        var scuolaCalcio = isScuolaCalcioRegistration();
+
+        if (!input.value) {
+            input.setCustomValidity('');
+            return;
+        }
+
+        if (!scuolaCalcio && input.value > allieviBirthdateCutoff) {
+            input.setCustomValidity('Questa data di nascita rientra nella Scuola Calcio, non negli Allievi.');
+            return;
+        }
+
+        if (scuolaCalcio && input.value < scuolaCalcioBirthdateMin) {
+            input.setCustomValidity('Questa data di nascita rientra negli Allievi, non nella Scuola Calcio.');
+            return;
+        }
+
+        input.setCustomValidity('');
+    }
+
+    function updateBirthdateLimits() {
+        document.querySelectorAll('input[type="date"][name$="_data_nascita"], input[type="date"][name="giocatore_data_nascita"]').forEach(function(input){
+            validateBirthdateField(input);
+        });
     }
 
     function clearExtraChildren() {
@@ -560,6 +593,8 @@ window.acTaverneIscrizioni = {
         if (addChildrenBlock) {
             addChildrenBlock.hidden = scuolaCalcio;
         }
+
+        updateBirthdateLimits();
     }
 
     function showStep(step, shouldScroll) {
@@ -669,6 +704,7 @@ window.acTaverneIscrizioni = {
 
     if (playerNext && playerForm && stepTwo) {
         playerNext.addEventListener('click', function(){
+            updateBirthdateLimits();
             var invalidFields = Array.from(playerForm.querySelectorAll('input')).filter(function(input){
                 return !input.checkValidity();
             });
@@ -1678,7 +1714,7 @@ window.acTaverneIscrizioni = {
             fields.className = 'iscrizione-child-fields';
             fields.appendChild(createChildField(childIndex, 'cognome', 'Cognome', 'text', { autocomplete: 'family-name', pattern: "[A-Za-zÀ-ÖØ-öø-ÿ' -]+", onlyText: true }));
             fields.appendChild(createChildField(childIndex, 'nome', 'Nome', 'text', { autocomplete: 'given-name', pattern: "[A-Za-zÀ-ÖØ-öø-ÿ' -]+", onlyText: true }));
-            fields.appendChild(createChildField(childIndex, 'data_nascita', 'Data di nascita', 'date', { min: '1990-01-01', max: '<?php echo esc_js( date('Y-m-d') ); ?>', icon: 'fa-regular fa-calendar' }));
+            fields.appendChild(createChildField(childIndex, 'data_nascita', 'Data di nascita', 'date', { min: '1990-01-01', max: todayDate, icon: 'fa-regular fa-calendar' }));
             fields.appendChild(createChildField(childIndex, 'nazionalita', 'Nazionalità', 'text', { autocomplete: 'country-name', nationality: true }));
             fields.appendChild(createChildField(childIndex, 'avs', 'Numero AVS (13 cifre)', 'text', { avs: true, help: 'Lo trovi sulla tessera della cassa malati' }));
             fields.appendChild(createChildField(childIndex, 'indirizzo', 'Indirizzo completo (Via e numero civico)', 'text', { autocomplete: 'street-address' }));
@@ -1701,12 +1737,19 @@ window.acTaverneIscrizioni = {
             });
 
             updateAddChildButton();
+            updateBirthdateLimits();
             section.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         if (addChildBtn) {
             addChildBtn.addEventListener('click', addChildSection);
         }
+
+        document.addEventListener('input', function(event){
+            if (event.target && event.target.matches('input[type="date"]')) {
+                validateBirthdateField(event.target);
+            }
+        });
 
         updateAddChildButton();
     }

@@ -65,44 +65,11 @@ get_header();
             <?php 
             if ( have_posts() ) :
                 while ( have_posts() ) : the_post();
-                    $raw = get_the_content();
-                    
-                    // Se non ci sono tag <h2> significa che l'utente non ha eseguito lo script di aggiornamento.
-                    // Formattiamo il testo on-the-fly per assicurarci che appaia perfetto come nel mockup.
-                    if (strpos($raw, '<h2>') === false && strpos($raw, 'IDENTITÀ') !== false) {
-                        $formatted = '<h2>IDENTITÀ DEL CLUB</h2>';
-                        $formatted .= '<h3>Un’identità forte e radicata, nata nel dopoguerra dall’entusiasmo popolare e dall’amore per lo sport.</h3>';
-                        $formatted .= '<p>Le origini della prima squadra di Taverne affondano le proprie radici negli anni Venti, con la nascita del Football Club Stella Taverne, prima vera formazione locale. Inizialmente si giocava nella zona di Livorno, lungo il corso del Vedeggio, indossando una maglia nera con una stella bianca sul petto. Negli anni successivi, il campo fu spostato a Taverne Superiore e, negli anni Quaranta, nell’area della stazione.</p>';
-                        $formatted .= '<p>Nel secondo dopoguerra nacque l’Associazione Calcio Taverne, sostenuta da grande entusiasmo popolare. La società divenne rapidamente un punto di riferimento sportivo per tutta la valle, grazie a un ambiente favorevole, ottimi allenatori e ad una solida comunità. A questo periodo eroico sono legati nomi importanti come Mario Banfi, Flaminio Petrocchi e Gino Gova, mentre già negli anni Trenta si distinsero i fratelli Zambelli, in particolare il portiere Emilio, detto “Zamorra”.</p>';
-                        $formatted .= '<p>Un momento chiave arrivò nel 1950, quando l’AC Taverne entrò ufficialmente nella Federazione calcistica ticinese partecipando al campionato di Quarta Divisione, ottenendo subito la promozione in Terza. La crescita proseguì fino alla stagione 1956-57, in cui, sotto la guida di Bruno Passardi, la squadra conquistò il titolo di campione di Terza Divisione. L’anno successivo, con Dino Leoni alla guida, il Taverne si confermò vincendo sia il campionato sia il Trofeo Ticino, segnando una delle pagine più significative della sua storia.</p>';
-                        
-                        $formatted .= '<h2>RUOLO DELLA PRIMA SQUADRA</h2>';
-                        $formatted .= '<h3>La prima squadra come traino e punto di riferimento di tutta l\'attività agonistica giallonera.</h3>';
-                        $formatted .= '<p>La prima squadra rappresenta la vetrina principale del club e il traguardo naturale per tutti i giovani che crescono nel settore giovanile. Nel corso degli anni, essa ha svolto il ruolo di traino per l\'intera comunità sportiva di Taverne, ispirando generazioni di atleti locali e promuovendo l\'attaccamento dei tesserati e dei tifosi ai colori gialloneri.</p>';
-                        $formatted .= '<p>Oggi, la prima squadra partecipa a campionati di livello nazionale, portando con orgoglio il nome del club e del territorio oltre i confini regionali, sempre guidata dai valori storici di lealtà, dedizione e passione.</p>';
-
-                        $formatted .= '<h2>EVOLUZIONE NEL TEMPO</h2>';
-                        $formatted .= '<h3>Una crescita costante nel tempo, costruendo un percorso solido nel panorama calcistico nazionale.</h3>';
-                        $formatted .= '<p>Nel corso della sua storia, il Taverne ha saputo tracciare una linea coerente, caratterizzata da tappe significative. Tra gli anni Ottanta e Novanta, la prima squadra ha partecipato con regolarità ai campionati di Seconda e Terza Lega, consolidando la propria presenza e gettando le basi per i successi futuri. Un primo importante salto di qualità si registra nella stagione 2009-2010, quando il Taverne conquista il terzo rango in Seconda Lega regionale ottenendo la promozione in Seconda Lega Interregionale. Si tratta di un traguardo storico, che segna l’ingresso del club, a partire dal 2010, in un contesto di competizione nazionale.</p>';
-                        $formatted .= '<p>Nel campionato 2011-2012, il Taverne tenta la scalata alla Seconda Lega élite, categoria già raggiunta con merito due anni prima e sfortunatamente persa nella stagione successiva. L’annata seguente, 2012-2013, si apre con segnali positivi: la squadra si presenta briosa e promettente, mantenendo il primo posto in classifica al termine del girone d’andata.</p>';
-                        $formatted .= '<p>A partire dalla stagione 2019-2020, il Taverne milita stabilmente in Prima Lega Classic, raggiungendo il livello più alto nella storia della società dopo alcune stagioni di consolidamento nei campionati interregionali.</p>';
-                        
-                        $formatted .= '<h2>IL SETTORE GIOVANILE E I SUCCESSI</h2>';
-                        $formatted .= '<h3>Il vivaio e le squadre giovanili come risorsa fondamentale e garanzia per il futuro del club.</h3>';
-                        $formatted .= '<p>Parallelamente ai risultati della prima squadra, il club ha sempre attribuito una rilevanza strategica al settore giovanile. I ragazzi delle categorie Allievi, sempre più numerosi, rappresentano una prospettiva concreta ed una risorsa fondamentale su cui fondare il domani.</p>';
-                        $formatted .= '<p>Il loro sviluppo è affidato a dirigenti, allenatori e preparatori che privilegiano una crescita progressiva e duratura rispetto ai risultati immediati.</p>';
-                        $formatted .= '<p>Nel corso degli anni, il club ha collezionato numerosi successi, tra cui:</p>';
-                        $formatted .= '<ul><li>Campione ticinese di Terza Divisione e promozione in Seconda Lega (stagione 1956-1957)</li><li>Campione ticinese di Seconda Divisione e promozione in Seconda Lega (stagione 1958-1959)</li><li>Vincitore di gruppo di Terza Divisione e promozione in Seconda Lega (stagione 1979-1980)</li><li>Vincitore di gruppo di Terza Lega e promozione in Seconda Lega (stagioni 1992-1993 e 2004-2005)</li><li>Terzo posto in Seconda Lega regionale e promozione in Seconda Lega Interregionale (stagione 2009-2010)</li></ul>';
-                        
-                        $formatted .= '<p>A questi si aggiungono i risultati del settore giovanile e della seconda squadra:</p>';
-                        $formatted .= '<ul><li>Campione ticinese Allievi A e promozione nella categoria Interregionale (stagione 1986-1987)</li><li>Seconda squadra campione di gruppo in Quinta Lega e promossa in Quarta Lega (stagione 2007-2008)</li></ul>';
-                        
-                        $formatted .= '<p>Di particolare rilievo anche il percorso nelle competizioni regionali: il Taverne ha conquistato sei Coppe Ticino, stabilendo un record prestigioso, e ha ottenuto un primo e un secondo posto nella Coppa Campioni del calcio regionale ticinese.</p>';
-                        $formatted .= '<p>Dalla stagione attuale, la prima squadra si presenta con un nuovo assetto societario, segnando l’inizio di una nuova fase nel percorso di sviluppo del club, nel segno della continuità e dell’attenzione alla propria storia.</p>';
-                        
-                        echo $formatted;
-                    } else {
+                    $page_content = trim( get_the_content() );
+                    if ( $page_content !== '' ) {
                         the_content();
+                    } else {
+                        echo sport_theme_storia_content_html();
                     }
                 endwhile;
             endif;
@@ -174,6 +141,7 @@ get_header();
                         <i class="<?php echo $index === 0 ? 'fa-solid' : 'fa-regular'; ?> fa-circle<?php echo $index === 0 ? ' active' : ''; ?>" data-page="<?php echo esc_attr( $index ); ?>"></i>
                     <?php endforeach; ?>
                 </span>
+                <span class="gallery-counter" id="storia-gallery-counter">1 / <?php echo esc_html( count( $storia_gallery_items ) ); ?></span>
                 <span class="nav-arrow text-primary" id="storia-gallery-next" style="cursor:pointer;"><i class="fa-solid fa-chevron-right"></i></span>
             </div>
 
@@ -184,6 +152,7 @@ get_header();
 
                 var prev = document.getElementById('storia-gallery-prev');
                 var next = document.getElementById('storia-gallery-next');
+                var counter = document.getElementById('storia-gallery-counter');
                 var dots = document.querySelectorAll('#storia-gallery-dots .fa-circle');
                 var slides = car.querySelectorAll('.gallery-slide');
                 var cur = 0;
@@ -215,6 +184,9 @@ get_header();
                         }
                     });
                     slides.forEach(function(s,i){ s.classList.toggle('active', i === cur); });
+                    if (counter) {
+                        counter.textContent = (cur + 1) + ' / ' + slides.length;
+                    }
                 }
 
                 function go(n) {

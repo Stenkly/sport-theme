@@ -101,7 +101,7 @@ get_header('societa');
         <?php if (!empty($presidents)): ?>
             <div class="dirigenti-grid" style="grid-template-columns: 1fr; margin-bottom: 40px; display: grid;">
                 <?php foreach ($presidents as $p): ?>
-                    <div class="dirigente-card" style="justify-self: center; width: 100%; max-width: 800px;">
+                    <div class="dirigente-card" style="width: 100%;">
                         <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($p['foto']); ?>');<?php echo $p['bg_pos']; ?>">
                             <div class="dirigente-photo-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); pointer-events: none;"></div>
                         </div>
@@ -126,9 +126,9 @@ get_header('societa');
             </div>
         <?php endif; ?>
 
-        <!-- Sezione Presidente e Vice Presidente (affiancati) -->
+        <!-- Sezione Presidente e Vice Presidente -->
         <?php if (!empty($leaders)): ?>
-            <div class="dirigenti-grid" style="margin-bottom: 40px;">
+            <div class="dirigenti-grid" style="grid-template-columns: 1fr; margin-bottom: 40px; display: grid;">
                 <?php foreach ($leaders as $l): ?>
                     <div class="dirigente-card">
                         <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($l['foto']); ?>');<?php echo $l['bg_pos']; ?>">
@@ -157,7 +157,7 @@ get_header('societa');
 
         <!-- Resto del Comitato (altri membri) -->
         <?php if (!empty($others)): ?>
-            <div class="dirigenti-grid">
+            <div class="dirigenti-grid" style="grid-template-columns: 1fr; display: grid;">
                 <?php foreach ($others as $o): ?>
                     <div class="dirigente-card">
                         <div class="dirigente-photo cover-bg" style="background-image: url('<?php echo esc_url($o['foto']); ?>');<?php echo $o['bg_pos']; ?>">

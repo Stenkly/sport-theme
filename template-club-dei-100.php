@@ -104,6 +104,7 @@ get_header('societa');
                         <i class="<?php echo $index === 0 ? 'fa-solid' : 'fa-regular'; ?> fa-circle<?php echo $index === 0 ? ' active' : ''; ?>" data-page="<?php echo esc_attr( $index ); ?>"></i>
                     <?php endforeach; ?>
                 </span>
+                <span class="gallery-counter" id="club100-gallery-counter">1 / <?php echo esc_html( count( $club100_gallery_items ) ); ?></span>
                 <span class="nav-arrow text-primary" id="club100-gallery-next" style="cursor:pointer;"><i class="fa-solid fa-chevron-right"></i></span>
             </div>
 
@@ -114,6 +115,7 @@ get_header('societa');
 
                 var prev = document.getElementById('club100-gallery-prev');
                 var next = document.getElementById('club100-gallery-next');
+                var counter = document.getElementById('club100-gallery-counter');
                 var dots = document.querySelectorAll('#club100-gallery-dots .fa-circle');
                 var slides = car.querySelectorAll('.gallery-slide');
                 var cur = 0;
@@ -144,6 +146,9 @@ get_header('societa');
                             d.classList.add('fa-regular');
                         }
                     });
+                    if (counter) {
+                        counter.textContent = (cur + 1) + ' / ' + slides.length;
+                    }
                     slides.forEach(function(s,i){ s.classList.toggle('active', i === cur); });
                 }
 
@@ -223,14 +228,18 @@ get_header('societa');
                             <input type="email" name="c100_email" required style="width: 100%; background: transparent; border: 2px solid white; color: white; padding: 14px; font-size: 17px;" placeholder="E-mail">
                         </div>
                         <div style="flex: 1; min-width: 200px;">
-                            <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 16px; font-weight: 600;">Oggetto*</label>
-                            <input type="text" name="c100_oggetto" required style="width: 100%; background: transparent; border: 2px solid white; color: white; padding: 14px; font-size: 17px;" placeholder="Oggetto">
+                            <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 16px; font-weight: 600;">Indirizzo*</label>
+                            <input type="text" name="c100_indirizzo" required style="width: 100%; background: transparent; border: 2px solid white; color: white; padding: 14px; font-size: 17px;" placeholder="Indirizzo">
+                        </div>
+                        <div style="flex: 1; min-width: 200px;">
+                            <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 16px; font-weight: 600;">Luogo*</label>
+                            <input type="text" name="c100_luogo" required style="width: 100%; background: transparent; border: 2px solid white; color: white; padding: 14px; font-size: 17px;" placeholder="Luogo">
                         </div>
                     </div>
  
                     <div style="margin-bottom: 40px;">
-                        <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 16px; font-weight: 600;">Testo*</label>
-                        <input type="text" name="c100_testo" required style="width: 100%; background: transparent; border: none; border-bottom: 2px solid white; color: white; padding: 14px 0; font-size: 17px;" placeholder="Testo">
+                        <label class="text-white" style="display: block; margin-bottom: 8px; font-size: 16px; font-weight: 600;">Testo</label>
+                        <input type="text" name="c100_testo" style="width: 100%; background: transparent; border: none; border-bottom: 2px solid white; color: white; padding: 14px 0; font-size: 17px;" placeholder="Testo">
                     </div>
  
                     <div style="text-align: right;">

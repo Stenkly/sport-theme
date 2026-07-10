@@ -11,7 +11,7 @@
         <div class="footer-mega container">
             <div class="fm-col fm-col-1">
                 <h4>AC TAVERNE</h4>
-                <p>Via Traversone 2<br>
+                <p>Via Traversee 2<br>
                 CP 703 - 6807 Taverne<br>
                 <a href="mailto:scoutingprimasquadra@actaverne.com">scoutingprimasquadra@actaverne.com</a>
                 <a href="mailto:primasquadra@actaverne.com">primasquadra@actaverne.com</a>
@@ -25,24 +25,24 @@
                 </div>
             </div>
             <div class="fm-col">
-                <h4>HOMEPAGE</h4>
+                <h4><a href="<?php echo esc_url( site_url('/prima-squadra') ); ?>">HOMEPAGE</a></h4>
                 <a href="<?php echo site_url('/news'); ?>">News</a>
                 <a class="footer-link-shop" href="<?php echo site_url('/shop'); ?>">Shop</a>
                 <a href="<?php echo site_url('/stagione'); ?>">Stagione</a>
             </div>
             <div class="fm-col">
-                <h4>TEAM</h4>
+                <h4><a href="<?php echo esc_url( site_url('/giocatori') ); ?>">TEAM</a></h4>
                 <a href="<?php echo site_url('/giocatori'); ?>">Giocatori</a>
                 <a href="<?php echo site_url('/staff'); ?>">Staff</a>
             </div>
             <div class="fm-col">
-                <h4>CLUB</h4>
+                <h4><a href="<?php echo esc_url( site_url('/organigramma') ); ?>">CLUB</a></h4>
                 <a href="<?php echo site_url('/organigramma'); ?>">Organigramma</a>
                 <a href="<?php echo site_url('/storia'); ?>">Storia</a>
                 <a href="<?php echo site_url('/presente-e-futuro'); ?>">Presente e Futuro</a>
             </div>
             <div class="fm-col fm-col-links">
-                <a href="<?php echo esc_url( sport_theme_get_page_url('partner', 'NETWORK') ); ?>"><b>Network</b></a>
+                <a href="<?php echo esc_url( sport_theme_get_page_url('partner', 'NETWORK') ); ?>"><b>NETWORK</b></a>
                 <a href="<?php echo site_url('/contatti'); ?>"><b>Contatti</b></a>
                 <a href="<?php echo site_url('/'); ?>"><b>AC Taverne</b></a>
             </div>
@@ -115,10 +115,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!modalImgCol || !img || !img.naturalWidth || !img.naturalHeight) return;
 
         try {
+            var edgeSample = modalImgCol.getAttribute('data-edge-sample') || 'full';
             var stripWidth = Math.min(3, img.naturalWidth);
+            var stripHeight = edgeSample === 'top_right_50' ? Math.min(50, img.naturalHeight) : img.naturalHeight;
             var canvas = document.createElement('canvas');
             canvas.width = stripWidth;
-            canvas.height = img.naturalHeight;
+            canvas.height = stripHeight;
 
             var ctx = canvas.getContext('2d');
             ctx.drawImage(
@@ -126,16 +128,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 img.naturalWidth - stripWidth,
                 0,
                 stripWidth,
-                img.naturalHeight,
+                stripHeight,
                 0,
                 0,
                 stripWidth,
-                img.naturalHeight
+                stripHeight
             );
 
+            modalImgCol.style.setProperty('--modal-edge-strip-repeat', edgeSample === 'top_right_50' ? 'repeat' : 'repeat-x');
+            modalImgCol.style.setProperty('--modal-edge-strip-size', edgeSample === 'top_right_50' ? 'auto 50px' : 'auto 100%');
             modalImgCol.style.setProperty('--modal-edge-strip', 'url("' + canvas.toDataURL('image/png') + '")');
         } catch (err) {
             modalImgCol.style.removeProperty('--modal-edge-strip');
+            modalImgCol.style.removeProperty('--modal-edge-strip-repeat');
+            modalImgCol.style.removeProperty('--modal-edge-strip-size');
         }
     }
 
@@ -151,14 +157,38 @@ document.addEventListener('DOMContentLoaded', function() {
         if (link) {
             e.preventDefault();
             var modalFotoUrl = link.getAttribute('data-foto') || '';
+            var modalFotoZoom = link.getAttribute('data-foto-zoom') || '1';
+            var modalFotoPosition = link.getAttribute('data-foto-position') || '50% 0%';
+            var modalFotoEdgeSample = link.getAttribute('data-foto-edge-sample') || 'full';
+            var modalFotoZoomNumber = parseFloat(modalFotoZoom);
+            var modalFotoWidth = '54%';
+            var modalFotoScale = '1';
+
+            if (!isNaN(modalFotoZoomNumber) && modalFotoZoomNumber > 0 && modalFotoZoomNumber < 1) {
+                modalFotoWidth = Math.min(96, 54 / modalFotoZoomNumber) + '%';
+            } else if (!isNaN(modalFotoZoomNumber) && modalFotoZoomNumber >= 1) {
+                modalFotoScale = modalFotoZoomNumber;
+            }
+
+            if (modalImgCol) {
+                modalImgCol.setAttribute('data-edge-sample', modalFotoEdgeSample);
+                modalImgCol.style.removeProperty('--modal-edge-strip');
+                modalImgCol.style.removeProperty('--modal-edge-strip-repeat');
+                modalImgCol.style.removeProperty('--modal-edge-strip-size');
+            }
             if (modalFotoUrl) {
                 modalImage.src = modalFotoUrl;
+                if (modalImage.complete && modalImage.naturalWidth) {
+                    setModalEdgeStrip(modalImage);
+                }
             } else {
                 modalImage.removeAttribute('src');
             }
+            modalImage.style.setProperty('--modal-player-width', modalFotoWidth);
+            modalImage.style.setProperty('--modal-player-scale', modalFotoScale);
+            modalImage.style.setProperty('--modal-player-position', modalFotoPosition);
             if (modalImgCol) {
                 modalImgCol.style.setProperty('--modal-player-photo', modalFotoUrl ? 'url("' + modalFotoUrl + '")' : 'none');
-                modalImgCol.style.removeProperty('--modal-edge-strip');
             }
             
             var num = link.getAttribute('data-numero');

@@ -2,7 +2,7 @@
 /* Template Name: Sponsor / Partner */
 get_header();
 
-$render_sponsor_marquee = function($level, $empty_message, $extra_class = '') {
+$render_sponsor_marquee = function($level, $empty_message, $extra_class = '', $is_marquee = false) {
     $query = new WP_Query([
         'post_type' => 'sponsor',
         'posts_per_page' => -1,
@@ -60,22 +60,30 @@ $render_sponsor_marquee = function($level, $empty_message, $extra_class = '') {
     }
     wp_reset_postdata();
 
-    $visible_items = $items;
-    while (count($visible_items) < 8) {
-        $visible_items = array_merge($visible_items, $items);
-    }
-    ?>
-    <div class="sponsor-marquee <?php echo esc_attr($extra_class); ?>">
-        <div class="sponsor-marquee-track">
-            <div class="sponsor-marquee-group">
-                <?php echo implode('', $visible_items); ?>
-            </div>
-            <div class="sponsor-marquee-group" aria-hidden="true">
-                <?php echo implode('', $visible_items); ?>
+    if ( $is_marquee ) {
+        $visible_items = $items;
+        while (count($visible_items) < 8) {
+            $visible_items = array_merge($visible_items, $items);
+        }
+        ?>
+        <div class="sponsor-marquee <?php echo esc_attr($extra_class); ?>">
+            <div class="sponsor-marquee-track">
+                <div class="sponsor-marquee-group">
+                    <?php echo implode('', $visible_items); ?>
+                </div>
+                <div class="sponsor-marquee-group" aria-hidden="true">
+                    <?php echo implode('', $visible_items); ?>
+                </div>
             </div>
         </div>
-    </div>
-    <?php
+        <?php
+    } else {
+        ?>
+        <div class="sponsor-grid <?php echo esc_attr($extra_class); ?>">
+            <?php echo implode('', $items); ?>
+        </div>
+        <?php
+    }
 };
 ?>
 
@@ -124,7 +132,7 @@ $render_sponsor_marquee = function($level, $empty_message, $extra_class = '') {
     <!-- SPONSOR -->
     <section class="container" style="padding-top: 20px; padding-bottom: 20px;">
         <h2 class="sponsor-section-title">SPONSOR</h2>
-        <?php $render_sponsor_marquee('main', 'Nessun Sponsor inserito. Aggiungi i loghi dal pannello WordPress sotto "Sponsor".', 'sponsor-marquee-main'); ?>
+        <?php $render_sponsor_marquee('main', 'Nessun Sponsor inserito. Aggiungi i loghi dal pannello WordPress sotto "Sponsor".', 'main-sponsor-grid'); ?>
     </section>
 
     <!-- Linea Decorativa -->
@@ -133,7 +141,7 @@ $render_sponsor_marquee = function($level, $empty_message, $extra_class = '') {
     <!-- PARTNER -->
     <section class="container" style="padding-top: 20px; padding-bottom: 60px;">
         <h2 class="sponsor-section-title">PARTNER</h2>
-        <?php $render_sponsor_marquee('partner', 'Nessun Network inserito. Aggiungi i loghi dal pannello WordPress sotto "Sponsor".', 'sponsor-marquee-network'); ?>
+        <?php $render_sponsor_marquee('partner', 'Nessun Network inserito. Aggiungi i loghi dal pannello WordPress sotto "Sponsor".', 'sponsor-marquee-network', true); ?>
     </section>
 
     <!-- INSTAGRAM -->

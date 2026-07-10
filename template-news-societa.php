@@ -39,80 +39,16 @@ function sport_theme_render_news_societa_filters( $action, $ordine, $ricerca, $o
     <?php
 }
 
-function sport_theme_news_societa_event_timestamp( $post_id ) {
-    $data_evento = get_post_meta( $post_id, '_data_evento', true );
-    if ( ! empty( $data_evento ) ) {
-        $timestamp = strtotime( $data_evento . ' 00:00:00' );
-        if ( $timestamp ) {
-            return $timestamp;
-        }
-    }
-
-    return (int) get_post_time( 'U', false, $post_id );
-}
-
-function sport_theme_news_societa_get_events( $period, $ordine, $ricerca, $limit = 3 ) {
-    $args = array(
-        'post_type'      => 'evento',
-        'post_status'    => 'publish',
-        'posts_per_page' => -1,
-        'orderby'        => 'date',
-        'order'          => 'DESC',
-    );
-
-    if ( ! empty( $ricerca ) ) {
-        $args['s'] = $ricerca;
-    }
-
-    $query = new WP_Query( $args );
-    $today_start = strtotime( current_time( 'Y-m-d' ) . ' 00:00:00' );
-    $events = array();
-
-    if ( $query->have_posts() ) {
-        while ( $query->have_posts() ) {
-            $query->the_post();
-            $event_timestamp = sport_theme_news_societa_event_timestamp( get_the_ID() );
-            $is_future = $event_timestamp >= $today_start;
-
-            if ( ( 'future' === $period && $is_future ) || ( 'past' === $period && ! $is_future ) ) {
-                $events[] = array(
-                    'post'      => get_post(),
-                    'timestamp' => $event_timestamp,
-                );
-            }
-        }
-        wp_reset_postdata();
-    }
-
-    usort( $events, function( $a, $b ) use ( $ordine ) {
-        if ( $a['timestamp'] === $b['timestamp'] ) {
-            return 0;
-        }
-        return 'asc' === $ordine ? $a['timestamp'] <=> $b['timestamp'] : $b['timestamp'] <=> $a['timestamp'];
-    } );
-
-    return array_slice( $events, 0, $limit );
-}
-
-function sport_theme_news_societa_render_event_card( $event, $link_label ) {
-    $post = $event['post'];
-    $thumb = has_post_thumbnail( $post->ID )
-        ? get_the_post_thumbnail_url( $post->ID, 'medium_large' )
-        : 'https://images.unsplash.com/photo-1508344928928-7137b29de218?q=80&w=900&auto=format&fit=crop';
-    $data_format = date_i18n( 'd.m', $event['timestamp'] );
+function sport_theme_news_societa_render_carousel_nav( $carousel_key ) {
     ?>
-    <div class="event-card news-card cover-bg" style="position: relative; height: 350px; overflow: hidden; background-image: url('<?php echo esc_url( $thumb ); ?>'); background-size: cover; background-position: center;">
-        <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 70%);"></div>
-        <div style="position: absolute; top: 20px; left: 20px; color: white; font-weight: bold; font-size: 32px; z-index: 2;"><?php echo esc_html( $data_format ); ?></div>
-        <div style="position: absolute; bottom: 20px; left: 20px; right: 20px; z-index: 2;">
-            <h3 style="color: white; font-size: 32px; font-weight: bold; margin-bottom: 10px; line-height: 1.4; text-transform: uppercase;">
-                <?php echo esc_html( get_the_title( $post ) ); ?>
-            </h3>
-            <a href="<?php echo esc_url( get_permalink( $post ) ); ?>" style="color: white; font-size: 13px; text-decoration: none; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;"><?php echo esc_html( $link_label ); ?> <span style="margin-left: 5px; opacity: 0.7;">|</span></a>
-        </div>
+    <div class="carousel-nav news-societa-carousel-nav" data-news-societa-nav="<?php echo esc_attr( $carousel_key ); ?>" style="margin-top: 15px;">
+        <span class="nav-arrow text-primary" data-news-societa-prev style="cursor:pointer;"><i class="fa-solid fa-chevron-left"></i></span>
+        <span class="nav-dots" data-news-societa-dots></span>
+        <span class="nav-arrow text-primary" data-news-societa-next style="cursor:pointer;"><i class="fa-solid fa-chevron-right"></i></span>
     </div>
     <?php
 }
+
 ?>
 
 <main id="primary" class="site-main page-news-societa">
@@ -121,7 +57,8 @@ function sport_theme_news_societa_render_event_card( $event, $link_label ) {
     <section class="news-hero">
         <?php
         $hero_image_url = sport_theme_get_societa_home_hero_url();
-        $hero_sottotitolo = get_post_meta( get_the_ID(), '_news_societa_hero_sottotitolo', true ) ?: 'AGGIORNAMENTI, EVENTI E MOMENTI DELLA VITA GIALLONERA.';
+        $hero_sottotitolo = get_post_meta( get_the_ID(), '_news_societa_hero_sottotitolo', true ) ?: 'AGGIORNAMENTI E MOMENTI DELLA VITA GIALLONERA.';
+        $hero_sottotitolo = str_replace( array( 'EVENTI E ', 'EVENTI, ' ), '', $hero_sottotitolo );
         ?>
         <div class="news-hero-wrapper" style="position: relative; width: 100%; height: 732px; min-height: 350px;">
             <img src="<?php echo esc_url( $hero_image_url ); ?>" class="hero-image" style="height: 100%; width: 100%; object-fit: cover; object-position: center;" alt="News AC Taverne">
@@ -139,7 +76,7 @@ function sport_theme_news_societa_render_event_card( $event, $link_label ) {
         
         <?php sport_theme_render_news_societa_filters( get_permalink(), $ordine, $ricerca, array( 'desc' => 'RECENTI', 'asc' => 'MENO RECENTI' ), 'CERCA' ); ?>
 
-        <div class="news-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px;">
+        <div class="news-grid news-societa-card-grid" data-news-societa-carousel="news" style="display: grid; gap: 20px; margin-bottom: 20px;">
             <?php
             $args_news = array(
                 'post_type'      => 'post',
@@ -156,7 +93,7 @@ function sport_theme_news_societa_render_event_card( $event, $link_label ) {
                     $img = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'large') : 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=800';
                     $data_format = get_the_date('d.m');
                     ?>
-                    <div class="news-card" style="position: relative; height: 350px; overflow: hidden; background-color: #111;">
+                    <div class="news-card" style="position: relative; overflow: hidden; background-color: #111;">
                         <img src="<?php echo esc_url($img); ?>" style="width: 100%; height: 100%; object-fit: cover;" alt="<?php echo esc_attr(get_the_title()); ?>">
                         <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 60%);"></div>
                         
@@ -177,6 +114,7 @@ function sport_theme_news_societa_render_event_card( $event, $link_label ) {
             endif;
             ?>
         </div>
+        <?php sport_theme_news_societa_render_carousel_nav( 'news' ); ?>
         
         <?php if ( $news_query->max_num_pages > 1 ) : ?>
             <div class="pagination-container news-pagination">
@@ -211,55 +149,6 @@ function sport_theme_news_societa_render_event_card( $event, $link_label ) {
 
     </div>
 
-    <!-- SEZIONE PROSSIMI EVENTI -->
-    <div class="container news-societa-section" style="padding-top: 30px; padding-bottom: 60px;">
-        <h2 class="news-societa-section-title">PROSSIMI EVENTI</h2>
-        
-        <?php sport_theme_render_news_societa_filters( get_permalink() . '#prossimi-eventi', $ordine, $ricerca, array( 'asc' => 'VICINI', 'desc' => 'LONTANI' ), 'CERCA' ); ?>
-
-        <div id="prossimi-eventi" class="eventi-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px;">
-            <?php
-            $prossimi_eventi = sport_theme_news_societa_get_events( 'future', $ordine, $ricerca );
-            if ( ! empty( $prossimi_eventi ) ) :
-                foreach ( $prossimi_eventi as $evento ) :
-                    sport_theme_news_societa_render_event_card( $evento, 'SCOPRI' );
-                endforeach;
-            else :
-                if(!empty($ricerca)) {
-                    echo '<p class="text-white">Nessun evento futuro trovato con la ricerca: '.esc_html($ricerca).'</p>';
-                } else {
-                    echo '<p class="text-white">Nessun evento futuro disponibile.</p>';
-                }
-            endif;
-            ?>
-        </div>
-
-    </div>
-
-    <!-- SEZIONE EVENTI PASSATI -->
-    <div class="container news-societa-section" style="padding-top: 30px; padding-bottom: 60px;">
-        <h2 class="news-societa-section-title">EVENTI PASSATI</h2>
-        
-        <?php sport_theme_render_news_societa_filters( get_permalink() . '#eventi-passati', $ordine, $ricerca, array( 'desc' => 'RECENTI', 'asc' => 'MENO RECENTI' ), 'CERCA' ); ?>
-
-        <div id="eventi-passati" class="eventi-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px;">
-            <?php
-            $eventi_passati = sport_theme_news_societa_get_events( 'past', $ordine, $ricerca );
-            if ( ! empty( $eventi_passati ) ) :
-                foreach ( $eventi_passati as $evento ) :
-                    sport_theme_news_societa_render_event_card( $evento, 'GALLERY' );
-                endforeach;
-            else :
-                if(!empty($ricerca)) {
-                    echo '<p class="text-white">Nessun evento passato trovato con la ricerca: '.esc_html($ricerca).'</p>';
-                } else {
-                    echo '<p class="text-white">Nessun evento passato disponibile.</p>';
-                }
-            endif;
-            ?>
-        </div>
-
-    </div>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.page-news-societa .news-filter-search input').forEach(function(input) {
@@ -338,6 +227,88 @@ function sport_theme_news_societa_render_event_card( $event, $link_label ) {
                     dropdown.querySelector('.news-filter-order').setAttribute('aria-expanded', 'false');
                 }
             });
+        });
+
+        document.querySelectorAll('.page-news-societa [data-news-societa-carousel]').forEach(function(carousel) {
+            var key = carousel.getAttribute('data-news-societa-carousel');
+            var nav = document.querySelector('[data-news-societa-nav="' + key + '"]');
+            var cards = Array.prototype.slice.call(carousel.querySelectorAll('.news-card'));
+            if (!nav || !cards.length) {
+                if (nav) {
+                    nav.style.display = 'none';
+                }
+                return;
+            }
+
+            var prev = nav.querySelector('[data-news-societa-prev]');
+            var next = nav.querySelector('[data-news-societa-next]');
+            var dotsWrap = nav.querySelector('[data-news-societa-dots]');
+            var currentPage = 0;
+
+            function getPerPage() {
+                if (window.matchMedia('(max-width: 600px)').matches) {
+                    return 1;
+                }
+                if (window.matchMedia('(max-width: 900px)').matches) {
+                    return 2;
+                }
+                return 3;
+            }
+
+            function setArrowState(totalPages) {
+                prev.classList.toggle('is-disabled', currentPage === 0);
+                next.classList.toggle('is-disabled', currentPage >= totalPages - 1);
+            }
+
+            function renderDots(totalPages) {
+                dotsWrap.innerHTML = '';
+                for (var i = 0; i < totalPages; i++) {
+                    var dot = document.createElement('i');
+                    dot.className = (i === currentPage ? 'fa-solid active' : 'fa-regular') + ' fa-circle';
+                    dot.setAttribute('data-news-societa-page', String(i));
+                    dotsWrap.appendChild(dot);
+                }
+            }
+
+            function goTo(page) {
+                var perPage = getPerPage();
+                var totalPages = Math.max(1, Math.ceil(cards.length / perPage));
+                currentPage = Math.max(0, Math.min(page, totalPages - 1));
+
+                cards.forEach(function(card, index) {
+                    var visible = index >= currentPage * perPage && index < (currentPage + 1) * perPage;
+                    card.classList.toggle('is-carousel-hidden', !visible);
+                });
+
+                renderDots(totalPages);
+                setArrowState(totalPages);
+                nav.classList.toggle('has-single-page', totalPages <= 1);
+            }
+
+            prev.addEventListener('click', function() {
+                if (!prev.classList.contains('is-disabled')) {
+                    goTo(currentPage - 1);
+                }
+            });
+
+            next.addEventListener('click', function() {
+                if (!next.classList.contains('is-disabled')) {
+                    goTo(currentPage + 1);
+                }
+            });
+
+            dotsWrap.addEventListener('click', function(event) {
+                var dot = event.target.closest('[data-news-societa-page]');
+                if (dot) {
+                    goTo(parseInt(dot.getAttribute('data-news-societa-page'), 10));
+                }
+            });
+
+            window.addEventListener('resize', function() {
+                goTo(currentPage);
+            });
+
+            goTo(0);
         });
     });
     </script>
