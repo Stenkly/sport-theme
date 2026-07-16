@@ -306,6 +306,21 @@ function sport_theme_mail_from_name() {
 }
 add_filter( 'wp_mail_from_name', 'sport_theme_mail_from_name', 999 );
 
+function sport_theme_configure_smtp( $phpmailer ) {
+    if ( ! defined( 'ACT_TAVERNE_SMTP_PASSWORD' ) || trim( (string) ACT_TAVERNE_SMTP_PASSWORD ) === '' ) {
+        return;
+    }
+
+    $phpmailer->isSMTP();
+    $phpmailer->Host       = defined( 'ACT_TAVERNE_SMTP_HOST' ) ? ACT_TAVERNE_SMTP_HOST : 'mail.infomaniak.com';
+    $phpmailer->Port       = defined( 'ACT_TAVERNE_SMTP_PORT' ) ? (int) ACT_TAVERNE_SMTP_PORT : 587;
+    $phpmailer->SMTPAuth   = true;
+    $phpmailer->SMTPSecure = defined( 'ACT_TAVERNE_SMTP_SECURE' ) ? ACT_TAVERNE_SMTP_SECURE : 'tls';
+    $phpmailer->Username   = defined( 'ACT_TAVERNE_SMTP_USERNAME' ) ? ACT_TAVERNE_SMTP_USERNAME : 'info@actaverne.com';
+    $phpmailer->Password   = ACT_TAVERNE_SMTP_PASSWORD;
+}
+add_action( 'phpmailer_init', 'sport_theme_configure_smtp' );
+
 function sport_theme_iscrizioni_default_email_settings() {
     return array(
         'new_registration_recipients' => "info@actaverne.com\nf.ruberto@honegger.ch\nmenegao@hotmail.com\nmarketing@actaverne.com",
