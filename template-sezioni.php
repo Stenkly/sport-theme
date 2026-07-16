@@ -54,7 +54,11 @@ if ( ! empty($root_categories) && ! is_wp_error($root_categories) ) {
                     'orderby' => 'menu_order title',
                     'order' => 'ASC'
                 ));
-                if (!empty($teams)) $has_real_data = true;
+                if ( empty($teams) ) {
+                    continue;
+                }
+
+                $has_real_data = true;
 
                 $teams_data = array();
                 foreach($teams as $t) {
@@ -104,7 +108,10 @@ if ( ! empty($root_categories) && ! is_wp_error($root_categories) ) {
             $cat_data['items'] = $teams_data;
         }
 
-        $struttura[$root_cat->name] = $cat_data;
+        // Non mostra categorie o sottocategorie senza almeno una squadra pubblicata.
+        if ( ! empty($cat_data['items']) ) {
+            $struttura[$root_cat->name] = $cat_data;
+        }
     }
 }
 

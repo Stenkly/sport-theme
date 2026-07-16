@@ -35,7 +35,9 @@ $duplicate_email_has_discount = array();
 $edit_duplicate_iscrizioni = array();
 $table_exists = false;
 $allievi_birthdate_cutoff = function_exists('sport_theme_get_allievi_birthdate_cutoff') ? sport_theme_get_allievi_birthdate_cutoff() : '2017-12-31';
-$scuola_calcio_birthdate_min = function_exists('sport_theme_get_scuola_calcio_birthdate_min') ? sport_theme_get_scuola_calcio_birthdate_min() : '2018-01-01';
+$new_registrations_discount_50_active = function_exists('sport_theme_new_registrations_discount_50_is_active')
+    ? sport_theme_new_registrations_discount_50_is_active()
+    : false;
 
 $filter_tipo = isset($_GET['tipo']) ? sanitize_key(wp_unslash($_GET['tipo'])) : '';
 $filter_stato = isset($_GET['stato']) ? sanitize_key(wp_unslash($_GET['stato'])) : '';
@@ -472,30 +474,35 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
         <?php else : ?>
             <?php if ($edit_iscrizione) : ?>
                 <section id="segreteria-edit" class="segreteria-edit">
+                    <?php $edit_has_payment_due = (float) ($edit_iscrizione->importo_totale_chf ?? 0) > 0; ?>
                     <div class="segreteria-dashboard-head">
                         <div>
                             <span class="segreteria-kicker">Modifica iscrizione</span>
                             <h2><?php echo esc_html('Iscrizione #' . $edit_iscrizione->id); ?></h2>
                         </div>
                         <div class="segreteria-head-actions">
-                            <a class="segreteria-export-link" data-payment-action="fattura" <?php echo $edit_iscrizione->metodo_pagamento !== 'fattura' ? 'style="display:none;"' : ''; ?> target="_blank" rel="noopener" href="<?php echo esc_url(function_exists('sport_theme_iscrizione_invoice_url') ? sport_theme_iscrizione_invoice_url($edit_iscrizione, false) : wp_nonce_url(add_query_arg(array('action' => 'act_iscrizione_invoice', 'iscrizione_id' => (int) $edit_iscrizione->id), admin_url('admin-post.php')), 'act_iscrizione_invoice_' . (int) $edit_iscrizione->id)); ?>">Fattura QR</a>
-                            <form class="segreteria-invoice-form segreteria-invoice-form-head" data-payment-action="fattura" <?php echo $edit_iscrizione->metodo_pagamento !== 'fattura' ? 'style="display:none;"' : ''; ?> method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" onsubmit="return confirm('Inviare la fattura QR al genitore?');">
-                                <?php wp_nonce_field('act_send_iscrizione_invoice'); ?>
-                                <input type="hidden" name="action" value="act_send_iscrizione_invoice">
-                                <input type="hidden" name="iscrizione_id" value="<?php echo esc_attr((int) $edit_iscrizione->id); ?>">
-                                <button type="submit">Invia fattura</button>
-                            </form>
-                            <form class="segreteria-stripe-form segreteria-stripe-form-head" data-payment-action="stripe" <?php echo $edit_iscrizione->metodo_pagamento !== 'stripe' ? 'style="display:none;"' : ''; ?> method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" onsubmit="return confirm('Inviare il link di pagamento Stripe al genitore?');">
-                                <?php wp_nonce_field('act_send_stripe_payment'); ?>
-                                <input type="hidden" name="action" value="act_send_stripe_payment">
-                                <input type="hidden" name="iscrizione_id" value="<?php echo esc_attr((int) $edit_iscrizione->id); ?>">
-                                <button type="submit">Invia Stripe</button>
-                            </form>
-                            <?php
-                            $stripe_invoice_link = !empty($edit_iscrizione->stripe_invoice_pdf) ? $edit_iscrizione->stripe_invoice_pdf : ($edit_iscrizione->stripe_invoice_url ?? '');
-                            ?>
-                            <?php if ($stripe_invoice_link) : ?>
-                                <a class="segreteria-export-link" data-payment-action="stripe" <?php echo $edit_iscrizione->metodo_pagamento !== 'stripe' ? 'style="display:none;"' : ''; ?> target="_blank" rel="noopener" href="<?php echo esc_url($stripe_invoice_link); ?>">Fattura Stripe</a>
+                            <?php if ($edit_has_payment_due) : ?>
+                                <a class="segreteria-export-link" data-payment-action="fattura" <?php echo $edit_iscrizione->metodo_pagamento !== 'fattura' ? 'style="display:none;"' : ''; ?> target="_blank" rel="noopener" href="<?php echo esc_url(function_exists('sport_theme_iscrizione_invoice_url') ? sport_theme_iscrizione_invoice_url($edit_iscrizione, false) : wp_nonce_url(add_query_arg(array('action' => 'act_iscrizione_invoice', 'iscrizione_id' => (int) $edit_iscrizione->id), admin_url('admin-post.php')), 'act_iscrizione_invoice_' . (int) $edit_iscrizione->id)); ?>">Fattura QR</a>
+                                <form class="segreteria-invoice-form segreteria-invoice-form-head" data-payment-action="fattura" <?php echo $edit_iscrizione->metodo_pagamento !== 'fattura' ? 'style="display:none;"' : ''; ?> method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" onsubmit="return confirm('Inviare la fattura QR al genitore?');">
+                                    <?php wp_nonce_field('act_send_iscrizione_invoice'); ?>
+                                    <input type="hidden" name="action" value="act_send_iscrizione_invoice">
+                                    <input type="hidden" name="iscrizione_id" value="<?php echo esc_attr((int) $edit_iscrizione->id); ?>">
+                                    <button type="submit">Invia fattura</button>
+                                </form>
+                                <form class="segreteria-stripe-form segreteria-stripe-form-head" data-payment-action="stripe" <?php echo $edit_iscrizione->metodo_pagamento !== 'stripe' ? 'style="display:none;"' : ''; ?> method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" onsubmit="return confirm('Inviare il link di pagamento Stripe al genitore?');">
+                                    <?php wp_nonce_field('act_send_stripe_payment'); ?>
+                                    <input type="hidden" name="action" value="act_send_stripe_payment">
+                                    <input type="hidden" name="iscrizione_id" value="<?php echo esc_attr((int) $edit_iscrizione->id); ?>">
+                                    <button type="submit">Invia Stripe</button>
+                                </form>
+                                <?php
+                                $stripe_invoice_link = !empty($edit_iscrizione->stripe_invoice_pdf) ? $edit_iscrizione->stripe_invoice_pdf : ($edit_iscrizione->stripe_invoice_url ?? '');
+                                ?>
+                                <?php if ($stripe_invoice_link) : ?>
+                                    <a class="segreteria-export-link" data-payment-action="stripe" <?php echo $edit_iscrizione->metodo_pagamento !== 'stripe' ? 'style="display:none;"' : ''; ?> target="_blank" rel="noopener" href="<?php echo esc_url($stripe_invoice_link); ?>">Fattura Stripe</a>
+                                <?php endif; ?>
+                            <?php else : ?>
+                                <span class="segreteria-discount-active-label">Nessun pagamento dovuto</span>
                             <?php endif; ?>
                             <form class="segreteria-inline-action-form" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" onsubmit="return confirm('Reinviare la conferma iscrizione al responsabile?');">
                                 <?php wp_nonce_field('act_resend_iscrizione_confirmation'); ?>
@@ -503,12 +510,14 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                                 <input type="hidden" name="iscrizione_id" value="<?php echo esc_attr((int) $edit_iscrizione->id); ?>">
                                 <button type="submit">Reinvia conferma</button>
                             </form>
-                            <form class="segreteria-inline-action-form" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" onsubmit="return confirm('Inviare un promemoria pagamento al responsabile?');">
-                                <?php wp_nonce_field('act_send_payment_reminder'); ?>
-                                <input type="hidden" name="action" value="act_send_payment_reminder">
-                                <input type="hidden" name="iscrizione_id" value="<?php echo esc_attr((int) $edit_iscrizione->id); ?>">
-                                <button type="submit">Promemoria pagamento</button>
-                            </form>
+                            <?php if ($edit_has_payment_due) : ?>
+                                <form class="segreteria-inline-action-form" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" onsubmit="return confirm('Inviare un promemoria pagamento al responsabile?');">
+                                    <?php wp_nonce_field('act_send_payment_reminder'); ?>
+                                    <input type="hidden" name="action" value="act_send_payment_reminder">
+                                    <input type="hidden" name="iscrizione_id" value="<?php echo esc_attr((int) $edit_iscrizione->id); ?>">
+                                    <button type="submit">Promemoria pagamento</button>
+                                </form>
+                            <?php endif; ?>
                             <a class="segreteria-export-link" href="<?php echo esc_url(get_permalink() . '#segreteria-dashboard'); ?>">Torna alla dashboard</a>
                         </div>
                     </div>
@@ -561,10 +570,17 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                                 'confermata' => 'Conferma',
                                 'pagato' => 'Pagamento ricevuto',
                             );
-                            if (empty($edit_iscrizione->sconto_meta_stagione)) {
-                                $quick_actions['meta_stagione_50'] = 'Sconto metà stagione 50%';
-                            } else {
-                                $quick_actions['rimuovi_meta_stagione_50'] = 'Togli sconto metà stagione';
+                            $active_discount = function_exists('sport_theme_iscrizione_discount_percentage')
+                                ? sport_theme_iscrizione_discount_percentage($edit_iscrizione)
+                                : (!empty($edit_iscrizione->sconto_meta_stagione) ? 50 : 0);
+                            if ($active_discount !== 50) {
+                                $quick_actions['sconto_50'] = 'Sconto 50%';
+                            }
+                            if ($active_discount !== 100) {
+                                $quick_actions['sconto_100'] = 'Sconto 100%';
+                            }
+                            if ($active_discount) {
+                                $quick_actions['rimuovi_sconto'] = 'Togli sconto';
                             }
                             ?>
                             <?php foreach ($quick_actions as $quick_key => $quick_label) : ?>
@@ -646,12 +662,18 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                                             <option value="annullato" <?php selected($edit_iscrizione->stato_pagamento, 'annullato'); ?>>Annullato</option>
                                         </select>
                                     </label>
-                                    <label>Riduzione fratello/sorella
-                                        <select name="riduzione_fratelli">
-                                            <option value="0" <?php selected((int) ($edit_iscrizione->riduzione_fratelli ?? 0), 0); ?>>No</option>
-                                            <option value="1" <?php selected((int) ($edit_iscrizione->riduzione_fratelli ?? 0), 1); ?>>Sì, applica - CHF 50</option>
-                                        </select>
-                                    </label>
+                                    <?php if ($active_discount) : ?>
+                                        <label>Riduzione fratello/sorella
+                                            <input type="text" value="Non cumulabile con lo sconto <?php echo esc_attr($active_discount); ?>%" readonly>
+                                        </label>
+                                    <?php else : ?>
+                                        <label>Riduzione fratello/sorella
+                                            <select name="riduzione_fratelli">
+                                                <option value="0" <?php selected((int) ($edit_iscrizione->riduzione_fratelli ?? 0), 0); ?>>No</option>
+                                                <option value="1" <?php selected((int) ($edit_iscrizione->riduzione_fratelli ?? 0), 1); ?>>Sì, applica - CHF 50</option>
+                                            </select>
+                                        </label>
+                                    <?php endif; ?>
                                     <label>Totale quota
                                         <input type="text" value="CHF <?php echo esc_attr(number_format((float) ($edit_iscrizione->importo_totale_chf ?? 0), 0, '.', "'")); ?>" readonly>
                                     </label>
@@ -667,7 +689,7 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                                                 ?>
                                                 <span><?php echo esc_html(($fee_name ?: 'Bambino ' . ($fee_index + 1)) . ': CHF ' . number_format($fee_amount, 0, '.', "'")); ?></span>
                                             <?php endforeach; ?>
-                                            <?php if (!empty($edit_iscrizione->riduzione_fratelli)) : ?>
+                                            <?php if (!empty($edit_iscrizione->riduzione_fratelli) && !$active_discount) : ?>
                                                 <span>Riduzione fratello/sorella: - CHF 50</span>
                                             <?php endif; ?>
                                         </div>
@@ -894,6 +916,9 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                 <?php if (isset($_GET['updated']) && $_GET['updated'] === '1') : ?>
                     <div class="segreteria-edit-notice">Modifiche salvate correttamente.</div>
                 <?php endif; ?>
+                <?php if (isset($_GET['sconto_nuove_iscrizioni']) && $_GET['sconto_nuove_iscrizioni'] === 'salvato') : ?>
+                    <div class="segreteria-edit-notice">Regola sconto nuove iscrizioni aggiornata.</div>
+                <?php endif; ?>
 
                 <div class="segreteria-dashboard-head">
                     <div>
@@ -954,19 +979,28 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                     <input type="hidden" name="action" value="act_update_allievi_birthdate_cutoff">
                     <?php wp_nonce_field('act_update_allievi_birthdate_cutoff'); ?>
                     <div class="segreteria-filter-field">
-                        <label for="allievi-birthdate-cutoff">Allievi fino al</label>
+                        <label for="allievi-birthdate-cutoff">Data di confine per le iscrizioni di Scuola Calcio</label>
                         <input id="allievi-birthdate-cutoff" type="date" name="allievi_birthdate_cutoff" value="<?php echo esc_attr($allievi_birthdate_cutoff); ?>">
-                    </div>
-                    <div class="segreteria-filter-field">
-                        <label for="scuola-calcio-birthdate-min">Scuola Calcio dal</label>
-                        <input id="scuola-calcio-birthdate-min" type="date" name="scuola_calcio_birthdate_min" value="<?php echo esc_attr($scuola_calcio_birthdate_min); ?>">
-                    </div>
-                    <div class="segreteria-filter-field" style="min-width:280px;">
-                        <label>Regola attiva</label>
-                        <small>Allievi: nati fino al <?php echo esc_html(substr($allievi_birthdate_cutoff, 0, 4)); ?>. Scuola Calcio: nati dal <?php echo esc_html(substr($scuola_calcio_birthdate_min, 0, 4)); ?> in avanti.</small>
                     </div>
                     <div class="segreteria-filter-actions">
                         <button type="submit">Salva regola</button>
+                    </div>
+                </form>
+
+                <form class="segreteria-filters segreteria-discount-rule" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="margin-top:14px;">
+                    <input type="hidden" name="action" value="act_update_new_registrations_discount">
+                    <?php wp_nonce_field('act_update_new_registrations_discount'); ?>
+                    <div class="segreteria-filter-field">
+                        <span class="segreteria-filter-label">Sconto 50% sulle nuove iscrizioni</span>
+                        <label class="segreteria-toggle" for="new-registrations-discount-50">
+                            <input id="new-registrations-discount-50" type="checkbox" name="discount_50_active" value="1" <?php checked($new_registrations_discount_50_active); ?>>
+                            <span class="segreteria-toggle-track" aria-hidden="true"><span></span></span>
+                            <strong><?php echo $new_registrations_discount_50_active ? 'Attivo' : 'Non attivo'; ?></strong>
+                        </label>
+                        <small>Si applica solo alle nuove pratiche e sostituisce la riduzione fratelli.</small>
+                    </div>
+                    <div class="segreteria-filter-actions">
+                        <button type="submit">Salva sconto</button>
                     </div>
                 </form>
 
@@ -1109,11 +1143,12 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                                         <td data-label="Pagamento">
                                             <span class="segreteria-payment <?php echo esc_attr($payment_class); ?>"><?php echo esc_html($iscrizione->metodo_pagamento ?: 'Da definire'); ?></span>
                                             <span class="segreteria-record-meta"><?php echo esc_html($iscrizione->stato_pagamento ?: 'non_pagato'); ?></span>
-                                            <?php if (!empty($iscrizione->riduzione_fratelli)) : ?>
+                                            <?php $discount_percentage = function_exists('sport_theme_iscrizione_discount_percentage') ? sport_theme_iscrizione_discount_percentage($iscrizione) : (!empty($iscrizione->sconto_meta_stagione) ? 50 : 0); ?>
+                                            <?php if (!empty($iscrizione->riduzione_fratelli) && $discount_percentage === 0) : ?>
                                                 <span class="segreteria-record-meta">Riduzione fratelli - CHF 50</span>
                                             <?php endif; ?>
-                                            <?php if (!empty($iscrizione->sconto_meta_stagione)) : ?>
-                                                <span class="segreteria-record-meta segreteria-discount-active-label">Sconto metà stagione -50%</span>
+                                            <?php if ($discount_percentage) : ?>
+                                                <span class="segreteria-record-meta segreteria-discount-active-label">Sconto -<?php echo esc_html($discount_percentage); ?>%</span>
                                             <?php endif; ?>
                                             <span class="segreteria-record-meta">CHF <?php echo esc_html(number_format((float) $iscrizione->importo_totale_chf, 0, '.', "'")); ?></span>
                                         </td>
@@ -1124,7 +1159,9 @@ $export_url = add_query_arg($export_args, admin_url('admin-post.php', is_ssl() ?
                                         <td data-label="Azioni">
                                             <div class="segreteria-row-actions">
                                                 <a class="segreteria-edit-link" href="<?php echo esc_url(add_query_arg('edit_iscrizione', (int) $iscrizione->id, get_permalink()) . '#segreteria-edit'); ?>">Apri</a>
-                                                <?php if ($iscrizione->metodo_pagamento === 'fattura') : ?>
+                                                <?php if ((float) $iscrizione->importo_totale_chf <= 0) : ?>
+                                                    <span class="segreteria-record-meta segreteria-discount-active-label">Nessun pagamento dovuto</span>
+                                                <?php elseif ($iscrizione->metodo_pagamento === 'fattura') : ?>
                                                     <a class="segreteria-edit-link" target="_blank" rel="noopener" href="<?php echo esc_url($invoice_url); ?>">Fattura QR</a>
                                                     <form class="segreteria-invoice-form" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" onsubmit="return confirm('Inviare la fattura QR al genitore?');">
                                                         <?php wp_nonce_field('act_send_iscrizione_invoice'); ?>

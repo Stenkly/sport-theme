@@ -15,6 +15,9 @@ $classificazione_stagione = get_post_meta( get_the_ID(), '_iscrizioni_classifica
 $classificazione_is_image = $classificazione_url && preg_match( '/\.(jpe?g|png|webp|gif)(\?.*)?$/i', $classificazione_url );
 $allievi_birthdate_cutoff = function_exists( 'sport_theme_get_allievi_birthdate_cutoff' ) ? sport_theme_get_allievi_birthdate_cutoff() : '2017-12-31';
 $scuola_calcio_birthdate_min = function_exists( 'sport_theme_get_scuola_calcio_birthdate_min' ) ? sport_theme_get_scuola_calcio_birthdate_min() : '2018-01-01';
+$new_registrations_discount_50_active = function_exists( 'sport_theme_new_registrations_discount_50_is_active' )
+    ? sport_theme_new_registrations_discount_50_is_active()
+    : false;
 $today_date = date( 'Y-m-d' );
 ?>
 
@@ -82,8 +85,13 @@ $today_date = date( 'Y-m-d' );
                         <div class="iscrizione-item">
                             <span class="iscrizione-number">06</span>
                             <div>
-                                <h3>Riduzione fratelli</h3>
-                                <p>È prevista una riduzione di <strong>CHF 50</strong> per allievi con fratello o sorella regolarmente iscritto alla società. La riduzione non si applica agli <strong>Allievi F e G</strong>.</p>
+                                <?php if ( $new_registrations_discount_50_active ) : ?>
+                                    <h3>Sconto nuove iscrizioni</h3>
+                                    <p>È attivo uno sconto del <strong>50%</strong> sulla quota. Lo sconto non è cumulabile con la riduzione fratelli.</p>
+                                <?php else : ?>
+                                    <h3>Riduzione fratelli</h3>
+                                    <p>È prevista una riduzione di <strong>CHF 50</strong> per allievi con fratello o sorella regolarmente iscritto alla società. La riduzione non si applica agli <strong>Allievi F e G</strong>.</p>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -362,12 +370,12 @@ $today_date = date( 'Y-m-d' );
 
                 <div class="iscrizione-payment-box" data-payment-info="stripe" hidden>
                     <h3>Pagamento online</h3>
-                    <p>Dopo l'invio dell'iscrizione riceverai il link per completare il pagamento sicuro con carta tramite Stripe.</p>
+                    <p>Con un solo iscritto si aprirà subito il pagamento sicuro con carta tramite Stripe. Dopo il pagamento riceverai un’unica email con conferma dell’iscrizione, conferma del pagamento e ricevuta. Con due o più iscritti, la segreteria verificherà prima la pratica.</p>
                 </div>
 
                 <div class="iscrizione-payment-box" data-payment-info="fattura" hidden>
                     <h3>Pagamento tramite fattura</h3>
-                    <p>La segreteria verificherà la pratica e invierà la QR-fattura all'indirizzo email indicato nei dati del responsabile.</p>
+                    <p>Con un solo iscritto la fattura QR verrà generata e inviata automaticamente via email. Con due o più iscritti, la segreteria verificherà prima la pratica.</p>
                 </div>
 
                 <div class="iscrizione-submit-status" data-submit-status hidden></div>
@@ -444,6 +452,23 @@ $today_date = date( 'Y-m-d' );
         </div>
     </div>
 
+    <div class="iscrizione-modal iscrizione-child-notice-modal" data-add-child-notice aria-hidden="true">
+        <div class="iscrizione-modal-backdrop" data-add-child-notice-close></div>
+        <div class="iscrizione-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="add-child-notice-title">
+            <button type="button" class="iscrizione-modal-close" data-add-child-notice-close aria-label="Chiudi avviso">×</button>
+            <div class="iscrizione-modal-header">
+                <span>AC Taverne</span>
+                <h2 id="add-child-notice-title">Prima di continuare</h2>
+            </div>
+            <div class="iscrizione-modal-body">
+                <p>Qui puoi aggiungere solo un altro figlio Allievi. Per la Scuola Calcio devi compilare un’iscrizione separata.</p>
+            </div>
+            <div class="iscrizione-modal-actions">
+                <button type="button" class="iscrizione-modal-confirm" data-add-child-notice-confirm>Aggiungi figlio Allievi</button>
+            </div>
+        </div>
+    </div>
+
     <?php if ( $classificazione_url ) : ?>
         <div class="iscrizione-modal iscrizione-classificazione-modal" data-classificazione-modal aria-hidden="true">
             <div class="iscrizione-modal-backdrop" data-classificazione-close></div>
@@ -468,7 +493,8 @@ $today_date = date( 'Y-m-d' );
 <script>
 window.acTaverneIscrizioni = {
     ajaxUrl: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
-    nonce: '<?php echo esc_js( wp_create_nonce( 'act_iscrizione_submit' ) ); ?>'
+    nonce: '<?php echo esc_js( wp_create_nonce( 'act_iscrizione_submit' ) ); ?>',
+    newRegistrationDiscount50: <?php echo $new_registrations_discount_50_active ? 'true' : 'false'; ?>
 };
 </script>
 
@@ -481,6 +507,9 @@ window.acTaverneIscrizioni = {
     var classificazioneModal = document.querySelector('[data-classificazione-modal]');
     var classificazioneOpenEls = document.querySelectorAll('[data-classificazione-open]');
     var classificazioneCloseEls = document.querySelectorAll('[data-classificazione-close]');
+    var addChildNoticeModal = document.querySelector('[data-add-child-notice]');
+    var addChildNoticeCloseEls = document.querySelectorAll('[data-add-child-notice-close]');
+    var addChildNoticeConfirm = document.querySelector('[data-add-child-notice-confirm]');
     var checkbox = document.querySelector('[data-regolamento-check]');
     var ctaButtons = document.querySelectorAll('[data-iscrizione-cta]');
     var intro = document.querySelector('[data-iscrizione-intro]');
@@ -667,10 +696,35 @@ window.acTaverneIscrizioni = {
         document.body.style.overflow = '';
     }
 
+    function openAddChildNotice() {
+        if (!addChildNoticeModal) {
+            addChildSection();
+            return;
+        }
+
+        addChildNoticeModal.classList.add('is-open');
+        addChildNoticeModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeAddChildNotice() {
+        if (!addChildNoticeModal) return;
+        addChildNoticeModal.classList.remove('is-open');
+        addChildNoticeModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
     openBtn.addEventListener('click', openModal);
     closeEls.forEach(function(el){ el.addEventListener('click', closeModal); });
     classificazioneOpenEls.forEach(function(el){ el.addEventListener('click', openClassificazioneModal); });
     classificazioneCloseEls.forEach(function(el){ el.addEventListener('click', closeClassificazioneModal); });
+    addChildNoticeCloseEls.forEach(function(el){ el.addEventListener('click', closeAddChildNotice); });
+    if (addChildNoticeConfirm) {
+        addChildNoticeConfirm.addEventListener('click', function(){
+            closeAddChildNotice();
+            addChildSection();
+        });
+    }
     checkbox.addEventListener('change', updateCta);
 
     if (acceptBtn) {
@@ -1286,23 +1340,32 @@ window.acTaverneIscrizioni = {
 
     function calculateRegistrationAmount() {
         var childrenCount = getRegisteredChildrenCount();
+        var summary;
 
         if (isScuolaCalcioRegistration()) {
-            return {
+            summary = {
                 total: 150,
                 lines: ['Scuola Calcio: CHF 150']
             };
+        } else {
+            var lines = ['1° figlio Allievi: CHF 300'];
+            for (var i = 2; i <= childrenCount; i++) {
+                lines.push(i + '° figlio Allievi: CHF 250');
+            }
+
+            summary = {
+                total: 300 + Math.max(0, childrenCount - 1) * 250,
+                lines: lines
+            };
         }
 
-        var lines = ['1° figlio Allievi: CHF 300'];
-        for (var i = 2; i <= childrenCount; i++) {
-            lines.push(i + '° figlio Allievi: CHF 250');
+        if (ajaxConfig.newRegistrationDiscount50) {
+            var discountAmount = summary.total * 0.5;
+            summary.lines.push('Sconto nuove iscrizioni 50%: - ' + formatChf(discountAmount));
+            summary.total -= discountAmount;
         }
 
-        return {
-            total: 300 + Math.max(0, childrenCount - 1) * 250,
-            lines: lines
-        };
+        return summary;
     }
 
     function updatePaymentSummary() {
@@ -1406,9 +1469,13 @@ window.acTaverneIscrizioni = {
             }
 
             resetSubmissionState();
-            setSubmitStatus('Iscrizione inviata correttamente. La segreteria riceverà i dati per la verifica.', 'success');
+            var responseData = result.body.data || {};
+            setSubmitStatus(responseData.message || 'Iscrizione inviata correttamente.', 'success');
             if (paymentNext) {
                 paymentNext.hidden = true;
+            }
+            if (responseData.redirect_url) {
+                window.location.assign(responseData.redirect_url);
             }
         })
         .catch(function(error){
@@ -1742,7 +1809,7 @@ window.acTaverneIscrizioni = {
         }
 
         if (addChildBtn) {
-            addChildBtn.addEventListener('click', addChildSection);
+            addChildBtn.addEventListener('click', openAddChildNotice);
         }
 
         document.addEventListener('input', function(event){
@@ -1760,6 +1827,9 @@ window.acTaverneIscrizioni = {
         }
         if (event.key === 'Escape' && classificazioneModal && classificazioneModal.classList.contains('is-open')) {
             closeClassificazioneModal();
+        }
+        if (event.key === 'Escape' && addChildNoticeModal && addChildNoticeModal.classList.contains('is-open')) {
+            closeAddChildNotice();
         }
     });
 
