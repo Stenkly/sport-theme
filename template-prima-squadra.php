@@ -85,7 +85,7 @@ get_header();
             <?php
             $args_news = array(
                 'post_type'      => 'post',
-                'posts_per_page' => 9,
+                'posts_per_page' => 27,
             );
             $latest_news  = new WP_Query( $args_news );
             $news_count   = 0;
@@ -118,8 +118,11 @@ get_header();
         <div class="carousel-nav" style="margin-top:15px;">
             <span class="nav-arrow text-primary" id="news-prev" style="cursor:pointer;"><i class="fa-solid fa-chevron-left"></i></span>
             <span class="nav-dots" id="news-dots">
-                <?php for($i=0; $i<$news_count; $i++): ?>
-                <i class="<?php echo $i===0 ? 'fa-solid' : 'fa-regular'; ?> fa-circle<?php echo $i===0 ? ' active' : ''; ?>"></i>
+                <?php
+                $news_pages = min( 9, (int) ceil( $news_count / 3 ) );
+                for ( $i = 0; $i < $news_pages; $i++ ) :
+                ?>
+                <i class="<?php echo $i===0 ? 'fa-solid' : 'fa-regular'; ?> fa-circle<?php echo $i===0 ? ' active' : ''; ?>" data-page="<?php echo esc_attr( $i ); ?>"></i>
                 <?php endfor; ?>
             </span>
             <span class="nav-arrow text-primary" id="news-next" style="cursor:pointer;"><i class="fa-solid fa-chevron-right"></i></span>
@@ -142,7 +145,8 @@ get_header();
                 cur = Math.max(0, Math.min(n, max));
                 car.scrollLeft = cur * slideWidth();
                 dots.forEach(function(d, i){
-                    if (i === cur) {
+                    // Come nel carosello Team: un pallino rappresenta un gruppo di card.
+                    if (Math.floor(cur / 3) === i) {
                         d.classList.remove('fa-regular');
                         d.classList.add('fa-solid', 'active');
                     } else {
@@ -153,7 +157,7 @@ get_header();
             }
             prev.addEventListener('click', function(){ go(cur - 1); });
             next.addEventListener('click', function(){ go(cur + 1); });
-            dots.forEach(function(d, i){ d.addEventListener('click', function(){ go(i); }); });
+            dots.forEach(function(d, i){ d.addEventListener('click', function(){ go(i * 3); }); });
         })();
         </script>
     </section>
