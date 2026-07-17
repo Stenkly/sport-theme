@@ -21,11 +21,6 @@ get_header();
 
     <!-- HERO ARTICOLO -->
     <header class="single-article-header container">
-        <a href="<?php echo esc_url( home_url( '/news/' ) ); ?>" class="article-back-link">
-            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
-            <span>Torna alle news</span>
-        </a>
-
         <div class="article-kicker-row">
             <span class="category-badge">NEWS</span>
             <span class="article-date"><?php echo esc_html( get_the_date('d.m.Y') ); ?></span>
@@ -71,6 +66,11 @@ get_header();
                     </a>
                 </div>
             </div>
+
+            <a href="<?php echo esc_url( home_url( '/news/' ) ); ?>" class="article-back-link article-back-link--footer">
+                <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                <span>Torna indietro</span>
+            </a>
         </div>
     </section>
 

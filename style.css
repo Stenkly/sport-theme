@@ -7212,6 +7212,11 @@ body.network-modal-open {
     border-color: var(--c-primary);
 }
 
+.article-back-link--footer {
+    margin-top: 28px;
+    margin-bottom: 0;
+}
+
 .single-article-header .header-split {
     display: block;
 }
