@@ -25,6 +25,10 @@ get_header();
             <div class="club-hero-fade"></div>
             
             <div class="news-hero-content container" style="position: absolute; bottom: 40px; left: 0; right: 0; text-align: left;">
+                <a href="<?php echo esc_url( home_url( '/prima-squadra/' ) ); ?>" class="news-page-back-link">
+                    <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                    <span>Torna indietro</span>
+                </a>
                 <h1 class="text-white" style="font-size: 55px; font-weight: 700; text-transform: uppercase; margin: 0; letter-spacing: 2px;">NEWS</h1>
                 <hr style="border: 0; border-top: 2px solid white; margin: 20px 0;">
                 <div class="news-filters">
